@@ -19,6 +19,131 @@ A função dessa biblioteca é facilitar o uso de widgets interativos em display
 - Os pinos, tipo de display e touch são definidos em um arquivo (na raiz do diretório da library) chamado `user_setup.h`
 - Cada widget possui uma struct de configuração própria.
 
+
+## Task
+```mermaid
+flowchart TD
+    Start(["Início da loopTask()"])
+    CheckScreen{"WidgetBase::loadScreen está definida?"}
+    CallScreen["Chama WidgetBase::loadScreen()"]
+    NullScreen["Zera WidgetBase::loadScreen (nullptr)"]
+    Delay5ms1["vTaskDelay(5ms)"]
+    ProcessLog["processLogQueue: Processa fila de logs (SD/logs)"]
+    ProcessCallback["processCallback: Executa callbacks pendentes"]
+    TouchEnabled{"Touch está habilitado? (HAS_TOUCH)"}
+    GetTouch["Lê touch: xTouch, yTouch, zPressure, gesture"]
+    TouchDetected{"Touch detectado? (hasTouch)"}
+    DebugTouch{"Debug Touch ativado? (m_debugTouch)"}
+    DrawCircle["Desenha círculo rosa no ponto de toque"]
+    CallProcessTouch["processTouchEvent: Processa evento de toque"]
+    UpdateWidgets["updateWidgets: Atualiza todos os widgets"]
+    UpdateCircularBar["updateCircularBar"]
+    UpdateGauge["updateGauge"]
+    UpdateLabel["updateLabel"]
+    UpdateLed["updateLed"]
+    UpdateLineChart["updateLineChart"]
+    UpdateVBar["updateVBar"]
+    UpdateVAnalog["updateVAnalog"]
+    UpdateCheckbox["updateCheckbox"]
+    UpdateCircleButton["updateCircleButton"]
+    UpdateHSlider["updateHSlider"]
+    UpdateRadioGroup["updateRadioGroup"]
+    UpdateRectButton["updateRectButton"]
+    UpdateToggle["updateToggle"]
+    UpdateTextButton["updateTextButton"]
+    UpdateSpinbox["updateSpinbox"]
+    UpdateNumberBox["updateNumberBox"]
+    UpdateTextBox["updateTextBox"]
+    CalcTime["Calcula tempo de execução"]
+    Delay5ms2["vTaskDelay(5ms)"]
+    End(["Fim da iteração da task"])
+
+    Start --> CheckScreen
+    CheckScreen -- "Sim" --> CallScreen
+    CallScreen --> NullScreen
+    NullScreen --> Delay5ms1
+    Delay5ms1 --> ProcessLog
+    CheckScreen -- "Não" --> ProcessLog
+    ProcessLog --> ProcessCallback
+    ProcessCallback --> TouchEnabled
+    TouchEnabled -- "Sim" --> GetTouch
+    GetTouch --> TouchDetected
+    TouchDetected -- "Sim" --> DebugTouch
+    DebugTouch -- "Sim" --> DrawCircle
+    DrawCircle --> CallProcessTouch
+    DebugTouch -- "Não" --> CallProcessTouch
+    CallProcessTouch --> UpdateWidgets
+    TouchDetected -- "Não" --> UpdateWidgets
+    TouchEnabled -- "Não" --> UpdateWidgets
+    UpdateWidgets --> UpdateCircularBar
+    UpdateCircularBar --> UpdateGauge
+    UpdateGauge --> UpdateLabel
+    UpdateLabel --> UpdateLed
+    UpdateLed --> UpdateLineChart
+    UpdateLineChart --> UpdateVBar
+    UpdateVBar --> UpdateVAnalog
+    UpdateVAnalog --> UpdateCheckbox
+    UpdateCheckbox --> UpdateCircleButton
+    UpdateCircleButton --> UpdateHSlider
+    UpdateHSlider --> UpdateRadioGroup
+    UpdateRadioGroup --> UpdateRectButton
+    UpdateRectButton --> UpdateToggle
+    UpdateToggle --> UpdateTextButton
+    UpdateTextButton --> UpdateSpinbox
+    UpdateSpinbox --> UpdateNumberBox
+    UpdateNumberBox --> UpdateTextBox
+    UpdateTextBox --> CalcTime
+    CalcTime --> Delay5ms2
+    Delay5ms2 --> End
+```
+
+## Fluxo detalhado: processTouchEvent
+```mermaid
+flowchart TD
+    Start(["Início de processTouchEvent(xTouch, yTouch, zPressure, gesture)"])
+    CheckKeyboard{"WidgetBase::usingKeyboard está true?"}
+    ReturnKeyboard["Retorna (não processa touch)"]
+    Next(["Processa widgets touchable"])
+    CallCheckbox["processCheckboxTouch"]
+    CallCircleButton["processCircleButtonTouch"]
+    CallHSlider["processHSliderTouch"]
+    CallRadioGroup["processRadioGroupTouch"]
+    CallRectButton["processRectButtonTouch"]
+    CallImage["processImageTouch"]
+    CallSpinbox["processSpinboxTouch"]
+    CallToggle["processToggleTouch"]
+    CallTextButton["processTextButtonTouch"]
+    CallTextBox["processTextBoxTouch"]
+    CallNumberBox["processNumberBoxTouch"]
+    CallEmptyArea["processEmptyAreaTouch"]
+    End(["Fim do processamento"])
+
+    Start --> CheckKeyboard
+    CheckKeyboard -- "Sim" --> ReturnKeyboard
+    CheckKeyboard -- "Não" --> Next
+    Next --> CallCheckbox
+    CallCheckbox --> CallCircleButton
+    CallCircleButton --> CallHSlider
+    CallHSlider --> CallRadioGroup
+    CallRadioGroup --> CallRectButton
+    CallRectButton --> CallImage
+    CallImage --> CallSpinbox
+    CallSpinbox --> CallToggle
+    CallToggle --> CallTextButton
+    CallTextButton --> CallTextBox
+    CallTextBox --> CallNumberBox
+    CallNumberBox --> CallEmptyArea
+    CallEmptyArea --> End
+```
+
+**Descrição:**
+- Se o teclado virtual está ativo (`usingKeyboard`), a função retorna imediatamente e não processa nenhum widget.
+- Caso contrário, a função chama sequencialmente os métodos de processamento de toque para cada tipo de widget interativo (Checkbox, CircleButton, HSlider, etc.), passando as coordenadas do toque.
+- Cada função verifica se o toque ocorreu em algum widget daquele tipo e, se sim, agenda o callback correspondente.
+- O fluxo termina após tentar processar todos os tipos de widgets touchable.
+
+
+
 ## Basic code
 
 O código abaixo é um básico de como fica um projeto com ESP32 + display ILI9488 com touch resistivo XPT2046 compartilhando a mesma SPI.
@@ -308,4 +433,3 @@ void loadWidgets(){
 }
 
 ```
-
