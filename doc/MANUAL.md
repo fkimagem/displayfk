@@ -19,6 +19,47 @@ A função dessa biblioteca é facilitar o uso de widgets interativos em display
 - Os pinos, tipo de display e touch são definidos em um arquivo (na raiz do diretório da library) chamado `user_setup.h`
 - Cada widget possui uma struct de configuração própria.
 
+## Fluxo obrigatório
+Variáveis globais
+- Criar protótipos das funções
+- Criar objetos de comunicação
+- Criar objeto para a biblioteca DisplayFK
+- Criar array de widgets
+
+Fluxo no setup()
+- Iniciar objetos de comunicação
+- Iniciar touch
+- Configurar widgets
+- Deifnir a tela inicial
+- Iniciar task do objeto para controle do touch e widgets
+
+```mermaid
+flowchart TD
+    Start(["Início do projeto"])
+    Prototipos["Criar protótipos das funções"]
+    ObjComunicacao["Criar objetos de comunicação (SPI, I2C, etc)"]
+    ObjDisplayFK["Criar objeto DisplayFK"]
+    ArrayWidgets["Criar array(s) de widgets"]
+    Setup(["setup()"])
+    InitComunicacao["Iniciar objetos de comunicação"]
+    InitTouch["Iniciar touch"]
+    ConfigWidgets["Configurar widgets"]
+    DefinirTela["Definir tela inicial"]
+    IniciarTask["Iniciar task do DisplayFK"]
+    End(["Pronto para uso"])
+
+    Start --> Prototipos
+    Prototipos --> ObjComunicacao
+    ObjComunicacao --> ObjDisplayFK
+    ObjDisplayFK --> ArrayWidgets
+    ArrayWidgets --> Setup
+    Setup --> InitComunicacao
+    InitComunicacao --> InitTouch
+    InitTouch --> ConfigWidgets
+    ConfigWidgets --> DefinirTela
+    DefinirTela --> IniciarTask
+    IniciarTask --> End
+```
 
 ## Basic code
 
