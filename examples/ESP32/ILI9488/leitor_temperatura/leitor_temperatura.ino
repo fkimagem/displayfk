@@ -119,7 +119,7 @@ void setup(){ // Função de setup
     
     WidgetBase::objTFT = tft; // Referência para o objeto para desenhar na tela
     //myDisplay.startTouch(DISPLAY_W, DISPLAY_H, rotationScreen, &spi_shared); // Inicializa a comunicação com o touch controller
-    myDisplay.startTouchXPT2046(DISPLAY_W, DISPLAY_H, rotationScreen, -1, -1, -1, TC_CS, &spi_shared, tft); //Start comunication with touch controller
+    myDisplay.startTouchXPT2046(DISPLAY_W, DISPLAY_H, rotationScreen, TC_CS, &spi_shared, tft); //Start comunication with touch controller
     //myDisplay.recalibrate(); // Verifica e aplica os valores de calibração
     myDisplay.checkCalibration(); // Verifica e aplica os valores de calibração
     myDisplay.disableTouchLog();
