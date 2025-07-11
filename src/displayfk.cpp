@@ -13,117 +13,18 @@
 #endif
 
 
-/**
- * @brief Initializes static variables of the DisplayFK class
- */
-//functionCB_t DisplayFK::funcaoCB = nullptr;
-
+DisplayFK *DisplayFK::instance = nullptr;
 bool DisplayFK::sdcardOK = false;
-
-// DisplayFK *DisplayFK::instance = nullptr;
-
-#if defined(DFK_TOUCHAREA)
-TouchArea *DisplayFK::arrayTouchArea = nullptr;
-uint8_t DisplayFK::qtdTouchArea = 0;
-#endif
-#ifdef DFK_CHECKBOX
-uint8_t DisplayFK::qtdCheckbox = 0;
-CheckBox *DisplayFK::arrayCheckbox = nullptr;
-#endif
-
-// Array of circle button
-#ifdef DFK_CIRCLEBTN
-uint8_t DisplayFK::qtdCircleBtn = 0;
-CircleButton *DisplayFK::arrayCircleBtn = nullptr;
-#endif
-// Array os gauge
-#ifdef DFK_GAUGE
-uint8_t DisplayFK::qtdGauge = 0;
-GaugeSuper *DisplayFK::arrayGauge = nullptr;
-#endif
-
-// Array of circularBar
-#ifdef DFK_CIRCULARBAR
-uint8_t DisplayFK::qtdCircularBar = 0;
-CircularBar *DisplayFK::arrayCircularBar = nullptr;
-#endif
-
-// Array of slider
-#ifdef DFK_HSLIDER
-uint8_t DisplayFK::qtdHSlider = 0;
-HSlider *DisplayFK::arrayHSlider = nullptr;
-#endif
-// Array os labels
-#ifdef DFK_LABEL
-uint8_t DisplayFK::qtdLabel = 0;
-Label *DisplayFK::arrayLabel = nullptr;
-#endif
-// Array of leds
-#ifdef DFK_LED
-uint8_t DisplayFK::qtdLed = 0;
-Led *DisplayFK::arrayLed = nullptr;
-#endif
-// Array of line chart
-#ifdef DFK_LINECHART
-uint8_t DisplayFK::qtdLineChart = 0;
-LineChart *DisplayFK::arrayLineChart = nullptr;
-#endif
-// Array of radio buttons groups
-#ifdef DFK_RADIO
-uint8_t DisplayFK::qtdRadioGroup = 0;
-RadioGroup *DisplayFK::arrayRadioGroup = nullptr;
-#endif
-#ifdef DFK_RECTBTN
-uint8_t DisplayFK::qtdRectBtn = 0;
-RectButton *DisplayFK::arrayRectBtn = nullptr;
-#endif
-// Array of toggle
-#ifdef DFK_TOGGLE
-uint8_t DisplayFK::qtdToggle = 0;
-ToggleButton *DisplayFK::arrayToggleBtn = nullptr;
-#endif
-// Array of vertical loader
-#ifdef DFK_VBAR
-uint8_t DisplayFK::qtdVBar = 0;
-VBar *DisplayFK::arrayVBar = nullptr;
-#endif
-// Array of analog viewer
-#ifdef DFK_VANALOG
-uint8_t DisplayFK::qtdVAnalog = 0;
-VAnalog *DisplayFK::arrayVAnalog = nullptr;
-#endif
-// Array of string textbox
-#ifdef DFK_TEXTBOX
-uint8_t DisplayFK::qtdTextBox = 0;
-TextBox *DisplayFK::arrayTextBox = nullptr;
-WKeyboard *DisplayFK::keyboard = nullptr;
-#endif
-// Array of numberbox
-#ifdef DFK_NUMBERBOX
-uint8_t DisplayFK::qtdNumberBox = 0;
-NumberBox *DisplayFK::arrayNumberbox = nullptr;
-Numpad *DisplayFK::numpad = nullptr;
-#endif
-#ifdef DFK_IMAGE
-uint8_t DisplayFK::qtdImage = 0;
-Image *DisplayFK::arrayImage = nullptr;
-#endif
-#ifdef DFK_TEXTBUTTON
-uint8_t DisplayFK::qtdTextButton = 0;
-TextButton *DisplayFK::arrayTextButton = nullptr;
-#endif
-#ifdef DFK_SD
-
-#endif
-#ifdef DFK_SPINBOX
-uint8_t DisplayFK::qtdSpinbox = 0;
-SpinBox *DisplayFK::arraySpinbox = nullptr;
-#endif
-
 QueueHandle_t DisplayFK::xFilaLog;
 logMessage_t DisplayFK::bufferLog[LOG_LENGTH];
 uint8_t DisplayFK::logIndex = 0;
 uint16_t DisplayFK::logFileCount = 1;
+
+
+#ifdef DFK_SD
+
+#endif
+
 
 /**
  * @brief Enables or disables the watchdog timer
@@ -219,7 +120,7 @@ const char *DisplayFK::getLogFileName()
  * @param array Pointer to the checkbox array
  * @param amount Number of checkboxes in the array
  */
-void DisplayFK::setCheckbox(CheckBox *array, uint8_t amount)
+void DisplayFK::setCheckbox(CheckBox *array[], uint8_t amount)
 {
     if (m_checkboxConfigured)
     {
@@ -227,8 +128,8 @@ void DisplayFK::setCheckbox(CheckBox *array, uint8_t amount)
         return;
     }
     m_checkboxConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayCheckbox = array;
-    DisplayFK::qtdCheckbox = amount;
+    arrayCheckbox = array;
+    qtdCheckbox = amount;
 }
 
 #endif
@@ -240,7 +141,7 @@ void DisplayFK::setCheckbox(CheckBox *array, uint8_t amount)
  * @param array Pointer to the circle button array
  * @param amount Number of buttons in the array
  */
-void DisplayFK::setCircleButton(CircleButton *array, uint8_t amount)
+void DisplayFK::setCircleButton(CircleButton *array[], uint8_t amount)
 {
     if (m_circleButtonConfigured)
     {
@@ -248,8 +149,8 @@ void DisplayFK::setCircleButton(CircleButton *array, uint8_t amount)
         return;
     }
     m_circleButtonConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayCircleBtn = array;
-    DisplayFK::qtdCircleBtn = amount;
+    arrayCircleBtn = array;
+    qtdCircleBtn = amount;
 }
 
 #endif
@@ -261,7 +162,7 @@ void DisplayFK::setCircleButton(CircleButton *array, uint8_t amount)
  * @param array Pointer to the gauge array
  * @param amount Number of gauges in the array
  */
-void DisplayFK::setGauge(GaugeSuper *array, uint8_t amount)
+void DisplayFK::setGauge(GaugeSuper *array[], uint8_t amount)
 {
     if (m_gaugeConfigured)
     {
@@ -269,8 +170,8 @@ void DisplayFK::setGauge(GaugeSuper *array, uint8_t amount)
         return;
     }
     m_gaugeConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayGauge = array;
-    DisplayFK::qtdGauge = amount;
+    arrayGauge = array;
+    qtdGauge = amount;
 }
 
 #endif
@@ -282,7 +183,7 @@ void DisplayFK::setGauge(GaugeSuper *array, uint8_t amount)
  * @param array Pointer to the circular bar array
  * @param amount Number of bars in the array
  */
-void DisplayFK::setCircularBar(CircularBar *array, uint8_t amount)
+void DisplayFK::setCircularBar(CircularBar *array[], uint8_t amount)
 {
     if (m_circularBarConfigured)
     {
@@ -290,8 +191,8 @@ void DisplayFK::setCircularBar(CircularBar *array, uint8_t amount)
         return;
     }
     m_circularBarConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayCircularBar = array;
-    DisplayFK::qtdCircularBar = amount;
+    arrayCircularBar = array;
+    qtdCircularBar = amount;
 }
 
 #endif
@@ -303,7 +204,7 @@ void DisplayFK::setCircularBar(CircularBar *array, uint8_t amount)
  * @param array Pointer to the slider array
  * @param amount Number of sliders in the array
  */
-void DisplayFK::setHSlider(HSlider *array, uint8_t amount)
+void DisplayFK::setHSlider(HSlider *array[], uint8_t amount)
 {
     if (m_hSliderConfigured)
     {
@@ -311,8 +212,8 @@ void DisplayFK::setHSlider(HSlider *array, uint8_t amount)
         return;
     }
     m_hSliderConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayHSlider = array;
-    DisplayFK::qtdHSlider = amount;
+    arrayHSlider = array;
+    qtdHSlider = amount;
 }
 
 #endif
@@ -324,7 +225,7 @@ void DisplayFK::setHSlider(HSlider *array, uint8_t amount)
  * @param array Pointer to the label array
  * @param amount Number of labels in the array
  */
-void DisplayFK::setLabel(Label *array, uint8_t amount)
+void DisplayFK::setLabel(Label *array[], uint8_t amount)
 {
     if (m_labelConfigured)
     {
@@ -332,8 +233,8 @@ void DisplayFK::setLabel(Label *array, uint8_t amount)
         return;
     }
     m_labelConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayLabel = array;
-    DisplayFK::qtdLabel = amount;
+    arrayLabel = array;
+    qtdLabel = amount;
 }
 #endif
 
@@ -344,7 +245,7 @@ void DisplayFK::setLabel(Label *array, uint8_t amount)
  * @param array Pointer to the LED array
  * @param amount Number of LEDs in the array
  */
-void DisplayFK::setLed(Led *array, uint8_t amount)
+void DisplayFK::setLed(Led *array[], uint8_t amount)
 {
     if (m_ledConfigured)
     {
@@ -352,8 +253,8 @@ void DisplayFK::setLed(Led *array, uint8_t amount)
         return;
     }
     m_ledConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayLed = array;
-    DisplayFK::qtdLed = amount;
+    arrayLed = array;
+    qtdLed = amount;
 }
 
 #endif
@@ -365,7 +266,7 @@ void DisplayFK::setLed(Led *array, uint8_t amount)
  * @param array Pointer to the line chart array
  * @param amount Number of charts in the array
  */
-void DisplayFK::setLineChart(LineChart *array, uint8_t amount)
+void DisplayFK::setLineChart(LineChart *array[], uint8_t amount)
 {
     if (m_lineChartConfigured)
     {
@@ -373,8 +274,8 @@ void DisplayFK::setLineChart(LineChart *array, uint8_t amount)
         return;
     }
     m_lineChartConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayLineChart = array;
-    DisplayFK::qtdLineChart = amount;
+    arrayLineChart = array;
+    qtdLineChart = amount;
 }
 
 #endif
@@ -385,7 +286,7 @@ void DisplayFK::setLineChart(LineChart *array, uint8_t amount)
  * @param array Pointer to the number box array
  * @param amount Number of boxes in the array
  */
-void DisplayFK::setNumberbox(NumberBox *array, uint8_t amount)
+void DisplayFK::setNumberbox(NumberBox *array[], uint8_t amount)
 {
     if (m_numberboxConfigured)
     {
@@ -393,8 +294,8 @@ void DisplayFK::setNumberbox(NumberBox *array, uint8_t amount)
         return;
     }
     m_numberboxConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayNumberbox = array;
-    DisplayFK::qtdNumberBox = amount;
+    arrayNumberbox = array;
+    qtdNumberBox = amount;
 
     setupNumpad();
 }
@@ -404,8 +305,8 @@ void DisplayFK::setNumberbox(NumberBox *array, uint8_t amount)
  */
 void DisplayFK::setupNumpad()
 {
-    m_pNumpad.setup();
-    DisplayFK::numpad = &m_pNumpad;
+    //m_pNumpad.setup();
+    //DisplayFK::numpad = &m_pNumpad;
 }
 
 /**
@@ -415,7 +316,7 @@ void DisplayFK::setupNumpad()
 void DisplayFK::insertCharNumpad(char c)
 {
     if(DisplayFK::numpad){
-        m_pNumpad.insertChar(c);
+        DisplayFK::numpad->insertChar(c);
     }else{
         DEBUG_E("Numpad not configured");
     }
@@ -430,7 +331,7 @@ void DisplayFK::insertCharNumpad(char c)
  * @param array Pointer to the radio group array
  * @param amount Number of groups in the array
  */
-void DisplayFK::setRadioGroup(RadioGroup *array, uint8_t amount)
+void DisplayFK::setRadioGroup(RadioGroup *array[], uint8_t amount)
 {
     if (m_radioGroupConfigured)
     {
@@ -438,8 +339,8 @@ void DisplayFK::setRadioGroup(RadioGroup *array, uint8_t amount)
         return;
     }
     m_radioGroupConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayRadioGroup = array;
-    DisplayFK::qtdRadioGroup = amount;
+    arrayRadioGroup = array;
+    qtdRadioGroup = amount;
 }
 #endif
 
@@ -450,7 +351,7 @@ void DisplayFK::setRadioGroup(RadioGroup *array, uint8_t amount)
  * @param array Pointer to the button array
  * @param amount Number of buttons in the array
  */
-void DisplayFK::setRectButton(RectButton *array, uint8_t amount)
+void DisplayFK::setRectButton(RectButton *array[], uint8_t amount)
 {
     if (m_rectButtonConfigured)
     {
@@ -458,8 +359,8 @@ void DisplayFK::setRectButton(RectButton *array, uint8_t amount)
         return;
     }
     m_rectButtonConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayRectBtn = array;
-    DisplayFK::qtdRectBtn = amount;
+    arrayRectBtn = array;
+    qtdRectBtn = amount;
 }
 #endif
 
@@ -470,7 +371,7 @@ void DisplayFK::setRectButton(RectButton *array, uint8_t amount)
  * @param array Pointer to the button array
  * @param amount Number of buttons in the array
  */
-void DisplayFK::setTextButton(TextButton *array, uint8_t amount)
+void DisplayFK::setTextButton(TextButton *array[], uint8_t amount)
 {
     if (m_textButtonConfigured)
     {
@@ -478,8 +379,8 @@ void DisplayFK::setTextButton(TextButton *array, uint8_t amount)
         return;
     }
     m_textButtonConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayTextButton = array;
-    DisplayFK::qtdTextButton = amount;
+    arrayTextButton = array;
+    qtdTextButton = amount;
 }
 #endif
 
@@ -490,7 +391,7 @@ void DisplayFK::setTextButton(TextButton *array, uint8_t amount)
  * @param array Pointer to the spin box array
  * @param amount Number of boxes in the array
  */
-void DisplayFK::setSpinbox(SpinBox *array, uint8_t amount)
+void DisplayFK::setSpinbox(SpinBox *array[], uint8_t amount)
 {
     if (m_spinboxConfigured)
     {
@@ -498,8 +399,8 @@ void DisplayFK::setSpinbox(SpinBox *array, uint8_t amount)
         return;
     }
     m_spinboxConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arraySpinbox = array;
-    DisplayFK::qtdSpinbox = amount;
+    arraySpinbox = array;
+    qtdSpinbox = amount;
 }
 #endif
 
@@ -510,7 +411,7 @@ void DisplayFK::setSpinbox(SpinBox *array, uint8_t amount)
  * @param array Pointer to the text box array
  * @param amount Number of boxes in the array
  */
-void DisplayFK::setTextbox(TextBox *array, uint8_t amount)
+void DisplayFK::setTextbox(TextBox *array[], uint8_t amount)
 {
     if (m_textboxConfigured)
     {
@@ -518,8 +419,8 @@ void DisplayFK::setTextbox(TextBox *array, uint8_t amount)
         return;
     }
     m_textboxConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayTextBox = array;
-    DisplayFK::qtdTextBox = amount;
+    arrayTextBox = array;
+    qtdTextBox = amount;
 
     setupKeyboard();
 }
@@ -529,8 +430,8 @@ void DisplayFK::setTextbox(TextBox *array, uint8_t amount)
  */
 void DisplayFK::setupKeyboard()
 {
-    m_pKeyboard.setup();
-    DisplayFK::keyboard = &m_pKeyboard;
+    //m_pKeyboard.setup();
+    //DisplayFK::keyboard = &m_pKeyboard;
 }
 
 /**
@@ -540,7 +441,7 @@ void DisplayFK::setupKeyboard()
 void DisplayFK::insertCharTextbox(char c)
 {
     if(DisplayFK::keyboard){
-        m_pKeyboard.insertChar(c);
+        keyboard->insertChar(c);
     }else{
         DEBUG_E("Keyboard not configured");
     }
@@ -555,7 +456,7 @@ void DisplayFK::insertCharTextbox(char c)
  * @param array Pointer to the button array
  * @param amount Number of buttons in the array
  */
-void DisplayFK::setToggle(ToggleButton *array, uint8_t amount)
+void DisplayFK::setToggle(ToggleButton *array[], uint8_t amount)
 {
     if (m_toggleConfigured)
     {
@@ -563,8 +464,8 @@ void DisplayFK::setToggle(ToggleButton *array, uint8_t amount)
         return;
     }
     m_toggleConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayToggleBtn = array;
-    DisplayFK::qtdToggle = amount;
+    arrayToggleBtn = array;
+    qtdToggle = amount;
 }
 #endif
 
@@ -575,7 +476,7 @@ void DisplayFK::setToggle(ToggleButton *array, uint8_t amount)
  * @param array Pointer to the touch area array
  * @param amount Number of areas in the array
  */
-void DisplayFK::setTouchArea(TouchArea *array, uint8_t amount)
+void DisplayFK::setTouchArea(TouchArea *array[], uint8_t amount)
 {
     if (m_touchAreaConfigured)
     {
@@ -583,8 +484,8 @@ void DisplayFK::setTouchArea(TouchArea *array, uint8_t amount)
         return;
     }
     m_touchAreaConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayTouchArea = array;
-    DisplayFK::qtdTouchArea = amount;
+    arrayTouchArea = array;
+    qtdTouchArea = amount;
 }
 #endif
 
@@ -595,7 +496,7 @@ void DisplayFK::setTouchArea(TouchArea *array, uint8_t amount)
  * @param array Pointer to the viewer array
  * @param amount Number of viewers in the array
  */
-void DisplayFK::setVAnalog(VAnalog *array, uint8_t amount)
+void DisplayFK::setVAnalog(VAnalog *array[], uint8_t amount)
 {
     if (m_vAnalogConfigured)
     {
@@ -603,8 +504,8 @@ void DisplayFK::setVAnalog(VAnalog *array, uint8_t amount)
         return;
     }
     m_vAnalogConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayVAnalog = array;
-    DisplayFK::qtdVAnalog = amount;
+    arrayVAnalog = array;
+    qtdVAnalog = amount;
 }
 #endif
 
@@ -615,7 +516,7 @@ void DisplayFK::setVAnalog(VAnalog *array, uint8_t amount)
  * @param array Pointer to the bar array
  * @param amount Number of bars in the array
  */
-void DisplayFK::setVBar(VBar *array, uint8_t amount)
+void DisplayFK::setVBar(VBar *array[], uint8_t amount)
 {
     if (m_vBarConfigured)
     {
@@ -623,8 +524,8 @@ void DisplayFK::setVBar(VBar *array, uint8_t amount)
         return;
     }
     m_vBarConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayVBar = array;
-    DisplayFK::qtdVBar = amount;
+    arrayVBar = array;
+    qtdVBar = amount;
 }
 #endif
 
@@ -635,7 +536,7 @@ void DisplayFK::setVBar(VBar *array, uint8_t amount)
  * @param array Pointer to the image array
  * @param amount Number of images in the array
  */
-void DisplayFK::setImage(Image *array, uint8_t amount)
+void DisplayFK::setImage(Image *array[], uint8_t amount)
 {
     if (m_imageConfigured)
     {
@@ -643,8 +544,8 @@ void DisplayFK::setImage(Image *array, uint8_t amount)
         return;
     }
     m_imageConfigured = (amount > 0 && array != nullptr);
-    DisplayFK::arrayImage = array;
-    DisplayFK::qtdImage = amount;
+    arrayImage = array;
+    qtdImage = amount;
     DEBUG_D("Configuring image: %i", amount);
 }
 #endif
@@ -1047,11 +948,24 @@ void DisplayFK::addLog(const char *data)
  */
 DisplayFK::DisplayFK() : m_configs(), m_runningTransaction(false)
 {
-    // DisplayFK::instance = this;
+    DisplayFK::instance = this;
     WidgetBase::fontBold = const_cast<GFXfont *>(&Roboto_Bold5pt7b);
     WidgetBase::fontNormal = const_cast<GFXfont *>(&Roboto_Bold5pt7b);
 
     
+
+    
+}
+
+void DisplayFK::startKeyboards(){
+    #ifdef DFK_TEXTBOX
+        keyboard = new WKeyboard();
+        keyboard->setup();
+    #endif
+    #ifdef DFK_NUMBERBOX
+        numpad = new Numpad();
+        numpad->setup();
+    #endif
 }
 
 /**
@@ -1298,12 +1212,13 @@ void DisplayFK::setFontBold(const GFXfont *_font)
  */
 void DisplayFK::startTouch(uint16_t w, uint16_t h, uint8_t _rotation, SPIClass *_sharedSPI = nullptr)
 {
-    touchExterno = new TouchScreen();
+    DEBUG_E("startTouch not implemented.");
+    /*touchExterno = new TouchScreen();
 
     if (touchExterno)
     {
         touchExterno->setDimension(w, h, _rotation);
-    }
+    }*/
 }
 
 #if defined(TOUCH_XPT2046)
@@ -1384,7 +1299,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdTouchArea); indice++)
         {
-            arrayTouchArea[indice].redraw();
+            arrayTouchArea[indice]->redraw();
         }
     }
     else
@@ -1398,8 +1313,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdCheckbox); indice++)
         {
-            arrayCheckbox[indice].forceUpdate();
-            arrayCheckbox[indice].redraw();
+            arrayCheckbox[indice]->forceUpdate();
+            arrayCheckbox[indice]->redraw();
         }
     }
     else
@@ -1412,8 +1327,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdCircleBtn); indice++)
         {
-            arrayCircleBtn[indice].forceUpdate();
-            arrayCircleBtn[indice].redraw();
+            arrayCircleBtn[indice]->forceUpdate();
+            arrayCircleBtn[indice]->redraw();
         }
     }
     else
@@ -1426,8 +1341,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdSpinbox); indice++)
         {
-            arraySpinbox[indice].drawBackground();
-            arraySpinbox[indice].redraw();
+            arraySpinbox[indice]->drawBackground();
+            arraySpinbox[indice]->redraw();
         }
     }
     else
@@ -1440,8 +1355,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdGauge); indice++)
         {
-            arrayGauge[indice].forceUpdate();
-            arrayGauge[indice].drawBackground();
+            arrayGauge[indice]->forceUpdate();
+            arrayGauge[indice]->drawBackground();
         }
     }
     else
@@ -1456,8 +1371,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdCircularBar); indice++)
         {
-            arrayCircularBar[indice].forceUpdate();
-            arrayCircularBar[indice].drawBackground();
+            arrayCircularBar[indice]->forceUpdate();
+            arrayCircularBar[indice]->drawBackground();
         }
     }
     else
@@ -1471,8 +1386,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdHSlider); indice++)
         {
-            arrayHSlider[indice].forceUpdate();
-            arrayHSlider[indice].drawBackground();
+            arrayHSlider[indice]->forceUpdate();
+            arrayHSlider[indice]->drawBackground();
         }
     }
     else
@@ -1485,8 +1400,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdLabel); indice++)
         {
-            arrayLabel[indice].forceUpdate();
-            arrayLabel[indice].redraw();
+            arrayLabel[indice]->forceUpdate();
+            arrayLabel[indice]->redraw();
         }
     }
     else
@@ -1499,8 +1414,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdLed); indice++)
         {
-            arrayLed[indice].forceUpdate();
-            arrayLed[indice].redraw();
+            arrayLed[indice]->forceUpdate();
+            arrayLed[indice]->redraw();
         }
     }
     else
@@ -1513,8 +1428,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdLineChart); indice++)
         {
-            arrayLineChart[indice].forceUpdate();
-            arrayLineChart[indice].drawBackground();
+            arrayLineChart[indice]->forceUpdate();
+            arrayLineChart[indice]->drawBackground();
         }
     }
     else
@@ -1527,8 +1442,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdRadioGroup); indice++)
         {
-            arrayRadioGroup[indice].forceUpdate();
-            arrayRadioGroup[indice].redraw();
+            arrayRadioGroup[indice]->forceUpdate();
+            arrayRadioGroup[indice]->redraw();
         }
     }
     else
@@ -1541,8 +1456,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdRectBtn); indice++)
         {
-            arrayRectBtn[indice].forceUpdate();
-            arrayRectBtn[indice].redraw();
+            arrayRectBtn[indice]->forceUpdate();
+            arrayRectBtn[indice]->redraw();
         }
     }
     else
@@ -1555,8 +1470,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdToggle); indice++)
         {
-            arrayToggleBtn[indice].forceUpdate();
-            arrayToggleBtn[indice].redraw();
+            arrayToggleBtn[indice]->forceUpdate();
+            arrayToggleBtn[indice]->redraw();
         }
     }
     else
@@ -1570,7 +1485,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdTextButton); indice++)
         {
-            arrayTextButton[indice].redraw();
+            arrayTextButton[indice]->redraw();
         }
     }
     else
@@ -1584,8 +1499,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdVBar); indice++)
         {
-            arrayVBar[indice].forceUpdate();
-            arrayVBar[indice].drawBackground();
+            arrayVBar[indice]->forceUpdate();
+            arrayVBar[indice]->drawBackground();
         }
     }
     else
@@ -1598,8 +1513,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdVAnalog); indice++)
         {
-            arrayVAnalog[indice].forceUpdate();
-            arrayVAnalog[indice].drawBackground();
+            arrayVAnalog[indice]->forceUpdate();
+            arrayVAnalog[indice]->drawBackground();
         }
     }
     else
@@ -1612,8 +1527,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdTextBox); indice++)
         {
-            arrayTextBox[indice].forceUpdate();
-            arrayTextBox[indice].redraw();
+            arrayTextBox[indice]->forceUpdate();
+            arrayTextBox[indice]->redraw();
         }
     }
     else
@@ -1626,8 +1541,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdNumberBox); indice++)
         {
-            arrayNumberbox[indice].forceUpdate();
-            arrayNumberbox[indice].redraw();
+            arrayNumberbox[indice]->forceUpdate();
+            arrayNumberbox[indice]->redraw();
         }
     }
     else
@@ -1640,8 +1555,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for (register uint32_t indice = 0; indice < (qtdImage); indice++)
         {
-            arrayImage[indice].forceUpdate();
-            arrayImage[indice].draw();
+            arrayImage[indice]->forceUpdate();
+            arrayImage[indice]->draw();
             //arrayImage[indice].redraw();
         }
     }
@@ -1657,12 +1572,14 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
  */
 void DisplayFK::createTask()
 {
-    setup();
+    this->setup();
+    this->startKeyboards();
+
     BaseType_t xRetorno;
     xRetorno = xTaskCreatePinnedToCore(DisplayFK::TaskEventoTouch, "TaskEventoTouch", configMINIMAL_STACK_SIZE + 3048, this, 1, &m_hndTaskEventoTouch, 0);
     if (xRetorno == pdFAIL)
     {
-        DEBUG_E("Cant create task to read touch");
+        DEBUG_E("Cant create task to read touch or draw widgets");
     }
 }
 
@@ -1800,15 +1717,17 @@ void DisplayFK::processTouchableWidgets(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processEmptyAreaTouch(uint16_t xTouch, uint16_t yTouch) {
 #if defined(DFK_TOUCHAREA)
-    if (m_touchAreaConfigured) {
+    if(!m_touchAreaConfigured || !arrayTouchArea){
+        return;
+    }
+    
         for (uint32_t indice = 0; indice < qtdTouchArea; indice++) {
-            if (arrayTouchArea[indice].detectTouch(&xTouch, &yTouch)) {
-                functionCB_t cb = arrayTouchArea[indice].getCallbackFunc();
+            if (arrayTouchArea[indice]->detectTouch(&xTouch, &yTouch)) {
+                functionCB_t cb = arrayTouchArea[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
                 return;
             }
         }
-    }
 #endif
 }
 
@@ -1819,15 +1738,18 @@ void DisplayFK::processEmptyAreaTouch(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processCheckboxTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_CHECKBOX
-    if (m_checkboxConfigured) {
+    if(!m_checkboxConfigured || !arrayCheckbox){
+        return;
+    }
+    
         for (uint32_t indice = 0; indice < qtdCheckbox; indice++) {
-            if (arrayCheckbox[indice].detectTouch(&xTouch, &yTouch)) {
-                functionCB_t cb = arrayCheckbox[indice].getCallbackFunc();
+            if (arrayCheckbox[indice]->detectTouch(&xTouch, &yTouch)) {
+                functionCB_t cb = arrayCheckbox[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
                 return;
             }
         }
-    }
+    
 #endif
 }
 
@@ -1838,15 +1760,17 @@ void DisplayFK::processCheckboxTouch(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processCircleButtonTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_CIRCLEBTN
-    if (m_circleButtonConfigured) {
+    if(!m_circleButtonConfigured || !arrayCircleBtn){
+        return;
+    }
+    
         for (uint32_t indice = 0; indice < qtdCircleBtn; indice++) {
-            if (arrayCircleBtn[indice].detectTouch(&xTouch, &yTouch)) {
-                functionCB_t cb = arrayCircleBtn[indice].getCallbackFunc();
+            if (arrayCircleBtn[indice]->detectTouch(&xTouch, &yTouch)) {
+                functionCB_t cb = arrayCircleBtn[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
                 return;
             }
         }
-    }
 #endif
 }
 
@@ -1857,18 +1781,17 @@ void DisplayFK::processCircleButtonTouch(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processHSliderTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_HSLIDER
-    if (m_hSliderConfigured) {
+    if(!m_hSliderConfigured || !arrayHSlider){
+        return;
+    }
+    
         for (uint32_t indice = 0; indice < qtdHSlider; indice++) {
-            if (arrayHSlider[indice].detectTouch(&xTouch, &yTouch)) {
-                /*while(arrayHSlider[indice].detectTouch(&xTouch, &yTouch)){
-                    vTaskDelay(pdMS_TO_TICKS(1));
-                }*/
-                functionCB_t cb = arrayHSlider[indice].getCallbackFunc();
+            if (arrayHSlider[indice]->detectTouch(&xTouch, &yTouch)) {
+                functionCB_t cb = arrayHSlider[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
                 return;
             }
         }
-    }
 #endif
 }
 
@@ -1879,15 +1802,17 @@ void DisplayFK::processHSliderTouch(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processRadioGroupTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_RADIO
-    if (m_radioGroupConfigured) {
+    if(!m_radioGroupConfigured || !arrayRadioGroup){
+        return;
+    }
+    
         for (uint32_t indice = 0; indice < qtdRadioGroup; indice++) {
-            if (arrayRadioGroup[indice].detectTouch(&xTouch, &yTouch)) {
-                functionCB_t cb = arrayRadioGroup[indice].getCallbackFunc();
+            if (arrayRadioGroup[indice]->detectTouch(&xTouch, &yTouch)) {
+                functionCB_t cb = arrayRadioGroup[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
                 return;
             }
         }
-    }
 #endif
 }
 
@@ -1898,15 +1823,17 @@ void DisplayFK::processRadioGroupTouch(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processRectButtonTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_RECTBTN
-    if (m_rectButtonConfigured) {
+    if(!m_rectButtonConfigured || !arrayRectBtn){
+        return;
+    }
+    
         for (uint32_t indice = 0; indice < qtdRectBtn; indice++) {
-            if (arrayRectBtn[indice].detectTouch(&xTouch, &yTouch)) {
-                functionCB_t cb = arrayRectBtn[indice].getCallbackFunc();
+            if (arrayRectBtn[indice]->detectTouch(&xTouch, &yTouch)) {
+                functionCB_t cb = arrayRectBtn[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
                 return;
             }
         }
-    }
 #endif
 }
 
@@ -1917,15 +1844,17 @@ void DisplayFK::processRectButtonTouch(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processImageTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_IMAGE
-    if (m_imageConfigured) {
+    if(!m_imageConfigured || !arrayImage){
+        return;
+    }
+    
         for (uint32_t indice = 0; indice < qtdImage; indice++) {
-            if (arrayImage[indice].detectTouch(&xTouch, &yTouch)) {
-                functionCB_t cb = arrayImage[indice].getCallbackFunc();
+            if (arrayImage[indice]->detectTouch(&xTouch, &yTouch)) {
+                functionCB_t cb = arrayImage[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
                 return;
             }
         }
-    }
 #endif
 }
 
@@ -1936,15 +1865,18 @@ void DisplayFK::processImageTouch(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processSpinboxTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_SPINBOX
-    if (m_spinboxConfigured) {
+    if(!m_spinboxConfigured || !arraySpinbox){
+        return;
+    }
+    
         for (uint32_t indice = 0; indice < qtdSpinbox; indice++) {
-            if (arraySpinbox[indice].detectTouch(&xTouch, &yTouch)) {
-                functionCB_t cb = arraySpinbox[indice].getCallbackFunc();
+            if (arraySpinbox[indice]->detectTouch(&xTouch, &yTouch)) {
+                functionCB_t cb = arraySpinbox[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
                 return;
             }
         }
-    }
+    
 #endif
 }
 
@@ -1955,16 +1887,18 @@ void DisplayFK::processSpinboxTouch(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processToggleTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_TOGGLE
-    if (m_toggleConfigured) {
+    if(!m_toggleConfigured || !arrayToggleBtn){
+        return;
+    }
+
         for (uint32_t indice = 0; indice < qtdToggle; indice++) {
-            if (arrayToggleBtn[indice].detectTouch(&xTouch, &yTouch)) {
+            if (arrayToggleBtn[indice]->detectTouch(&xTouch, &yTouch)) {
                 //funcaoCB = arrayToggleBtn[indice].getCallbackFunc();
-                functionCB_t cb = arrayToggleBtn[indice].getCallbackFunc();
+                functionCB_t cb = arrayToggleBtn[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
                 return;
             }
         }
-    }
 #endif
 }
 
@@ -1975,13 +1909,15 @@ void DisplayFK::processToggleTouch(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processTextButtonTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_TEXTBUTTON
-    if (m_textButtonConfigured) {
-        for (uint32_t indice = 0; indice < qtdTextButton; indice++) {
-            if (arrayTextButton[indice].detectTouch(&xTouch, &yTouch)) {
-                functionCB_t cb = arrayTextButton[indice].getCallbackFunc();
-                WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-                return;
-            }
+    if(!m_textButtonConfigured || !arrayTextButton){
+        return;
+    }
+    
+    for (uint32_t indice = 0; indice < qtdTextButton; indice++) {
+        if (arrayTextButton[indice]->detectTouch(&xTouch, &yTouch)) {
+            functionCB_t cb = arrayTextButton[indice]->getCallbackFunc();
+            WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
+            return;
         }
     }
 #endif
@@ -1994,10 +1930,17 @@ void DisplayFK::processTextButtonTouch(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_TEXTBOX
-    if (m_textboxConfigured) {
+    if(!m_textboxConfigured || !arrayTextBox || !keyboard){
+        return;
+    }
         for (uint32_t indice = 0; indice < qtdTextBox; indice++) {
-            if (arrayTextBox[indice].detectTouch(&xTouch, &yTouch)) {
-                keyboard->open(&arrayTextBox[indice]);
+            if (arrayTextBox[indice] == nullptr) {
+                DEBUG_E("TextBox pointer is null");
+                continue;
+            }
+
+            if (arrayTextBox[indice]->detectTouch(&xTouch, &yTouch) && keyboard) {
+                keyboard->open(arrayTextBox[indice]);
                 WKeyboard::PressedKeyType pressedKey = WKeyboard::PressedKeyType::NONE;
 
                 while (WidgetBase::usingKeyboard) {
@@ -2009,7 +1952,7 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
                         if (pressedKey == WKeyboard::PressedKeyType::RETURN) {
                             WidgetBase::loadScreen = keyboard->m_field->parentScreen;
                             keyboard->close();
-                            functionCB_t cb = arrayTextBox[indice].getCallbackFunc();
+                            functionCB_t cb = arrayTextBox[indice]->getCallbackFunc();
                             WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
                             return;
                         }
@@ -2018,7 +1961,6 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
                 }
             }
         }
-    }
 #endif
 }
 
@@ -2029,10 +1971,17 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
  */
 void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_NUMBERBOX
-    if (m_numberboxConfigured) {
+        if(!m_numberboxConfigured || !arrayNumberbox || !numpad){
+            return;
+        }
+
         for (uint32_t indice = 0; indice < qtdNumberBox; indice++) {
-            if (arrayNumberbox[indice].detectTouch(&xTouch, &yTouch)) {
-                numpad->open(&arrayNumberbox[indice]);
+            if (arrayNumberbox[indice] == nullptr) {
+                DEBUG_E("NumberBox pointer is null");
+                continue;
+            }
+            if (arrayNumberbox[indice]->detectTouch(&xTouch, &yTouch) && numpad) {
+                numpad->open(arrayNumberbox[indice]);
                 Numpad::PressedKeyType pressedKey = Numpad::PressedKeyType::NONE;
 
                 while (WidgetBase::usingKeyboard) {
@@ -2042,9 +1991,11 @@ void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
                     bool hasTouch = touchExterno && (touchExterno->getTouch(&internal_xTouch, &internal_yTouch, &internal_zPressure));
                     if (hasTouch && numpad->detectTouch(&internal_xTouch, &internal_yTouch, &pressedKey)) {
                         if (pressedKey == Numpad::PressedKeyType::RETURN) {
-                            WidgetBase::loadScreen = numpad->m_field->parentScreen;
+                            if (numpad->m_field && numpad->m_field->parentScreen) {
+                                WidgetBase::loadScreen = numpad->m_field->parentScreen;
+                            }
                             numpad->close();
-                            functionCB_t cb = arrayNumberbox[indice].getCallbackFunc();
+                            functionCB_t cb = arrayNumberbox[indice]->getCallbackFunc();
                             WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
                             return;
                         }
@@ -2053,7 +2004,6 @@ void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
                 }
             }
         }
-    }
 #endif
 }
 
@@ -2097,14 +2047,6 @@ void DisplayFK::loopTask() {
         vTaskDelay(pdMS_TO_TICKS(5));
     }
 
-    // Process callback function
-    /*if (funcaoCB) {
-        log_d("Executing funcaoCB on taskloop");
-        (*funcaoCB)();
-        funcaoCB = nullptr;
-        log_d("Done and cleaned funcaoCB on taskloop");
-    }*/
-
     // Process log queue
     processLogQueue();
 
@@ -2140,7 +2082,7 @@ void DisplayFK::loopTask() {
 
     // Calculate and log execution time
     startTime = micros() - startTime;
-    vTaskDelay(pdMS_TO_TICKS(5));
+    vTaskDelay(pdMS_TO_TICKS(1));
 }
 
 /**
@@ -2150,16 +2092,19 @@ void DisplayFK::loopTask() {
 void DisplayFK::TaskEventoTouch(void *pvParameters)
 {
     //(void)pvParameters;
-    DisplayFK *instance = static_cast<DisplayFK *>(pvParameters);
+    //DisplayFK *instance = static_cast<DisplayFK *>(pvParameters);
 
-    instance->changeWTD(false);
+    DisplayFK::instance->changeWTD(false);
 
     DEBUG_D("TaskEventoTouch created");
     // const TickType_t xDelay = 10 / portTICK_PERIOD_MS;
 
     for (;;)
     {
-        instance->loopTask();
+        if(DisplayFK::instance){
+            DisplayFK::instance->loopTask();
+        }
+        vTaskDelay(pdMS_TO_TICKS(1));
     }
 }
 
@@ -2341,7 +2286,7 @@ void DisplayFK::updateCircularBar() {
 
     if (m_circularBarConfigured) {
         for (uint32_t indice = 0; indice < qtdCircularBar; indice++) {
-            arrayCircularBar[indice].redraw();
+            arrayCircularBar[indice]->redraw();
         }
     }
 #endif
@@ -2354,7 +2299,7 @@ void DisplayFK::updateGauge() {
 #ifdef DFK_GAUGE
     if (m_gaugeConfigured) {
         for (uint32_t indice = 0; indice < qtdGauge; indice++) {
-            arrayGauge[indice].redraw();
+            arrayGauge[indice]->redraw();
         }
     }
 #endif
@@ -2367,7 +2312,7 @@ void DisplayFK::updateLabel() {
 #ifdef DFK_LABEL
     if (m_labelConfigured) {
         for (uint32_t indice = 0; indice < qtdLabel; indice++) {
-            arrayLabel[indice].redraw();
+            arrayLabel[indice]->redraw();
         }
     }
 #endif
@@ -2380,7 +2325,7 @@ void DisplayFK::updateLed() {
 #ifdef DFK_LED
     if (m_ledConfigured) {
         for (uint32_t indice = 0; indice < qtdLed; indice++) {
-            arrayLed[indice].redraw();
+            arrayLed[indice]->redraw();
         }
     }
 #endif
@@ -2393,7 +2338,7 @@ void DisplayFK::updateLineChart() {
 #ifdef DFK_LINECHART
     if (m_lineChartConfigured) {
         for (uint32_t indice = 0; indice < qtdLineChart; indice++) {
-            arrayLineChart[indice].redraw();
+            arrayLineChart[indice]->redraw();
         }
     }
 #endif
@@ -2406,7 +2351,7 @@ void DisplayFK::updateVBar() {
 #ifdef DFK_VBAR
     if (m_vBarConfigured) {
         for (uint32_t indice = 0; indice < qtdVBar; indice++) {
-            arrayVBar[indice].redraw();
+            arrayVBar[indice]->redraw();
         }
     }
 #endif
@@ -2419,7 +2364,7 @@ void DisplayFK::updateVAnalog() {
 #ifdef DFK_VANALOG
     if (m_vAnalogConfigured) {
         for (uint32_t indice = 0; indice < qtdVAnalog; indice++) {
-            arrayVAnalog[indice].redraw();
+            arrayVAnalog[indice]->redraw();
         }
     }
 #endif
@@ -2432,7 +2377,7 @@ void DisplayFK::updateCheckbox() {
 #ifdef DFK_CHECKBOX
     if (m_checkboxConfigured) {
         for (uint32_t indice = 0; indice < qtdCheckbox; indice++) {
-            arrayCheckbox[indice].redraw();
+            arrayCheckbox[indice]->redraw();
         }
     }
 #endif
@@ -2445,7 +2390,7 @@ void DisplayFK::updateCircleButton() {
 #ifdef DFK_CIRCLEBTN
     if (m_circleButtonConfigured) {
         for (uint32_t indice = 0; indice < qtdCircleBtn; indice++) {
-            arrayCircleBtn[indice].redraw();
+            arrayCircleBtn[indice]->redraw();
         }
     }
 #endif
@@ -2458,7 +2403,7 @@ void DisplayFK::updateHSlider() {
 #ifdef DFK_HSLIDER
     if (m_hSliderConfigured) {
         for (uint32_t indice = 0; indice < qtdHSlider; indice++) {
-            arrayHSlider[indice].redraw();
+            arrayHSlider[indice]->redraw();
         }
     }
 #endif
@@ -2471,7 +2416,7 @@ void DisplayFK::updateRadioGroup() {
 #ifdef DFK_RADIO
     if (m_radioGroupConfigured) {
         for (uint32_t indice = 0; indice < qtdRadioGroup; indice++) {
-            arrayRadioGroup[indice].redraw();
+            arrayRadioGroup[indice]->redraw();
         }
     }
 #endif
@@ -2484,7 +2429,7 @@ void DisplayFK::updateRectButton() {
 #ifdef DFK_RECTBTN
     if (m_rectButtonConfigured) {
         for (uint32_t indice = 0; indice < qtdRectBtn; indice++) {
-            arrayRectBtn[indice].redraw();
+            arrayRectBtn[indice]->redraw();
         }
     }
 #endif
@@ -2497,7 +2442,7 @@ void DisplayFK::updateToggle() {
 #ifdef DFK_TOGGLE
     if (m_toggleConfigured) {
         for (uint32_t indice = 0; indice < qtdToggle; indice++) {
-            arrayToggleBtn[indice].redraw();
+            arrayToggleBtn[indice]->redraw();
         }
     }
 #endif
@@ -2511,7 +2456,7 @@ void DisplayFK::updateImage() {
 #ifdef DFK_IMAGE
     if (m_imageConfigured) {
         for (uint32_t indice = 0; indice < qtdImage; indice++) {
-            arrayImage[indice].redraw();
+            arrayImage[indice]->redraw();
         }
     }
 #endif
@@ -2524,7 +2469,7 @@ void DisplayFK::updateTextButton() {
 #ifdef DFK_TEXTBUTTON
     if (m_textButtonConfigured) {
         for (uint32_t indice = 0; indice < qtdTextButton; indice++) {
-            arrayTextButton[indice].redraw();
+            arrayTextButton[indice]->redraw();
         }
     }
 #endif
@@ -2537,7 +2482,7 @@ void DisplayFK::updateSpinbox() {
 #ifdef DFK_SPINBOX
     if (m_spinboxConfigured) {
         for (uint32_t indice = 0; indice < qtdSpinbox; indice++) {
-            arraySpinbox[indice].redraw();
+            arraySpinbox[indice]->redraw();
         }
     }
 #endif
@@ -2550,7 +2495,7 @@ void DisplayFK::updateTextBox() {
 #ifdef DFK_TEXTBOX
     if (m_textboxConfigured) {
         for (uint32_t indice = 0; indice < qtdTextBox; indice++) {
-            arrayTextBox[indice].redraw();
+            arrayTextBox[indice]->redraw();
         }
     }
 #endif
@@ -2560,7 +2505,7 @@ void DisplayFK::updateNumberBox(){
     #ifdef DFK_NUMBERBOX
     if (m_numberboxConfigured) {
         for (uint32_t indice = 0; indice < qtdNumberBox; indice++) {
-            arrayNumberbox[indice].redraw();
+            arrayNumberbox[indice]->redraw();
         }
     }
 #endif

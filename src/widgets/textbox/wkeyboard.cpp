@@ -46,6 +46,7 @@ const char *WKeyboard::m_alphabetCap[WKeyboard::aRows][WKeyboard::aCols] = {
  */
 WKeyboard::WKeyboard(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen)
 {
+
 }
 
 /**
@@ -198,6 +199,10 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
  */
 void WKeyboard::redraw(bool fullScreen, bool onlyContent)
 {
+    if(!loaded){
+        Serial.println("Keyboard not loaded");
+        return;
+    }
     if (fullScreen)
     {
         WidgetBase::objTFT->fillScreen(WidgetBase::lightMode ? CFK_WHITE : CFK_BLACK);

@@ -282,15 +282,24 @@ bool TouchScreen::touch_touched()
   m_ts->read();
   if (m_ts->isTouched)
   {
-#if defined(TOUCH_SWAP_XY)
+#if TOUCH_SWAP_XY
     m_touch_last_x = map(m_ts->points[0].y, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, m_widthScreen - 1);
     m_touch_last_y = map(m_ts->points[0].x, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, m_heightScreen - 1);
     m_touch_last_z = -1;
 #else
     // Raw touch coordinates
-    Serial.printf("Raw touch coordinates: %i, %i\n", m_ts->points[0].x, m_ts->points[0].y);
+    //Serial.printf("Raw touch coordinates: %i, %i\n", m_ts->points[0].x, m_ts->points[0].y);
+    #if TOUCH_INVERT_X
+    m_touch_last_x = map(m_ts->points[0].x, TOUCH_MAP_X1, TOUCH_MAP_X2, m_widthScreen - 1, 0);
+    #else
     m_touch_last_x = map(m_ts->points[0].x, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, m_widthScreen - 1);
+    #endif
+
+    #if TOUCH_INVERT_Y
+    m_touch_last_y = map(m_ts->points[0].y, TOUCH_MAP_Y1, TOUCH_MAP_Y2, m_heightScreen - 1, 0);
+    #else
     m_touch_last_y = map(m_ts->points[0].y, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, m_heightScreen - 1);
+    #endif
     m_touch_last_z = -1;
 #endif
 
@@ -342,7 +351,7 @@ bool TouchScreen::touch_touched()
                                                              // Serial.printf("Raw xyz[%i\t%i\t%i]\n", xTouch, yTouch, zTouch);
                                                              // Serial.printf("Scr xyz[%i\t%i\t%i]\n", toque.x, toque.y, zTouch);
 
-#if defined(TOUCH_SWAP_XY)
+#if TOUCH_SWAP_XY
 
     m_ts->x = constrain(xTouch, m_calibMatrix[2], m_calibMatrix[3]);
     m_ts->y = constrain(yTouch, m_calibMatrix[0], m_calibMatrix[1]);

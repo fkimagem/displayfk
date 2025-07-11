@@ -183,6 +183,10 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, Numpad::PressedKe
  */
 void Numpad::redraw(bool fullScreen, bool onlyContent)
 {
+    if(!loaded){
+        Serial.println("Numpad not loaded");
+        return;
+    }
     if (fullScreen)
     {
         WidgetBase::objTFT->fillScreen(WidgetBase::lightMode ? CFK_WHITE : CFK_BLACK);
@@ -202,7 +206,7 @@ void Numpad::redraw(bool fullScreen, bool onlyContent)
 
     WidgetBase::objTFT->setTextColor(CFK_BLACK);
     TextBound_t area;
-    WidgetBase::objTFT->getTextBounds("N", 50, 50, &area.x, &area.y, &area.width, &area.height);
+    WidgetBase::objTFT->getTextBounds("M", 50, 50, &area.x, &area.y, &area.width, &area.height);
 
 
     uint16_t qtdLetrasMax = m_pontoPreview.width / area.width;
