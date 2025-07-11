@@ -2026,7 +2026,7 @@ void DisplayFK::updateWidgets() {
         updateRectButton();
         updateToggle();
         //updateImage();
-        updateTextButton();
+        //updateTextButton();
         updateSpinbox();
         updateNumberBox();
         updateTextBox();
