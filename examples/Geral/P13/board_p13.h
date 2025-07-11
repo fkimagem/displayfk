@@ -11,5 +11,9 @@
 #define TOUCH_MAP_X2 0
 #define TOUCH_MAP_Y1 480
 #define TOUCH_MAP_Y2 0
+#define TOUCH_SWAP_XY false
+#define TOUCH_INVERT_Y true
+#define TOUCH_INVERT_X true
+
 
 #pragma message("Display yellow + ESP32S3 embedded 7inch + GT911")

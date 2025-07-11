@@ -103,7 +103,6 @@ typedef struct {
 class DisplayFK
 {
 private:
-    //static functionCB_t funcaoCB;   ///< Callback function for the current widget interaction.
     static QueueHandle_t xFilaLog; ///< Queue handle for log data.
     TaskHandle_t m_hndTaskEventoTouch; ///< Handle for the touch event task.
     Preferences m_configs;             ///< Preferences for storing and accessing configuration data.
@@ -116,114 +115,114 @@ private:
 
 
 #if defined(DFK_TOUCHAREA)
-    static uint8_t qtdTouchArea;      ///< Number of TouchArea widgets.
-    static TouchArea *arrayTouchArea; ///< Array of TouchArea widgets.
+    uint8_t qtdTouchArea = 0;      ///< Number of TouchArea widgets.
+    TouchArea **arrayTouchArea = nullptr; ///< Array of TouchArea widgets.
     bool m_touchAreaConfigured = false; ///< Flag indicating if TouchArea is configured.
 #endif
 
 #ifdef DFK_CHECKBOX
-    static uint8_t qtdCheckbox;      ///< Number of CheckBox widgets.
-    static CheckBox *arrayCheckbox;  ///< Array of CheckBox widgets.
+    uint8_t qtdCheckbox = 0;      ///< Number of CheckBox widgets.
+    CheckBox **arrayCheckbox = nullptr;  ///< Array of CheckBox widgets.
     bool m_checkboxConfigured = false; ///< Flag indicating if CheckBox is configured.
 #endif
 
 #ifdef DFK_CIRCLEBTN
-    static uint8_t qtdCircleBtn;         ///< Number of CircleButton widgets.
-    static CircleButton *arrayCircleBtn; ///< Array of CircleButton widgets.
+    uint8_t qtdCircleBtn = 0;         ///< Number of CircleButton widgets.
+    CircleButton **arrayCircleBtn = nullptr; ///< Array of CircleButton widgets.
     bool m_circleButtonConfigured = false; ///< Flag indicating if CircleButton is configured.
 #endif
 
 #ifdef DFK_GAUGE
-    static uint8_t qtdGauge;       ///< Number of GaugeSuper widgets.
-    static GaugeSuper *arrayGauge; ///< Array of GaugeSuper widgets.
+    uint8_t qtdGauge = 0;       ///< Number of GaugeSuper widgets.
+    GaugeSuper **arrayGauge = nullptr; ///< Array of GaugeSuper widgets.
     bool m_gaugeConfigured = false;  ///< Flag indicating if GaugeSuper is configured.
 #endif
 
 #ifdef DFK_CIRCULARBAR
-    static uint8_t qtdCircularBar;        ///< Number of CircularBar widgets.
-    static CircularBar *arrayCircularBar; ///< Array of CircularBar widgets.
+    uint8_t qtdCircularBar = 0;        ///< Number of CircularBar widgets.
+    CircularBar **arrayCircularBar = nullptr; ///< Array of CircularBar widgets.
     bool m_circularBarConfigured = false;   ///< Flag indicating if CircularBar is configured.
 #endif
 
 #ifdef DFK_HSLIDER
-    static uint8_t qtdHSlider;      ///< Number of HSlider widgets.
-    static HSlider *arrayHSlider;   ///< Array of HSlider widgets.
+    uint8_t qtdHSlider = 0;      ///< Number of HSlider widgets.
+    HSlider **arrayHSlider = nullptr;   ///< Array of HSlider widgets.
     bool m_hSliderConfigured = false; ///< Flag indicating if HSlider is configured.
 #endif
 
 #ifdef DFK_LABEL
-    static uint8_t qtdLabel;      ///< Number of Label widgets.
-    static Label *arrayLabel;     ///< Array of Label widgets.
+    uint8_t qtdLabel = 0;      ///< Number of Label widgets.
+    Label **arrayLabel = nullptr;     ///< Array of Label widgets.
     bool m_labelConfigured = false; ///< Flag indicating if Label is configured.
 #endif
 
 #ifdef DFK_LED
-    static uint8_t qtdLed;      ///< Number of Led widgets.
-    static Led *arrayLed;       ///< Array of Led widgets.
+    uint8_t qtdLed = 0;      ///< Number of Led widgets.
+    Led **arrayLed = nullptr;       ///< Array of Led widgets.
     bool m_ledConfigured = false; ///< Flag indicating if Led is configured.
 #endif
 
 #ifdef DFK_LINECHART
-    static uint8_t qtdLineChart;      ///< Number of LineChart widgets.
-    static LineChart *arrayLineChart; ///< Array of LineChart widgets.
+    uint8_t qtdLineChart = 0;      ///< Number of LineChart widgets.
+    LineChart **arrayLineChart = nullptr; ///< Array of LineChart widgets.
     bool m_lineChartConfigured = false; ///< Flag indicating if LineChart is configured.
 #endif
 
 #ifdef DFK_RADIO
-    static uint8_t qtdRadioGroup;       ///< Number of RadioGroup widgets.
-    static RadioGroup *arrayRadioGroup; ///< Array of RadioGroup widgets.
+    uint8_t qtdRadioGroup = 0;       ///< Number of RadioGroup widgets.
+    RadioGroup **arrayRadioGroup = nullptr; ///< Array of RadioGroup widgets.
     bool m_radioGroupConfigured = false;  ///< Flag indicating if RadioGroup is configured.
 #endif
 
 #ifdef DFK_RECTBTN
-    static uint8_t qtdRectBtn;         ///< Number of RectButton widgets.
-    static RectButton *arrayRectBtn;   ///< Array of RectButton widgets.
+    uint8_t qtdRectBtn = 0;         ///< Number of RectButton widgets.
+    RectButton **arrayRectBtn = nullptr;   ///< Array of RectButton widgets.
     bool m_rectButtonConfigured = false; ///< Flag indicating if RectButton is configured.
 #endif
 
 #ifdef DFK_TOGGLE
-    static uint8_t qtdToggle;            ///< Number of ToggleButton widgets.
-    static ToggleButton *arrayToggleBtn; ///< Array of ToggleButton widgets.
+    uint8_t qtdToggle = 0;            ///< Number of ToggleButton widgets.
+    ToggleButton **arrayToggleBtn = nullptr; ///< Array of ToggleButton widgets.
     bool m_toggleConfigured = false;       ///< Flag indicating if ToggleButton is configured.
 #endif
 
 #ifdef DFK_VBAR
-    static uint8_t qtdVBar;      ///< Number of VBar widgets.
-    static VBar *arrayVBar;      ///< Array of VBar widgets.
+    uint8_t qtdVBar = 0;      ///< Number of VBar widgets.
+    VBar **arrayVBar = nullptr;      ///< Array of VBar widgets.
     bool m_vBarConfigured = false; ///< Flag indicating if VBar is configured.
 #endif
 
 #ifdef DFK_VANALOG
-    static uint8_t qtdVAnalog;      ///< Number of VAnalog widgets.
-    static VAnalog *arrayVAnalog;   ///< Array of VAnalog widgets.
+    uint8_t qtdVAnalog = 0;      ///< Number of VAnalog widgets.
+    VAnalog **arrayVAnalog = nullptr;   ///< Array of VAnalog widgets.
     bool m_vAnalogConfigured = false; ///< Flag indicating if VAnalog is configured.
 #endif
 
 #ifdef DFK_TEXTBOX
-    static uint8_t qtdTextBox;      ///< Number of TextBox widgets.
-    static TextBox *arrayTextBox;   ///< Array of TextBox widgets.
+    uint8_t qtdTextBox = 0;      ///< Number of TextBox widgets.
+    TextBox **arrayTextBox = nullptr;   ///< Array of TextBox widgets.
     bool m_textboxConfigured = false; ///< Flag indicating if TextBox is configured.
-    static WKeyboard *keyboard;     ///< Pointer to the WKeyboard instance for text input.
-    WKeyboard m_pKeyboard;            ///< Internal keyboard instance for TextBox.
+    WKeyboard *keyboard = nullptr;     ///< Pointer to the WKeyboard instance for text input.
+    //WKeyboard m_pKeyboard;            ///< Internal keyboard instance for TextBox.
 #endif
 
 #ifdef DFK_NUMBERBOX
-    static uint8_t qtdNumberBox;      ///< Number of NumberBox widgets.
-    static NumberBox *arrayNumberbox; ///< Array of NumberBox widgets.
+    uint8_t qtdNumberBox = 0;      ///< Number of NumberBox widgets.
+    NumberBox **arrayNumberbox = nullptr; ///< Array of NumberBox widgets.
     bool m_numberboxConfigured = false; ///< Flag indicating if NumberBox is configured.
-    static Numpad *numpad;            ///< Pointer to the Numpad instance for number input.
-    Numpad m_pNumpad;                   ///< Internal numpad instance for NumberBox.
+    Numpad *numpad = nullptr;            ///< Pointer to the Numpad instance for number input.
+    //Numpad m_pNumpad;                   ///< Internal numpad instance for NumberBox.
 #endif
 
 #ifdef DFK_IMAGE
-    static uint8_t qtdImage;      ///< Number of Image widgets.
-    static Image *arrayImage;     ///< Array of Image widgets.
+    uint8_t qtdImage = 0;      ///< Number of Image widgets.
+    Image **arrayImage = nullptr;     ///< Array of Image widgets.
     bool m_imageConfigured = false; ///< Flag indicating if Image is configured.
 #endif
 
 #ifdef DFK_TEXTBUTTON
-    static uint8_t qtdTextButton;       ///< Number of TextButton widgets.
-    static TextButton *arrayTextButton; ///< Array of TextButton widgets.
+    uint8_t qtdTextButton = 0;       ///< Number of TextButton widgets.
+    TextButton **arrayTextButton = nullptr; ///< Array of TextButton widgets.
     bool m_textButtonConfigured = false;  ///< Flag indicating if TextButton is configured.
 #endif
 
@@ -233,8 +232,8 @@ private:
 #endif
 
 #ifdef DFK_SPINBOX
-    static uint8_t qtdSpinbox;      ///< Number of SpinBox widgets.
-    static SpinBox *arraySpinbox;   ///< Array of SpinBox widgets.
+    uint8_t qtdSpinbox = 0;      ///< Number of SpinBox widgets.
+    SpinBox **arraySpinbox = nullptr;   ///< Array of SpinBox widgets.
     bool m_spinboxConfigured = false; ///< Flag indicating if SpinBox is configured.
 #endif
 
@@ -289,13 +288,17 @@ private:
     void updateNumberBox();
 
 public:
+    static DisplayFK *instance;
     static bool sdcardOK; ///< Indicates if the SD card is successfully initialized.
+    static void TaskEventoTouch(void *pvParamenters);
+
     bool m_runningTransaction;
 
     DisplayFK();
     ~DisplayFK();
 
     void setup();
+    void startKeyboards();
 
     void startTransaction();
     void finishTransaction();
@@ -307,6 +310,9 @@ public:
     void printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum, uint16_t _colorText, uint16_t _colorPadding, const GFXfont* _font);
     void enableTouchLog();
     void disableTouchLog();
+    void addLog(const char *data);
+    void loopTask();
+    TaskHandle_t getTaskHandle();
 
 #if (HAS_TOUCH)
 #if defined(TOUCH_XPT2046)
@@ -334,83 +340,83 @@ public:
     void changeWTD(bool enable);
 
 #ifdef DFK_CHECKBOX
-    void setCheckbox(CheckBox *array, uint8_t amount);
+    void setCheckbox(CheckBox *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_CIRCLEBTN
-    void setCircleButton(CircleButton *array, uint8_t amount);
+    void setCircleButton(CircleButton *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_GAUGE
-    void setGauge(GaugeSuper *array, uint8_t amount);
+    void setGauge(GaugeSuper *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_CIRCULARBAR
-    void setCircularBar(CircularBar *array, uint8_t amount);
+    void setCircularBar(CircularBar *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_HSLIDER
-    void setHSlider(HSlider *array, uint8_t amount);
+    void setHSlider(HSlider *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_LABEL
-    void setLabel(Label *array, uint8_t amount);
+    void setLabel(Label *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_LED
-    void setLed(Led *array, uint8_t amount);
+    void setLed(Led *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_LINECHART
-    void setLineChart(LineChart *array, uint8_t amount);
+    void setLineChart(LineChart *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_NUMBERBOX
-    void setNumberbox(NumberBox *array, uint8_t amount);
+    void setNumberbox(NumberBox *array[], uint8_t amount);
     void setupNumpad();
     void insertCharNumpad(char c);
 #endif
 
 #ifdef DFK_RADIO
-    void setRadioGroup(RadioGroup *array, uint8_t amount);
+    void setRadioGroup(RadioGroup *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_RECTBTN
-    void setRectButton(RectButton *array, uint8_t amount);
+    void setRectButton(RectButton *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_TEXTBOX
-    void setTextbox(TextBox *array, uint8_t amount);
+    void setTextbox(TextBox *array[], uint8_t amount);
     void setupKeyboard();
     void insertCharTextbox(char c);
 #endif
 
 #ifdef DFK_TOGGLE
-    void setToggle(ToggleButton *array, uint8_t amount);
+    void setToggle(ToggleButton *array[], uint8_t amount);
 #endif
 
 #if defined(DFK_TOUCHAREA)
-    void setTouchArea(TouchArea *array, uint8_t amount);
+    void setTouchArea(TouchArea *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_VANALOG
-    void setVAnalog(VAnalog *array, uint8_t amount);
+    void setVAnalog(VAnalog *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_VBAR
-    void setVBar(VBar *array, uint8_t amount);
+    void setVBar(VBar *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_IMAGE
-    void setImage(Image *array, uint8_t amount);
+    void setImage(Image *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_SPINBOX
-    void setSpinbox(SpinBox *array, uint8_t amount);
+    void setSpinbox(SpinBox *array[], uint8_t amount);
 #endif
 
 #if defined(DFK_TEXTBUTTON)
-    void setTextButton(TextButton *array, uint8_t amount);
+    void setTextButton(TextButton *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_SD
@@ -426,13 +432,7 @@ public:
     const char *generateNameFile();
 #endif
 
-    void addLog(const char *data);
     
-    static void TaskEventoTouch(void *pvParamenters);
-
-    void loopTask();
-
-    TaskHandle_t getTaskHandle();
 };
 
 #endif
