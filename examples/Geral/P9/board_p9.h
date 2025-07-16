@@ -12,5 +12,7 @@
 #define TC_CS	21 //CS, SS, nSS
 #define DISP_FREQUENCY	27000000
 #define TOUCH_FREQUENCY	2500000
+#define TOUCH_INVERT_Y false
+#define TOUCH_INVERT_X false
 
 #pragma message("Compiling for board P9")

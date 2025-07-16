@@ -37,7 +37,6 @@ Arduino_DataBus *bus = nullptr;
 Arduino_GFX *tft = nullptr;
 uint8_t rotationScreen = 1; // This value can be changed depending of orientation of your screen
 DisplayFK myDisplay;
-SPIClass spi_sd(VSPI);
 GaugeSuper gauge(230, 290, 1);
 const uint8_t qtdGauge = 1;
 GaugeSuper *arrayGauge[qtdGauge] = {&gauge};
@@ -93,6 +92,9 @@ int contador = 0; // Contador auxliar para a onda senoidal do grafico
 TimerHandle_t xTimerLeitura; // Timer para a leitura do sensor
 volatile bool podeLerSensor = false; // Variável auxiliar para a leitura do sensor
 
+void cb_LerSensor(TimerHandle_t xTimer){ // Função de callback para a leitura do sensor
+    podeLerSensor = true;
+  }
 
 void setup(){
     Serial.begin(115200);
@@ -109,8 +111,7 @@ void setup(){
     pinMode(pinBomba, OUTPUT); // Configura o pino como saída
     digitalWrite(pinBomba, initialStatusPinsRele);  // Inicializa o pino como initialStatusPinsRele
 
-    spi_sd.begin(SD_SCLK, SD_MISO, SD_MOSI, SD_CS);
-    myDisplay.startSD(SD_CS, &spi_sd);
+    
     spi_shared.begin(DISP_SCLK, DISP_MISO, DISP_MOSI);
     bus = new Arduino_HWSPI(DISP_DC, DISP_CS, DISP_SCLK, DISP_MOSI, DISP_MISO, &spi_shared);
     tft = new Arduino_ILI9488_18bit(bus, DISP_RST, rotationScreen, false);
