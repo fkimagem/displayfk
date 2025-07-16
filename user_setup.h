@@ -27,7 +27,7 @@
 #include "examples/Geral/P15/board_p15.h"
 
 #elif defined(PLACA_P9)
-#include "setup_boards/board_p9.h"
+#include "examples/Geral/P9/board_p9.h"
 
 #elif defined(PLACA_ST7735)
 #include "setup_boards/board_st7735.h"

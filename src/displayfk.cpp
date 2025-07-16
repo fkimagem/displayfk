@@ -1415,6 +1415,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
         for (register uint32_t indice = 0; indice < (qtdLed); indice++)
         {
             arrayLed[indice]->forceUpdate();
+            arrayLed[indice]->drawBackground();
             arrayLed[indice]->redraw();
         }
     }

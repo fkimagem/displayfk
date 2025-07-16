@@ -59,7 +59,7 @@ private:
 public:
   enum class CallbackOrigin{
     TOUCH = 1,
-    INTERNAL = 2
+    SELF = 2
   };
 
   static QueueHandle_t xFilaCallback; ///< Queue for callbacks
@@ -72,6 +72,7 @@ public:
   
 
   static uint16_t lightenColor565(unsigned short color, float factor);
+  static uint16_t lightenToWhite565(uint16_t color, float factor);
   static uint16_t darkenColor565(unsigned short color, float factor);
   static uint16_t blendColors(uint16_t color1, uint16_t color2, float factor);
 

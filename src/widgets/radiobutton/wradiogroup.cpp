@@ -137,7 +137,7 @@ void RadioGroup::setSelected(uint16_t clickedId)
       m_clickedId = r.id;
       m_shouldRedraw = true;
       if(cb != nullptr){
-        WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::INTERNAL);
+        WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
       }
     }
   }

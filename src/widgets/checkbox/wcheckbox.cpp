@@ -209,6 +209,6 @@ void CheckBox::setStatus(bool status)
     m_status = status;
     m_shouldRedraw = true;
     if(cb != nullptr){
-        WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::INTERNAL);
+        WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
     }
 }

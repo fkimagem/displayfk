@@ -236,7 +236,7 @@ void HSlider::setValue(int _value){
   m_value = constrain(_value, m_vmin, m_vmax);
   m_shouldRedraw = true;
   if(cb != nullptr){
-    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::INTERNAL);
+    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
   }
 
 }

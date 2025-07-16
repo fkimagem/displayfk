@@ -13,27 +13,27 @@ struct LedConfig {
 class Led : public WidgetBase
 {
 private:
+  static constexpr uint8_t m_colorLightGradientSize = 5;
   bool m_lastStatus; ///< Stores the last status of the LED for comparison.
   bool m_update; ///< Flag indicating if the LED should be updated.
   uint16_t m_radius; ///< Radius of the LED.
   uint16_t m_colorOn; ///< Color displayed when the LED is on.
   bool m_status = false; ///< Current on/off status of the LED.
+  uint16_t m_colorLightGradient[Led::m_colorLightGradientSize]; ///< Color gradient for the light effect.
+
 
   void setup(uint16_t _radius, uint16_t _colorOn);
 
 public:
  
   Led(uint16_t _x, uint16_t _y, uint8_t _screen);
-
- 
   ~Led();
 
+  void drawBackground();
   
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
-
   
   void setState(bool newValue);
-
   
   void redraw();
 

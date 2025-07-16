@@ -280,6 +280,6 @@ void SpinBox::setValue(int _value)
     m_shouldRedraw = true;
 
     if(cb != nullptr){
-        WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::INTERNAL);
+        WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
     }
 }

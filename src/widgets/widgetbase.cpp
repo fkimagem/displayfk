@@ -38,7 +38,7 @@ fs::SDFS *WidgetBase::mySD = nullptr;
 /**
  * @brief Lightens a color by a given factor.
  * @param color The color to lighten.
- * @param factor The factor to lighten the color by.
+ * @param factor The factor to lighten the color by. (0.0 to 5.0)
  * @return The lightened color.
  */
 uint16_t WidgetBase::lightenColor565(unsigned short color, float factor)
@@ -58,6 +58,31 @@ uint16_t WidgetBase::lightenColor565(unsigned short color, float factor)
 
     // Recombinar os componentes em uma cor 565
     return (red << 11) | (green << 5) | blue;
+}
+
+uint16_t WidgetBase::lightenToWhite565(uint16_t color, float factor)
+{
+    // limita factor entre 0.0 (original) e 1.0 (branco puro)
+    if (factor < 0.0f) factor = 0.0f;
+    if (factor > 1.0f) factor = 1.0f;
+
+    // extrair componentes
+    uint8_t r = (color >> 11) & 0x1F; // 5 bits
+    uint8_t g = (color >> 5) & 0x3F;  // 6 bits
+    uint8_t b = color & 0x1F;         // 5 bits
+
+    // máximos
+    const uint8_t Rmax = 0x1F;
+    const uint8_t Gmax = 0x3F;
+    const uint8_t Bmax = 0x1F;
+
+    // para clarear, aproximamos cada componente do máximo
+    r = r + (uint8_t)((Rmax - r) * factor);
+    g = g + (uint8_t)((Gmax - g) * factor);
+    b = b + (uint8_t)((Bmax - b) * factor);
+
+    // recombinar
+    return (r << 11) | (g << 5) | b;
 }
 
 /**

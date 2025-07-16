@@ -40,6 +40,16 @@ void Led::setState(bool newValue)
   // redraw();
 }
 
+void Led::drawBackground()
+{
+  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded)
+  {
+    return;
+  }
+
+  WidgetBase::objTFT->drawCircle(xPos, yPos, m_radius, CFK_BLACK);
+}
+
 /**
  * @brief Redraws the LED on the screen, updating its appearance.
  * 
@@ -48,44 +58,24 @@ void Led::setState(bool newValue)
  */
 void Led::redraw()
 {
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !m_update || !loaded)
   {
     return;
   }
-  //uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;
-//uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
-uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
-  m_lastStatus = m_status;
-  // uint16_t corOff = CFK_GREY3;
-  //WidgetBase::objTFT->fillCircle(xPos + 1, yPos - (2 * radius) + 1, radius, baseBorder);                          // Sombra circulo
-  //WidgetBase::objTFT->fillRect(xPos - (radius + 1), yPos - (2 * radius) + 1, 2 * radius, 2 * radius, baseBorder); // sombra quadrado
-  uint16_t corPintar = CFK_GREY11;
-  //uint16_t corBrilho = CFK_WHITE;
-  if (m_status)
+  if(m_status)
   {
-    corPintar = m_colorOn;
-    //corBrilho = CFK_BLACK;
+    for(uint8_t i = 0; i < m_colorLightGradientSize; i++)
+    {
+      uint8_t radius = m_radius - (i * 4);
+      if(radius > m_radius){
+        continue;//Aborta o loop se o raio for maior que o raio do LED (overflow do tipo uint8_t)
+      }
+      WidgetBase::objTFT->fillCircle(xPos - (2 * i), yPos - (2 * i), radius, m_colorLightGradient[i]);
+    }
+  }else{
+    WidgetBase::objTFT->fillCircle(xPos, yPos, m_radius - 1, CFK_GREY11);
   }
-
-  // Serial.println("led redraw: " + String(status));
-  WidgetBase::objTFT->fillCircle(xPos, yPos - (2 * m_radius), m_radius, corPintar);                                                                // circulo
-  WidgetBase::objTFT->drawCircle(xPos, yPos - (2 * m_radius), m_radius, CFK_BLACK);                                                                // borda circulo
-  WidgetBase::objTFT->fillRect(xPos - m_radius, yPos - (2 * m_radius), (2 * m_radius) + 1, (2 * m_radius), corPintar);                                     // quadrado
-  WidgetBase::objTFT->drawRect(xPos - m_radius, yPos - (2 * m_radius), (2 * m_radius) + 1, (2 * m_radius), baseBorder); // borda quadrado
-  WidgetBase::objTFT->drawFastHLine(xPos - (m_radius - 1), yPos - (2 * m_radius), 2 * m_radius - 2, corPintar);                                      // linha para esconder borda quadrado
-
-  //WidgetBase::objTFT->drawFastVLine(xPos, yPos - (3 * radius) - 10, 8, corBrilho);            // brilho cima
-  //WidgetBase::objTFT->drawFastHLine(xPos + radius + 2, yPos - (2 * radius), 8, corBrilho);    // brilho direita
-  //WidgetBase::objTFT->drawFastHLine(xPos - (radius + 10), yPos - (2 * radius), 8, corBrilho); // brilho esquerda
-
-  WidgetBase::objTFT->drawFastVLine(xPos - 4, yPos - 8, 12, baseBorder); // conector esquerda
-  WidgetBase::objTFT->drawFastVLine(xPos - 5, yPos - 8, 12, baseBorder); // conector esquerda
-  WidgetBase::objTFT->drawFastVLine(xPos + 4, yPos - 6, 12, baseBorder); // conector direita
-  WidgetBase::objTFT->drawFastVLine(xPos + 5, yPos - 6, 12, baseBorder); // conector direita
-  WidgetBase::objTFT->fillRoundRect(xPos - m_radius - 3, yPos - 2, (2 * m_radius) + 6, 4, 2, baseBorder);
-
-  //showOrigin(CFK_RED);
 
   m_update = false;
 }
@@ -114,6 +104,10 @@ void Led::setup(uint16_t _radius, uint16_t _colorOn)
 
   m_radius = _radius;
   m_colorOn = _colorOn;
+  for(uint8_t i = 0; i < m_colorLightGradientSize; i++)
+  {
+    m_colorLightGradient[i] = WidgetBase::lightenToWhite565(_colorOn, 0.08*i);
+  }
   // size = constrain(_size, 1,3);
   m_update = true;
   loaded = true;

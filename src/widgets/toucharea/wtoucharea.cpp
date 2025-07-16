@@ -80,7 +80,7 @@ void TouchArea::onClick()
     return;
   }
   if(cb != nullptr){
-    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::INTERNAL);
+    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
   }
 }
 
