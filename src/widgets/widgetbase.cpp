@@ -348,6 +348,7 @@ void WidgetBase::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t
  * @param _colorPadding Color of the padding.
  */
 void WidgetBase::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum, TextBound_t &lastTextBoud, uint16_t _colorPadding){
+    objTFT->setTextWrap(false);
     objTFT->fillRect(lastTextBoud.x, lastTextBoud.y, lastTextBoud.width, lastTextBoud.height, _colorPadding);
     //int ox = _x, oy = _y;
     WidgetBase::recalculateTextPosition(_texto, &_x, &_y, _datum);
