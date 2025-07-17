@@ -215,7 +215,8 @@ void screen1()
     tft->fillScreen(CFK_GREY3);
     WidgetBase::backgroundColor = CFK_GREY3;
     myDisplay.printText("Config do motor", 165, 17, TL_DATUM, CFK_COLOR06, CFK_GREY3, &Roboto_Regular10pt7b);
-    myDisplay.printText("Limite de temp.", 50, 107, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Limite motor", 50, 107, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Limite compr.", 50, 200, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
     myDisplay.drawWidgetsOnScreen(1);
 }
 
@@ -247,8 +248,8 @@ void loadWidgets()
         .datum = TL_DATUM,
         .fontColor = CFK_COLOR10,
         .backgroundColor = CFK_GREY3,
-        .prefix = "pref",
-        .suffix = "suf"};
+        .prefix = "Motor ",
+        .suffix = " C"};
     linhaverde.setup(configLabel0);
     LabelConfig configLabel1 = {
         .text = "Line 2",
@@ -256,8 +257,8 @@ void loadWidgets()
         .datum = TL_DATUM,
         .fontColor = CFK_COLOR04,
         .backgroundColor = CFK_GREY3,
-        .prefix = "pref",
-        .suffix = "suf"};
+        .prefix = "Compr. ",
+        .suffix = " C"};
     linhalaranja.setup(configLabel1);
     myDisplay.setLabel(arrayLabel, qtdLabel);
     LineChartConfig configLineChart0 = {
