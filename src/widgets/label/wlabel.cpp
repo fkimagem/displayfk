@@ -272,6 +272,10 @@ void Label::setup(const char *_text, const GFXfont *_fontFamily, uint16_t _datum
     m_datum = _datum;
     m_letterColor = _color;
     m_backgroundColor = _bkColor;
+    m_lastArea.x = 0;
+    m_lastArea.y = 0;
+    m_lastArea.width = 0;
+    m_lastArea.height = 0;
     m_update = true;
     loaded = true;
   } else {
