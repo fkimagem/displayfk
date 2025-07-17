@@ -1,4 +1,4 @@
-//#define PLACA_P1  
+//#define PLACA_P1  // ESP32S3 4.3" + XPT2046
 //#define PLACA_P6    // ESP32S3 + ILI9488 + FT6236U base azul
 #define PLACA_P13 // ESP32S3 7.0" + GT911
 //#define PLACA_P14 // ESP32S3 4.3" + GT911
