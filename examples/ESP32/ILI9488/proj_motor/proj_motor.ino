@@ -38,13 +38,18 @@ Arduino_GFX *tft = nullptr;
 uint8_t rotationScreen = 1; // This value can be changed depending of orientation of your screen
 DisplayFK myDisplay;
 GaugeSuper gauge(230, 290, 1);
-const uint8_t qtdGauge = 1;
-GaugeSuper *arrayGauge[qtdGauge] = {&gauge};
+GaugeSuper gaugecontrole(350, 160, 0);
+const uint8_t qtdGauge = 2;
+GaugeSuper *arrayGauge[qtdGauge] = {&gauge, &gaugecontrole};
 const uint8_t qtdIntervalG0 = 4;
 int range0[qtdIntervalG0] = {0,25,50,75};
 uint16_t colors0[qtdIntervalG0] = {CFK_COLOR08,CFK_COLOR06,CFK_COLOR04,CFK_COLOR01};
-Label linhaverde(365, 70, 0);
-Label linhalaranja(365, 115, 0);
+const uint8_t qtdIntervalG1 = 4;
+int range1[qtdIntervalG1] = {0,25,50,75};
+uint16_t colors1[qtdIntervalG1] = {CFK_COLOR08,CFK_COLOR06,CFK_COLOR04,CFK_COLOR01};
+
+Label linhaverde(30, 170, 0);
+Label linhalaranja(160, 170, 0);
 const uint8_t qtdLabel = 2;
 Label *arrayLabel[qtdLabel] = {&linhaverde, &linhalaranja};
 LineChart grafico(15, 40, 0);
@@ -227,6 +232,24 @@ void loadWidgets(){
             .fontFamily = &Roboto_Bold10pt7b
         };
     gauge.setup(configGauge0);
+    GaugeConfig configGauge1 = {
+        .width = 250,
+        .title = "Motor",
+        .intervals = range0,
+        .colors = colors0,
+        .amountIntervals = qtdIntervalG0,
+        .minValue = 0,
+        .maxValue = 100,
+        .borderColor = CFK_BLACK,
+        .textColor = CFK_BLACK,
+        .backgroundColor = CFK_WHITE,
+        .titleColor = CFK_BLACK,
+        .needleColor = CFK_RED,
+        .markersColor = CFK_BLACK,
+        .showLabels = true,
+        .fontFamily = &Roboto_Bold10pt7b
+    };
+gaugecontrole.setup(configGauge1);
     myDisplay.setGauge(arrayGauge,qtdGauge);
     LabelConfig configLabel0 = {
             .text = "Line 1",
@@ -250,7 +273,7 @@ void loadWidgets(){
     linhalaranja.setup(configLabel1);
     myDisplay.setLabel(arrayLabel,qtdLabel);
     LineChartConfig configLineChart0 = {
-            .width = 310,
+            .width = 200,
             .height = 118,
             .minValue = 0,
             .maxValue = 100,
