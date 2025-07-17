@@ -96,7 +96,7 @@
  */
 typedef struct {
     char line[MAX_LINE_LENGTH];     ///< The actual log message text
-    uint8_t line_length;            ///< Length of the message
+    uint8_t line_length = 0;            ///< Length of the message
 } logMessage_t;
 
 /// @brief Represents the main display framework class, managing various widget types, SD card functionality, and touch input.

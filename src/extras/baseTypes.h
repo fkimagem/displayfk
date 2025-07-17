@@ -21,28 +21,28 @@ typedef void(*functionLoadScreen_t)(); ///< Define callback to load screen when 
 /// @brief Structure representing a 2D point with X and Y coordinates.
 typedef struct
 {
-  uint16_t x; ///< X coordinate.
-  uint16_t y; ///< Y coordinate.
+  uint16_t x = 0; ///< X coordinate.
+  uint16_t y = 0; ///< Y coordinate.
 } CoordPoint_t;
 
 
 /// @brief Structure representing a rectangle with position and size.
 typedef struct
 {
-  uint16_t x;      ///< X coordinate of the rectangle.
-  uint16_t y;      ///< Y coordinate of the rectangle.
-  uint16_t width;  ///< Width of the rectangle.
-  uint16_t height; ///< Height of the rectangle.
+  uint16_t x = 0;      ///< X coordinate of the rectangle.
+  uint16_t y = 0;      ///< Y coordinate of the rectangle.
+  uint16_t width = 0;  ///< Width of the rectangle.
+  uint16_t height = 0; ///< Height of the rectangle.
 } Rect_t;
 
 
 /// @brief Struct to save text bounding box data.
 typedef struct
 {
-  int16_t x;       ///< X coordinate of the text bounding box.
-  int16_t y;       ///< Y coordinate of the text bounding box.
-  uint16_t width;  ///< Width of the text bounding box.
-  uint16_t height; ///< Height of the text bounding box.
+  int16_t x = 0;       ///< X coordinate of the text bounding box.
+  int16_t y = 0;       ///< Y coordinate of the text bounding box.
+  uint16_t width = 0;  ///< Width of the text bounding box.
+  uint16_t height = 0; ///< Height of the text bounding box.
 } TextBound_t;
 
 
