@@ -34,7 +34,7 @@ void TouchScreen::startAsFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, uint
 }
 #elif defined(TOUCH_FT6336)
 void TouchScreen::startAsFT6336(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST){
-  m_ts = new FT6336U(pinSDA, pinSCL, pinRST, pinINT);
+  m_ts = new FT6336(pinSDA, pinSCL, pinRST, pinINT);
   this->setDimension(w, h, _rotation);
   m_pinSCL = pinSCL;
   m_pinSDA = pinSDA;
@@ -179,45 +179,45 @@ void TouchScreen::touch_init()
   }
 #elif defined(TOUCH_CST816)
   m_ts->begin();
-#elif defined(TOUCH_FT6336U)
+#elif defined(TOUCH_FT6336)
   m_ts->begin();
   showSetup();
 #endif
 }
 
-#if defined(TOUCH_FT6336U)
+#if defined(TOUCH_FT6336)
 void TouchScreen::showSetup()
 {
-  Serial.print("FT6336U Device Mode: ");
+  Serial.print("FT6336 Device Mode: ");
   Serial.println(m_ts->read_device_mode());
-  Serial.print("FT6336U Threshold: 0x");
+  Serial.print("FT6336 Threshold: 0x");
   Serial.println(m_ts->read_touch_threshold(), HEX);
-  Serial.print("FT6336U Filter Coefficient: 0x");
+  Serial.print("FT6336 Filter Coefficient: 0x");
   Serial.println(m_ts->read_filter_coefficient(), HEX);
-  Serial.print("FT6336U Control Mode: 0x");
+  Serial.print("FT6336 Control Mode: 0x");
   Serial.println(m_ts->read_ctrl_mode(), HEX);
-  Serial.print("FT6336U Time Period for enter to Monitor Mode: 0x");
+  Serial.print("FT6336 Time Period for enter to Monitor Mode: 0x");
   Serial.println(m_ts->read_time_period_enter_monitor(), HEX);
-  Serial.print("FT6336U Active Rate: 0x");
+  Serial.print("FT6336 Active Rate: 0x");
   Serial.println(m_ts->read_active_rate(), HEX);
-  Serial.print("FT6336U Monitor Rate: 0x");
+  Serial.print("FT6336 Monitor Rate: 0x");
   Serial.println(m_ts->read_monitor_rate(), HEX);
 
-  Serial.print("FT6336U LIB Ver: 0x");
+  Serial.print("FT6336 LIB Ver: 0x");
   Serial.println(m_ts->read_library_version(), HEX);
-  Serial.print("FT6336U Chip ID: 0x");
+  Serial.print("FT6336 Chip ID: 0x");
   Serial.println(m_ts->read_chip_id(), HEX);
-  Serial.print("FT6336U G Mode: 0x");
+  Serial.print("FT6336 G Mode: 0x");
   Serial.println(m_ts->read_g_mode(), HEX);
-  Serial.print("FT6336U POWER Mode: 0x");
+  Serial.print("FT6336 POWER Mode: 0x");
   Serial.println(m_ts->read_pwrmode(), HEX);
-  Serial.print("FT6336U Firm ID: 0x");
+  Serial.print("FT6336 Firm ID: 0x");
   Serial.println(m_ts->read_firmware_id(), HEX);
-  Serial.print("FT6336U Focal Tehc ID: 0x");
+  Serial.print("FT6336 Focal Tehc ID: 0x");
   Serial.println(m_ts->read_focaltech_id(), HEX);
-  Serial.print("FT6336U Release Code ID: 0x");
+  Serial.print("FT6336 Release Code ID: 0x");
   Serial.println(m_ts->read_release_code_id(), HEX);
-  Serial.print("FT6336U State: 0x");
+  Serial.print("FT6336 State: 0x");
   Serial.println(m_ts->read_state(), HEX);
 }
 #endif
@@ -250,7 +250,7 @@ bool TouchScreen::touch_has_signal()
   return true;
 #elif defined(TOUCH_CST816)
   return true;
-#elif defined(TOUCH_FT6336U)
+#elif defined(TOUCH_FT6336)
   tp = m_ts->scan();
   return tp.touch_count > 0;
 #else
@@ -410,13 +410,13 @@ bool TouchScreen::touch_touched()
   }
 
   return touched;
-#elif defined(TOUCH_FT6336U) && HAS_TOUCH
+#elif defined(TOUCH_FT6336) && HAS_TOUCH
   bool touched = tp.touch_count > 0;
   if (!touched)
     return false;
 
-  uint16_t rx = tp.tp[0].x; // raw X do FT6336U
-  uint16_t ry = tp.tp[0].y; // raw Y do FT6336U
+  uint16_t rx = tp.tp[0].x; // raw X do FT6336
+  uint16_t ry = tp.tp[0].y; // raw Y do FT6336
   uint16_t sx, sy;          // coordenadas já convertidas
 
   switch (m_rotation & 3) // 0,1,2,3

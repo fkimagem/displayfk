@@ -9,7 +9,7 @@
 #define DISP_DC     8 //DC, RS, A0
 
 #define HAS_TOUCH true
-#define TOUCH_FT6336U
+#define TOUCH_FT6336
 #define TOUCH_FT6336_SCL    14 //21
 #define TOUCH_FT6336_SDA    13 //19
 #define TOUCH_FT6336_INT    18 //20

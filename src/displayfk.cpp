@@ -1250,8 +1250,8 @@ void DisplayFK::startTouchFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, int
         }
     }
 }
-#elif defined (TOUCH_FT6336U)
-void DisplayFK::startTouchFT6336U(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST){
+#elif defined (TOUCH_FT6336)
+void DisplayFK::startTouchFT6336(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST){
     if(!touchExterno){
         touchExterno = new TouchScreen();
         if (touchExterno)

@@ -4,7 +4,7 @@
 //#define PLACA_P14 // ESP32S3 4.3" + GT911
 //#define PLACA_P15 // ESP32S3 4.3" + XPT2046
 //#define PLACA_P9  // Display vermelho tft 4", base azul
-//#define PLACA_P10 // Com display amarelo ILI9488 e FT6336U
+//#define PLACA_P10 // Com display amarelo ILI9488 e FT6336
 
 //#define PLACA_ST7735 1
 

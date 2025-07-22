@@ -4,7 +4,7 @@
  * GT911: https://github.com/TAMCTec/gt911-arduino.git
  * FT6236U https://github.com/DustinWatts/FT6236/releases
  * CST816S https://github.com/fbiego/CST816S/tree/main
- * FT6336U https://github.com/aselectroworks/Arduino-FT6336U/tree/master
+ * FT6336 https://github.com/aselectroworks/Arduino-FT6336/tree/master
  ******************************************************************************/
 #ifndef WTOUCH_H
 #define WTOUCH_H
@@ -76,7 +76,7 @@
   #elif defined(TOUCH_FT6236U)
     #include <FT6236.h>
   #elif defined(TOUCH_FT6336)
-    #include <FT6336U.h>
+    #include <FT6336.h>
   #elif defined(TOUCH_CST816)
     #include <CST816S.h>
   #elif defined(TOUCH_GT911)
@@ -137,8 +137,8 @@ private:
   int8_t m_pinSCL = 0, m_pinSDA = 0, m_pinINT = 0, m_pinRST = 0;
 
   #elif defined(TOUCH_FT6336)
-  FT6336U *m_ts = nullptr;
-  FT6336U_TouchPointType tp;
+  FT6336 *m_ts = nullptr;
+  FT6336_TouchPointType tp;
   int8_t m_pinSCL = 0, m_pinSDA = 0, m_pinINT = 0, m_pinRST = 0;
   
   #elif defined(TOUCH_CST816)

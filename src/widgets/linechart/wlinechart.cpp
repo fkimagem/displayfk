@@ -643,6 +643,8 @@ void LineChart::setup(uint16_t _width, uint16_t _height, int _vmin, int _vmax, u
 void LineChart::setup(const LineChartConfig &config)
 {
   m_config = config;
+
+  
   setup(config.width, config.height, config.minValue, config.maxValue, config.amountSeries,
         config.colorsSeries, config.gridColor, config.borderColor, config.backgroundColor,
         config.textColor, config.verticalDivision, config.workInBackground, config.showZeroLine,
