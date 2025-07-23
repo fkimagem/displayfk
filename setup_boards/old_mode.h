@@ -1,3 +1,58 @@
+#define DISP_SPI
+#define TOUCH_SPI
+
+#if defined(DISP_SPI)
+#define DISP_MISO //MISO, SDO, SOMI
+#define DISP_LED
+#define DISP_SCK //SCLK, SCK, CLK
+#define DISP_MOSI //MOSI, SDI, SIMO
+#define DISP_DC //CS, SS, nSS
+#define DISP_RST //RST, RES, RESET
+#define DISP_CS //CS, SS, nSS
+#define DISP_FREQUENCY	27000000
+#endif
+
+
+#if defined(DISP_I2C)
+#define SD_CS //CS, SS, nSS
+#define SD_MOSI //MOSI, SDI, SIMO
+#define SD_MISO //MISO, SDO, SOMI
+#define SD_SCK //SCLK, SCK, CLK
+#endif
+
+#if defined(DISP_I2C) || defined(DISP_SPI)
+#define DISP_DEFAULT
+#define INVERT_COLOR false
+#endif
+
+#if defined(TOUCH_SPI)
+#define TOUCH_CS //CS, SS, nSS, T_CS
+#define TOUCH_MOSI //MOSI, SDI, SIMO, T_DIN
+#define TOUCH_MISO //MISO, SDO, SOMI, T_D0
+#define TOUCH_SCK //SCLK, SCK, CLK, T_CLK
+#define TOUCH_FREQUENCY	2500000
+#endif
+
+#if defined(TOUCH_I2C)
+#define TOUCH_INT
+#define TOUCH_SDA
+#define TOUCH_SCL
+#define TOUCH_RST
+#endif
+
+#if defined(TOUCH_I2C) || defined(TOUCH_SPI)
+#define HAS_TOUCH true
+#define TOUCH_INVERT_X false
+#define TOUCH_INVERT_Y false
+#define TOUCH_MAP_X0 800
+#define TOUCH_MAP_X1 0
+#define TOUCH_MAP_Y0 480
+#define TOUCH_MAP_Y1 0
+#define TOUCH_SWAP_XY false
+#endif
+
+
+
 
 
 //Vermelho
@@ -25,10 +80,10 @@
 #define TOUCH_FT6236U
 #define TOUCH_FT6X36_SCL 9 //21
 #define TOUCH_FT6X36_SDA 10 //19
-#define TOUCH_MAP_X1 0
-#define TOUCH_MAP_X2 480
-#define TOUCH_MAP_Y1 320
-#define TOUCH_MAP_Y2 0
+#define TOUCH_MAP_X0 0
+#define TOUCH_MAP_X1 480
+#define TOUCH_MAP_Y0 320
+#define TOUCH_MAP_Y1 0
 #define TOUCH_SWAP_XY
 #define TFT_FREQUENCY   27000000*/
 

@@ -13,10 +13,10 @@
 #define TOUCH_FT6236U
 #define TOUCH_FT6X36_SCL 14 //21
 #define TOUCH_FT6X36_SDA 13 //19
-#define TOUCH_MAP_X1 0
-#define TOUCH_MAP_X2 480
-#define TOUCH_MAP_Y1 320
-#define TOUCH_MAP_Y2 0
+#define TOUCH_MAP_X0 0
+#define TOUCH_MAP_X1 480
+#define TOUCH_MAP_Y0 320
+#define TOUCH_MAP_Y1 0
 #define TOUCH_SWAP_XY
 
 #pragma message("Compiling for board P6")

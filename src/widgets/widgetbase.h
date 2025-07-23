@@ -5,10 +5,10 @@
 #include <esp32-hal.h>
 #include <stdint.h>
 
+#include "../user_setup.h"
 #include "../extras/baseTypes.h"
 #include "../extras/wutils.h"
 #include "widgetsetup.h"
-#include "../user_setup.h"
 
 #if defined(DISP_DEFAULT)
 #include <Arduino_GFX_Library.h>

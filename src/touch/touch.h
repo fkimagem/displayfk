@@ -74,14 +74,14 @@
     #include <SPI.h>
     #include <Arduino_GFX_Library.h>
   #elif defined(TOUCH_FT6236U)
-    #include <FT6236.h>
+    #include "ft6236/src/FT6236.h"
   #elif defined(TOUCH_FT6336)
-    #include <FT6336.h>
+    #include "ft6336/src/FT6336U.h"
   #elif defined(TOUCH_CST816)
     #include <CST816S.h>
   #elif defined(TOUCH_GT911)
     #include <Wire.h>
-    #include <TAMC_GT911.h>
+    #include "gt911/TAMC_GT911.h"
   #endif
 
 
@@ -137,8 +137,8 @@ private:
   int8_t m_pinSCL = 0, m_pinSDA = 0, m_pinINT = 0, m_pinRST = 0;
 
   #elif defined(TOUCH_FT6336)
-  FT6336 *m_ts = nullptr;
-  FT6336_TouchPointType tp;
+  FT6336U *m_ts = nullptr;
+  FT6336U_TouchPointType tp;
   int8_t m_pinSCL = 0, m_pinSDA = 0, m_pinINT = 0, m_pinRST = 0;
   
   #elif defined(TOUCH_CST816)

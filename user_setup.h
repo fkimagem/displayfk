@@ -8,6 +8,8 @@
 
 //#define PLACA_ST7735 1
 
+#define INVERT_COLOR
+
 #if defined(PLACA_P1)
 #include "examples/Geral/P1/board_p1.h"
 
@@ -15,7 +17,7 @@
 #include "examples/Geral/P6/board_p6.h"
 
 #elif defined(PLACA_P10)
-#include "setup_boards/board_p10.h"
+#include "examples/Geral/P10/board_p10.h"
 
 #elif defined(PLACA_P13)
 #include "examples/Geral/P13/board_p13.h"

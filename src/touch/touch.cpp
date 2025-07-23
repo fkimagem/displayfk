@@ -34,7 +34,7 @@ void TouchScreen::startAsFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, uint
 }
 #elif defined(TOUCH_FT6336)
 void TouchScreen::startAsFT6336(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST){
-  m_ts = new FT6336(pinSDA, pinSCL, pinRST, pinINT);
+  m_ts = new FT6336U(pinSDA, pinSCL, pinRST, pinINT);
   this->setDimension(w, h, _rotation);
   m_pinSCL = pinSCL;
   m_pinSDA = pinSDA;

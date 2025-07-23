@@ -1,6 +1,9 @@
 #ifndef WIDGETSETUP_H
 #define WIDGETSETUP_H
 
+#define INVERTE_BITS_16(x) ((uint16_t)(~(x)))
+
+
 #define DFK_TOUCHAREA 1
  #define DFK_CIRCLEBTN 1
  #define DFK_RECTBTN 1
@@ -41,90 +44,183 @@
 #define R_BASELINE 11 // Right character baseline
 
  // Default color definitions
-#define CFK_NO_COLOR	0x0000
-#define CFK_BLACK	0x0000
-#define CFK_WHITE	0xffff
-#define CFK_IVORY	0xfffe
-#define CFK_YELLOW	0xffe0
-#define CFK_GOLD	0xfea0
-#define CFK_ORANGE	0xfd20
-#define CFK_CORAL	0xfbea
-#define CFK_TOMATO	0xfb08
-#define CFK_RED	0xf800
-#define CFK_MAROON	0x8000
-#define CFK_LAVENDER	0xe73f
-#define CFK_PINK	0xfe19
-#define CFK_DEEPPINK	0xf8b2
-#define CFK_PLUM	0xdd1b
-#define CFK_VIOLET	0xec1d
-#define CFK_FUCHSIA	0xf81f
-#define CFK_PURPLE	0x8010
-#define CFK_INDIGO	0x4810
-#define CFK_LIME	0x07e0
-#define CFK_GREEN	0x0400
-#define CFK_OLIVE	0x8400
-#define CFK_AQUA	0x07ff
-#define CFK_SKYBLUE	0x867d
-#define CFK_TEAL	0x0410
-#define CFK_BLUE	0x001f
-#define CFK_NAVY	0x0010
-#define CFK_SILVER	0xc618
-#define CFK_GRAY	0x8410
-#define CFK_WHEAT	0xf6f6
-#define CFK_TAN	0xd5b1
-#define CFK_CHOCOLATE	0xd343
-#define CFK_SADDLEBROWN	0x8a22
+#define INVERTE_BITS_16(x) ((uint16_t)(~(x)))
+
+#ifdef INVERT_COLOR
+  #define CFK_NO_COLOR     INVERTE_BITS_16(0x0000)
+  #define CFK_BLACK        INVERTE_BITS_16(0x0000)
+  #define CFK_WHITE        INVERTE_BITS_16(0xffff)
+  #define CFK_IVORY        INVERTE_BITS_16(0xfffe)
+  #define CFK_YELLOW       INVERTE_BITS_16(0xffe0)
+  #define CFK_GOLD         INVERTE_BITS_16(0xfea0)
+  #define CFK_ORANGE       INVERTE_BITS_16(0xfd20)
+  #define CFK_CORAL        INVERTE_BITS_16(0xfbea)
+  #define CFK_TOMATO       INVERTE_BITS_16(0xfb08)
+  #define CFK_RED          INVERTE_BITS_16(0xf800)
+  #define CFK_MAROON       INVERTE_BITS_16(0x8000)
+  #define CFK_LAVENDER     INVERTE_BITS_16(0xe73f)
+  #define CFK_PINK         INVERTE_BITS_16(0xfe19)
+  #define CFK_DEEPPINK     INVERTE_BITS_16(0xf8b2)
+  #define CFK_PLUM         INVERTE_BITS_16(0xdd1b)
+  #define CFK_VIOLET       INVERTE_BITS_16(0xec1d)
+  #define CFK_FUCHSIA      INVERTE_BITS_16(0xf81f)
+  #define CFK_PURPLE       INVERTE_BITS_16(0x8010)
+  #define CFK_INDIGO       INVERTE_BITS_16(0x4810)
+  #define CFK_LIME         INVERTE_BITS_16(0x07e0)
+  #define CFK_GREEN        INVERTE_BITS_16(0x0400)
+  #define CFK_OLIVE        INVERTE_BITS_16(0x8400)
+  #define CFK_AQUA         INVERTE_BITS_16(0x07ff)
+  #define CFK_SKYBLUE      INVERTE_BITS_16(0x867d)
+  #define CFK_TEAL         INVERTE_BITS_16(0x0410)
+  #define CFK_BLUE         INVERTE_BITS_16(0x001f)
+  #define CFK_NAVY         INVERTE_BITS_16(0x0010)
+  #define CFK_SILVER       INVERTE_BITS_16(0xc618)
+  #define CFK_GRAY         INVERTE_BITS_16(0x8410)
+  #define CFK_WHEAT        INVERTE_BITS_16(0xf6f6)
+  #define CFK_TAN          INVERTE_BITS_16(0xd5b1)
+  #define CFK_CHOCOLATE    INVERTE_BITS_16(0xd343)
+  #define CFK_SADDLEBROWN  INVERTE_BITS_16(0x8a22)
+#else
+  #define CFK_NO_COLOR     0x0000
+  #define CFK_BLACK        0x0000
+  #define CFK_WHITE        0xffff
+  #define CFK_IVORY        0xfffe
+  #define CFK_YELLOW       0xffe0
+  #define CFK_GOLD         0xfea0
+  #define CFK_ORANGE       0xfd20
+  #define CFK_CORAL        0xfbea
+  #define CFK_TOMATO       0xfb08
+  #define CFK_RED          0xf800
+  #define CFK_MAROON       0x8000
+  #define CFK_LAVENDER     0xe73f
+  #define CFK_PINK         0xfe19
+  #define CFK_DEEPPINK     0xf8b2
+  #define CFK_PLUM         0xdd1b
+  #define CFK_VIOLET       0xec1d
+  #define CFK_FUCHSIA      0xf81f
+  #define CFK_PURPLE       0x8010
+  #define CFK_INDIGO       0x4810
+  #define CFK_LIME         0x07e0
+  #define CFK_GREEN        0x0400
+  #define CFK_OLIVE        0x8400
+  #define CFK_AQUA         0x07ff
+  #define CFK_SKYBLUE      0x867d
+  #define CFK_TEAL         0x0410
+  #define CFK_BLUE         0x001f
+  #define CFK_NAVY         0x0010
+  #define CFK_SILVER       0xc618
+  #define CFK_GRAY         0x8410
+  #define CFK_WHEAT        0xf6f6
+  #define CFK_TAN          0xd5b1
+  #define CFK_CHOCOLATE    0xd343
+  #define CFK_SADDLEBROWN  0x8a22
+#endif
 
 // Defines for color palette
-#define CFK_NO_COLOR	0x0040
-#define CFK_BLACK	0x0000
-#define CFK_WHITE	0xFFFF
-#define CFK_COLOR01	0xF800
-#define CFK_COLOR02	0xF980
-#define CFK_COLOR03	0xFB00
-#define CFK_COLOR04	0xFC60
-#define CFK_COLOR05	0xFDE0
-#define CFK_COLOR06	0xFF60
-#define CFK_COLOR07	0xDFE0
-#define CFK_COLOR08	0xAFE0
-#define CFK_COLOR09	0x87E0
-#define CFK_COLOR10	0x57E0
-#define CFK_COLOR11	0x27E0
-#define CFK_COLOR12	0x07E2
-#define CFK_COLOR13	0x07E8
-#define CFK_COLOR14	0x07EE
-#define CFK_COLOR15	0x07F3
-#define CFK_COLOR16	0x07F9
-#define CFK_COLOR17	0x07FF
-#define CFK_COLOR18	0x067F
-#define CFK_COLOR19	0x04FF
-#define CFK_COLOR20	0x039F
-#define CFK_COLOR21	0x021F
-#define CFK_COLOR22	0x009F
-#define CFK_COLOR23	0x201F
-#define CFK_COLOR24	0x501F
-#define CFK_COLOR25	0x801F
-#define CFK_COLOR26	0xA81F
-#define CFK_COLOR27	0xD81F
-#define CFK_COLOR28	0xF81D
-#define CFK_COLOR29	0xF817
-#define CFK_COLOR30	0xF811
-#define CFK_COLOR31	0xF80C
-#define CFK_COLOR32	0xF806
-#define CFK_GREY1	0x1082
-#define CFK_GREY2	0x2104
-#define CFK_GREY3	0x3186
-#define CFK_GREY4	0x4228
-#define CFK_GREY5	0x52AA
-#define CFK_GREY6	0x632C
-#define CFK_GREY7	0x73AE
-#define CFK_GREY8	0x8C51
-#define CFK_GREY9	0x9CD3
-#define CFK_GREY10	0xAD55
-#define CFK_GREY11	0xBDD7
-#define CFK_GREY12	0xCE79
-#define CFK_GREY13	0xDEFB
-#define CFK_GREY14	0xEF7D
+#define INVERTE_BITS_16(x) ((uint16_t)(~(x)))
+
+#ifdef INVERT_COLOR
+  #define CFK_NO_COLOR  INVERTE_BITS_16(0x0040)
+  #define CFK_BLACK     INVERTE_BITS_16(0x0000)
+  #define CFK_WHITE     INVERTE_BITS_16(0xFFFF)
+  #define CFK_COLOR01   INVERTE_BITS_16(0xF800)
+  #define CFK_COLOR02   INVERTE_BITS_16(0xF980)
+  #define CFK_COLOR03   INVERTE_BITS_16(0xFB00)
+  #define CFK_COLOR04   INVERTE_BITS_16(0xFC60)
+  #define CFK_COLOR05   INVERTE_BITS_16(0xFDE0)
+  #define CFK_COLOR06   INVERTE_BITS_16(0xFF60)
+  #define CFK_COLOR07   INVERTE_BITS_16(0xDFE0)
+  #define CFK_COLOR08   INVERTE_BITS_16(0xAFE0)
+  #define CFK_COLOR09   INVERTE_BITS_16(0x87E0)
+  #define CFK_COLOR10   INVERTE_BITS_16(0x57E0)
+  #define CFK_COLOR11   INVERTE_BITS_16(0x27E0)
+  #define CFK_COLOR12   INVERTE_BITS_16(0x07E2)
+  #define CFK_COLOR13   INVERTE_BITS_16(0x07E8)
+  #define CFK_COLOR14   INVERTE_BITS_16(0x07EE)
+  #define CFK_COLOR15   INVERTE_BITS_16(0x07F3)
+  #define CFK_COLOR16   INVERTE_BITS_16(0x07F9)
+  #define CFK_COLOR17   INVERTE_BITS_16(0x07FF)
+  #define CFK_COLOR18   INVERTE_BITS_16(0x067F)
+  #define CFK_COLOR19   INVERTE_BITS_16(0x04FF)
+  #define CFK_COLOR20   INVERTE_BITS_16(0x039F)
+  #define CFK_COLOR21   INVERTE_BITS_16(0x021F)
+  #define CFK_COLOR22   INVERTE_BITS_16(0x009F)
+  #define CFK_COLOR23   INVERTE_BITS_16(0x201F)
+  #define CFK_COLOR24   INVERTE_BITS_16(0x501F)
+  #define CFK_COLOR25   INVERTE_BITS_16(0x801F)
+  #define CFK_COLOR26   INVERTE_BITS_16(0xA81F)
+  #define CFK_COLOR27   INVERTE_BITS_16(0xD81F)
+  #define CFK_COLOR28   INVERTE_BITS_16(0xF81D)
+  #define CFK_COLOR29   INVERTE_BITS_16(0xF817)
+  #define CFK_COLOR30   INVERTE_BITS_16(0xF811)
+  #define CFK_COLOR31   INVERTE_BITS_16(0xF80C)
+  #define CFK_COLOR32   INVERTE_BITS_16(0xF806)
+  #define CFK_GREY1     INVERTE_BITS_16(0x1082)
+  #define CFK_GREY2     INVERTE_BITS_16(0x2104)
+  #define CFK_GREY3     INVERTE_BITS_16(0x3186)
+  #define CFK_GREY4     INVERTE_BITS_16(0x4228)
+  #define CFK_GREY5     INVERTE_BITS_16(0x52AA)
+  #define CFK_GREY6     INVERTE_BITS_16(0x632C)
+  #define CFK_GREY7     INVERTE_BITS_16(0x73AE)
+  #define CFK_GREY8     INVERTE_BITS_16(0x8C51)
+  #define CFK_GREY9     INVERTE_BITS_16(0x9CD3)
+  #define CFK_GREY10    INVERTE_BITS_16(0xAD55)
+  #define CFK_GREY11    INVERTE_BITS_16(0xBDD7)
+  #define CFK_GREY12    INVERTE_BITS_16(0xCE79)
+  #define CFK_GREY13    INVERTE_BITS_16(0xDEFB)
+  #define CFK_GREY14    INVERTE_BITS_16(0xEF7D)
+#else
+  #define CFK_NO_COLOR  0x0040
+  #define CFK_BLACK     0x0000
+  #define CFK_WHITE     0xFFFF
+  #define CFK_COLOR01   0xF800
+  #define CFK_COLOR02   0xF980
+  #define CFK_COLOR03   0xFB00
+  #define CFK_COLOR04   0xFC60
+  #define CFK_COLOR05   0xFDE0
+  #define CFK_COLOR06   0xFF60
+  #define CFK_COLOR07   0xDFE0
+  #define CFK_COLOR08   0xAFE0
+  #define CFK_COLOR09   0x87E0
+  #define CFK_COLOR10   0x57E0
+  #define CFK_COLOR11   0x27E0
+  #define CFK_COLOR12   0x07E2
+  #define CFK_COLOR13   0x07E8
+  #define CFK_COLOR14   0x07EE
+  #define CFK_COLOR15   0x07F3
+  #define CFK_COLOR16   0x07F9
+  #define CFK_COLOR17   0x07FF
+  #define CFK_COLOR18   0x067F
+  #define CFK_COLOR19   0x04FF
+  #define CFK_COLOR20   0x039F
+  #define CFK_COLOR21   0x021F
+  #define CFK_COLOR22   0x009F
+  #define CFK_COLOR23   0x201F
+  #define CFK_COLOR24   0x501F
+  #define CFK_COLOR25   0x801F
+  #define CFK_COLOR26   0xA81F
+  #define CFK_COLOR27   0xD81F
+  #define CFK_COLOR28   0xF81D
+  #define CFK_COLOR29   0xF817
+  #define CFK_COLOR30   0xF811
+  #define CFK_COLOR31   0xF80C
+  #define CFK_COLOR32   0xF806
+  #define CFK_GREY1     0x1082
+  #define CFK_GREY2     0x2104
+  #define CFK_GREY3     0x3186
+  #define CFK_GREY4     0x4228
+  #define CFK_GREY5     0x52AA
+  #define CFK_GREY6     0x632C
+  #define CFK_GREY7     0x73AE
+  #define CFK_GREY8     0x8C51
+  #define CFK_GREY9     0x9CD3
+  #define CFK_GREY10    0xAD55
+  #define CFK_GREY11    0xBDD7
+  #define CFK_GREY12    0xCE79
+  #define CFK_GREY13    0xDEFB
+  #define CFK_GREY14    0xEF7D
+#endif
+
 
 
 #define FONT_ROBOTO
