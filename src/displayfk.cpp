@@ -1221,22 +1221,44 @@ void DisplayFK::startTouch(uint16_t w, uint16_t h, uint8_t _rotation, SPIClass *
     }*/
 }
 
+void DisplayFK::setTouchCorners(int x0, int x1, int y0, int y1){
+    m_x0 = x0;
+    m_x1 = x1;
+    m_y0 = y0;
+    m_y1 = y1;
+}
+
+void DisplayFK::setInvertAxis(bool invertX, bool invertY){
+  m_invertXAxis = invertX;
+  m_invertYAxis = invertY;
+}
+
+void DisplayFK::setSwapAxis(bool swap){
+  m_swapAxis = swap;
+}
+
 #if defined(TOUCH_XPT2046)
-void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT){
+void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS){
     if(!touchExterno){
         touchExterno = new TouchScreen();
         if (touchExterno)
         {
-            touchExterno->startAsXPT2046(w, h, _rotation, -1, -1, -1, pinCS, _sharedSPI, _objTFT);
+            touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
+            touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
+            touchExterno->setSwapAxis(m_swapAxis);
+            touchExterno->startAsXPT2046(w, h, _rotation, -1, -1, -1, pinCS, _sharedSPI, _objTFT, touchFrequency, displayFrequency, displayPinCS);
         }
     }
 }
-void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSclk, int8_t pinMosi, int8_t pinMiso, int8_t pinCS, Arduino_GFX *_objTFT){
+void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSclk, int8_t pinMosi, int8_t pinMiso, int8_t pinCS, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS){
     if(!touchExterno){
         touchExterno = new TouchScreen();
         if (touchExterno)
         {
-            touchExterno->startAsXPT2046(w, h, _rotation, pinSclk, pinMosi, pinMiso, pinCS, nullptr, _objTFT);
+            touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
+            touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
+            touchExterno->setSwapAxis(m_swapAxis);
+            touchExterno->startAsXPT2046(w, h, _rotation, pinSclk, pinMosi, pinMiso, pinCS, nullptr, _objTFT, touchFrequency, displayFrequency, displayPinCS);
         }
     }
 }
@@ -1246,6 +1268,9 @@ void DisplayFK::startTouchFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, int
         touchExterno = new TouchScreen();
         if (touchExterno)
         {
+            touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
+            touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
+            touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsFT6236U(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
         }
     }
@@ -1256,6 +1281,9 @@ void DisplayFK::startTouchFT6336(uint16_t w, uint16_t h, uint8_t _rotation, int8
         touchExterno = new TouchScreen();
         if (touchExterno)
         {
+            touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
+            touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
+            touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsFT6336(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
         }
     }
@@ -1266,6 +1294,9 @@ void DisplayFK::startTouchCST816(uint16_t w, uint16_t h, uint8_t _rotation, int8
         touchExterno = new TouchScreen();
         if (touchExterno)
         {
+            touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
+            touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
+            touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsCST816(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
         }
     }
@@ -1277,6 +1308,9 @@ void DisplayFK::startTouchGT911(uint16_t w, uint16_t h, uint8_t _rotation, int8_
         touchExterno = new TouchScreen();
         if (touchExterno)
         {
+            touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
+            touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
+            touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsGT911(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
         }
     }

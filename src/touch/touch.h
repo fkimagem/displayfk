@@ -10,6 +10,11 @@
 #define WTOUCH_H
 
 #include "../../user_setup.h"
+#if defined(TOUCH_FT6236U) || defined(TOUCH_FT6336) || defined(TOUCH_CST816) || defined(TOUCH_GT911) || defined(TOUCH_XPT2046)
+#define HAS_TOUCH true
+#else
+#define HAS_TOUCH false
+#endif
 
 #include <cstdint>
 #include "../extras/baseTypes.h"
@@ -30,41 +35,18 @@
 
 // Defines for eache touch ci and check requeired defines
   #if defined(TOUCH_XPT2046)
-    #ifndef TOUCH_FREQUENCY
-      #define TOUCH_FREQUENCY 2500000
-    #endif
-
-    #ifndef TOUCH_INVERT_X
-    #error "You need define TOUCH_INVERT_X as true or false in file user_setup.h"
-    #endif
-    #ifndef TOUCH_INVERT_Y
-    #error "You need define TOUCH_INVERT_Y as true or false in file user_setup.h"
-    #endif
-
-    #ifndef DISP_FREQUENCY
-      #define DISP_FREQUENCY 2500000
-    #endif
+    
   #elif defined(TOUCH_FT6236U)
     //#define TOUCH_FT6X36_SCL 18
     //#define TOUCH_FT6X36_SDA 2
     //#define TOUCH_FT6X36_INT 21
-    #ifndef TOUCH_SWAP_XY
-      #error "You need define TOUCH_SWAP_XY as true or false in file user_setup.h"
-    #endif
-    #if !defined(TOUCH_MAP_X1) || !defined(TOUCH_MAP_X2) || !defined(TOUCH_MAP_Y1) || !defined(TOUCH_MAP_Y2)
-      #error "You need define TOUCH_MAP_X1, TOUCH_MAP_X2, TOUCH_MAP_Y1 and TOUCH_MAP_Y2 in file user_setup.h"
-    #endif
+    
   #elif defined(TOUCH_FT6336)
   
   #elif defined(TOUCH_CST816)
   
   #elif defined(TOUCH_GT911)
-    #ifndef TOUCH_SWAP_XY
-      #error "You need define TOUCH_SWAP_XY as true or false in file user_setup.h"
-    #endif
-    #if !defined(TOUCH_MAP_X1) || !defined(TOUCH_MAP_X2) || !defined(TOUCH_MAP_Y1) || !defined(TOUCH_MAP_Y2)
-      #error "You need define TOUCH_MAP_X1, TOUCH_MAP_X2, TOUCH_MAP_Y1 and TOUCH_MAP_Y2 in file user_setup.h"
-    #endif
+    
 
   #endif
 
@@ -165,6 +147,12 @@ private:
   uint16_t m_touch_last_z;     ///< Last recorded Y-coordinate of the touch.
   bool m_startedTouch = false; ///< Flag indicating if a touch has started.
   uint8_t m_rotation = 0;      ///< Rotation setting for the touch screen.
+  int m_touchFrequency = 2500000;    ///< Touch frequency setting for the touch screen.
+  int m_displayFrequency = 27000000;  ///< Display frequency setting for the touch screen.
+
+  int m_x0 = 0, m_x1 = 0, m_y0 = 0, m_y1 = 0;
+  bool m_invertXAxis = false, m_invertYAxis = false, m_swapAxis = false;
+  int m_displayPinCS = -1;
 
 
 public:
@@ -179,10 +167,14 @@ public:
   uint8_t getGesture();
   uint8_t getRotation();
 
+  void setTouchCorners(int x0, int x1, int y0, int y1);
+  void setInvertAxis(bool invert_x, bool invert_y);
+  void setSwapAxis(bool swap);
+
   #if defined(TOUCH_XPT2046)
   CalibrationPoint_t getMinPoint(CalibrationPoint_t pontos[4]);
   CalibrationPoint_t getMaxPoint(CalibrationPoint_t pontos[4]);
-  void startAsXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSclk,uint8_t pinMosi, uint8_t pinMiso, uint8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT);
+  void startAsXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSclk,uint8_t pinMosi, uint8_t pinMiso, uint8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS);
   void calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32_t color_bg, uint8_t size);
   void calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg, uint32_t color_bg, uint8_t size);
   void calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t length, Rect_t* rectScreen, uint32_t color_fg, uint32_t color_bg, uint8_t sizeMarker);

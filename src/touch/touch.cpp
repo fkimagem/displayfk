@@ -10,7 +10,10 @@ TouchScreen::TouchScreen()
 }
 
 #if defined(TOUCH_XPT2046)
-void TouchScreen::startAsXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSclk,uint8_t pinMosi, uint8_t pinMiso, uint8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT){
+void TouchScreen::startAsXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSclk,uint8_t pinMosi, uint8_t pinMiso, uint8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS){
+  m_displayPinCS = displayPinCS;
+  m_touchFrequency = touchFrequency;
+  m_displayFrequency = displayFrequency;
   m_ts = new XPT2046(pinSclk, pinMiso, pinMosi, pinCS);
   this->setDimension(w, h, _rotation);
   m_objTFT = _objTFT;
@@ -54,7 +57,7 @@ m_pinRST = pinRST;
 }
 #elif defined(TOUCH_GT911)
 void TouchScreen::startAsGT911(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST){
-//m_ts = new TAMC_GT911(pinSDA, pinSCL, pinINT, pinRST, max(TOUCH_MAP_X1, TOUCH_MAP_X2), max(TOUCH_MAP_Y1, TOUCH_MAP_Y2));
+//m_ts = new TAMC_GT911(pinSDA, pinSCL, pinINT, pinRST, max(m_x0, m_x1), max(m_y0, m_y1));
 this->setDimension(w, h, _rotation);
 m_ts = new TAMC_GT911(pinSDA, pinSCL, pinINT, pinRST, m_widthScreen, m_heightScreen);
 m_pinSCL = pinSCL;
@@ -88,11 +91,28 @@ uint16_t TouchScreen::getHeightScreen()
  */
 TouchScreen::~TouchScreen()
 {
+  #if HAS_TOUCH
   if(m_ts){
     delete m_ts;
   }
+  #endif
 }
 
+void TouchScreen::setTouchCorners(int x0, int y0, int x1, int y1){
+  m_x0 = x0;
+  m_y0 = y0;
+  m_x1 = x1;
+  m_y1 = y1;
+}
+
+void TouchScreen::setInvertAxis(bool invertX, bool invertY){
+  m_invertXAxis = invertX;
+  m_invertYAxis = invertY;
+}
+
+void TouchScreen::setSwapAxis(bool swap){
+  m_swapAxis = swap;
+}
 
 
 #if defined(TOUCH_FT6236)
@@ -110,13 +130,15 @@ void TouchScreen::touch(TPoint p, TEvent e)
     return;
   }
   // translation logic depends on screen rotation
-#if defined(TOUCH_SWAP_XY)
-  m_touch_last_x = map(p.y, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, m_widthScreen);
-  m_touch_last_y = map(p.x, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, m_heightScreen);
-#else
-  m_touch_last_x = map(p.x, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, m_widthScreen);
-  m_touch_last_y = map(p.y, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, m_heightScreen);
-#endif
+  if(m_swapAxis){
+    m_touch_last_x = map(p.y, m_x0, m_x1, 0, m_widthScreen);
+    m_touch_last_y = map(p.x, m_y0, m_y1, 0, m_heightScreen);
+  }else{
+    m_touch_last_x = map(p.x, m_x0, m_x1, 0, m_widthScreen);
+    m_touch_last_y = map(p.y, m_y0, m_y1, 0, m_heightScreen);
+  }
+
+
   switch (e)
   {
   case TEvent::Tap:
@@ -154,19 +176,18 @@ void TouchScreen::touch_init()
 
 #elif defined(TOUCH_XPT2046)
 
-#if defined (DISP_CS)
-  digitalWrite(DISP_CS, HIGH);
+if(m_displayPinCS > 0){
+  digitalWrite(m_displayPinCS, HIGH);
   delayMicroseconds(5);
-#endif
+}
 
   
-  m_ts->begin(m_spitoque, TOUCH_FREQUENCY, DISP_FREQUENCY);
+  m_ts->begin(m_spitoque, m_touchFrequency, m_displayFrequency);
 
-  
-#if defined (DISP_CS)
-  delayMicroseconds(5);
-  digitalWrite(DISP_CS, LOW);
-  #endif
+  if(m_displayPinCS > 0){
+   delayMicroseconds(5);
+  digitalWrite(m_displayPinCS, LOW);
+}
 
 #elif defined(TOUCH_FT6236U)
   if (!m_ts->begin(40, m_pinSDA, m_pinSCL)) // 40 in this case represents the sensitivity. Try higer or lower for better response.
@@ -282,26 +303,26 @@ bool TouchScreen::touch_touched()
   m_ts->read();
   if (m_ts->isTouched)
   {
-#if TOUCH_SWAP_XY
-    m_touch_last_x = map(m_ts->points[0].y, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, m_widthScreen - 1);
-    m_touch_last_y = map(m_ts->points[0].x, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, m_heightScreen - 1);
-    m_touch_last_z = -1;
-#else
-    // Raw touch coordinates
-    //Serial.printf("Raw touch coordinates: %i, %i\n", m_ts->points[0].x, m_ts->points[0].y);
-    #if TOUCH_INVERT_X
-    m_touch_last_x = map(m_ts->points[0].x, TOUCH_MAP_X1, TOUCH_MAP_X2, m_widthScreen - 1, 0);
-    #else
-    m_touch_last_x = map(m_ts->points[0].x, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, m_widthScreen - 1);
-    #endif
+    if(m_swapAxis){
+      m_touch_last_x = map(m_ts->points[0].y, m_x0, m_x1, 0, m_widthScreen - 1);
+      m_touch_last_y = map(m_ts->points[0].x, m_y0, m_y1, 0, m_heightScreen - 1);
+      m_touch_last_z = -1;
+    }else{
+      // Raw touch coordinates
+      //Serial.printf("Raw touch coordinates: %i, %i\n", m_ts->points[0].x, m_ts->points[0].y);
+      if(m_invertXAxis){
+        m_touch_last_x = map(m_ts->points[0].x, m_x0, m_x1, m_widthScreen - 1, 0);
+      }else{
+        m_touch_last_x = map(m_ts->points[0].x, m_x0, m_x1, 0, m_widthScreen - 1);
+      }
 
-    #if TOUCH_INVERT_Y
-    m_touch_last_y = map(m_ts->points[0].y, TOUCH_MAP_Y1, TOUCH_MAP_Y2, m_heightScreen - 1, 0);
-    #else
-    m_touch_last_y = map(m_ts->points[0].y, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, m_heightScreen - 1);
-    #endif
-    m_touch_last_z = -1;
-#endif
+      if(m_invertYAxis){
+        m_touch_last_y = map(m_ts->points[0].y, m_y1, TOUCH_MAP_Y2, m_heightScreen - 1, 0);
+      }else{
+        m_touch_last_y = map(m_ts->points[0].y, m_y1, TOUCH_MAP_Y2, 0, m_heightScreen - 1);
+      }
+      m_touch_last_z = -1;
+    }
 
     return true;
   }
@@ -337,11 +358,11 @@ bool TouchScreen::touch_touched()
 
   bool hasTouch = (touchDetect == 0);
 
-#if defined(DISP_CS)
-  // delayMicroseconds(5);
+  if(m_displayPinCS){
+// delayMicroseconds(5);
   // digitalWrite(DISP_CS, LOW);
   // log_d("Pino %i modo LOW", DISP_CS);
-#endif
+  }
 
   if (hasTouch)
   {
@@ -351,18 +372,21 @@ bool TouchScreen::touch_touched()
                                                              // Serial.printf("Raw xyz[%i\t%i\t%i]\n", xTouch, yTouch, zTouch);
                                                              // Serial.printf("Scr xyz[%i\t%i\t%i]\n", toque.x, toque.y, zTouch);
 
-#if TOUCH_SWAP_XY
 
-    m_ts->x = constrain(xTouch, m_calibMatrix[2], m_calibMatrix[3]);
-    m_ts->y = constrain(yTouch, m_calibMatrix[0], m_calibMatrix[1]);
+    if(m_swapAxis){
+      //m_ts->x = constrain(xTouch, m_calibMatrix[2], m_calibMatrix[3]);
+      //m_ts->y = constrain(yTouch, m_calibMatrix[0], m_calibMatrix[1]);
 
-    m_touch_last_x = map(m_ts->y, m_calibMatrix[0], m_calibMatrix[1], 0, m_widthScreen - 1);
-    m_touch_last_y = map(m_ts->x, m_calibMatrix[2], m_calibMatrix[3], 0, m_heightScreen - 1);
-#else
+      //m_touch_last_x = map(m_ts->y, m_calibMatrix[0], m_calibMatrix[1], 0, m_widthScreen - 1);
+      //m_touch_last_y = map(m_ts->x, m_calibMatrix[2], m_calibMatrix[3], 0, m_heightScreen - 1);
+    }else{
+      //m_touch_last_x = toque.x;
+      //m_touch_last_y = toque.y;
+      //m_touch_last_z = zTouch;
+    }
     m_touch_last_x = toque.x;
-    m_touch_last_y = toque.y;
-    m_touch_last_z = zTouch;
-#endif
+      m_touch_last_y = toque.y;
+      m_touch_last_z = zTouch;
 
     return true;
   }
@@ -379,15 +403,15 @@ bool TouchScreen::touch_touched()
 
     // Print coordinates to the serial output
     // Serial.printf("X: %i, Y: %i\n", p.x, p.y);
-#if defined(TOUCH_SWAP_XY)
-    m_touch_last_x = map(p.y, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, m_widthScreen - 1);
-    m_touch_last_y = map(p.x, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, m_heightScreen - 1);
-    m_touch_last_z = 0;
-#else
-    m_touch_last_x = map(p.x, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, m_widthScreen - 1);
-    m_touch_last_y = map(p.y, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, m_heightScreen - 1);
-    m_touch_last_z = 0;
-#endif
+    if(m_swapAxis){
+      m_touch_last_x = map(p.y, m_x0, m_x1, 0, m_widthScreen - 1);
+      m_touch_last_y = map(p.x, m_y0, m_y1, 0, m_heightScreen - 1);
+      m_touch_last_z = 0;
+    }else{
+      m_touch_last_x = map(p.x, m_x0, m_x1, 0, m_widthScreen - 1);
+      m_touch_last_y = map(p.y, m_y0, m_y1, 0, m_heightScreen - 1);
+      m_touch_last_z = 0;
+    }
 
     return true;
   }
@@ -422,23 +446,23 @@ bool TouchScreen::touch_touched()
   switch (m_rotation & 3) // 0,1,2,3
   {
   case 0: // Portrait   (0°)
-    sx = map(rx, TOUCH_MAP_X1, TOUCH_MAP_X0, 0, m_widthScreen - 1);
-    sy = map(ry, TOUCH_MAP_Y0, TOUCH_MAP_Y1, 0, m_heightScreen - 1);
+    sx = map(rx, m_x1, m_x0, 0, m_widthScreen - 1);
+    sy = map(ry, m_y0, m_y1, 0, m_heightScreen - 1);
     break;
 
   case 1: // Landscape  (90°)
-    sx = map(ry, TOUCH_MAP_Y0, TOUCH_MAP_Y1, 0, m_widthScreen - 1);
-    sy = map(rx, TOUCH_MAP_X0, TOUCH_MAP_X1, 0, m_heightScreen - 1);
+    sx = map(ry, m_y0, m_y1, 0, m_widthScreen - 1);
+    sy = map(rx, m_x0, m_x1, 0, m_heightScreen - 1);
     break;
 
   case 2: // Portrait   (180°)
-    sx = map(rx, TOUCH_MAP_X0, TOUCH_MAP_X1, 0, m_widthScreen - 1);
-    sy = map(ry, TOUCH_MAP_Y1, TOUCH_MAP_Y0, 0, m_heightScreen - 1);
+    sx = map(rx, m_x0, m_x1, 0, m_widthScreen - 1);
+    sy = map(ry, m_y1, m_y0, 0, m_heightScreen - 1);
     break;
 
   default: // Landscape  (270°)
-    sx = map(ry, TOUCH_MAP_Y1, TOUCH_MAP_Y0, 0, m_widthScreen - 1);
-    sy = map(rx, TOUCH_MAP_X1, TOUCH_MAP_X0, 0, m_heightScreen - 1);
+    sx = map(ry, m_y1, m_y0, 0, m_widthScreen - 1);
+    sy = map(rx, m_x1, m_x0, 0, m_heightScreen - 1);
     break;
   }
 
@@ -887,44 +911,44 @@ ScreenPoint_t TouchScreen::getScreenPosition(int16_t xTouch, int16_t yTouch)
       xMapVal = xTouch;
       yMapVal = yTouch;
 
-      xMapFrom = TOUCH_INVERT_X ? cornerMax.xTouch : cornerMin.xTouch;
-      xMapTo   = TOUCH_INVERT_X ? cornerMin.xTouch : cornerMax.xTouch;
+      xMapFrom = m_invertXAxis ? cornerMax.xTouch : cornerMin.xTouch;
+      xMapTo   = m_invertXAxis ? cornerMin.xTouch : cornerMax.xTouch;
 
-      yMapFrom = TOUCH_INVERT_Y ? cornerMin.yTouch : cornerMax.yTouch;
-      yMapTo   = TOUCH_INVERT_Y ? cornerMax.yTouch : cornerMin.yTouch;
+      yMapFrom = m_invertYAxis ? cornerMin.yTouch : cornerMax.yTouch;
+      yMapTo   = m_invertYAxis ? cornerMax.yTouch : cornerMin.yTouch;
       break;
 
     case 1:
       xMapVal = yTouch;
       yMapVal = xTouch;
 
-      xMapFrom = TOUCH_INVERT_X ? cornerMin.yTouch : cornerMax.yTouch;
-      xMapTo   = TOUCH_INVERT_X ? cornerMax.yTouch : cornerMin.yTouch;
+      xMapFrom = m_invertXAxis ? cornerMin.yTouch : cornerMax.yTouch;
+      xMapTo   = m_invertXAxis ? cornerMax.yTouch : cornerMin.yTouch;
 
-      yMapFrom = TOUCH_INVERT_Y ? cornerMin.xTouch : cornerMax.xTouch;
-      yMapTo   = TOUCH_INVERT_Y ? cornerMax.xTouch : cornerMin.xTouch;
+      yMapFrom = m_invertYAxis ? cornerMin.xTouch : cornerMax.xTouch;
+      yMapTo   = m_invertYAxis ? cornerMax.xTouch : cornerMin.xTouch;
       break;
 
     case 2:
       xMapVal = xTouch;
       yMapVal = yTouch;
 
-      xMapFrom = TOUCH_INVERT_X ? cornerMin.xTouch : cornerMax.xTouch;
-      xMapTo   = TOUCH_INVERT_X ? cornerMax.xTouch : cornerMin.xTouch;
+      xMapFrom = m_invertXAxis ? cornerMin.xTouch : cornerMax.xTouch;
+      xMapTo   = m_invertXAxis ? cornerMax.xTouch : cornerMin.xTouch;
 
-      yMapFrom = TOUCH_INVERT_Y ? cornerMax.yTouch : cornerMin.yTouch;
-      yMapTo   = TOUCH_INVERT_Y ? cornerMin.yTouch : cornerMax.yTouch;
+      yMapFrom = m_invertYAxis ? cornerMax.yTouch : cornerMin.yTouch;
+      yMapTo   = m_invertYAxis ? cornerMin.yTouch : cornerMax.yTouch;
       break;
 
     case 3:
       xMapVal = yTouch;
       yMapVal = xTouch;
 
-      xMapFrom = TOUCH_INVERT_X ? cornerMax.yTouch : cornerMin.yTouch;
-      xMapTo   = TOUCH_INVERT_X ? cornerMin.yTouch : cornerMax.yTouch;
+      xMapFrom = m_invertXAxis ? cornerMax.yTouch : cornerMin.yTouch;
+      xMapTo   = m_invertXAxis ? cornerMin.yTouch : cornerMax.yTouch;
 
-      yMapFrom = TOUCH_INVERT_Y ? cornerMax.xTouch : cornerMin.xTouch;
-      yMapTo   = TOUCH_INVERT_Y ? cornerMin.xTouch : cornerMax.xTouch;
+      yMapFrom = m_invertYAxis ? cornerMax.xTouch : cornerMin.xTouch;
+      yMapTo   = m_invertYAxis ? cornerMin.xTouch : cornerMax.xTouch;
       break;
 
     default:

@@ -50,7 +50,9 @@
 #include "widgets/widgetsetup.h"
 #include "../user_setup.h"
 
-#ifndef HAS_TOUCH
+#if defined(TOUCH_FT6236U) || defined(TOUCH_FT6336) || defined(TOUCH_CST816) || defined(TOUCH_GT911) || defined(TOUCH_XPT2046)
+#define HAS_TOUCH true
+#else
 #define HAS_TOUCH false
 #endif
 
@@ -75,6 +77,8 @@
 #include "output_widgets.h"
 
 #include "freertos/queue.h"
+
+
 
 /**
  * @brief Maximum length for a single log line
@@ -111,6 +115,8 @@ private:
     static uint8_t logIndex; ///< Index of the next log message to be written.
     static uint16_t logFileCount; ///< Number of log files created
     bool m_debugTouch = false;
+    int m_x0 = 0, m_y0 = 0, m_x1 = 0, m_y1 = 0;
+    bool m_invertXAxis = false, m_invertYAxis = false, m_swapAxis = false;
     
 
 
@@ -321,10 +327,13 @@ public:
 #endif
 
     void startTouch(uint16_t w, uint16_t h, uint8_t _rotation, SPIClass *_sharedSPI);
+    void setTouchCorners(int x0, int x1, int y0, int y1);
+    void setInvertAxis(bool invert_x, bool invert_y);
+    void setSwapAxis(bool swap);
 
     #if defined(TOUCH_XPT2046)
-    void startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT);
-    void startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSclk, int8_t pinMosi, int8_t pinMiso, int8_t pinCS, Arduino_GFX *_objTFT);
+    void startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS);
+    void startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSclk, int8_t pinMosi, int8_t pinMiso, int8_t pinCS, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS);
     #elif defined(TOUCH_FT6236U)
     void startTouchFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, uint8_t pinINT, int8_t pinRST);
     #elif defined(TOUCH_FT6336)
