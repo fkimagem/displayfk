@@ -98,6 +98,10 @@ TouchScreen::~TouchScreen()
   #endif
 }
 
+void TouchScreen::setLogMessages(bool logMessages){
+  m_logMessages = logMessages;
+}
+
 void TouchScreen::setTouchCorners(int x0, int y0, int x1, int y1){
   m_x0 = x0;
   m_y0 = y0;
@@ -367,11 +371,12 @@ bool TouchScreen::touch_touched()
   if (hasTouch)
   {
 
-    Serial.printf("Raw xyz[%i\t%i\t%i]\n", xTouch, yTouch, zTouch);
+    if(m_logMessages){
+      Serial.printf("Raw xyz[%i\t%i\t%i]\n", xTouch, yTouch, zTouch);
+    }
     ScreenPoint_t toque = getScreenPosition(xTouch, yTouch); // Raw XY touch converted to XY screen
                                                              // Serial.printf("Raw xyz[%i\t%i\t%i]\n", xTouch, yTouch, zTouch);
                                                              // Serial.printf("Scr xyz[%i\t%i\t%i]\n", toque.x, toque.y, zTouch);
-
 
     if(m_swapAxis){
       //m_ts->x = constrain(xTouch, m_calibMatrix[2], m_calibMatrix[3]);
@@ -610,7 +615,10 @@ void TouchScreen::calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg,
       int y = points[j][1];
 
       m_objTFT->fillCircle(x, y, size / 2, color_bg);
-      Serial.printf("Ponto %i: %i x %i\n", j, x, y);
+      if(m_logMessages){
+        Serial.printf("Ponto %i: %i x %i\n", j, x, y);
+      }
+      
     }
 
     // Desenhe o quadrado vermelho com linhas cruzadas no ponto de calibração
@@ -619,19 +627,24 @@ void TouchScreen::calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg,
     m_objTFT->fillCircle(x, y, size / 3, color_fg);
 
     // Aguarde o usuário tocar no ponto
-    Serial.printf("Calibrando ponto %d\n", i);
+    if(m_logMessages){
+      Serial.printf("Calibrando ponto %d\n", i);
+    }
     for (uint8_t j = 0; j < 8; j++) // Média de 8 leituras para cada ponto
     {
       while (!m_ts->getInputBodmer())
         ; // Aguarde até detectar o toque
       values[i * 2] += m_ts->x;
       values[i * 2 + 1] += m_ts->y;
-      Serial.printf("{%d\t%d\t%d}\n", m_ts->x, m_ts->y, m_ts->z);
+      if(m_logMessages){
+      Serial.printf("{%d\t%d\t%d}\n", m_ts->x, m_ts->y, m_ts->z);}
     }
 
     values[i * 2] /= 8;
     values[i * 2 + 1] /= 8;
+    if(m_logMessages){
     Serial.printf("Calibrado ponto %d => %d, %d\n", i, values[i * 2], values[i * 2 + 1]);
+    }
 
     m_objTFT->fillCircle(points[i][0], points[i][1], size, color_bg); // Apaga o ponto de toque com a cor de fundo
     delay(2000);                                                      // Aguarda antes do próximo ponto
@@ -678,9 +691,10 @@ void TouchScreen::calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg,
     parameters[3] = m_touchCalibration_y1;
     parameters[4] = m_touchCalibration_rotate | (m_touchCalibration_invert_x << 1) | (m_touchCalibration_invert_y << 2);
   }
-
+if(m_logMessages){
   Serial.println("Calibração concluída:");
   Serial.printf("x0: %d, x1: %d, y0: %d, y1: %d\n", m_touchCalibration_x0, m_touchCalibration_x1, m_touchCalibration_y0, m_touchCalibration_y1);
+}
 }
 #endif
 /**
@@ -746,7 +760,9 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
     delay(1000);
 
     // objTFT->fillCircle(widthScreen / 2, heightScreen / 2, 20, 0x07c0);
+    if(m_logMessages){
     Serial.printf("Calibration point %i: %i, %i\n", i, points[i].xScreen, points[i].yScreen);
+    }
     const uint16_t margin = 50;
 
     m_objTFT->fillRect(rectScreen->x + margin, rectScreen->y + margin, rectScreen->width - 2 * margin, rectScreen->height - 2 * margin, 0xffff);
@@ -760,16 +776,22 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
     {
       while (!m_ts->getInputBodmer())
         ;
+        if(m_logMessages){
       Serial.printf("%i, %i\n", m_ts->x, m_ts->y);
+        }
       points[i].xTouch += m_ts->x;
       points[i].yTouch += m_ts->y;
+      if(m_logMessages){
       Serial.printf("{%i\t%i\t%i}\n", m_ts->x, m_ts->y, m_ts->z);
+      }
     }
     points[i].xTouch /= captureCount;
     points[i].yTouch /= captureCount;
 
     m_objTFT->fillCircle(points[i].xScreen, points[i].yScreen, sizeMarker, color_bg);
+    if(m_logMessages){
     Serial.printf("Calibrado %i => %i, %i\n", i, points[i].xTouch, points[i].yTouch);
+    }
     m_objTFT->setCursor(rectScreen->width / 2, rectScreen->height / 2);
     m_objTFT->print("OK");
 
@@ -782,7 +804,9 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
   // Somar o X de todos os pontos, e somar todos os Y tambem
   for (uint8_t i = 0; i < length; i++)
   {
+    if(m_logMessages){
     Serial.printf("Tela: %i x %i = Touch: %i x %i\n", points[i].xScreen, points[i].yScreen, points[i].xTouch, points[i].yTouch);
+    }
     mediaX += points[i].xTouch;
     mediaY += points[i].yTouch;
   }
@@ -891,14 +915,15 @@ ScreenPoint_t TouchScreen::getScreenPosition(int16_t xTouch, int16_t yTouch)
 
   if (!m_calibMatrix)
     return screenPos;
-
+if(m_logMessages){
   Serial.printf("Get screen position for xTouch: %i and yTouch: %i\n", xTouch, yTouch);
-
+}
   CalibrationPoint_t cornerMin = getMinPoint(m_calibMatrix);
   CalibrationPoint_t cornerMax = getMaxPoint(m_calibMatrix);
 
+  if(m_logMessages){
   Serial.printf("Ponto minimo: %i x %i e ponto maximo: %i x %i\n", cornerMin.xTouch, cornerMin.yTouch, cornerMax.xTouch, cornerMax.yTouch);
-
+  }
   xTouch = constrain(xTouch, cornerMin.xTouch, cornerMax.xTouch);
   yTouch = constrain(yTouch, cornerMin.yTouch, cornerMax.yTouch);
 
@@ -957,10 +982,10 @@ ScreenPoint_t TouchScreen::getScreenPosition(int16_t xTouch, int16_t yTouch)
 
   screenPos.x = map(xMapVal, xMapFrom, xMapTo, 0, m_widthScreen);
   screenPos.y = map(yMapVal, yMapFrom, yMapTo, 0, m_heightScreen);
-
+if(m_logMessages){
   Serial.printf("Mapped x: %i from [%i → %i] to [0 → %i] = %i\n", xMapVal, xMapFrom, xMapTo, m_widthScreen, screenPos.x);
   Serial.printf("Mapped y: %i from [%i → %i] to [0 → %i] = %i\n", yMapVal, yMapFrom, yMapTo, m_heightScreen, screenPos.y);
-
+}
   return screenPos;
 }
 #endif
@@ -1028,20 +1053,28 @@ void TouchScreen::calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32
       delay(1000);
 
     m_objTFT->fillCircle(m_widthScreen / 2, m_heightScreen / 2, 20, 0x07c0);
+    if(m_logMessages){
     Serial.printf("Calibrando %i\n", i);
+    }
     for (uint8_t j = 0; j < 8; j++)
     {
       // Use a lower detect threshold as corners tend to be less sensitive
       while (!m_ts->getInputBodmer())
         ;
+        if(m_logMessages){
       Serial.printf("%i, %i\n", m_ts->x, m_ts->y);
+        }
       values[i * 2] += m_ts->x;
       values[i * 2 + 1] += m_ts->y;
+      if(m_logMessages){
       Serial.printf("{%i\t%i\t%i}\n", m_ts->x, m_ts->y, m_ts->z);
+      }
     }
     values[i * 2] /= 8;
     values[i * 2 + 1] /= 8;
+    if(m_logMessages){
     Serial.printf("Calibrado %i => %i, %i\n", i, values[i * 2], values[i * 2 + 1]);
+    }
     m_objTFT->fillCircle(m_widthScreen / 2, m_heightScreen / 2, 20, 0xf800);
     delay(2000);
   }
@@ -1065,11 +1098,13 @@ void TouchScreen::calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32
     m_touchCalibration_y1 = (values[3] + values[7]) / 2; // calc max y
   }
 
+  if(m_logMessages){
   for (auto i = 0; i < 8; ++i)
   {
     Serial.print(values[i]);
     Serial.print("\t");
   }
+}
 
   /*Serial.print("\n");
   Serial.println("Calibrated values before");
@@ -1110,12 +1145,14 @@ void TouchScreen::calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32
   if (m_touchCalibration_y1 == 0)
     m_touchCalibration_y1 = 1;
 
+    if(m_logMessages){
   Serial.println("Calibrated values");
   Serial.println(m_touchCalibration_x0);
   Serial.println(m_touchCalibration_x1);
   Serial.println(m_touchCalibration_y0);
   Serial.println(m_touchCalibration_y1);
   Serial.println("-----------------");
+  }
 
   // export parameters, if pointer valid
   if (parameters != NULL)

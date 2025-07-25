@@ -33,23 +33,6 @@
     #pragma message("No touch driver selected")
   #endif
 
-// Defines for eache touch ci and check requeired defines
-  #if defined(TOUCH_XPT2046)
-    
-  #elif defined(TOUCH_FT6236U)
-    //#define TOUCH_FT6X36_SCL 18
-    //#define TOUCH_FT6X36_SDA 2
-    //#define TOUCH_FT6X36_INT 21
-    
-  #elif defined(TOUCH_FT6336)
-  
-  #elif defined(TOUCH_CST816)
-  
-  #elif defined(TOUCH_GT911)
-    
-
-  #endif
-
   // Include the touch library
   #if defined(TOUCH_XPT2046)
     #include "XPT2046.h"
@@ -153,6 +136,7 @@ private:
   int m_x0 = 0, m_x1 = 0, m_y0 = 0, m_y1 = 0;
   bool m_invertXAxis = false, m_invertYAxis = false, m_swapAxis = false;
   int m_displayPinCS = -1;
+  bool m_logMessages = false;
 
 
 public:
@@ -170,6 +154,7 @@ public:
   void setTouchCorners(int x0, int x1, int y0, int y1);
   void setInvertAxis(bool invert_x, bool invert_y);
   void setSwapAxis(bool swap);
+  void setLogMessages(bool enable);
 
   #if defined(TOUCH_XPT2046)
   CalibrationPoint_t getMinPoint(CalibrationPoint_t pontos[4]);
