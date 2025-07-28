@@ -316,7 +316,7 @@ public:
     void loopTask();
     TaskHandle_t getTaskHandle();
 
-#if (HAS_TOUCH)
+#if defined(HAS_TOUCH)
 #if defined(TOUCH_XPT2046)
     void checkCalibration();
     void recalibrate();
