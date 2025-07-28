@@ -1115,7 +1115,7 @@ DisplayFK::~DisplayFK()
     }
 #endif
 
-#if (HAS_TOUCH)
+#if defined(HAS_TOUCH)
     if (touchExterno) {
         delete touchExterno;
         touchExterno = nullptr;
@@ -1201,7 +1201,7 @@ void DisplayFK::setFontBold(const GFXfont *_font)
     WidgetBase::fontBold = _font;
 }
 
-#if HAS_TOUCH && defined(DISP_DEFAULT)
+#if defined(HAS_TOUCH) && defined(DISP_DEFAULT)
 
 /**
  * @brief Initializes the touch system
@@ -2089,7 +2089,7 @@ void DisplayFK::loopTask() {
     processCallback();
 
     // Process touch events
-#if defined(TOUCH_CS) || HAS_TOUCH
+#if defined(TOUCH_CS) || defined(HAS_TOUCH)
     uint16_t xTouch, yTouch;
     int zPressure;
     bool hasTouch = false;
@@ -2165,14 +2165,14 @@ void DisplayFK::disableTouchLog(){
     touchExterno->setLogMessages(false);
 }
 
-#if defined(TOUCH_XPT2046) && HAS_TOUCH
+#if defined(TOUCH_XPT2046) && defined(HAS_TOUCH)
 
 /**
  * @brief Checks and performs touch calibration
  */
 void DisplayFK::checkCalibration()
 {
-#if HAS_TOUCH
+#if defined(HAS_TOUCH)
     if (!WidgetBase::objTFT)
     {
         Serial.println("Define WidgetBase::objTFT before use this function");

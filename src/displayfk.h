@@ -49,12 +49,8 @@
 
 #include "widgets/widgetsetup.h"
 #include "../user_setup.h"
+#include "check_touch.h"
 
-#if defined(TOUCH_FT6236U) || defined(TOUCH_FT6336) || defined(TOUCH_CST816) || defined(TOUCH_GT911) || defined(TOUCH_XPT2046)
-#define HAS_TOUCH true
-#else
-#define HAS_TOUCH false
-#endif
 
 #include <Arduino.h>
 #include "SPIFFS.h"

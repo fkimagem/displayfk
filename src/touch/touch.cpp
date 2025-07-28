@@ -70,7 +70,7 @@ touch_init();
 
 uint16_t TouchScreen::getWidthScreen()
 {
-#if HAS_TOUCH
+#if defined(HAS_TOUCH)
   return m_widthScreen;
 #else
   return 0;
@@ -79,7 +79,7 @@ uint16_t TouchScreen::getWidthScreen()
 
 uint16_t TouchScreen::getHeightScreen()
 {
-#if HAS_TOUCH
+#if defined (HAS_TOUCH)
   return m_heightScreen;
 #else
   return 0;
@@ -91,7 +91,7 @@ uint16_t TouchScreen::getHeightScreen()
  */
 TouchScreen::~TouchScreen()
 {
-  #if HAS_TOUCH
+  #if defined(HAS_TOUCH)
   if(m_ts){
     delete m_ts;
   }
@@ -289,7 +289,7 @@ bool TouchScreen::touch_has_signal()
  */
 bool TouchScreen::touch_touched()
 {
-#if defined(TOUCH_FT6236) && HAS_TOUCH
+#if defined(TOUCH_FT6236) && defined(HAS_TOUCH)
   if (m_touch_touched_flag)
   {
     m_touch_touched_flag = false;
@@ -303,7 +303,7 @@ bool TouchScreen::touch_touched()
     return false;
   }
 
-#elif defined(TOUCH_GT911) && HAS_TOUCH
+#elif defined(TOUCH_GT911) && defined(HAS_TOUCH)
   m_ts->read();
   if (m_ts->isTouched)
   {
@@ -335,7 +335,7 @@ bool TouchScreen::touch_touched()
     return false;
   }
 
-#elif defined(TOUCH_XPT2046) && HAS_TOUCH
+#elif defined(TOUCH_XPT2046) && defined(HAS_TOUCH)
 
   if (!m_calibMatrix)
   {
@@ -400,7 +400,7 @@ bool TouchScreen::touch_touched()
     return false;
   }
 
-#elif defined(TOUCH_FT6236U) && HAS_TOUCH
+#elif defined(TOUCH_FT6236U) && defined(HAS_TOUCH)
   if (m_ts->touched())
   {
     // Retrieve a point
@@ -425,7 +425,7 @@ bool TouchScreen::touch_touched()
     return false;
   }
 
-#elif defined(TOUCH_CST816) && HAS_TOUCH
+#elif defined(TOUCH_CST816) && defined(HAS_TOUCH)
   bool touched;
   uint8_t gesture;
   uint16_t touchX, touchY;
@@ -439,7 +439,7 @@ bool TouchScreen::touch_touched()
   }
 
   return touched;
-#elif defined(TOUCH_FT6336) && HAS_TOUCH
+#elif defined(TOUCH_FT6336) && defined(HAS_TOUCH)
   bool touched = tp.touch_count > 0;
   if (!touched)
     return false;
@@ -541,7 +541,7 @@ uint8_t TouchScreen::getRotation()
  * @brief Sets the calibration of the touch screen.
  * @param array Array of calibration points.
  */
-#if HAS_TOUCH && defined(TOUCH_XPT2046)
+#if defined(HAS_TOUCH) && defined(TOUCH_XPT2046)
 void TouchScreen::setCalibration(CalibrationPoint_t *array)
 {
   delete[] m_calibMatrix;
@@ -578,7 +578,7 @@ void TouchScreen::setCalibration(CalibrationPoint_t *array)
  * @param color_bg Color of the background.
  * @param size Size of the calibration points.
  */
-#if HAS_TOUCH && defined(TOUCH_XPT2046)
+#if defined(HAS_TOUCH) && defined(TOUCH_XPT2046)
 void TouchScreen::calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg, uint32_t color_bg, uint8_t size)
 {
   int16_t values[18] = {0}; // 9 pontos (x, y) = 18 valores
@@ -706,7 +706,7 @@ if(m_logMessages){
  * @param color_bg Color of the background.
  * @param sizeMarker Size of the marker.
  */
-#if HAS_TOUCH && defined(TOUCH_XPT2046)
+#if defined(HAS_TOUCH) && defined(TOUCH_XPT2046)
 void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t length, Rect_t *rectScreen, uint32_t color_fg, uint32_t color_bg, uint8_t sizeMarker)
 {
   // CalibrationPoint_t points[4];
@@ -908,7 +908,7 @@ void TouchScreen::drawStar(int16_t xPos, int16_t yPos, uint8_t size, uint16_t co
  * @param yTouch Y position of the touch.
  * @return Screen position of the touch.
  */
-#if defined(TOUCH_XPT2046) && HAS_TOUCH
+#if defined(TOUCH_XPT2046) && defined(HAS_TOUCH)
 ScreenPoint_t TouchScreen::getScreenPosition(int16_t xTouch, int16_t yTouch)
 {
   ScreenPoint_t screenPos = {0, 0};
@@ -996,7 +996,7 @@ if(m_logMessages){
  * @param color_bg Color of the background.
  * @param size Size of the calibration points.
  */
-#if defined(TOUCH_XPT2046) && HAS_TOUCH
+#if defined(TOUCH_XPT2046) && defined(HAS_TOUCH)
 void TouchScreen::calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32_t color_bg, uint8_t size)
 {
   int16_t values[] = {0, 0, 0, 0, 0, 0, 0, 0};

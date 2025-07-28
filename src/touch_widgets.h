@@ -1,7 +1,7 @@
 #include "../user_setup.h"
 #include "widgets/widgetsetup.h"
 
-#if HAS_TOUCH
+#if defined(HAS_TOUCH)
 
 
 #if defined(DFK_TOUCHAREA)
