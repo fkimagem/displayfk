@@ -2155,14 +2155,18 @@ TaskHandle_t DisplayFK::getTaskHandle()
 /** @brief Enables touch log */
 void DisplayFK::enableTouchLog(){
     m_debugTouch = true;
+    #if defined(HAS_TOUCH)
     touchExterno->setLogMessages(true);
+    #endif
     
 }
 
 /** @brief Disables touch log */
 void DisplayFK::disableTouchLog(){
     m_debugTouch = false;
+    #if defined(HAS_TOUCH)
     touchExterno->setLogMessages(false);
+    #endif
 }
 
 #if defined(TOUCH_XPT2046) && defined(HAS_TOUCH)

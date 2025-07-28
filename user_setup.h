@@ -8,7 +8,7 @@
 #define PLACA_CUSTOM //Defina seus proprios pinos
 
 //#define PLACA_ST7735 1
-
+/*
 #if defined(PLACA_P1)
 #include "examples/Geral/P1/board_p1.h"
 
@@ -43,3 +43,6 @@
 #error "Defina a placa no arquivo user_setup.h"
 
 #endif
+*/
+
+#define DISP_DEFAULT
