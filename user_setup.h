@@ -46,3 +46,6 @@
 */
 
 #define DISP_DEFAULT
+#define TOUCH_XPT2046
+//#define INVERT_COLOR_BITS
+//#define IS_BGR
