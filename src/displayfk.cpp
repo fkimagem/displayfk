@@ -1239,6 +1239,9 @@ void DisplayFK::setSwapAxis(bool swap){
 
 #if defined(TOUCH_XPT2046)
 void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS){
+    m_widthScreen = w;
+    m_rotationScreen = _rotation;
+    m_heightScreen = h;
     if(!touchExterno){
         touchExterno = new TouchScreen();
         if (touchExterno)
@@ -1251,6 +1254,9 @@ void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int
     }
 }
 void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSclk, int8_t pinMosi, int8_t pinMiso, int8_t pinCS, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS){
+    m_widthScreen = w;
+    m_rotationScreen = _rotation;
+    m_heightScreen = h;
     if(!touchExterno){
         touchExterno = new TouchScreen();
         if (touchExterno)
@@ -1264,6 +1270,9 @@ void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int
 }
 #elif defined (TOUCH_FT6236U)
 void DisplayFK::startTouchFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, uint8_t pinINT, int8_t pinRST){
+    m_widthScreen = w;
+    m_rotationScreen = _rotation;
+    m_heightScreen = h;
     if(!touchExterno){
         touchExterno = new TouchScreen();
         if (touchExterno)
@@ -1277,6 +1286,9 @@ void DisplayFK::startTouchFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, int
 }
 #elif defined (TOUCH_FT6336)
 void DisplayFK::startTouchFT6336(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST){
+    m_widthScreen = w;
+    m_rotationScreen = _rotation;
+    m_heightScreen = h;
     if(!touchExterno){
         touchExterno = new TouchScreen();
         if (touchExterno)
@@ -1290,6 +1302,9 @@ void DisplayFK::startTouchFT6336(uint16_t w, uint16_t h, uint8_t _rotation, int8
 }
 #elif defined (TOUCH_CST816)
 void DisplayFK::startTouchCST816(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST){
+    m_widthScreen = w;
+    m_rotationScreen = _rotation;
+    m_heightScreen = h;
     if(!touchExterno){
         touchExterno = new TouchScreen();
         if (touchExterno)
@@ -1303,7 +1318,9 @@ void DisplayFK::startTouchCST816(uint16_t w, uint16_t h, uint8_t _rotation, int8
 }
 #elif defined (TOUCH_GT911)
 void DisplayFK::startTouchGT911(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST){
-    
+    m_widthScreen = w;
+    m_rotationScreen = _rotation;
+    m_heightScreen = h;
     if(!touchExterno){
         touchExterno = new TouchScreen();
         if (touchExterno)
@@ -2220,9 +2237,10 @@ void DisplayFK::checkCalibration()
     WidgetBase::objTFT->setTextColor(corDoMarcador, corDoFundo);
     if (!jaCalibrado)
     {
-        WidgetBase::objTFT->setRotation(0);
-        uint16_t widthScreen = WidgetBase::objTFT->width();
-        uint16_t heightScreen = WidgetBase::objTFT->height();
+        //WidgetBase::objTFT->setRotation(0);
+        WidgetBase::objTFT->setRotation(m_rotationScreen);
+        uint16_t widthScreen = m_widthScreen;// WidgetBase::objTFT->width();
+        uint16_t heightScreen = m_heightScreen;// WidgetBase::objTFT->height();
         Serial.printf("Dimensao da tela: %i x %i\n", widthScreen, heightScreen);
 
         Serial.println("recalibrando");

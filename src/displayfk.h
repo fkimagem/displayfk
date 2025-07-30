@@ -113,6 +113,10 @@ private:
     bool m_debugTouch = false;
     int m_x0 = 0, m_y0 = 0, m_x1 = 0, m_y1 = 0;
     bool m_invertXAxis = false, m_invertYAxis = false, m_swapAxis = false;
+    int m_widthScreen = 0;
+    int m_heightScreen = 0;
+    int m_rotationScreen = 0;
+
     
 
 

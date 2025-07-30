@@ -160,6 +160,10 @@ public:
   void calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg, uint32_t color_bg, uint8_t size);
   void calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t length, Rect_t* rectScreen, uint32_t color_fg, uint32_t color_bg, uint8_t sizeMarker);
   ScreenPoint_t getScreenPosition(int16_t xTouch, int16_t yTouch);
+  ScreenPoint_t touchToTelaPonto0e2(int16_t xTouch, int16_t yTouch);
+  int mapTouch(int val, int in_min, int in_max, int out_min, int out_max);
+
+
   void setCalibration(CalibrationPoint_t *array);
 
   #elif defined(TOUCH_FT6236U)

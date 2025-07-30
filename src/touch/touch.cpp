@@ -374,11 +374,12 @@ bool TouchScreen::touch_touched()
     if(m_logMessages){
       Serial.printf("Raw xyz[%i\t%i\t%i]\n", xTouch, yTouch, zTouch);
     }
-    ScreenPoint_t toque = getScreenPosition(xTouch, yTouch); // Raw XY touch converted to XY screen
+    ScreenPoint_t toque = touchToTelaPonto0e2(xTouch, yTouch);
+    //ScreenPoint_t toque = getScreenPosition(xTouch, yTouch); // Raw XY touch converted to XY screen
                                                              // Serial.printf("Raw xyz[%i\t%i\t%i]\n", xTouch, yTouch, zTouch);
                                                              // Serial.printf("Scr xyz[%i\t%i\t%i]\n", toque.x, toque.y, zTouch);
 
-    if(m_swapAxis){
+    /*if(m_swapAxis){
       m_touch_last_x = toque.y;
       m_touch_last_y = toque.x;
       m_touch_last_z = zTouch;
@@ -386,7 +387,11 @@ bool TouchScreen::touch_touched()
       m_touch_last_x = toque.x;
       m_touch_last_y = toque.y;
       m_touch_last_z = zTouch;
-    }
+    }*/
+
+    m_touch_last_x = toque.x;
+    m_touch_last_y = toque.y;
+    m_touch_last_z = zTouch;
     
 
     return true;
@@ -744,22 +749,25 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
 
   for (auto i = 0; i < length; i++)
   {
+
+    CalibrationPoint_t currentPoint = points[i];
     // objTFT->fillCircle(points[0].xScreen, points[0].yScreen, size / 2, color_bg);
     // objTFT->fillCircle(points[1].xScreen, points[1].yScreen, size / 2, color_bg);
     // objTFT->fillCircle(points[2].xScreen, points[2].yScreen, size / 2, color_bg);
     // objTFT->fillCircle(points[3].xScreen, points[3].yScreen, size / 2, color_bg);
 
-    m_objTFT->fillCircle(points[i].xScreen, points[i].yScreen, sizeMarker, color_fg);
+    m_objTFT->fillCircle(currentPoint.xScreen, currentPoint.yScreen, sizeMarker, color_fg);
+    if(m_logMessages){
+      Serial.printf("Calibration point %i: %i, %i\n", i, currentPoint.xScreen, currentPoint.yScreen);
+    }
 
     // drawStar(points[i].xScreen, points[i].yScreen, sizeMarker, color_bg);
 
     delay(1000);
 
     // objTFT->fillCircle(widthScreen / 2, heightScreen / 2, 20, 0x07c0);
-    if(m_logMessages){
-    Serial.printf("Calibration point %i: %i, %i\n", i, points[i].xScreen, points[i].yScreen);
-    }
-    const uint16_t margin = 50;
+    
+    const uint16_t margin = 20;
 
     m_objTFT->fillRect(rectScreen->x + margin, rectScreen->y + margin, rectScreen->width - 2 * margin, rectScreen->height - 2 * margin, 0xffff);
     m_objTFT->setCursor(rectScreen->width / 2, rectScreen->height / 2);
@@ -898,6 +906,8 @@ void TouchScreen::drawStar(int16_t xPos, int16_t yPos, uint8_t size, uint16_t co
   }
 }
 #endif
+
+
 /**
  * @brief Gets the screen position of the touch screen.
  * @param xTouch X position of the touch.
@@ -905,6 +915,46 @@ void TouchScreen::drawStar(int16_t xPos, int16_t yPos, uint8_t size, uint16_t co
  * @return Screen position of the touch.
  */
 #if defined(TOUCH_XPT2046) && defined(HAS_TOUCH)
+
+int TouchScreen::mapTouch(int val, int in_min, int in_max, int out_min, int out_max) {
+    if (in_max == in_min) return out_min;
+    int result = (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+
+    if(m_logMessages){
+      Serial.printf(
+          "mapTouch: val=%d, in_min=%d, in_max=%d, out_min=%d, out_max=%d -> result=%d\n",
+          val, in_min, in_max, out_min, out_max, result
+      );
+    }
+
+    return result;
+}
+
+ScreenPoint_t TouchScreen::touchToTelaPonto0e2(int16_t xTouch, int16_t yTouch){
+  ScreenPoint_t screenPos = {0, 0};
+  if (!m_calibMatrix)
+    return screenPos;
+
+    CalibrationPoint_t p0 = m_calibMatrix[0]; // Ponto mais próximo da origem
+    CalibrationPoint_t p2 = m_calibMatrix[2]; // Ponto mais distante da origem
+
+    if(m_logMessages){
+      Serial.printf("Ponto 0: (%d,%d) = (%d,%d)\n", p0.xScreen, p0.yScreen, p0.xTouch, p0.yTouch);
+      Serial.printf("Ponto 2: (%d,%d) = (%d,%d)\n", p2.xScreen, p2.yScreen, p2.xTouch, p2.yTouch);
+    }
+
+    if(m_swapAxis){
+      screenPos.x = mapTouch(yTouch, p0.yTouch, p2.yTouch, p0.xScreen, p2.xScreen);
+      screenPos.y = mapTouch(xTouch, p0.xTouch, p2.xTouch, p0.yScreen, p2.yScreen);
+    }else{
+      screenPos.x = mapTouch(xTouch, p0.xTouch, p2.xTouch, p0.xScreen, p2.xScreen);
+      screenPos.y = mapTouch(yTouch, p0.yTouch, p2.yTouch, p0.yScreen, p2.yScreen);
+    }
+    
+
+    return screenPos;
+}
+
 ScreenPoint_t TouchScreen::getScreenPosition(int16_t xTouch, int16_t yTouch)
 {
   ScreenPoint_t screenPos = {0, 0};
