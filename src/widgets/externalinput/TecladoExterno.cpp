@@ -17,12 +17,12 @@ TecladoExterno::TecladoExterno() : m_internalTime(0), m_waitForNewDetection(500)
 }
 
 /**
- * @brief Configura o teclado externo.
+ * @brief Configures the external keyboard.
  *
- * @param teclado Ponteiro para um array de estruturas keypadExtern_t, cada uma representando um teclado.
- * @param qtdTeclados Quantidade de teclados no array.
- * @param minimunADToConsider Valor minimo lido do ADC para considerar como sinal (quadrado do valor, pois e o valor absoluto do sinal).
- * @param thresholdDeviation Desvio padr o entre os valores lidos para considerar um sinal estavel.
+ * @param teclado Pointer to an array of keypadExtern_t structures, each representing a keyboard.
+ * @param qtdTeclados Number of keyboards in the array.
+ * @param minimunADToConsider Minimum value read from ADC to consider as signal (square of value, as it's the absolute signal value).
+ * @param thresholdDeviation Standard deviation between read values to consider a stable signal.
  */
 void TecladoExterno::configure(keypadExtern_t *teclado, uint8_t qtdTeclados, uint16_t minimunADToConsider, uint16_t thresholdDeviation)
 {
@@ -91,24 +91,24 @@ bool TecladoExterno::readKey(keyExtern_t *pressedKey)
 #if !defined(MODO_READONLY) && defined(LOG_KEYBOARD)
         log_d("Entrei loop algumaTeclaApertada %i", indiceTecladoApertado);
 #endif
-        // Crio o array com leituras atuais e coloco valor 0;
-        uint32_t leituraAtual = 0;
+        // Create array with current readings and set value to 0;
+        uint32_t currentReading = 0;
 
-        // Para cada teclado, leio e somo as leituras
+        // For each keyboard, read and sum the readings
         for (uint8_t i = 0; i < QTD_LEITURAS; i++)
         {
-            leituraAtual += (analogRead(m_teclado[indiceTecladoApertado].adPin) / m_divisor);
+            currentReading += (analogRead(m_teclado[indiceTecladoApertado].adPin) / m_divisor);
         }
 
-        // Divido pelo total de leituras para obter a media
-        leituraAtual = leituraAtual / QTD_LEITURAS;
+        // Divide by total readings to get the average
+        currentReading = currentReading / QTD_LEITURAS;
 
-        m_teclado[indiceTecladoApertado].ultimaLeitura = (leituraAtual + m_teclado[indiceTecladoApertado].ultimaLeitura) / 2;
+        m_teclado[indiceTecladoApertado].ultimaLeitura = (currentReading + m_teclado[indiceTecladoApertado].ultimaLeitura) / 2;
         shiftArray(m_teclado[indiceTecladoApertado].cacheADValues, m_teclado[indiceTecladoApertado].ultimaLeitura, QTD_CACHE);
 
         float media = 0.0;
         float desvio = 0.0;
-        bool estavel = checkDeviation(m_teclado[indiceTecladoApertado].cacheADValues, QTD_CACHE, THRESHOLD_DEVIATION, &media, &desvio); // 2 significa que o devio entre os valores do array nao podem ser maiores que esse valor
+        bool estavel = checkDeviation(m_teclado[indiceTecladoApertado].cacheADValues, QTD_CACHE, THRESHOLD_DEVIATION, &media, &desvio); // 2 means that the deviation between array values cannot be greater than this value
         int powA = media;
         powA *= powA;
 
@@ -119,24 +119,24 @@ bool TecladoExterno::readKey(keyExtern_t *pressedKey)
 #if defined(MODO_READONLY)
             Serial.printf("%d\n", (int)media);
 #elif defined(LOG_KEYBOARD)
-            log_d("leitura estavel com media: %d", (int)media);
+            log_d("stable reading with average: %d", (int)media);
 #endif
             encontrouTecla = procurarKey(media, m_teclado[indiceTecladoApertado].keys, m_teclado[indiceTecladoApertado].qtdKeys, pressedKey);
         }
         else if (!estavel)
         {
 #if defined(MODO_READONLY)
-            log_d("Desvio muito grande: %d", (int)desvio);
+            log_d("Deviation too large: %d", (int)desvio);
 #elif defined(LOG_KEYBOARD)
-            log_d("Desvio muito grande: %d", (int)desvio);
+            log_d("Deviation too large: %d", (int)desvio);
 #endif
         }
         else if (media < MIN_AD_TO_CONSIDER)
         {
 #if defined(MODO_READONLY)
-            log_d("AD lido muito baixo: %d de %i", (int)media, MIN_AD_TO_CONSIDER);
+            log_d("AD reading too low: %d of %i", (int)media, MIN_AD_TO_CONSIDER);
 #elif defined(LOG_KEYBOARD)
-            log_d("AD lido muito baixo: %d de %i", (int)media, MIN_AD_TO_CONSIDER);
+            log_d("AD reading too low: %d of %i", (int)media, MIN_AD_TO_CONSIDER);
 #endif
         }
 
@@ -149,14 +149,14 @@ bool TecladoExterno::readKey(keyExtern_t *pressedKey)
 
     tempo = millis() - tempo;
 
-    // log_d("Acabou o loop algumaTeclaApertada");
+    // log_d("Finished the loop someKeyPressed");
 
     if (encontrouTecla)
     {
 #if !defined(MODO_READONLY) && defined(LOG_KEYBOARD)
         log_d("Elapsed time readKey: %d", tempo);
 #endif
-        // TODO: verificar a necessidade de resetar (preencher com 0) o cacheADValues
+        // TODO: check the need to reset (fill with 0) the cacheADValues
     }
 
     return encontrouTecla;
@@ -204,8 +204,8 @@ bool TecladoExterno::procurarKey(uint32_t valor, keyExtern_t *keys, size_t size,
     log_d("Looking for key with value: %d", valor);
 #endif
 
-    uint32_t primeiraMedia = (keys[0].avgValue + keys[1].avgValue) / 2;             // Como o size minimo é 2, tira a media entre os dois primeiros valores
-    uint32_t ultimaMedia = (keys[size - 2].avgValue + keys[size - 1].avgValue) / 2; // Como o size minimo é 2, tira a media entre os dois primeiros valores
+    uint32_t primeiraMedia = (keys[0].avgValue + keys[1].avgValue) / 2;             // Since minimum size is 2, get average between first two values
+    uint32_t ultimaMedia = (keys[size - 2].avgValue + keys[size - 1].avgValue) / 2; // Since minimum size is 2, get average between last two values
 
     if (valor >= primeiraMedia)
     {
@@ -263,26 +263,26 @@ bool TecladoExterno::checkDeviation(uint16_t *array, size_t size, uint16_t thres
     float soma = 0.0;
     float somaQuadrados = 0.0;
 
-    // Calcula a soma dos elementos
+    // Calculate sum of elements
     for (size_t i = 0; i < size; i++)
     {
         soma += array[i];
     }
 
-    // Calcula a média
+    // Calculate average
     (*media) = soma / size;
 
-    // Calcula a soma dos quadrados das diferenças em relação à média
+    // Calculate sum of squares of differences from average
     for (size_t i = 0; i < size; i++)
     {
         somaQuadrados += ((array[i] - (*media)) * (array[i] - (*media)));
     }
 
-    // Calcula o desvio padrão
+    // Calculate standard deviation
     float desvioPadrao = sqrt(somaQuadrados / size);
     (*desvio) = desvioPadrao;
 
-    // Retorna true se o desvio padrão for menor ou igual ao threshold
+    // Returns true if standard deviation is less than or equal to threshold
     return desvioPadrao <= threshold;
 }
 

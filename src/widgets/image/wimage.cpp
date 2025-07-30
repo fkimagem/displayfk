@@ -59,15 +59,15 @@ bool Image::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
     return false;
   }
   m_myTime = millis();
-  bool detectado = false;
+  bool detected = false;
   uint16_t xMax = xPos + m_width;
   uint16_t yMax = yPos + m_height;
 
   if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) && (*_yTouch < yMax))
   {
-    detectado = true;
+    detected = true;
   }
-  return detectado;
+  return detected;
 }
 
 /**
@@ -82,6 +82,9 @@ functionCB_t Image::getCallbackFunc()
 
 /**
  * @brief Draws the image on the screen.
+ * 
+ * Loads and renders the image from its source (file or pixels) with optional rotation.
+ * Only draws if the widget is on the current screen and needs updating.
  */
 void Image::draw()
 {
@@ -93,7 +96,7 @@ void Image::draw()
   m_update = false;
 
   if (m_source == SourceFile::SD || m_source == SourceFile::SPIFFS) {
-    // Libera memória existente antes de alocar nova
+    // Free existing memory before allocating new
     if(m_pixels) {
       delete[] m_pixels;
       m_pixels = nullptr;
@@ -136,9 +139,9 @@ void Image::draw()
       return;
     }
 
-    // obtem a largura (width)
+    // Get width
     uint16_t arqWidth = ((file.read()) << 8) | file.read();
-    // obtem a altura (height)
+    // Get height
     uint16_t arqHeight = ((file.read()) << 8) | file.read();
 
     m_width = arqWidth;
@@ -167,7 +170,7 @@ void Image::draw()
     }
 
     uint8_t read_pixels = 2;
-    uint8_t pixel[read_pixels];// 3 bytes per pixel (core 565 + alpha)
+    uint8_t pixel[read_pixels];// 2 bytes per pixel (color 565)
     for(int i = 0; i < read_pixels; i++) {
       pixel[i] = 0;
     }
@@ -182,9 +185,9 @@ void Image::draw()
           m_pixels = nullptr;
           return;
         }
-        //Serial.printf("Pixel: %2x %2x %d\n", pixel[0], pixel[1], pixel[2]);
-        uint16_t cor = (pixel[0] << 8) | pixel[1];
-        m_pixels[y * m_width + x] = cor;
+        //Serial.printf("Pixel: %2x %2x\n", pixel[0], pixel[1]);
+        uint16_t color = (pixel[0] << 8) | pixel[1];
+        m_pixels[y * m_width + x] = color;
       }
     }
 
@@ -193,7 +196,7 @@ void Image::draw()
     if(maskLen == 0) {
       log_e("Invalid mask length");
       file.close();
-      delete[] m_pixels;  // Libera pixels antes de retornar em caso de erro
+      delete[] m_pixels;  // Free pixels before returning in case of error
       m_pixels = nullptr;
       return;
     }

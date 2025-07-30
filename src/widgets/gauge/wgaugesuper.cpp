@@ -63,7 +63,10 @@ functionCB_t GaugeSuper::getCallbackFunc()
 }
 
 /**
- * @brief Starts the gauge.
+ * @brief Initializes the GaugeSuper widget with default calculations and constraints.
+ * 
+ * Calculates gauge dimensions, text bounds, and sets up initial values.
+ * Constrains the maximum angle between 22 and 80 degrees.
  */
 void GaugeSuper::start()
 {
@@ -77,23 +80,23 @@ void GaugeSuper::start()
 
   
 
-  // Configura a fonte
+  // Configure the font
   // m_usedFont = &Roboto_Bold10pt7b;
   WidgetBase::objTFT->setFont(m_usedFont);
 
-  // Calcula as dimensões do texto para os valores
-  char strMin[12], strMax[12];// Maximo de 12 caracteres para os valores
-  sprintf(strMin, "%d", m_vmin * 10);// Multiplico por 10 para ter mais um digito e servir de offset para o texto
-  sprintf(strMax, "%d", m_vmax * 10);// Multiplico por 10 para ter mais um digito e servir de offset para o texto
-  TextBound_t dimensionMin = getTextBounds(strMin, xPos, yPos);// Pega as dimensões do texto
-  TextBound_t dimensionMax = getTextBounds(strMax, xPos, yPos);// Pega as dimensões do texto
-  m_textBoundForValue = dimensionMax.width > dimensionMin.width ? dimensionMax : dimensionMin;// Pega o maior valor entre os dois
+  // Calculate text dimensions for values
+  char strMin[12], strMax[12];// Maximum of 12 characters for values
+  sprintf(strMin, "%d", m_vmin * 10);// Multiply by 10 to have one more digit and serve as text offset
+  sprintf(strMax, "%d", m_vmax * 10);// Multiply by 10 to have one more digit and serve as text offset
+  TextBound_t dimensionMin = getTextBounds(strMin, xPos, yPos);// Get text dimensions
+  TextBound_t dimensionMax = getTextBounds(strMax, xPos, yPos);// Get text dimensions
+  m_textBoundForValue = dimensionMax.width > dimensionMin.width ? dimensionMax : dimensionMin;// Get the larger value between the two
 
-  // Configura o título
-  m_showTitle = (m_title != nullptr && strlen(m_title) > 0);// Verifica se o titulo existe e tem caracteres
+  // Configure the title
+  m_showTitle = (m_title != nullptr && strlen(m_title) > 0);// Check if title exists and has characters
   
-  m_value = m_vmin;// Define o valor inicial
-  m_lastValue = m_vmax;// Define o valor inicial
+  m_value = m_vmin;// Define initial value
+  m_lastValue = m_vmax;// Define initial value
 
   
   //TextBound_t t;
@@ -108,40 +111,40 @@ void GaugeSuper::start()
   }
   
 
-  // Calcula o raio e ângulo do gauge
-  int corda = (m_width - 2 * m_textBoundForValue.width) * 0.9;// Largura do gauge menos o texto dos valores multiplicado por 0.9 para ter um espaço para o texto
-  int aberturaArcoTotal = 2 * m_maxAngle;// Calcula o ângulo total do arco
-  int raioSugerido = corda / (2.0 * fastSin(aberturaArcoTotal / 2.0));// Calcula o raio sugerido
+  // Calculate gauge radius and angle
+  int corda = (m_width - 2 * m_textBoundForValue.width) * 0.9;// Gauge width minus value text multiplied by 0.9 to have space for text
+  int aberturaArcoTotal = 2 * m_maxAngle;// Calculate total arc angle
+  int raioSugerido = corda / (2.0 * fastSin(aberturaArcoTotal / 2.0));// Calculate suggested radius
   int altura = raioSugerido * (1 - fastCos(aberturaArcoTotal / 2.0));
   m_radius = raioSugerido;
-  DEBUG_D("Raio gauge %i\tsegmento %i", m_radius, altura);
+  DEBUG_D("Gauge radius %i\tsegment %i", m_radius, altura);
 
   //m_offsetYAgulha = (40 + m_textBoundForValue.height + m_borderSize);
   int seno = fastSin((90 - m_maxAngle)) * m_radius;
   m_offsetYAgulha = seno - (m_borderSize + m_textBoundForValue.height * 2);
-  DEBUG_D("Offset da agulha: %i\n", m_offsetYAgulha);
+  DEBUG_D("Needle offset: %i\n", m_offsetYAgulha);
   m_rotation = (-(m_maxAngle + m_rotation));
   m_divisor = 1;
 
-  // Configura a origem do gauge
+  // Configure gauge origin
   m_origem.x = xPos;
   m_origem.y = yPos + m_offsetYAgulha;
 
-  // O 3 da borderSize é para ter um espaço para as label e a borda de cima
+  // The 3 in borderSize is to have space for labels and top border
   m_height = (m_radius - m_offsetYAgulha) + (3 * m_borderSize) + (m_textBoundForValue.height * 3);
 
   
 
-  // Ajusta o ângulo máximo
+  // Adjust maximum angle
   m_maxAngle = constrain(m_maxAngle, 22, 80);
 
-  // Reseta o valor do textbound para desenhar o value
+  // Reset textbound value to draw the value
   m_textBoundForValue.x = 0;
   m_textBoundForValue.y = 0;
   m_textBoundForValue.width = 0;
   m_textBoundForValue.height = 0;
 
-  // Calcula as dimensões disponíveis
+  // Calculate available dimensions
   m_availableWidth = m_width - (2 * m_borderSize);
   m_availableHeight = m_height - (2 * m_borderSize);
 
@@ -149,7 +152,10 @@ void GaugeSuper::start()
 }
 
 /**
- * @brief Draws the background of the gauge.
+ * @brief Draws the background of the GaugeSuper widget.
+ * 
+ * Renders the gauge background including colored strips, markers, and labels.
+ * Only draws if the widget is on the current screen and properly loaded.
  */
 void GaugeSuper::drawBackground()
 {
@@ -165,11 +171,11 @@ void GaugeSuper::drawBackground()
 
   DEBUG_D("Draw background GaugeSuper");
 
-  m_indexCurrentStrip = 0;  // Index da primeira cor a ser pega para pintar o fundo da faixa
-  m_stripColor = CFK_WHITE; // o inicio da faixa é branco
-  m_ltx = 0;                // ultima posição x da base da agulha
+  m_indexCurrentStrip = 0;  // Index of first color to paint the strip background
+  m_stripColor = CFK_WHITE; // the beginning of the strip is white
+  m_ltx = 0;                // last x position of needle base
   m_lastPointNeedle.x = m_origem.x;
-  m_lastPointNeedle.y = m_origem.y; // posições da agulha
+  m_lastPointNeedle.y = m_origem.y; // needle positions
 
   for (auto i = 0; i < m_borderSize; ++i)
   {
@@ -182,16 +188,16 @@ void GaugeSuper::drawBackground()
   // WidgetBase::objTFT->drawCircle(_origem.x, _origem.y, _radius, CFK_RED);
   // WidgetBase::objTFT->fillCircle(_origem.x, _origem.y, 2, CFK_RED);
 
-  // Desenha a faixa de cor com intervals menores do que 5 para ficar mais certinho
+  // Draw colored strip with intervals less than 5 to be more precise
   for (int i = 0; i <= (2 * m_maxAngle); i += 1)
   {
-    // Aplica a rotação
+    // Apply rotation
     int angulo = i + m_rotation;
 
-    // Tamanho tick maior
+    // Larger tick size
     int tl = 15;
 
-    // Coordenadas para desenhar o tick
+    // Coordinates to draw the tick
     float sx = fastCos(angulo);
     float sy = fastSin(angulo);
 
@@ -200,7 +206,7 @@ void GaugeSuper::drawBackground()
     uint16_t x1 = sx * m_radius + m_origem.x;
     uint16_t y1 = sy * m_radius + m_origem.y;
 
-    // Coordenadas do proximo tick para preencher o espaço com a cor desejada
+    // Coordinates of next tick to fill space with desired color
     float sx2 = fastCos(angulo + 1);
     float sy2 = fastSin(angulo + 1);
     int x2 = sx2 * (m_radius + tl) + m_origem.x;
@@ -208,7 +214,7 @@ void GaugeSuper::drawBackground()
     int x3 = sx2 * m_radius + m_origem.x;
     int y3 = sy2 * m_radius + m_origem.y;
 
-    int vFaixa = map(i, 0, (2 * m_maxAngle), m_vmin, m_vmax); // Tranforma o for de -50 a 50 no value entre min e max para poder pintar
+    int vFaixa = map(i, 0, (2 * m_maxAngle), m_vmin, m_vmax); // Transform the for loop from -50 to 50 into value between min and max to paint
     if (vFaixa >= m_intervals[m_indexCurrentStrip] && m_indexCurrentStrip < m_amountInterval)
     {
       m_stripColor = m_colors[m_indexCurrentStrip];
@@ -220,9 +226,9 @@ void GaugeSuper::drawBackground()
       WidgetBase::objTFT->fillTriangle(x1, y1, x2, y2, x3, y3, m_stripColor);
     }
   }
-  // Fim do desenho do arco colorido
+  // End of colored arc drawing
 
-  // Calcula e desenha o multiplcador
+  // Calculate and draw the multiplier
   WidgetBase::objTFT->setTextColor(m_textColor); // Text color
 
   uint32_t absMin = 0;
@@ -260,18 +266,18 @@ void GaugeSuper::drawBackground()
   if (m_showLabels)
   {
 
-    // Reseta os values para desenhar os textos
-    m_indexCurrentStrip = 0; // Index do primeiro intervalo para escrever o value
+    // Reset values to draw texts
+    m_indexCurrentStrip = 0; // Index of first interval to write the value
 
-    // Repetição para desenhar os textos dos intervals
+    // Loop to draw interval texts
     for (int i = 0; i <= (2 * m_maxAngle); i += 1)
     {
       int angulo = i + m_rotation;
 
-      // Tamanho tick maior
+      // Larger tick size
       int tl = 15;
 
-      // Coordenadas para desenhar o tick
+      // Coordinates to draw the tick
       float sx = fastCos(angulo);
       float sy = fastSin(angulo);
       uint16_t x0 = sx * (m_radius + tl) + m_origem.x;
@@ -316,14 +322,14 @@ void GaugeSuper::drawBackground()
     }
   }
 
-  // Desenha os ticks a cada 5 graus
+  // Draw ticks every 5 degrees
   for (int i = 0; i <= 2 * m_maxAngle; i += 5)
   {
     int angulo = i + m_rotation;
-    // Tamanho tick maior
+    // Larger tick size
     int tl = 15;
 
-    // Coordenadas para desenhar o tick
+    // Coordinates to draw the tick
     float sx = fastCos(angulo);
     float sy = fastSin(angulo);
     uint16_t x0 = sx * (m_radius + tl) + m_origem.x;
@@ -331,26 +337,26 @@ void GaugeSuper::drawBackground()
     uint16_t x1 = sx * m_radius + m_origem.x;
     uint16_t y1 = sy * m_radius + m_origem.y;
 
-    // Tamanho tick menor
+    // Smaller tick size
     if (i % 25 != 0)
       tl = 8;
 
-    // Recalcula as coordenadas caso o tick mude o tamanho, no caso, se o angulo nao for multiplo de 25
+    // Recalculate coordinates if tick changes size, in case angle is not multiple of 25
     x0 = sx * (m_radius + tl) + m_origem.x;
     y0 = sy * (m_radius + tl) + m_origem.y;
     x1 = sx * m_radius + m_origem.x;
     y1 = sy * m_radius + m_origem.y;
 
-    // Desenha o tick
+    // Draw the tick
     WidgetBase::objTFT->drawLine(x0, y0, x1, y1, m_marcadoresColor);
 
-    // Calcula as posições para desenhar o arco base
+    // Calculate positions to draw base arc
     sx = fastCos(angulo + 5);
     sy = fastSin(angulo + 5);
     x0 = sx * m_radius + m_origem.x;
     y0 = sy * m_radius + m_origem.y;
 
-    // Desenha o arco, não desenha a ultima parte
+    // Draw the arc, don't draw the last part
     if (i < 2 * m_maxAngle)
       WidgetBase::objTFT->drawLine(x0, y0, x1, y1, m_marcadoresColor);
   }
@@ -362,8 +368,10 @@ void GaugeSuper::drawBackground()
 }
 
 /**
- * @brief Sets the value of the gauge.
- * @param newValue New value to set.
+ * @brief Sets the current value of the GaugeSuper widget.
+ * @param newValue New value to display on the gauge.
+ * 
+ * Updates the current value and marks the widget for redraw if the value changed.
  */
 void GaugeSuper::setValue(int newValue)
 {
@@ -387,7 +395,10 @@ void GaugeSuper::setValue(int newValue)
 }
 
 /**
- * @brief Redraws the gauge.
+ * @brief Redraws the GaugeSuper widget on the screen, updating the needle position.
+ * 
+ * Displays the gauge with the current value and updates the needle position.
+ * Only redraws if the widget is on the current screen and needs updating.
  */
 void GaugeSuper::redraw()
 {
@@ -408,31 +419,31 @@ void GaugeSuper::redraw()
   m_myTime = millis();
   m_lastValue = m_value;
 
-  // Desenhar aqui
+  // Draw here
   char buf[8];
-  dtostrf(m_value, 4, 0, buf);
+  sprintf(buf, "%d", m_value);
 
-  // Como o desenho esta girado -90 e os angulo de desenho são -50 e 50.
+  // Since the drawing is rotated -90 and drawing angles are -50 and 50.
   // int diff10 = (maxAngle + 10) - 90;
 
-  int sdeg = map(m_value, m_vmin, m_vmax, 0, 2 * m_maxAngle); // Mapeia os value de entrada min e max com extrapolação de 10 para o angulo com extrapolação de 10
+  int sdeg = map(m_value, m_vmin, m_vmax, 0, 2 * m_maxAngle); // Map input values min and max with extrapolation of 10 to angle with extrapolation of 10
   int angulo = sdeg + m_rotation;
 
-  // Calcula as componetes da agulha de acordo com o angulo
+  // Calculate needle components according to angle
 
   float sx = fastCos(angulo);
   float sy = fastSin(angulo);
 
-  // Usa a tangente para calcular a posição X que a agulha deve começar ja que a origem.y é abaixo do limite do grafico
-  // O -90 é para simular que angulo total de abertura é girado 90 graus para calculo correto da tangente (de -90 a 90)
+  // Use tangent to calculate X position where needle should start since origin.y is below graph limit
+  // The -90 is to simulate that total opening angle is rotated 90 degrees for correct tangent calculation (from -90 to 90)
   float tx = fastTan(angulo - 90);
 
-  // Apaga a agulha antiga
+  // Erase old needle
   if (!m_isFirstDraw)
   {
-    WidgetBase::objTFT->drawLine(m_origem.x - 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x - 1, m_lastPointNeedle.y, m_bkColor); // -1 é para nao desenha em cima da linha fina da borda
-    WidgetBase::objTFT->drawLine(m_origem.x + 0 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 0, m_lastPointNeedle.y, m_bkColor); // -1 é para nao desenha em cima da linha fina da borda
-    WidgetBase::objTFT->drawLine(m_origem.x + 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 1, m_lastPointNeedle.y, m_bkColor); // -1 é para nao desenha em cima da linha fina da borda
+    WidgetBase::objTFT->drawLine(m_origem.x - 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x - 1, m_lastPointNeedle.y, m_bkColor); // -1 is to not draw on top of thin border line
+    WidgetBase::objTFT->drawLine(m_origem.x + 0 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 0, m_lastPointNeedle.y, m_bkColor); // -1 is to not draw on top of thin border line
+    WidgetBase::objTFT->drawLine(m_origem.x + 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 1, m_lastPointNeedle.y, m_bkColor); // -1 is to not draw on top of thin border line
   }
 
   WidgetBase::objTFT->setTextColor(m_textColor);
@@ -448,7 +459,7 @@ void GaugeSuper::redraw()
   }
   if (m_showTitle)
   {
-    // Redesenha os textos
+    // Redraw texts
     // updateFont(FontType::BOLD);
     WidgetBase::objTFT->setTextColor(m_titleColor);
 #if defined(DISP_DEFAULT)
@@ -459,17 +470,17 @@ void GaugeSuper::redraw()
     updateFont(FontType::UNLOAD);
 #endif
   }
-  // guarda os valuees dalinha para poder apagar depois
+  // store line values to erase later
   m_ltx = tx;
-  m_lastPointNeedle.x = sx * (m_radius - m_distanceAgulhaArco) + m_origem.x; //-2 é a distancia entre o final da agulha e o arco
+  m_lastPointNeedle.x = sx * (m_radius - m_distanceAgulhaArco) + m_origem.x; //-2 is the distance between needle end and arc
   m_lastPointNeedle.y = sy * (m_radius - m_distanceAgulhaArco) + m_origem.y;
 
-  // Desenha a nova linha
-  // Desenha 3 linhas para aumentar a espessura
+  // Draw new line
+  // Draw 3 lines to increase thickness
 
-  WidgetBase::objTFT->drawLine(m_origem.x - 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x - 1, m_lastPointNeedle.y, m_agulhaColor);     // -1 é para nao desenha em cima da linha fina da borda
-  WidgetBase::objTFT->drawLine(m_origem.x + 0 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 0, m_lastPointNeedle.y, m_agulhaColor); // -1 é para nao desenha em cima da linha fina da borda
-  WidgetBase::objTFT->drawLine(m_origem.x + 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 1, m_lastPointNeedle.y, m_agulhaColor);     // -1 é para nao desenha em cima da linha fina da borda
+  WidgetBase::objTFT->drawLine(m_origem.x - 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x - 1, m_lastPointNeedle.y, m_agulhaColor);     // -1 is to not draw on top of thin border line
+  WidgetBase::objTFT->drawLine(m_origem.x + 0 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 0, m_lastPointNeedle.y, m_agulhaColor); // -1 is to not draw on top of thin border line
+  WidgetBase::objTFT->drawLine(m_origem.x + 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 1, m_lastPointNeedle.y, m_agulhaColor);     // -1 is to not draw on top of thin border line
 
   m_update = false;
   m_isFirstDraw = false;
@@ -477,7 +488,9 @@ void GaugeSuper::redraw()
 }
 
 /**
- * @brief Forces the gauge to update.
+ * @brief Forces an immediate update of the GaugeSuper widget.
+ * 
+ * Sets the flag to redraw the gauge on the next redraw cycle.
  */
 void GaugeSuper::forceUpdate()
 {
@@ -485,20 +498,24 @@ void GaugeSuper::forceUpdate()
 }
 
 /**
- * @brief Sets up the gauge.
+ * @brief Configures the GaugeSuper widget with specific parameters.
  * @param width Width of the gauge.
- * @param title Title of the gauge.
- * @param intervals Intervals of the gauge.
- * @param colors Colors of the gauge.
- * @param amountIntervals Amount of intervals of the gauge.
- * @param vmin Minimum value of the gauge.
- * @param vmax Maximum value of the gauge.
- * @param borderColor Border color of the gauge.
- * @param textColor Text color of the gauge.
+ * @param title Title displayed on the gauge.
+ * @param intervals Array of interval values.
+ * @param colors Array of colors corresponding to intervals.
+ * @param amountIntervals Number of intervals and colors.
+ * @param vmin Minimum value of the gauge range.
+ * @param vmax Maximum value of the gauge range.
+ * @param borderColor Color of the gauge border.
+ * @param textColor Color for text and value display.
  * @param backgroundColor Background color of the gauge.
- * @param titleColor Title color of the gauge.
- * @param showLabels True if the labels are shown, false otherwise. 
- * @param _fontFamily Font of the gauge.
+ * @param titleColor Color of the title text.
+ * @param agulhaColor Color of the needle.
+ * @param marcadoresColor Color of the markers.
+ * @param showLabels True if text labels should be displayed for intervals, false otherwise.
+ * @param _fontFamily Font used for text rendering.
+ * 
+ * Initializes the gauge properties and marks it as loaded when complete.
  */
 void GaugeSuper::setup(uint16_t width, const char *title, const int *intervals, const uint16_t *colors, uint8_t amountIntervals, int vmin, int vmax, uint16_t borderColor, uint16_t textColor, uint16_t backgroundColor, uint16_t titleColor, uint16_t agulhaColor, uint16_t marcadoresColor, bool showLabels, const GFXfont *_fontFamily)
 {
@@ -513,7 +530,7 @@ void GaugeSuper::setup(uint16_t width, const char *title, const int *intervals, 
     return;
   }
 
-  // Libera memória anterior se existir
+  // Free previous memory if it exists
   if (m_intervals)
   {
     delete[] m_intervals;
@@ -530,7 +547,7 @@ void GaugeSuper::setup(uint16_t width, const char *title, const int *intervals, 
     m_title = nullptr;
   }
 
-  // Configura as dimensões e cores
+  // Configure dimensions and colors
   m_width = width;
   // m_height = height;
   m_vmin = vmin;
@@ -545,7 +562,7 @@ void GaugeSuper::setup(uint16_t width, const char *title, const int *intervals, 
   m_agulhaColor = agulhaColor;
   m_marcadoresColor = marcadoresColor;
 
-  // Aloca e copia os arrays
+  // Allocate and copy arrays
   m_intervals = new int[amountIntervals];
   m_colors = new uint16_t[amountIntervals];
 
@@ -565,14 +582,14 @@ void GaugeSuper::setup(uint16_t width, const char *title, const int *intervals, 
     return;
   }
 
-  // Copia os dados
+  // Copy data
   for (uint8_t i = 0; i < amountIntervals; i++)
   {
     m_intervals[i] = intervals[i];
     m_colors[i] = colors[i];
   }
 
-  // Aloca e copia o título
+  // Allocate and copy title
   if (title != nullptr)
   {
     size_t titleLen = strlen(title) + 1;
@@ -589,7 +606,7 @@ void GaugeSuper::setup(uint16_t width, const char *title, const int *intervals, 
     }
   }
 
-  // Inicializa o gauge
+  // Initialize gauge
   start();
 
   loaded = true;

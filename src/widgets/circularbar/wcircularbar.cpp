@@ -50,7 +50,10 @@ functionCB_t CircularBar::getCallbackFunc()
 }
 
 /**
- * @brief Draws the background of the circular bar.
+ * @brief Draws the background of the CircularBar widget.
+ * 
+ * Renders the background arc of the circular bar and initializes the display.
+ * Only draws if the widget is on the current screen and properly loaded.
  */
 void CircularBar::drawBackground()
 {
@@ -60,8 +63,8 @@ void CircularBar::drawBackground()
         return;
     }
 
-    uint8_t offsetBorda = 1;
-    WidgetBase::objTFT->fillArc(xPos, yPos, m_radius + offsetBorda, (m_radius - m_lineWeight - offsetBorda), m_startAngle, m_endAngle, m_bkColor);
+    uint8_t borderOffset = 1;
+    WidgetBase::objTFT->fillArc(xPos, yPos, m_radius + borderOffset, (m_radius - m_lineWeight - borderOffset), m_startAngle, m_endAngle, m_bkColor);
 
     /*
     if(!m_invertedFill){
@@ -83,8 +86,10 @@ void CircularBar::drawBackground()
 }
 
 /**
- * @brief Sets the value of the circular bar.
- * @param newValue New value to set.
+ * @brief Sets the current value of the CircularBar widget.
+ * @param newValue New value to display on the circular bar.
+ * 
+ * Updates the current value and marks the widget for redraw.
  */
 void CircularBar::setValue(int newValue)
 {
@@ -94,7 +99,10 @@ void CircularBar::setValue(int newValue)
 }
 
 /**
- * @brief Redraws the circular bar.
+ * @brief Redraws the CircularBar widget on the screen, updating its appearance based on the current value.
+ * 
+ * Displays the circular bar with the current value and updates the visual representation.
+ * Only redraws if the widget is on the current screen and needs updating.
  */
 void CircularBar::redraw()
 {
@@ -137,16 +145,16 @@ void CircularBar::redraw()
 
     
 
-    // Se esta 'voltando' o angulo
+    // If the angle is 'going back' (decreasing)
     if (angleValue < lastAngleValue){
-        DEBUG_D("Diminuindo -> x: %d, y: %d, r1: %d, r2: %d, start: %d, end: %d", xPos, yPos, m_radius, (m_radius - m_lineWeight), angleValue, lastAngleValue);
-        //WidgetBase::objTFT->fillArc(xPos, yPos, m_radius, (m_radius - m_lineWeight), angleValue, lastAngleValue, m_middleColor);// Pinta a diferença
-        WidgetBase::objTFT->fillArc(xPos, yPos, m_radius, (m_radius - m_lineWeight), angleValue, lastAngleValue, m_bkColor);// Pinta a diferença
+        DEBUG_D("Decreasing -> x: %d, y: %d, r1: %d, r2: %d, start: %d, end: %d", xPos, yPos, m_radius, (m_radius - m_lineWeight), angleValue, lastAngleValue);
+        //WidgetBase::objTFT->fillArc(xPos, yPos, m_radius, (m_radius - m_lineWeight), angleValue, lastAngleValue, m_middleColor);// Paint the difference
+        WidgetBase::objTFT->fillArc(xPos, yPos, m_radius, (m_radius - m_lineWeight), angleValue, lastAngleValue, m_bkColor);// Paint the difference
         //lastCursoColor = m_middleColor;
         lastCursoColor = m_bkColor;
     }else if(angleValue > lastAngleValue){
-        DEBUG_D("Aumentando -> x: %d, y: %d, r1: %d, r2: %d, start: %d, end: %d", xPos, yPos, m_radius, (m_radius - m_lineWeight), lastAngleValue, angleValue);
-        WidgetBase::objTFT->fillArc(xPos, yPos, m_radius, (m_radius - m_lineWeight), lastAngleValue, angleValue, m_lineColor);// Pinta a diferença
+        DEBUG_D("Increasing -> x: %d, y: %d, r1: %d, r2: %d, start: %d, end: %d", xPos, yPos, m_radius, (m_radius - m_lineWeight), lastAngleValue, angleValue);
+        WidgetBase::objTFT->fillArc(xPos, yPos, m_radius, (m_radius - m_lineWeight), lastAngleValue, angleValue, m_lineColor);// Paint the difference
         lastCursoColor = m_lineColor;
     }
 
@@ -186,7 +194,9 @@ void CircularBar::redraw()
 }
 
 /**
- * @brief Forces the circular bar to update.
+ * @brief Forces an immediate update of the CircularBar widget.
+ * 
+ * Sets the flag to redraw the circular bar on the next redraw cycle.
  */
 void CircularBar::forceUpdate()
 {
@@ -194,18 +204,20 @@ void CircularBar::forceUpdate()
 }
 
 /**
- * @brief Sets up the circular bar.         
+ * @brief Configures the CircularBar widget with specific parameters.
  * @param radius Radius of the circular bar.
- * @param vmin Minimum value of the circular bar.
- * @param vmax Maximum value of the circular bar.
- * @param startAngle Starting angle of the circular bar.
- * @param endAngle Ending angle of the circular bar.
- * @param weight Weight of the circular bar.
+ * @param vmin Minimum value of the circular bar range.
+ * @param vmax Maximum value of the circular bar range.
+ * @param startAngle Starting angle of the circular bar in degrees.
+ * @param endAngle Ending angle of the circular bar in degrees.
+ * @param weight Thickness of the circular bar line.
  * @param color Color of the circular bar.
  * @param bkColor Background color of the circular bar.
- * @param textColor Text color of the circular bar.
- * @param showLabel True if the label is shown, false otherwise.
- * @param inverted True if the circular bar is inverted, false otherwise.
+ * @param textColor Color of the text displaying the value.
+ * @param showLabel True if the value text should be displayed, false otherwise.
+ * @param inverted True if the fill direction is inverted, false otherwise.
+ * 
+ * Initializes the circular bar properties and marks it as loaded when complete.
  */
 void CircularBar::setup(uint16_t radius, int vmin, int vmax, uint16_t startAngle, uint16_t endAngle, uint8_t weight, uint16_t color, uint16_t bkColor, uint16_t textColor, bool showLabel, bool inverted)
 {
@@ -233,7 +245,7 @@ void CircularBar::setup(uint16_t radius, int vmin, int vmax, uint16_t startAngle
         m_vmax = aux;
     }
 
-    //Se for preenchimento anti-horario, inverte os angulos
+    //If it's counter-clockwise fill, invert the angles
     /*if(m_invertedFill){
         int aux = m_startAngle;
         m_startAngle = m_endAngle;

@@ -43,7 +43,7 @@ bool CircleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
   }
   
   m_myTime = millis();
-  bool detectado = false;
+  bool detected = false;
   int32_t deltaX = (*_xTouch - xPos) * (*_xTouch - xPos);
   int32_t deltaY = (*_yTouch - yPos) * (*_yTouch - yPos);
   int32_t radiusQ = m_radius * m_radius;
@@ -52,9 +52,9 @@ bool CircleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
   {
     changeState();
     m_shouldRedraw = true;
-    detectado = true;
+    detected = true;
   }
-  return detectado;
+  return detected;
 }
 
 /**
@@ -66,6 +66,11 @@ functionCB_t CircleButton::getCallbackFunc()
   return cb;
 }
 
+/**
+ * @brief Forces an immediate update of the CircleButton.
+ * 
+ * Sets the flag to redraw the button on the next redraw cycle.
+ */
 void CircleButton::forceUpdate(){
   m_shouldRedraw = true;
 }
@@ -89,7 +94,9 @@ void CircleButton::setEnabled(bool newState)
 }
 
 /**
- * @brief Changes the state of the button.
+ * @brief Changes the current state of the CircleButton (pressed or not pressed).
+ * 
+ * Inverts the current state of the button.
  */
 void CircleButton::changeState()
 {
@@ -97,7 +104,10 @@ void CircleButton::changeState()
 }
 
 /**
- * @brief Redraws the button.
+ * @brief Redraws the CircleButton on the screen, updating its appearance based on its state.
+ * 
+ * Displays the circular button with different appearance depending on whether it's pressed or not.
+ * Only redraws if the button is on the current screen and needs updating.
  */
 void CircleButton::redraw()
 {
@@ -111,26 +121,30 @@ void CircleButton::redraw()
 
   log_d("Redrawing circlebutton");
 
-  WidgetBase::objTFT->fillCircle(xPos, yPos, m_radius, lightBg);                   // Botao
-  WidgetBase::objTFT->drawCircle(xPos, yPos, m_radius, baseBorder);                  // borda Botao
+  WidgetBase::objTFT->fillCircle(xPos, yPos, m_radius, lightBg);                   // Button background
+  WidgetBase::objTFT->drawCircle(xPos, yPos, m_radius, baseBorder);                  // Button border
   uint16_t bgColor = m_status ? m_pressedColor : lightBg;
-  WidgetBase::objTFT->fillCircle(xPos, yPos, m_radius * 0.75, bgColor);  // fundo dentro
-  WidgetBase::objTFT->drawCircle(xPos, yPos, m_radius * 0.75, baseBorder); // borda dentro
+  WidgetBase::objTFT->fillCircle(xPos, yPos, m_radius * 0.75, bgColor);  // Inner background
+  WidgetBase::objTFT->drawCircle(xPos, yPos, m_radius * 0.75, baseBorder); // Inner border
 }
 
 /**
- * @brief Starts the button.
+ * @brief Initializes the CircleButton with default constraints.
+ * 
+ * Constrains the button radius between 5 and 200 pixels.
  */
 void CircleButton::start()
 {
-  m_radius = constrain(m_radius, 5, 200); // Limita o radius do botao entre 5 e 200
+  m_radius = constrain(m_radius, 5, 200); // Limits the button radius between 5 and 200
 }
 
 /**
- * @brief Sets up the button.
- * @param _radius Radius of the button.
- * @param _pressedColor Color of the button when pressed.
- * @param _cb Callback function for the button.
+ * @brief Configures the CircleButton widget with specific radius, color, and callback function.
+ * @param _radius Radius of the circular button.
+ * @param _pressedColor Color displayed when the button is pressed.
+ * @param _cb Callback function to execute when the button state changes.
+ * 
+ * Initializes the button properties and marks it as loaded when complete.
  */
 void CircleButton::setup(uint16_t _radius, uint16_t _pressedColor, functionCB_t _cb)
 {
@@ -153,14 +167,18 @@ void CircleButton::setup(uint16_t _radius, uint16_t _pressedColor, functionCB_t 
   loaded = true;
 }
 
+/**
+ * @brief Configures the CircleButton with parameters defined in a configuration structure.
+ * @param config Structure containing the button configuration parameters.
+ */
 void CircleButton::setup(const CircleButtonConfig& config)
 {
   setup(config.radius, config.pressedColor, config.callback);
 }
 
 /**
- * @brief Gets the status of the button.
- * @return True if the button is pressed, false otherwise.
+ * @brief Retrieves the current status of the CircleButton.
+ * @return True if the button is pressed, otherwise false.
  */
 bool CircleButton::getStatus()
 {
@@ -169,8 +187,10 @@ bool CircleButton::getStatus()
 
 
 /**
- * @brief Sets the status of the button.
- * @param _status Status of the button.
+ * @brief Sets the current state of the CircleButton.
+ * @param _status True for pressed, false for not pressed.
+ * 
+ * Updates the button state, marks it for redraw, and triggers the callback if provided.
  */
 void CircleButton::setStatus(bool _status){
   if(!loaded)

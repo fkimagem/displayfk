@@ -379,19 +379,15 @@ bool TouchScreen::touch_touched()
                                                              // Serial.printf("Scr xyz[%i\t%i\t%i]\n", toque.x, toque.y, zTouch);
 
     if(m_swapAxis){
-      //m_ts->x = constrain(xTouch, m_calibMatrix[2], m_calibMatrix[3]);
-      //m_ts->y = constrain(yTouch, m_calibMatrix[0], m_calibMatrix[1]);
-
-      //m_touch_last_x = map(m_ts->y, m_calibMatrix[0], m_calibMatrix[1], 0, m_widthScreen - 1);
-      //m_touch_last_y = map(m_ts->x, m_calibMatrix[2], m_calibMatrix[3], 0, m_heightScreen - 1);
+      m_touch_last_x = toque.y;
+      m_touch_last_y = toque.x;
+      m_touch_last_z = zTouch;
     }else{
-      //m_touch_last_x = toque.x;
-      //m_touch_last_y = toque.y;
-      //m_touch_last_z = zTouch;
-    }
-    m_touch_last_x = toque.x;
+      m_touch_last_x = toque.x;
       m_touch_last_y = toque.y;
       m_touch_last_z = zTouch;
+    }
+    
 
     return true;
   }

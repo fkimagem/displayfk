@@ -45,14 +45,14 @@ bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 
   m_myTime = millis();
   // Serial.println("Calculating slider");
-  bool detectado = false;
+  bool detected = false;
   int32_t deltaX = (*_xTouch - m_currentPos) * (*_xTouch - m_currentPos);
   int32_t deltaY = (*_yTouch - (yPos + m_radius)) * (*_yTouch - (yPos + m_radius));
   int32_t radiusQ = m_radius * m_radius;
 
   if ((deltaX < radiusQ) && (deltaY < radiusQ))
   {
-    detectado = true;
+    detected = true;
 
     m_currentPos = (*_xTouch);
     m_currentPos = constrain(m_currentPos, m_minX, m_maxX);
@@ -76,7 +76,7 @@ bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
     m_shouldRedraw = true;
   }
   // Serial.println("Calculated slider");
-  return detectado;
+  return detected;
 }
 
 /**
@@ -125,21 +125,21 @@ void HSlider::redraw()
 
 
   //uint16_t lastPosCircleX = map(lastPos, xPos + radius, xPos + width - radius, radius, width - radius);
-  WidgetBase::objTFT->fillCircle(m_lastPos, m_centerV, m_contentRadius, CFK_WHITE); // slider
+  WidgetBase::objTFT->fillCircle(m_lastPos, m_centerV, m_contentRadius, CFK_WHITE); // slider background
 
 
   //uint16_t posCircleX = map(currentPos, xPos + radius, xPos + width - radius, radius, width - radius);
 
   log_d("Redraw ballslider with value %i at %i", m_value, m_currentPos);
 
-  uint8_t raioFill = 2;
+  uint8_t fillRadius = 2;
 
-  WidgetBase::objTFT->fillRoundRect(m_minX, m_centerV - (raioFill), m_currentPos - (m_minX), raioFill * 2, raioFill, m_pressedColor);
-  WidgetBase::objTFT->fillCircle(m_currentPos, m_centerV, m_contentRadius, lightBg); // slider
-  WidgetBase::objTFT->fillCircle(m_currentPos, m_centerV, m_contentRadius * 0.75, m_pressedColor);                                  // slider meio
+  WidgetBase::objTFT->fillRoundRect(m_minX, m_centerV - (fillRadius), m_currentPos - (m_minX), fillRadius * 2, fillRadius, m_pressedColor);
+  WidgetBase::objTFT->fillCircle(m_currentPos, m_centerV, m_contentRadius, lightBg); // slider handle
+  WidgetBase::objTFT->fillCircle(m_currentPos, m_centerV, m_contentRadius * 0.75, m_pressedColor);                                  // slider center
 
-  //WidgetBase::objTFT->drawCircle(posCircleX, radius, radius, baseBorder);        // contorno grande
-  //WidgetBase::objTFT->drawCircle(posCircleX, radius, radius * 0.75, baseBorder); // slider meio
+  //WidgetBase::objTFT->drawCircle(posCircleX, radius, radius, baseBorder);        // large outline
+  //WidgetBase::objTFT->drawCircle(posCircleX, radius, radius * 0.75, baseBorder); // slider center
 
   m_lastPos = m_currentPos;
 }
