@@ -34,36 +34,29 @@ flowchart TD
     V --> W["MANUAL - FIM"]
     
     W --> X["Função loop"]
-    X --> Y{"MANUAL - INICIO<br/>podeLerSensor == true?"}
+    X --> Y{"podeLerSensor == true?"}
     Y -->|"Não"| Z["delay 10ms"]
-    Z --> X
     Y -->|"Sim"| AA["Reset da Flag podeLerSensor"]
-    AA --> BB["Cálculo da Onda Senoidal"]
-    BB --> CC["Incremento do Contador"]
-    CC --> DD["Requisição de Temperatura dos Sensores"]
-    DD --> EE["Delay de 750ms"]
-    EE --> FF["Leitura da Temperatura do Motor"]
-    FF --> GG["Leitura da Temperatura do Compressor"]
-    GG --> HH["Início da Transação de Display"]
-    HH --> II["Atualização do Gráfico com Dados"]
-    II --> JJ["Atualização do Gauge"]
-    JJ --> KK["Finalização da Transação"]
-    KK --> LL["Verificação de Temperatura Alta"]
-    LL --> MM{"Temperatura Motor >= Limite?"}
-    MM -->|"Sim"| NN["Desativa Motor"]
-    MM -->|"Não"| OO["Ativa Controle Manual do Motor"]
-    NN --> OO
-    OO --> PP{"Temperatura Compressor >= Limite?"}
+    AA --> CC["Requisição de Temperatura dos Sensores"]
+    CC --> DD["Delay de 750ms"]
+    DD --> EE["Leitura da Temperatura do Motor"]
+    EE --> FF["Leitura da Temperatura do Compressor"]
+    FF --> GG["Início da Transação de Display"]
+    GG --> HH["Atualização do Gráfico com Dados"]
+    HH --> II["Atualização do Gauge"]
+    II --> JJ["Finalização da Transação"]
+    JJ --> KK["Verificação de Temperatura Alta"]
+    KK --> LL{"Temperatura Motor >= Limite?"}
+    LL -->|"Sim"| MM["Desativa Motor"]
+    LL -->|"Não"| NN["Ativa Controle Manual do Motor"]
+    MM --> PP
+    NN --> PP
+    PP{"Temperatura Compressor >= Limite?"}
     PP -->|"Sim"| QQ["Desativa Compressor"]
     PP -->|"Não"| RR["Ativa Controle Manual do Compressor"]
-    QQ --> RR
+    QQ --> Z
     RR --> Z
     Z --> X
-    X --> SS["MANUAL - FIM"]
-
-    SS --> TT["Funções de Callback"]
-    TT --> UU["Funções de Tela"]
-    UU --> VV["Função loadWidgets"]
 ```
 
 ## Fluxograma Detalhado das Funções de Callback
@@ -154,8 +147,7 @@ flowchart TD
     C --> D["MANUAL - FIM"]
     D --> E["Loop Principal Detecta Flag"]
     E --> F["Reset da Flag"]
-    F --> G["Cálculo Onda Senoidal"]
-    G --> H["Leitura dos Sensores"]
+    F --> H["Leitura dos Sensores"]
     H --> I["Atualização da Interface"]
     I --> J["Verificação de Segurança"]
     J --> K["Controle Automático"]
@@ -166,10 +158,8 @@ flowchart TD
 ### 1. Declaração de Variáveis de Controle (Linhas 108-115)
 ```mermaid
 flowchart LR
-    A["MANUAL - INICIO"] --> B["contador = 0"]
     B --> C["xTimerLeitura"]
     C --> D["podeLerSensor = false"]
-    D --> E["MANUAL - FIM"]
 ```
 
 ### 2. Função de Callback do Timer (Linhas 117-121)
@@ -192,9 +182,7 @@ flowchart LR
 ```mermaid
 flowchart TD
     A["MANUAL - INICIO"] --> B{"podeLerSensor?"}
-    B -->|"Sim"| C["Reset Flag"]
-    C --> D["Cálculo Seno"]
-    D --> E["Incremento Contador"]
+    B -->|"Sim"| E["Reset Flag"]
     E --> F["Request Temperaturas"]
     F --> G["Delay 750ms"]
     G --> H["Leitura Temperaturas"]
@@ -256,7 +244,7 @@ flowchart LR
 
 Os blocos **MANUAL - INICIO** e **MANUAL - FIM** contêm:
 
-1. **Variáveis de Controle**: Contador, timer e flags para controle do sistema
+1. **Variáveis de Controle**: Timer e flags para controle do sistema
 2. **Timer FreeRTOS**: Sistema de agendamento para leitura periódica dos sensores
 3. **Loop Principal**: Lógica de leitura de sensores, atualização da interface e controle automático
 4. **Callbacks de Hardware**: Controle direto dos pinos de saída (LEDs, motor, compressor)

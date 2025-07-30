@@ -1,3 +1,8 @@
+/*
+Esse codigo foi gerado automatico pelo edge. Para a versão final, criei apenas algumas novas funções, variáveis e movi algun comandos
+(controles de leds, etc). Do loop (lugar original que os comandos são escritos) para as funções de callback que eu queria que executase a ação.
+*/
+
 #define FORMAT_SPIFFS_IF_FAILED false
 #define DISPLAY_W 480 // Largura do display
 #define DISPLAY_H 320 // Altura do display
@@ -123,19 +128,6 @@ const uint8_t pinLed_3 = 1;              // Pino conectado ao LED 3
 const uint8_t pinMotor = 6;              // Pino de controle para o motor (saída digital)
 const uint8_t pinBomba = 7;              // Pino de controle para a bomba (ou compressor)
 
-// MANUAL - INICIO
-
-TimerHandle_t xTimerLeitura;            // Handle de um timer (FreeRTOS) usado para agendar leituras periódicas dos sensores
-volatile bool podeLerSensor = false;    // Flag controlada pelo timer para indicar que é hora de ler os sensores (usada dentro de ISR ou tarefas)
-
-
-// Função de callback quando estoura o timer
-void cb_LerSensor(TimerHandle_t xTimer)
-{
-    podeLerSensor = true;
-}
-
-// MANUAL - FIM
 
 void setup()
 {
@@ -191,71 +183,48 @@ void setup()
     WidgetBase::loadScreen = screen0; // Define qual tela será carregada inicialmente ao iniciar a interface gráfica
     myDisplay.createTask(); // Cria a tarefa principal da interface gráfica (usa FreeRTOS para lidar com toque e atualização de tela)
 
-    // MANUAL - INICIO
-
-    // Cria um timer com período de 1000ms (1 segundo), repetitivo (pdTRUE), e função de callback `cb_LerSensor`
-    xTimerLeitura = xTimerCreate("TIMER1", pdMS_TO_TICKS(1000), pdTRUE, 0, cb_LerSensor);
-
-    // Inicia o timer imediatamente
-    xTimerStart(xTimerLeitura, 0);
-    // MANUAL - FIM
 }
 
 void loop()
 {
-    // MANUAL - INICIO
 
-    // Se puder ler o sensor, lê o sensor
-    if (podeLerSensor)
-    {
-        podeLerSensor = false; // Reseta a variável auxiliar para a leitura do sensor
-
-        // Requisita a leitura de temperatura para os dois sensores
-        sensors_1.requestTemperatures();
-        sensors_2.requestTemperatures();
-        delay(750); // Aguarda 750ms para a leitura das temperaturas
-
-        // Faz a leitura da temperatura do primeiro sensor
-        float temperatureMotor = sensors_1.getTempCByIndex(0);
-
-        // Faz a leitura da temperatura do segundo sensor
-        float temperatureComp = sensors_2.getTempCByIndex(0);
-
-        // Inicio a transação, como vamos fazer varias atualizações que afetam o display, primeiro vamos mudar todos os valores e depois desenhar tudo de uma vez
-        myDisplay.startTransaction();
-
-        // Em cada serie (linha) do grafico, insere um novo valor
-        grafico.push(0, temperatureMotor); // Insere o valor da temperatura do primeiro sensor na serie 0
-        grafico.push(1, temperatureComp);  // Insere o valor da temperatura do segundo sensor na serie 1
-
-        // Atualizo o ponteiro/agulha do gauge
-        gaugecontrole.setValue(temperatureMotor); // Atualiza o valor do gauge
-
-        // Finalizo a transacao para indicar para a task de desenho que pode desenhar
-        myDisplay.finishTransaction();
-
-        bool temperaturaAltaMotor = (temperatureMotor >= maxTempMotor);    // Verifica se a temperatura do sensor é maior ou igual ao valor maximo permitido
-        bool temperaturaAltaComp = (temperatureComp >= maxTempCompressor); // Verifica se a temperatura do sensor é maior ou igual ao valor maximo permitido
-
-        // Se a temperatura do primeiro sensor for maior ou igual ao valor maximo permitido, desativa o relé 1
-        if (temperaturaAltaMotor)
-        {
-            btnmotor.setStatus(false);       // Desativa o toggle que controla o relé 1
-            Serial.println("Motor Quente!"); // Imprime uma mensagem no monitor serial
-        }
-        if (temperaturaAltaComp)
-        {
-            btncompressor.setStatus(false);       // Desativa o toggle que controla o relé 1
-            Serial.println("Compressor Quente!"); // Imprime uma mensagem no monitor serial
-        }
-
-        btnmotor.setEnabled(!temperaturaAltaMotor);     // Desativa/Ativa o controle manual (por touch) do toggle que controla o relé 1
-        btncompressor.setEnabled(!temperaturaAltaComp); // Desativa/Ativa o controle manual (por touch) do toggle que controla o relé 1
-    }
-
-    delay(10); // Aguarda 10ms para evitar que o loop seja executado muito rapidamente
-
-    // MANUAL - FIM
+    widget.setValue(random(0, 100)); //Use this command to change widget value.
+    gauge.setValue(random(0, 100)); //Use this command to change widget value.
+    linhaverde.setText("Line 1"); //Use this command to change widget value.
+    linhalaranja.setText("Line 2"); //Use this command to change widget value.
+    grafico.push(0, random(0, 100)); //Use this line to add value in serie 0.
+    grafico.push(1, random(0, 100)); //Use this line to add value in serie 1.
+    // Use the variable spin0_val to check value/status of widget spinmaxtemp
+    delay(2000);
+    // Commands for plugin Sensor DS18b20
+    sensors_1.requestTemperatures();
+    delay(750);
+    float temperatureC_1 = sensors_1.getTempCByIndex(0);
+    Serial.print("Temperature: ");
+    Serial.print(temperatureC_1);
+    Serial.println("°C");
+    // Commands for plugin Sensor DS18b20
+    sensors_2.requestTemperatures();
+    delay(750);
+    float temperatureC_2 = sensors_2.getTempCByIndex(0);
+    Serial.print("Temperature: ");
+    Serial.print(temperatureC_2);
+    Serial.println("°C");
+    // Commands for plugin Digital Write
+    digitalWrite(pinLed_1, HIGH);  // Liga o rele(true);
+    delay(5000);
+    // Commands for plugin Digital Write
+    digitalWrite(pinLed_2, HIGH);  // Liga o rele(true);
+    delay(5000);
+    // Commands for plugin Digital Write
+    digitalWrite(pinLed_3, HIGH);  // Liga o rele(true);
+    delay(5000);
+    // Commands for plugin Digital Write
+    digitalWrite(pinMotor, HIGH);  // Liga o rele(true);
+    delay(5000);
+    // Commands for plugin Digital Write
+    digitalWrite(pinBomba, HIGH);  // Liga o rele(true);
+    delay(5000);
 }
 
 void screen0()
@@ -482,54 +451,24 @@ void spinmaxcomp_cb()
 void btnleda_cb()
 {
     bool myValue = btnleda.getStatus();
-    // MANUAL - INICIO
-    digitalWrite(pinLed_1, myValue); // Ativa/Desativa o LED A
-    // MANUAL - FIM
 }
 
 // Quando clica no botão ledb, ativa/desativa o rele do ledB
 void btnledb_cb()
 {
     bool myValue = btnledb.getStatus();
-    // MANUAL - INICIO
-    digitalWrite(pinLed_2, myValue); // Ativa/Desativa o LED B
-    // MANUAL - FIM
 }
 
 // Quando clica no botão ledc, ativa/desativa o rele do ledC
 void btnledc_cb()
 {
     bool myValue = btnledc.getStatus();
-    // MANUAL - INICIO
-    digitalWrite(pinLed_3, myValue); // Ativa/Desativa o LED C
-    // MANUAL - FIM
 }
 
 // Quando clica no botão motor, ativa/desativa o rele do motor
 void btnmotor_cb()
 {
     bool myStatus = btnmotor.getStatus();
-
-    // MANUAL - INICIO
-
-    bool statusRele = !myStatus; // O rele ativa com LOW, entao aqui inverto a logica para facilitar o entendimento das linhas abaixo.
-    // statusRele = true -> rele ativado (passando energia)
-    // statusRele = false -> rele desativado
-
-    digitalWrite(pinMotor, statusRele); // Ativa/Desativa o relé 1
-
-    // Se ligou togglebutton do rele do motor
-    if (myStatus)
-    {
-        // Força a bomba para ligar
-        btncompressor.setStatus(true);      // Ativa o togglebutton da bomba
-        digitalWrite(pinBomba, statusRele); // Coloca o pin da bomba no mesmo nivel do pin do rele (digitalWrite acima desse 'if')
-    }
-
-    // MANUAL - FIM
-
-    Serial.print("O motor esta em nivel: ");
-    Serial.println(statusRele); // Imprime o valor do toggleButton no monitor serial
 }
 
 // Quando clica no botão compressor, ativa/desativa o rele da bomba
@@ -537,38 +476,17 @@ void btncompressor_cb()
 {
     bool myStatus = btncompressor.getStatus();
 
-    // MANUAL - INICIO
-
-    bool statusRele = !myStatus; // O rele ativa com LOW, entao aqui inverto a logica para facilitar o entendimento das linhas abaixo.
-
-    digitalWrite(pinBomba, statusRele); // Ativa/Desativa o relé 2
-
-    // Se desligou o togglebutton do rele da bomba
-    if (!myStatus)
-    {
-        // Força o motor para desligar
-        btnmotor.setStatus(false);          // Desativa o togglebutton de controle do motor
-        digitalWrite(pinMotor, statusRele); ////Coloca o pin do motor no mesmo nivel do pin do rele (digitalWrite acima desse 'if')
-    }
-
-    Serial.print("A bomba esta em nivel: ");
-    Serial.println(statusRele); // Imprime o valor do toggleButton no monitor serial
-
-    // MANUAL - FIM
+    
 }
 
 // Quando clica no botão right, carrega a tela de configuração
 void rightpng_cb()
 {
-    // MANUAL - INICIO
-    WidgetBase::loadScreen = screen1; // Carrega a tela de configuração
-    // MANUAL - FIM
+   
 }
 
 // Quando clica no botão home, carrega a tela de controle
 void homepng_cb()
 {
-    // MANUAL - INICIO
-    WidgetBase::loadScreen = screen0; // Carrega a tela de configuração
-    // MANUAL - FIM
+    
 }
