@@ -73,7 +73,7 @@ int range1[qtdIntervalG1] = {0, 25, 50, 75}; // Intervalos de valor que mudam a 
 uint16_t colors1[qtdIntervalG1] = {CFK_COLOR08, CFK_COLOR06, CFK_COLOR04, CFK_COLOR01}; // Cores correspondentes a cada faixa de valor
 
 Label linhaverde(10, 170, 0);           // Label de texto (linha verde) na posição (10, 170), tela 0
-Label linhalaranja(130, 170, 0);        // Outro label, com a linha laranja, mais à direita
+Label linhalaranja(350, 170, 0);        // Outro label, com a linha laranja, mais à direita
 const uint8_t qtdLabel = 2;             // Número total de labels
 Label *arrayLabel[qtdLabel] = {&linhaverde, &linhalaranja}; // Lista de ponteiros para gerenciamento automático
 

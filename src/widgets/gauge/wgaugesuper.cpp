@@ -454,7 +454,7 @@ void GaugeSuper::redraw()
     uint16_t auxX = xPos - (m_availableWidth / 2) + 1;
     uint16_t auxY = yPos - m_borderSize;
     //TextBound_t tb_value = getTextBounds(buf, auxX, auxY);
-    printText(buf, auxX, auxY, BL_DATUM, m_textBoundForValue, m_bkColor);
+    //printText(buf, auxX, auxY, BL_DATUM, m_textBoundForValue, m_bkColor); //Mostrar valor do gauge
 #endif
   }
   if (m_showTitle)
