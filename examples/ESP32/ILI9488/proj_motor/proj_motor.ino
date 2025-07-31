@@ -21,7 +21,7 @@
 #define TOUCH_MAP_X1	480
 #define TOUCH_MAP_Y0	0
 #define TOUCH_MAP_Y1	320
-#define TOUCH_SWAP_XY	false // Flag que indica se os eixos estao trocados
+#define TOUCH_SWAP_XY	true // Flag que indica se os eixos estao trocados
 
 // prototipo da função que configura os widgets
 void loadWidgets();
@@ -173,6 +173,15 @@ void setup()
 
     // Define o objeto global do display dentro da classe base dos widgets (para que todos possam desenhar)
     WidgetBase::objTFT = tft;
+
+    // Define os limites do touch, mapeando os pontos de calibração
+    myDisplay.setTouchCorners(TOUCH_MAP_X0, TOUCH_MAP_X1, TOUCH_MAP_Y0, TOUCH_MAP_Y1);
+
+    // Inverte os eixos X e Y se necessário, baseado nas flags definidas
+    myDisplay.setInvertAxis(TOUCH_INVERT_X, TOUCH_INVERT_Y);
+
+    // Define se os eixos X e Y devem ser trocados
+    myDisplay.setSwapAxis(TOUCH_SWAP_XY);
 
     // Inicializa o controle de toque com a biblioteca personalizada `displayfk`
     // Passa as dimensões do display, rotação, pino CS do touch, SPI compartilhado, ponteiro do display, frequência do touch e do display
@@ -447,6 +456,8 @@ void loadWidgets()
         .pressedColor = CFK_COLOR04,   // Cor exibida quando o botão está pressionado
         .callback = btncompressor_cb     // Função chamada ao clicar no botão
     };
+    btncompressor.setup(configToggle4);
+
     myDisplay.setToggle(arrayTogglebtn, qtdToggleBtn);
     
     ImageFromFileConfig configImage0 = {
