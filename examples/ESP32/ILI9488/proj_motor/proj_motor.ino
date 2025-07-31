@@ -283,7 +283,7 @@ void screen0()
     myDisplay.printText("Motor", 275, 222, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
 
     // Escreve "Compres." (abreviação de Compressor) na parte inferior da área
-    myDisplay.printText("Compres.", 270, 267, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Comp. agua", 270, 267, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
 
     // Desenha todos os widgets que estão associados à tela de índice 0
     // Isso inclui botões, gauge, gráficos, etc., registrados via `arrayTogglebtn`, `arrayGauge`, etc.
@@ -340,7 +340,7 @@ void loadWidgets()
         .datum = TL_DATUM,                        // Ponto de referência para posicionamento do texto (alinhamento)
         .fontColor = CFK_COLOR10,                 // Cor da fonte do texto principal
         .backgroundColor = CFK_GREY3,             // Cor de fundo do label
-        .prefix = "Motor ",                        // Texto fixo exibido antes do valor dinâmico
+        .prefix = "Agua ",                        // Texto fixo exibido antes do valor dinâmico
         .suffix = " C"                            // Texto fixo exibido após o valor dinâmico (unidade °C)
     };
     linhaverde.setup(configLabel0); //Associa a configuração ao label
@@ -351,7 +351,7 @@ void loadWidgets()
         .datum = TL_DATUM,                        // Ponto de referência para posicionamento do texto (alinhamento)
         .fontColor = CFK_COLOR04,                 // Cor da fonte do texto principal
         .backgroundColor = CFK_GREY3,             // Cor de fundo do label
-        .prefix = "Compr. ",                       // Texto fixo exibido antes do valor dinâmico
+        .prefix = "Temp. ",                       // Texto fixo exibido antes do valor dinâmico
         .suffix = " C"                            // Texto fixo exibido após o valor dinâmico (unidade °C)
     };
     linhalaranja.setup(configLabel1);//Associa a configuração ao label
