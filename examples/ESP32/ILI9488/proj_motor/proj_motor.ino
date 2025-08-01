@@ -72,8 +72,8 @@ const uint8_t qtdIntervalG1 = 4;        // Número de intervalos de cor no gauge
 int range1[qtdIntervalG1] = {0, 25, 50, 75}; // Intervalos de valor que mudam a cor do gauge
 uint16_t colors1[qtdIntervalG1] = {CFK_COLOR08, CFK_COLOR06, CFK_COLOR04, CFK_COLOR01}; // Cores correspondentes a cada faixa de valor
 
-Label linhaverde(10, 170, 0);           // Label de texto (linha verde) na posição (10, 170), tela 0
-Label linhalaranja(350, 170, 0);        // Outro label, com a linha laranja, mais à direita
+Label linhaverde(30, 170, 0);           // Label de texto (linha verde) na posição (10, 170), tela 0
+Label linhalaranja(310, 170, 0);        // Outro label, com a linha laranja, mais à direita
 const uint8_t qtdLabel = 2;             // Número total de labels
 Label *arrayLabel[qtdLabel] = {&linhaverde, &linhalaranja}; // Lista de ponteiros para gerenciamento automático
 
@@ -85,8 +85,8 @@ Label *seriesGrafico0[2] = {&linhaverde, &linhalaranja}; // Labels usados como f
 const uint8_t qtdLinesChart0 = 2;       // O gráfico terá duas linhas
 uint16_t colorsChart0[qtdLinesChart0] = {CFK_COLOR10, CFK_COLOR04}; // Cores de cada linha do gráfico
 
-SpinBox spinmaxmotor(210, 80, 1);       // SpinBox para definir o valor máximo do motor, na tela 1
-SpinBox spinmaxcomp(210, 175, 1);       // SpinBox para valor máximo do compressor, na tela 1
+SpinBox spinmaxmotor(260, 80, 1);       // SpinBox para definir o valor máximo do motor, na tela 1
+SpinBox spinmaxcomp(260, 175, 1);       // SpinBox para valor máximo do compressor, na tela 1
 const uint8_t qtdSpinbox = 2;           // Número de SpinBoxes
 SpinBox *arraySpinbox[qtdSpinbox] = {&spinmaxmotor, &spinmaxcomp}; // Lista de SpinBoxes para renderização e controle
 
@@ -271,10 +271,6 @@ void screen0()
 {
 
     tft->fillScreen(CFK_GREY3); // Preenche toda a tela com a cor cinza escuro (CFK_GREY3) como fundo
-
-    const myColor = tft->color565(255, 255, 0);
-
-
     WidgetBase::backgroundColor = CFK_GREY3; // Define a cor de fundo padrão para os widgets desenhados nesta tela
 
     // Escreve o texto "Tela de controle" na posição (165, 7), centralizado à esquerda (TL_DATUM)
@@ -293,7 +289,7 @@ void screen0()
     tft->drawRoundRect(260, 200, 205, 108, 10, CFK_WHITE);
 
     // Escreve "Motor" na parte superior da área correspondente ao botão do motor
-    myDisplay.printText("Motor", 275, 222, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Motor", 275, 222, TL_DATUM, CFK_COLOR04, CFK_GREY3, &Roboto_Regular10pt7b);
 
     // Escreve "Compres." (abreviação de Compressor) na parte inferior da área
     myDisplay.printText("Comp. agua", 270, 267, TL_DATUM, CFK_COLOR10, CFK_GREY3, &Roboto_Regular10pt7b);
@@ -309,13 +305,13 @@ void screen1()
 
     // Exibe o título "Config do motor" no topo da tela, centralizado à esquerda da coordenada (165, 17)
     // Usa a cor de texto CFK_COLOR06, fundo cinza, e fonte Roboto 10pt
-    myDisplay.printText("Config do motor", 165, 17, TL_DATUM, CFK_COLOR06, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Config de limite", 165, 17, TL_DATUM, CFK_COLOR06, CFK_GREY3, &Roboto_Regular10pt7b);
 
     // Escreve a legenda "Limite motor" próxima ao campo onde o usuário define a temperatura máxima do motor
     myDisplay.printText("Limite motor", 50, 107, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
 
     // Escreve a legenda "Limite compr." (limite do compressor) próximo ao respectivo campo
-    myDisplay.printText("Limite compr.", 50, 200, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Limite comp. agua", 50, 200, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
 
     // Desenha todos os widgets associados à tela de índice 1
     // Aqui devem ser desenhados os dois SpinBox (spinmaxmotor e spinmaxcomp), conforme configurados no array arraySpinbox
@@ -348,7 +344,7 @@ void loadWidgets()
     myDisplay.setGauge(arrayGauge, qtdGauge);//Envia para a biblioteca displayFK quais e quantos são os gauges no projetos.
 
     LabelConfig configLabel0 = {
-        .text = "Line 1",                          // Texto principal do label
+        .text = "agua",                          // Texto principal do label
         .fontFamily = &Roboto_Regular10pt7b,     // Fonte usada para o texto
         .datum = TL_DATUM,                        // Ponto de referência para posicionamento do texto (alinhamento)
         .fontColor = CFK_COLOR10,                 // Cor da fonte do texto principal
@@ -359,7 +355,7 @@ void loadWidgets()
     linhaverde.setup(configLabel0); //Associa a configuração ao label
     
     LabelConfig configLabel1 = {
-        .text = "Line 2",                          // Texto principal do label
+        .text = "motor",                          // Texto principal do label
         .fontFamily = &Roboto_Regular10pt7b,     // Fonte usada para o texto
         .datum = TL_DATUM,                        // Ponto de referência para posicionamento do texto (alinhamento)
         .fontColor = CFK_COLOR04,                 // Cor da fonte do texto principal
