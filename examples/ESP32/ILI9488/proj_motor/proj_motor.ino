@@ -271,6 +271,10 @@ void screen0()
 {
 
     tft->fillScreen(CFK_GREY3); // Preenche toda a tela com a cor cinza escuro (CFK_GREY3) como fundo
+
+    const myColor = tft->color565(255, 255, 0);
+
+
     WidgetBase::backgroundColor = CFK_GREY3; // Define a cor de fundo padrão para os widgets desenhados nesta tela
 
     // Escreve o texto "Tela de controle" na posição (165, 7), centralizado à esquerda (TL_DATUM)
@@ -292,7 +296,7 @@ void screen0()
     myDisplay.printText("Motor", 275, 222, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
 
     // Escreve "Compres." (abreviação de Compressor) na parte inferior da área
-    myDisplay.printText("Comp. agua", 270, 267, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Comp. agua", 270, 267, TL_DATUM, CFK_COLOR10, CFK_GREY3, &Roboto_Regular10pt7b);
 
     // Desenha todos os widgets que estão associados à tela de índice 0
     // Isso inclui botões, gauge, gráficos, etc., registrados via `arrayTogglebtn`, `arrayGauge`, etc.

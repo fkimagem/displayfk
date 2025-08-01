@@ -66,11 +66,16 @@ void setup()
     // Define o objeto global do display dentro da classe base dos widgets (para que todos possam desenhar)
     WidgetBase::objTFT = tft;
 
-    myDisplay.startTouchXPT2046(DISPLAY_W, DISPLAY_H, rotationScreen, TC_CS, &spi_shared, tft, TOUCH_FREQUENCY, DISP_FREQUENCY, DISP_CS);
+    // Escolha seu touch - Não esqueça de atualizar seu user_setup.h
+    //myDisplay.startTouchFT6336(DISPLAY_W, DISPLAY_H, rotationScreen, TC_SDA, TC_SCL, TC_INT, TC_RST);
+    //myDisplay.startTouchFT6236U(DISPLAY_W, DISPLAY_H, rotationScreen, TC_SDA, TC_SCL, -1, -1);
+    //myDisplay.startTouchGT911(DISPLAY_W, DISPLAY_H, rotationScreen, TC_SDA, TC_SCL, TC_INT, TC_RST);
+    //myDisplay.startTouchXPT2046(DISPLAY_W, DISPLAY_H, rotationScreen, TC_CS, &spi_shared, tft, TOUCH_FREQUENCY, DISP_FREQUENCY, DISP_CS);
+    //myDisplay.startTouchXPT2046(DISPLAY_W, DISPLAY_H, rotationScreen, TC_SCL, TC_MOSI, TC_MISO, TC_CS, tft, TOUCH_FREQUENCY, DISP_FREQUENCY, DISP_CS);
 
     // myDisplay.recalibrate(); // (opcional) re-calibração do touch se necessário
     myDisplay.checkCalibration(); // Verifica se o touch está calibrado, pode carregar dados salvos
-    // myDisplay.enableTouchLog(); // (opcional) ativa log de toque na serial para debug
+    myDisplay.enableTouchLog(); // (opcional) ativa log de toque na serial para debug
 
     loadWidgets(); // Função que configura todos os widgets (botões, gráficos, spinboxes, etc.)
     WidgetBase::loadScreen = screen0; // Define qual tela será carregada inicialmente ao iniciar a interface gráfica
