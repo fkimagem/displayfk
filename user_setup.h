@@ -45,7 +45,8 @@
 #endif
 */
 
-#define DISP_DEFAULT
-#define TOUCH_XPT2046
+#define DISP_DEFAULT	
+#define TOUCH_GT911	
+#define HAS_TOUCH	
 //#define INVERT_COLOR_BITS
 //#define IS_BGR
