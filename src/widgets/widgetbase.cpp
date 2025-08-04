@@ -248,11 +248,11 @@ const GFXfont *WidgetBase::GetBestRobotoBold(uint16_t availableWidth, uint16_t a
 {
     // Array de fontes disponíveis, ordenadas do maior para o menor
     static const GFXfont* const fontes[] = {
-        &Roboto_Bold50pt7b,
-        &Roboto_Bold40pt7b,
-        &Roboto_Bold30pt7b,
-        &Roboto_Bold20pt7b,
-        &Roboto_Bold10pt7b
+        &RobotoBold50pt7b,
+        &RobotoBold40pt7b,
+        &RobotoBold30pt7b,
+        &RobotoBold20pt7b,
+        &RobotoBold10pt7b
     };
     static const int numFontes = sizeof(fontes) / sizeof(fontes[0]);
 

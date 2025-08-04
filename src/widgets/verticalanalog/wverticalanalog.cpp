@@ -90,7 +90,7 @@ void VAnalog::drawBackground()
   {
 #if defined(DISP_BODMER)
     // WidgetBase::objTFT->loadFont("FONTE15");
-    WidgetBase::objTFT->setFreeFont(&Roboto_Regular10pt7b);
+    WidgetBase::objTFT->setFreeFont(&RobotoRegular10pt7b);
 #endif
   }
   redraw();
@@ -131,7 +131,7 @@ void VAnalog::redraw()
   if (m_updateText)
   {
 #if defined(DISP_DEFAULT)
-    WidgetBase::objTFT->setFont(&Roboto_Regular10pt7b);
+    WidgetBase::objTFT->setFont(&RobotoRegular10pt7b);
 #endif
   }
   // uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;

@@ -287,11 +287,11 @@ void icoLeft1_cb(){
 void screen0(){
     tft->fillScreen(CFK_GREY4); // Preenche a tela com a cor CFK_GREY4
     WidgetBase::backgroundColor = CFK_GREY4; // Define a cor de fundo da tela
-    myDisplay.printText("Sensor temp", 170, 12, TL_DATUM, CFK_LIME, CFK_GREY4, &Roboto_Regular10pt7b); // Imprime o texto "Sensor temp" na tela
-    myDisplay.printText("LEDs", 15, 212, TL_DATUM, CFK_LIME, CFK_GREY4, &Roboto_Regular10pt7b); // Imprime o texto "LEDs" na tela
-    myDisplay.printText("Reles", 15, 262, TL_DATUM, CFK_LIME, CFK_GREY4, &Roboto_Regular10pt7b); // Imprime o texto "Reles" na tela
-    myDisplay.printText("Motor", 90, 297, TL_DATUM, CFK_LIME, CFK_GREY4, &Roboto_Regular10pt7b); // Texto do motor
-    myDisplay.printText("Compr.", 180, 297, TL_DATUM, CFK_LIME, CFK_GREY4, &Roboto_Regular10pt7b); // Texto da bomba dagua
+    myDisplay.printText("Sensor temp", 170, 12, TL_DATUM, CFK_LIME, CFK_GREY4, &RobotoRegular10pt7b); // Imprime o texto "Sensor temp" na tela
+    myDisplay.printText("LEDs", 15, 212, TL_DATUM, CFK_LIME, CFK_GREY4, &RobotoRegular10pt7b); // Imprime o texto "LEDs" na tela
+    myDisplay.printText("Reles", 15, 262, TL_DATUM, CFK_LIME, CFK_GREY4, &RobotoRegular10pt7b); // Imprime o texto "Reles" na tela
+    myDisplay.printText("Motor", 90, 297, TL_DATUM, CFK_LIME, CFK_GREY4, &RobotoRegular10pt7b); // Texto do motor
+    myDisplay.printText("Compr.", 180, 297, TL_DATUM, CFK_LIME, CFK_GREY4, &RobotoRegular10pt7b); // Texto da bomba dagua
     myDisplay.drawWidgetsOnScreen(0); // Desenha os widgets na tela
 }
 
@@ -299,8 +299,8 @@ void screen0(){
 void screen1(){
     tft->fillScreen(CFK_GREY4); // Preenche a tela com a cor CFK_GREY4
     WidgetBase::backgroundColor = CFK_GREY4; // Define a cor de fundo da tela
-    myDisplay.printText("Config", 195, 17, TL_DATUM, CFK_LIME, CFK_GREY4, &Roboto_Regular10pt7b); // Imprime o texto "Config" na tela
-    myDisplay.printText("Max temp", 35, 92, TL_DATUM, CFK_SKYBLUE, CFK_GREY4, &Roboto_Regular10pt7b); // Imprime o texto "Max temp" na tela
+    myDisplay.printText("Config", 195, 17, TL_DATUM, CFK_LIME, CFK_GREY4, &RobotoRegular10pt7b); // Imprime o texto "Config" na tela
+    myDisplay.printText("Max temp", 35, 92, TL_DATUM, CFK_SKYBLUE, CFK_GREY4, &RobotoRegular10pt7b); // Imprime o texto "Max temp" na tela
     myDisplay.drawWidgetsOnScreen(1); // Desenha os widgets na tela
 }
 
@@ -328,7 +328,7 @@ void loadWidgets(){
             .needleColor = CFK_RED, // Cor da agulha do gauge
             .markersColor = CFK_BLACK, // Cor dos marcadores(risquinhos) do gauge
             .showLabels = true, // Mostra os labels do gauge
-            .fontFamily = &Roboto_Bold10pt7b // Fonte do gauge
+            .fontFamily = &RobotoBold10pt7b // Fonte do gauge
         };
     arrayGauge[0].setup(configGauge0); // Configura o widget gauge 0 com os valores da configuração
     myDisplay.setGauge(arrayGauge,qtdGauge); // Informa para a lib as configurações do widget gauge
@@ -336,7 +336,7 @@ void loadWidgets(){
     // Configuração do label
     LabelConfig configLabel0 = { // Configuração do label
             .text = "99", // Texto do label
-            .fontFamily = &Roboto_Regular10pt7b, // Fonte do label
+            .fontFamily = &RobotoRegular10pt7b, // Fonte do label
             .datum = TL_DATUM, // Posição do label
             .fontColor = CFK_FUCHSIA, // Cor do texto do label
             .backgroundColor = CFK_GREY4, // Cor de fundo do label
@@ -361,7 +361,7 @@ void loadWidgets(){
             .verticalDivision = 5, // Quantidade de divisões verticais do grafico de linhas
             .workInBackground = true, // Se o grafico de linhas deve ser desenhado em background
             .showZeroLine = true, // Se deve mostrar a linha zero do grafico de linhas
-            .font = &Roboto_Regular5pt7b // Fonte do grafico de linhas
+            .font = &RobotoRegular5pt7b // Fonte do grafico de linhas
         };
     arrayLinechart[0].setup(configLineChart0); // Configura o widget grafico de linhas 0 com os valores da configuração
     myDisplay.setLineChart(arrayLinechart,qtdLineChart); // Informa para a lib as configurações do widget grafico de linhas

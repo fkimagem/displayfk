@@ -4,7 +4,7 @@
 #include "../widgetbase.h"
 #include "winputexternal.h"
 #include "../../extras/charstring.h"
-#include "../../fonts/RobotoRegular/Roboto_Regular10pt7b.h"
+#include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
 
 
 /// @brief Represents an external keyboard widget for handling external keypad input.

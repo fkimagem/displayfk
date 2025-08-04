@@ -311,7 +311,7 @@ void loadWidgets(){
             .needleColor = CFK_RED,
             .markersColor = CFK_BLACK,
             .showLabels = true,
-            .fontFamily = &Roboto_Bold10pt7b
+            .fontFamily = &RobotoBold10pt7b
         };
     widget.setup(configGauge0);
     myDisplay.setGauge(arrayGauge,qtdGauge);
@@ -381,7 +381,7 @@ void loadWidgets(){
             .boldLine = true,
             .showDots = true,
             .maxPointsAmount = LineChart::SHOW_ALL,
-            .font = &Roboto_Regular5pt7b,
+            .font = &RobotoRegular5pt7b,
             .subtitles = nullptr
         };
     linechart.setup(configLineChart0);

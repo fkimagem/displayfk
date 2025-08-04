@@ -275,24 +275,24 @@ void screen0()
 
     // Escreve o texto "Tela de controle" na posição (165, 7), centralizado à esquerda (TL_DATUM)
     // Usa cor de texto CFK_COLOR07 cor de fundo CFK_GREY3 e fonte Roboto tamanho 10pt
-    myDisplay.printText("Tela de controle", 165, 7, TL_DATUM, CFK_COLOR07, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Tela de controle", 165, 7, TL_DATUM, CFK_COLOR07, CFK_GREY3, &RobotoRegular10pt7b);
 
     // Desenha um retângulo arredondado com borda branca, representando a área dos LEDs
     // Posição: canto superior em (5,200), largura: 243, altura: 110, raio das bordas: 10
     tft->drawRoundRect(5, 200, 243, 110, 10, CFK_WHITE);
 
     // Escreve a palavra "LED" no topo da seção, centralizado horizontalmente
-    myDisplay.printText("LED", 105, 212, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("LED", 105, 212, TL_DATUM, CFK_WHITE, CFK_GREY3, &RobotoRegular10pt7b);
 
     // Desenha o retângulo da área onde ficam os botões de Motor e Compressor
     // Posição em (260, 200), largura 205, altura 108
     tft->drawRoundRect(260, 200, 205, 108, 10, CFK_WHITE);
 
     // Escreve "Motor" na parte superior da área correspondente ao botão do motor
-    myDisplay.printText("Motor", 275, 222, TL_DATUM, CFK_COLOR04, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Motor", 275, 222, TL_DATUM, CFK_COLOR04, CFK_GREY3, &RobotoRegular10pt7b);
 
     // Escreve "Compres." (abreviação de Compressor) na parte inferior da área
-    myDisplay.printText("Comp. agua", 270, 267, TL_DATUM, CFK_COLOR10, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Comp. agua", 270, 267, TL_DATUM, CFK_COLOR10, CFK_GREY3, &RobotoRegular10pt7b);
 
     // Desenha todos os widgets que estão associados à tela de índice 0
     // Isso inclui botões, gauge, gráficos, etc., registrados via `arrayTogglebtn`, `arrayGauge`, etc.
@@ -305,13 +305,13 @@ void screen1()
 
     // Exibe o título "Config do motor" no topo da tela, centralizado à esquerda da coordenada (165, 17)
     // Usa a cor de texto CFK_COLOR06, fundo cinza, e fonte Roboto 10pt
-    myDisplay.printText("Config de limite", 165, 17, TL_DATUM, CFK_COLOR06, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Config de limite", 165, 17, TL_DATUM, CFK_COLOR06, CFK_GREY3, &RobotoRegular10pt7b);
 
     // Escreve a legenda "Limite motor" próxima ao campo onde o usuário define a temperatura máxima do motor
-    myDisplay.printText("Limite motor", 50, 107, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Limite motor", 50, 107, TL_DATUM, CFK_WHITE, CFK_GREY3, &RobotoRegular10pt7b);
 
     // Escreve a legenda "Limite compr." (limite do compressor) próximo ao respectivo campo
-    myDisplay.printText("Limite comp. agua", 50, 200, TL_DATUM, CFK_WHITE, CFK_GREY3, &Roboto_Regular10pt7b);
+    myDisplay.printText("Limite comp. agua", 50, 200, TL_DATUM, CFK_WHITE, CFK_GREY3, &RobotoRegular10pt7b);
 
     // Desenha todos os widgets associados à tela de índice 1
     // Aqui devem ser desenhados os dois SpinBox (spinmaxmotor e spinmaxcomp), conforme configurados no array arraySpinbox
@@ -337,7 +337,7 @@ void loadWidgets()
         .needleColor = CFK_RED,          // Cor da agulha (ponteiro) do gauge
         .markersColor = CFK_BLACK,       // Cor dos marcadores da escala (linhas divisórias)
         .showLabels = true,              // Define se os rótulos numéricos devem ser exibidos (true = sim)
-        .fontFamily = &Roboto_Bold10pt7b // Fonte utilizada para os textos dentro do gauge
+        .fontFamily = &RobotoBold10pt7b // Fonte utilizada para os textos dentro do gauge
     };
     gaugecontrole.setup(configGauge1);//Associa a configuração ao gauge
     
@@ -345,7 +345,7 @@ void loadWidgets()
 
     LabelConfig configLabel0 = {
         .text = "agua",                          // Texto principal do label
-        .fontFamily = &Roboto_Regular10pt7b,     // Fonte usada para o texto
+        .fontFamily = &RobotoRegular10pt7b,     // Fonte usada para o texto
         .datum = TL_DATUM,                        // Ponto de referência para posicionamento do texto (alinhamento)
         .fontColor = CFK_COLOR10,                 // Cor da fonte do texto principal
         .backgroundColor = CFK_GREY3,             // Cor de fundo do label
@@ -356,7 +356,7 @@ void loadWidgets()
     
     LabelConfig configLabel1 = {
         .text = "motor",                          // Texto principal do label
-        .fontFamily = &Roboto_Regular10pt7b,     // Fonte usada para o texto
+        .fontFamily = &RobotoRegular10pt7b,     // Fonte usada para o texto
         .datum = TL_DATUM,                        // Ponto de referência para posicionamento do texto (alinhamento)
         .fontColor = CFK_COLOR04,                 // Cor da fonte do texto principal
         .backgroundColor = CFK_GREY3,             // Cor de fundo do label
@@ -384,7 +384,7 @@ void loadWidgets()
         .boldLine = true,                      // Exibe linhas da grade com espessura maior
         .showDots = false,                     // Exibe pontos nos valores das séries (false = linhas lisas)
         .maxPointsAmount = LineChart::SHOW_ALL, // Número máximo de pontos mostrados (SHOW_ALL = exibe todos)
-        .font = &Roboto_Regular5pt7b,          // Fonte usada para legendas e textos no gráfico
+        .font = &RobotoRegular5pt7b,          // Fonte usada para legendas e textos no gráfico
         .subtitles = seriesGrafico0            // Array de labels que descreve cada série do gráfico
     };
     grafico.setup(configLineChart0);//Associa a configuração ao grafico

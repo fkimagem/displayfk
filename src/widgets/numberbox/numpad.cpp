@@ -199,9 +199,9 @@ void Numpad::redraw(bool fullScreen, bool onlyContent)
     WidgetBase::objTFT->drawRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, baseBorder);
 
     if(m_keyH > 20){
-        WidgetBase::objTFT->setFont(&Roboto_Bold10pt7b);
+        WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
     }else{
-        WidgetBase::objTFT->setFont(&Roboto_Bold5pt7b);
+        WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
     }
 
     WidgetBase::objTFT->setTextColor(CFK_BLACK);
@@ -245,12 +245,12 @@ void Numpad::redraw(bool fullScreen, bool onlyContent)
 
 #if defined(DISP_DEFAULT)
                     WidgetBase::objTFT->setTextColor(baseBorder);
-                    WidgetBase::objTFT->setFont(&Roboto_Bold10pt7b);
+                    WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
                     TextBound_t area;
                     WidgetBase::objTFT->getTextBounds(letter, xCenter, yCenter, &area.x, &area.y, &area.width, &area.height);
 
                     if(area.width > m_keyW/2){
-                        WidgetBase::objTFT->setFont(&Roboto_Bold5pt7b);
+                        WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
                     }
 
                     printText(letter, xCenter, yCenter, MC_DATUM);
@@ -342,7 +342,7 @@ void Numpad::open(NumberBox *_field)
     WidgetBase::usingKeyboard = true;
     m_content = m_field->getValueChar();
 #if defined(DISP_DEFAULT)
-    WidgetBase::objTFT->setFont(&Roboto_Bold10pt7b);
+    WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
 #endif
 
     redraw(true, false);

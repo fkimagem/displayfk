@@ -127,7 +127,7 @@ void NumberBox::redraw()
 
   #if defined(DISP_BODMER)
   //WidgetBase::objTFT->loadFont("FONTE15");
-  WidgetBase::objTFT->setFreeFont(&Roboto_Regular10pt7b);
+  WidgetBase::objTFT->setFreeFont(&RobotoRegular10pt7b);
   WidgetBase::objTFT->setTextDatum(TL_DATUM);
   #endif
   

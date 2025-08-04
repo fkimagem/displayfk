@@ -4,7 +4,7 @@
 #include "../widgetbase.h"
 #include "wnumberbox.h"
 #include "../../extras/charstring.h"
-#include "../../fonts/RobotoRegular/Roboto_Regular10pt7b.h"
+#include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
 
 /// @brief Number of rows in the numpad grid
 #define NROWS 4

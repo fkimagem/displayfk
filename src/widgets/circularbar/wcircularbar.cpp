@@ -182,7 +182,7 @@ void CircularBar::redraw()
 
         // String str = String(_value);
         WidgetBase::objTFT->setTextColor(m_textColor);
-        WidgetBase::objTFT->setFont(&Roboto_Bold10pt7b);
+        WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
         // updateFont(FontType::BOLD);
 
 #if defined(DISP_DEFAULT)

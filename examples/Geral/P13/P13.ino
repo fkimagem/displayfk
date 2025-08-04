@@ -160,7 +160,7 @@ void screen0(){
     //This screen has a/an verticalAnalog
     //This screen has a/an rectRange
     //This screen has a/an circularBar
-    myDisplay.printText("Custom text", 100, 347, TL_DATUM, CFK_BLACK, CFK_WHITE, &Roboto_Regular10pt7b);
+    myDisplay.printText("Custom text", 100, 347, TL_DATUM, CFK_BLACK, CFK_WHITE, &RobotoRegular10pt7b);
     //This screen has a/an label
     myDisplay.drawWidgetsOnScreen(0);
 }
@@ -199,7 +199,7 @@ void loadWidgets(){
     myDisplay.setHSlider(arrayHslider,qtdHSlider);
     LabelConfig configLabel0 = {
             .text = "Custom text",
-            .fontFamily = &Roboto_Regular10pt7b,
+            .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR28,
             .backgroundColor = CFK_WHITE,
@@ -220,7 +220,7 @@ void loadWidgets(){
             .letterColor = CFK_COLOR24,
             .backgroundColor = CFK_WHITE,
             .startValue = 123,
-            .font = &Roboto_Regular10pt7b,
+            .font = &RobotoRegular10pt7b,
             .funcPtr = screen0,
             .callback = numberbox0_cb
         };
@@ -283,7 +283,7 @@ void loadWidgets(){
             .letterColor = CFK_COLOR24,
             .backgroundColor = CFK_WHITE,
             .startValue = "YOUR TEXT HERE...",
-            .font = &Roboto_Regular10pt7b,
+            .font = &RobotoRegular10pt7b,
             .funcPtr = screen0,
             .cb = textbox0_cb
         };

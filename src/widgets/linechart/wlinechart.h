@@ -2,7 +2,7 @@
 #define WLINECHART
 
 #include "../widgetbase.h"
-#include "../../fonts/RobotoRegular/Roboto_Regular10pt7b.h"
+#include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include "../label/wlabel.h" // Para ponteiro Label

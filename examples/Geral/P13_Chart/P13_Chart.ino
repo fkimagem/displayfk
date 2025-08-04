@@ -114,7 +114,7 @@ void screen0(){
 void loadWidgets(){
   LabelConfig configLabel0 = {
             .text = "",
-            .fontFamily = &Roboto_Regular10pt7b,
+            .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR28,
             .backgroundColor = CFK_GREY3,
@@ -124,7 +124,7 @@ void loadWidgets(){
     text.setup(configLabel0);
     LabelConfig configLabel1 = {
             .text = "",
-            .fontFamily = &Roboto_Regular10pt7b,
+            .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR02,
             .backgroundColor = CFK_GREY3,
@@ -182,7 +182,7 @@ void loadWidgets(){
             .boldLine = false,
             .showDots = true,
             .maxPointsAmount = 20,
-            .font = &Roboto_Regular5pt7b,
+            .font = &RobotoRegular5pt7b,
             .subtitles = seriesGrafico
         };
     graficocima.setup(configLineChart0);
@@ -203,7 +203,7 @@ void loadWidgets(){
             .boldLine = true,
             .showDots = true,
             .maxPointsAmount = LineChart::SHOW_ALL,
-            .font = &Roboto_Regular5pt7b,
+            .font = &RobotoRegular5pt7b,
             .subtitles = nullptr
         };
     graficobaixo.setup(configLineChart1);

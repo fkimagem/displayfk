@@ -2,7 +2,7 @@
 #define WGAUGESUPER
 
 #include "../widgetbase.h"
-#include "../../fonts/RobotoRegular/Roboto_Regular10pt7b.h"
+#include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
 
 /// @brief Configuration structure for GaugeSuper
 struct GaugeConfig {

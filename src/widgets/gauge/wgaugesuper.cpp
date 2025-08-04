@@ -81,7 +81,7 @@ void GaugeSuper::start()
   
 
   // Configure the font
-  // m_usedFont = &Roboto_Bold10pt7b;
+  // m_usedFont = &RobotoBold10pt7b;
   WidgetBase::objTFT->setFont(m_usedFont);
 
   // Calculate text dimensions for values

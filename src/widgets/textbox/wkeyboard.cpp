@@ -218,9 +218,9 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
     WidgetBase::objTFT->setTextColor(CFK_BLACK);
 
     if(m_keyH > 20){
-        WidgetBase::objTFT->setFont(&Roboto_Bold10pt7b);
+        WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
     }else{
-        WidgetBase::objTFT->setFont(&Roboto_Bold5pt7b);
+        WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
     }
 
 
@@ -289,12 +289,12 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
                     //WidgetBase::objTFT->setCursor(xCenter, yCenter);
                     //WidgetBase::objTFT->print(letter);
 
-                    WidgetBase::objTFT->setFont(&Roboto_Bold10pt7b);
+                    WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
                     TextBound_t area;
                     WidgetBase::objTFT->getTextBounds(letter, xCenter, yCenter, &area.x, &area.y, &area.width, &area.height);
 
                     if(area.width > m_keyW/2){
-                        WidgetBase::objTFT->setFont(&Roboto_Bold5pt7b);
+                        WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
                     }
 
                     printText(letter, xCenter, yCenter, MC_DATUM);
@@ -425,9 +425,9 @@ void WKeyboard::open(TextBox *_field)
     m_content = m_field->getValue();
 #if defined(DISP_DEFAULT)
     if(m_keyH > 20){
-        WidgetBase::objTFT->setFont(&Roboto_Bold10pt7b);
+        WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
     }else{
-        WidgetBase::objTFT->setFont(&Roboto_Bold5pt7b);
+        WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
     }
     
 #endif

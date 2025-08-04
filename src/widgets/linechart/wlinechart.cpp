@@ -132,7 +132,7 @@ void LineChart::start()
 
   // verticalDivision++;//Incrementa a contagem para mostrar a posição correta das linhas de divisao
 
-  // m_letra = &Roboto_Bold10pt7b;
+  // m_letra = &RobotoBold10pt7b;
 
   WidgetBase::objTFT->setFont(m_letra);
 
@@ -628,7 +628,7 @@ void LineChart::setup(uint16_t _width, uint16_t _height, int _vmin, int _vmax, u
   }
   else
   {
-    m_letra = &Roboto_Regular10pt7b;
+    m_letra = &RobotoRegular10pt7b;
   }
 
   start();

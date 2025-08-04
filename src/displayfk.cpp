@@ -949,8 +949,8 @@ void DisplayFK::addLog(const char *data)
 DisplayFK::DisplayFK() : m_configs(), m_runningTransaction(false)
 {
     DisplayFK::instance = this;
-    WidgetBase::fontBold = const_cast<GFXfont *>(&Roboto_Bold5pt7b);
-    WidgetBase::fontNormal = const_cast<GFXfont *>(&Roboto_Bold5pt7b);
+    WidgetBase::fontBold = const_cast<GFXfont *>(&RobotoBold5pt7b);
+    WidgetBase::fontNormal = const_cast<GFXfont *>(&RobotoBold5pt7b);
 
     
 
