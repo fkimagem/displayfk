@@ -161,6 +161,15 @@ constexpr uint16_t CFK_GREY14    = process_color(0xEF7D);
 
 #define FONT_ROBOTO
 #define FONT_DIGIT
+#define FONT_LED
+#define FONT_MUSIC
+#define FONT_NOKIAN
+#define FONT_PIXEL
+#define FONT_SCORED
+#define FONT_SCREENMATRIX
+#define FONT_URBAN
+#define FONT_VACATION
+
 
 
 #endif

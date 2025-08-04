@@ -4,7 +4,7 @@
 #include "../widgetbase.h"
 #include "wtextbox.h"
 #include "../../extras/charstring.h"
-#include "../../fonts/RobotoRegular/Roboto_Regular10pt7b.h"
+#include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
 
 //#define AROWS 6
 #define AROWS 5
