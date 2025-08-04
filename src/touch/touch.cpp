@@ -321,9 +321,9 @@ bool TouchScreen::touch_touched()
       }
 
       if(m_invertYAxis){
-        m_touch_last_y = map(m_ts->points[0].y, m_y1, TOUCH_MAP_Y2, m_heightScreen - 1, 0);
+        m_touch_last_y = map(m_ts->points[0].y, m_y0, m_y1, m_heightScreen - 1, 0);
       }else{
-        m_touch_last_y = map(m_ts->points[0].y, m_y1, TOUCH_MAP_Y2, 0, m_heightScreen - 1);
+        m_touch_last_y = map(m_ts->points[0].y, m_y0, m_y1, 0, m_heightScreen - 1);
       }
       m_touch_last_z = -1;
     }
