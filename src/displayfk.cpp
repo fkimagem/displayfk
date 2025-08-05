@@ -489,26 +489,6 @@ void DisplayFK::setToggle(ToggleButton *array[], uint8_t amount)
 }
 #endif
 
-#ifdef DFK_TOGGLE
-
-/**
- * @brief Configures the toggle button array
- * @param array Pointer to the button array
- * @param amount Number of buttons in the array
- */
-void DisplayFK::setToggle(ToggleButton *array[], uint8_t amount)
-{
-    if (m_toggleConfigured)
-    {
-        DEBUG_W("Toggle already conffigured");
-        return;
-    }
-    m_toggleConfigured = (amount > 0 && array != nullptr);
-    arrayToggleBtn = array;
-    qtdToggle = amount;
-}
-#endif
-
 #if defined(DFK_TOUCHAREA)
 
 /**
