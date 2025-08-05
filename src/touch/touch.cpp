@@ -307,9 +307,11 @@ bool TouchScreen::touch_touched()
   m_ts->read();
   if (m_ts->isTouched)
   {
-    if(m_swapAxis){
-      m_touch_last_x = map(m_ts->points[0].y, m_x0, m_x1, 0, m_widthScreen - 1);
-      m_touch_last_y = map(m_ts->points[0].x, m_y0, m_y1, 0, m_heightScreen - 1);
+    if(!m_swapAxis){
+      //m_touch_last_x = map(m_ts->points[0].y, m_x0, m_x1, 0, m_widthScreen - 1);
+      //m_touch_last_y = map(m_ts->points[0].x, m_y0, m_y1, 0, m_heightScreen - 1);
+      m_touch_last_x = m_ts->points[0].x;
+      m_touch_last_y = m_ts->points[0].y;
       m_touch_last_z = -1;
     }else{
       // Raw touch coordinates

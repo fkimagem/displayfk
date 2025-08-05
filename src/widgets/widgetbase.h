@@ -57,8 +57,26 @@
 
 #endif
 
-#if defined(FONT_DIGIT)
+#if defined(FONT_SEGMENT7)
+#include "../fonts/Segment/G7_Segment7_S52pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S53pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S54pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S55pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S56pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S57pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S58pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S59pt7b.h"
 #include "../fonts/Segment/G7_Segment7_S510pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S511pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S512pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S513pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S514pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S515pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S520pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S525pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S530pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S540pt7b.h"
+#include "../fonts/Segment/G7_Segment7_S550pt7b.h"
 #endif
 
 #if defined(FONT_LED)

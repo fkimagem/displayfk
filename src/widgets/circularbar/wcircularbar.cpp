@@ -175,7 +175,7 @@ void CircularBar::redraw()
 
     if (m_showValue)
     {
-        WidgetBase::objTFT->fillCircle(xPos, yPos, (m_radius - m_lineWeight) - 5, m_bkColor);
+        WidgetBase::objTFT->fillCircle(xPos, yPos, (m_radius - m_lineWeight) - 5, m_backgroundText);
 
         char char_arr[100];
         sprintf(char_arr, "%d", m_value);
@@ -214,18 +214,20 @@ void CircularBar::forceUpdate()
  * @param color Color of the circular bar.
  * @param bkColor Background color of the circular bar.
  * @param textColor Color of the text displaying the value.
+ * @param backgroundText Background color of the text area.
  * @param showLabel True if the value text should be displayed, false otherwise.
  * @param inverted True if the fill direction is inverted, false otherwise.
  * 
  * Initializes the circular bar properties and marks it as loaded when complete.
  */
-void CircularBar::setup(uint16_t radius, int vmin, int vmax, uint16_t startAngle, uint16_t endAngle, uint8_t weight, uint16_t color, uint16_t bkColor, uint16_t textColor, bool showLabel, bool inverted)
+void CircularBar::setup(uint16_t radius, int vmin, int vmax, uint16_t startAngle, uint16_t endAngle, uint8_t weight, uint16_t color, uint16_t bkColor, uint16_t textColor, uint16_t backgroundText,bool showLabel, bool inverted)
 {
     m_radius = radius;
     m_lineWeight = weight;
     m_lineColor = color;
     m_bkColor = bkColor;
     m_textColor = textColor;
+    m_backgroundText = backgroundText;
 
 
     //m_middleColor = WidgetBase::blendColors(m_bkColor, m_lineColor, 0.25);
@@ -277,5 +279,5 @@ void CircularBar::setup(uint16_t radius, int vmin, int vmax, uint16_t startAngle
 void CircularBar::setup(const CircularBarConfig& config)
 {
     setup(config.radius, config.minValue, config.maxValue, config.startAngle, config.endAngle, 
-          config.thickness, config.color, config.backgroundColor, config.textColor, config.showValue, config.inverted);
+          config.thickness, config.color, config.backgroundColor, config.textColor, config.backgroundText, config.showValue, config.inverted);
 }

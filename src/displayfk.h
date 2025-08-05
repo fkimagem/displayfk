@@ -243,6 +243,12 @@ private:
     bool m_spinboxConfigured = false; ///< Flag indicating if SpinBox is configured.
 #endif
 
+#ifdef DFK_THERMOMETER
+    uint8_t qtdThermometer = 0;      ///< Number of Thermometer widgets.
+    Thermometer **arrayThermometer = nullptr;   ///< Array of Thermometer widgets.
+    bool m_thermometerConfigured = false; ///< Flag indicating if Thermometer is configured.
+#endif
+
 #ifdef DFK_EXTERNALINPUT
     static uint8_t qtdExternalInput;      ///< Number of ExternalInput widgets.
     static InputExternal *arrayInputExternal;   ///< Array of ExternalInput widgets.
@@ -292,6 +298,7 @@ private:
     void updateSpinbox();
     void updateTextBox();
     void updateNumberBox();
+    void updateThermometer();
 
 public:
     static DisplayFK *instance;
@@ -426,6 +433,10 @@ public:
 
 #if defined(DFK_TEXTBUTTON)
     void setTextButton(TextButton *array[], uint8_t amount);
+#endif
+
+#ifdef DFK_THERMOMETER
+    void setThermometer(Thermometer *array[], uint8_t amount);
 #endif
 
 #ifdef DFK_SD

@@ -50,6 +50,7 @@ constexpr uint16_t process_color(uint16_t val) {
  #define DFK_SPINBOX 1
  #define DFK_TEXTBUTTON 1
  #define DFK_CIRCULARBAR 1
+ #define DFK_THERMOMETER 1
  //#define DFK_EXTERNALINPUT 1
 
 //These enumerate the text plotting alignment (reference datum point)
@@ -160,7 +161,7 @@ constexpr uint16_t CFK_GREY14    = process_color(0xEF7D);
 
 
 #define FONT_ROBOTO
-#define FONT_DIGIT
+#define FONT_SEGMENT7
 #define FONT_LED
 #define FONT_MUSIC
 #define FONT_NOKIAN

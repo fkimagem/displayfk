@@ -26,6 +26,13 @@ typedef struct
 } CoordPoint_t;
 
 
+/// @brief Structure representing a circle with position and radius.
+typedef struct{
+  int x;
+  int y;
+  int radius;
+} Circle_t;
+
 /// @brief Structure representing a rectangle with position and size.
 typedef struct
 {

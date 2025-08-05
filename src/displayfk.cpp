@@ -449,6 +449,46 @@ void DisplayFK::insertCharTextbox(char c)
 }
 #endif
 
+#ifdef DFK_THERMOMETER
+
+/**
+ * @brief Configures the thermometer array
+ * @param array Pointer to the thermometer array
+ * @param amount Number of thermometers in the array
+ */
+void DisplayFK::setThermometer(Thermometer *array[], uint8_t amount)
+{
+    if (m_thermometerConfigured)
+    {
+        DEBUG_W("Thermometer already conffigured");
+        return;
+    }
+    m_thermometerConfigured = (amount > 0 && array != nullptr);
+    arrayThermometer = array;
+    qtdThermometer = amount;
+}
+#endif
+
+#ifdef DFK_TOGGLE
+
+/**
+ * @brief Configures the toggle button array
+ * @param array Pointer to the button array
+ * @param amount Number of buttons in the array
+ */
+void DisplayFK::setToggle(ToggleButton *array[], uint8_t amount)
+{
+    if (m_toggleConfigured)
+    {
+        DEBUG_W("Toggle already conffigured");
+        return;
+    }
+    m_toggleConfigured = (amount > 0 && array != nullptr);
+    arrayToggleBtn = array;
+    qtdToggle = amount;
+}
+#endif
+
 #ifdef DFK_TOGGLE
 
 /**
@@ -978,6 +1018,13 @@ DisplayFK::~DisplayFK()
     if (arrayTouchArea) {
         delete[] arrayTouchArea;
         arrayTouchArea = nullptr;
+    }
+#endif
+
+#if defined(DFK_THERMOMETER)
+    if (arrayThermometer) {
+        delete[] arrayThermometer;
+        arrayThermometer = nullptr;
     }
 #endif
 
@@ -1560,6 +1607,23 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
         DEBUG_W("Array of VBar not configured");
     }
 #endif
+
+#ifdef DFK_THERMOMETER
+    if (m_thermometerConfigured)
+    {
+        for (register uint32_t indice = 0; indice < (qtdThermometer); indice++)
+        {
+            arrayThermometer[indice]->forceUpdate();
+            arrayThermometer[indice]->drawBackground();
+        }
+    }
+    else
+    {
+        DEBUG_W("Array of Thermometer not configured");
+    }
+#endif
+
+
 #ifdef DFK_VANALOG
     if (m_vAnalogConfigured)
     {
@@ -2082,6 +2146,7 @@ void DisplayFK::updateWidgets() {
         updateSpinbox();
         updateNumberBox();
         updateTextBox();
+        updateThermometer();
     }
 }
 
@@ -2412,6 +2477,20 @@ void DisplayFK::updateVBar() {
     if (m_vBarConfigured) {
         for (uint32_t indice = 0; indice < qtdVBar; indice++) {
             arrayVBar[indice]->redraw();
+        }
+    }
+#endif
+}
+
+
+/**
+ * @brief Updates vertical bars
+ */
+void DisplayFK::updateThermometer() {
+#ifdef DFK_THERMOMETER
+    if (m_thermometerConfigured) {
+        for (uint32_t indice = 0; indice < qtdThermometer; indice++) {
+            arrayThermometer[indice]->redraw();
         }
     }
 #endif

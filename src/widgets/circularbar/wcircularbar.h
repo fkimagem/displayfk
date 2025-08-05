@@ -15,6 +15,7 @@ struct CircularBarConfig {
   uint16_t color;         ///< Color of the circular bar
   uint16_t backgroundColor;       ///< Background color of the CircularBar
   uint16_t textColor;     ///< Color of the text displaying the value
+  uint16_t backgroundText;///< Background color of the text area
   bool showValue;         ///< Flag to show/hide the value text
   bool inverted;          ///< Flag to indicate if the fill direction is inverted
 };
@@ -41,9 +42,10 @@ private:
   int m_rotation = 0; ///< Rotation angle of the gauge, where 0 is at the middle right.
   bool m_showValue = true; ///< Flag to show/hide the value text.
   TextBound_t m_lastArea = {0, 0, 0, 0}; ///< Last calculated area for the label.
+  uint16_t m_backgroundText = 0;
 
   void start();
-  void setup(uint16_t radius, int vmin, int vmax, uint16_t startAngle, uint16_t endAngle, uint8_t weight, uint16_t color, uint16_t bkColor, uint16_t textColor, bool showLabel, bool inverted);
+  void setup(uint16_t radius, int vmin, int vmax, uint16_t startAngle, uint16_t endAngle, uint8_t weight, uint16_t color, uint16_t bkColor, uint16_t textColor, uint16_t backgroundText, bool showLabel, bool inverted);
 
 public:
   CircularBar(uint16_t _x, uint16_t _y, uint8_t _screen);
