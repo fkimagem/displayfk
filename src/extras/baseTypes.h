@@ -61,5 +61,11 @@ enum class FontType
   BOLD    ///< Bold font type.
 };
 
+enum class Orientation
+{
+  VERTICAL = 1,    ///< Vertical orientation.
+  HORIZONTAL = 2 ///< Horizontal orientation.
+};
+
 #endif
 

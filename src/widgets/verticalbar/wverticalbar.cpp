@@ -58,32 +58,29 @@ void VBar::redraw()
   {
     return;
   }
-  // uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;
   uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
   m_lastValue = m_currentValue;
-  // uint32_t _max = vmax - vmin;
 
-  uint32_t t = map(m_currentValue, m_vmin, m_vmax, 0, m_height); // O +1 é para tirar a borda da contagem
-  // t = t < 6 ? 6 : t;
-  // t = constrain(t, 6, t);
-  // uint32_t _y = (height - t);
-
-  /*TFT_eSprite _spr = TFT_eSprite(WidgetBase::objTFT);
-  _spr.createSprite(width, height);
-  _spr.fillSprite(WidgetBase::lightMode ? CFK_WHITE : CFK_BLACK);
-  _spr.fillRoundRect(0, 0, width, height, 5, lightBg);
-  _spr.drawRoundRect(0, 0, width, height, 5, baseBorder);
-  _spr.fillRoundRect(1, _y + 1, width - 2, t - 2, 5, filledColor);
-
-  _spr.pushSprite(xPos, yPos, WidgetBase::lightMode ? CFK_WHITE : CFK_BLACK);
-  _spr.deleteSprite();*/
   WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, 5, CFK_GREY11); // fundo total
   WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, 5, CFK_BLACK);     // borda total
 
-  WidgetBase::objTFT->fillRoundRect(xPos, yPos + (m_height - t), m_width, t, 5, m_filledColor); // cor fill
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos + (m_height - t), m_width, t, 5, CFK_BLACK);   // borda fill
+  if(m_orientation == Orientation::VERTICAL){
+
+    uint32_t proportionalHeight = map(m_currentValue, m_vmin, m_vmax, 0, m_height); // O +1 é para tirar a borda da contagem
+    WidgetBase::objTFT->fillRoundRect(xPos, yPos + (m_height - proportionalHeight), m_width, proportionalHeight, 5, m_filledColor); // cor fill
+    WidgetBase::objTFT->drawRoundRect(xPos, yPos + (m_height - proportionalHeight), m_width, proportionalHeight, 5, CFK_BLACK);   // borda fill
+
+  }else if(m_orientation == Orientation::HORIZONTAL){
+
+    uint32_t proportionalWidth = map(m_currentValue, m_vmin, m_vmax, 0, m_width); // O +1 é para tirar a borda da contagem
+    WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, proportionalWidth, 5, m_filledColor); // cor fill
+    WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, proportionalWidth, 5, CFK_BLACK);   // borda fill
+
+  }
+
+  
 
   m_update = false;
 }
@@ -126,8 +123,9 @@ void VBar::drawBackground()
  * @param _filledColor Color for the filled portion of the bar.
  * @param _vmin Minimum value of the range.
  * @param _vmax Maximum value of the range.
+ * @param _orientation Orientation of the bar (vertical or horizontal).
  */
-void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax)
+void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax, Orientation _orientation)
 {
   if (!WidgetBase::objTFT)
   {
@@ -145,6 +143,7 @@ void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _
   m_vmin = _vmin;
   m_vmax = _vmax;
   m_currentValue = m_vmin;
+  m_orientation = _orientation;
   m_update = true;
   start();
   loaded = true;
@@ -156,5 +155,5 @@ void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _
  */
 void VBar::setup(const VerticalBarConfig& config)
 {
-  setup(config.width, config.height, config.filledColor, config.minValue, config.maxValue);
+  setup(config.width, config.height, config.filledColor, config.minValue, config.maxValue, config.orientation);
 }
