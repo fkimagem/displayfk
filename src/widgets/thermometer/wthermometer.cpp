@@ -58,28 +58,25 @@ void Thermometer::redraw()
   {
     return;
   }
-  m_lastValue = m_currentValue;
+  
   
 
-  uint32_t height = map(m_currentValue, m_vmin, m_vmax, 0, m_fillArea.height);
-  
-  
-  int startY = m_fillArea.y + (m_fillArea.height - height);
-  
-  //WidgetBase::objTFT->fillRoundRect(m_glassArea.x, m_glassArea.y, m_glassArea.width, m_glassArea.height, m_glassArea.width/2, CFK_WHITE);     // area do widget
-  WidgetBase::objTFT->fillRoundRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, m_fillArea.height, 0, m_config.backgroundColor);     // area do widget
-  WidgetBase::objTFT->fillRoundRect(m_fillArea.x, startY, m_fillArea.width, height, 0, m_filledColor);     // area do widget
-  
-  /*WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, 5, CFK_GREY11); // fundo total
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, 5, CFK_BLACK);     // borda total
+  uint32_t heightFill = map(m_currentValue, m_vmin, m_vmax, 0, m_fillArea.height);
+  uint32_t diffHeight = m_fillArea.height - heightFill;
+  int startY = m_fillArea.y + (m_fillArea.height - heightFill);
 
-  WidgetBase::objTFT->fillRoundRect(xPos, yPos + (m_height - t), m_width, t, 5, m_filledColor); // cor fill
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos + (m_height - t), m_width, t, 5, CFK_BLACK);   // borda fill*/
+
+    if(m_currentValue < m_lastValue){
+      WidgetBase::objTFT->fillRoundRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, diffHeight, 0, m_config.backgroundColor);     // area do widget
+    }else{
+      WidgetBase::objTFT->fillRoundRect(m_fillArea.x, startY, m_fillArea.width, heightFill, 0, m_filledColor);     // area do widget
+    }
 
   if(m_config.subtitle){
     m_config.subtitle->setTextFloat(m_lastValue);
   }
 
+  m_lastValue = m_currentValue;
   m_update = false;
 }
 

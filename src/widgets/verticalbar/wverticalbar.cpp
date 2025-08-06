@@ -58,30 +58,48 @@ void VBar::redraw()
   {
     return;
   }
-  uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
-  uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
-
-  m_lastValue = m_currentValue;
-
-  WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, 5, CFK_GREY11); // fundo total
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, 5, CFK_BLACK);     // borda total
+  
+  int innerX = xPos + 1;
+  int innerY = yPos + 1;
+  int innerHeight = m_height - 2;
+  int innerWidth = m_width - 2;
+  int minHeight = m_round;
+  int minWidth = m_round;
+  int innerRound = m_round > 0 ? m_round - 1 : m_round;
 
   if(m_orientation == Orientation::VERTICAL){
+	
+	uint32_t proportionalHeight = map(m_currentValue, m_vmin, m_vmax, minHeight, innerHeight);
+	
+	if(m_currentValue < m_lastValue){
+		uint32_t clearArea = map(m_vmax - m_currentValue, m_vmin, m_vmax, minHeight, innerHeight);
+		WidgetBase::objTFT->fillRoundRect(innerX, innerY, innerWidth, clearArea, innerRound, CFK_GREY11); // fundo total
+		
+	}
 
-    uint32_t proportionalHeight = map(m_currentValue, m_vmin, m_vmax, 0, m_height); // O +1 é para tirar a borda da contagem
-    WidgetBase::objTFT->fillRoundRect(xPos, yPos + (m_height - proportionalHeight), m_width, proportionalHeight, 5, m_filledColor); // cor fill
-    WidgetBase::objTFT->drawRoundRect(xPos, yPos + (m_height - proportionalHeight), m_width, proportionalHeight, 5, CFK_BLACK);   // borda fill
+    
+    WidgetBase::objTFT->fillRoundRect(innerX, innerY + (innerHeight - proportionalHeight), innerWidth, proportionalHeight, innerRound, m_filledColor); // cor fill
+    //WidgetBase::objTFT->drawRoundRect(innerX, innerY + (innerHeight - proportionalHeight), innerWidth, proportionalHeight, innerRound, CFK_BLACK);   // borda fill
 
   }else if(m_orientation == Orientation::HORIZONTAL){
+	  
+	  if(m_currentValue < m_lastValue){
+		uint32_t clearArea = map(m_vmax - m_currentValue, m_vmin, m_vmax, minWidth, innerWidth);
+		uint32_t xValue = map(m_currentValue, m_vmin, m_vmax, innerX, innerX + innerWidth);
+		
+		WidgetBase::objTFT->fillRoundRect(xValue, innerY, clearArea, innerHeight, innerRound, CFK_GREY11); // fundo total
+		
+	}
 
-    uint32_t proportionalWidth = map(m_currentValue, m_vmin, m_vmax, 0, m_width); // O +1 é para tirar a borda da contagem
-    WidgetBase::objTFT->fillRoundRect(xPos, yPos, proportionalWidth, m_height, 5, m_filledColor); // cor fill
-    WidgetBase::objTFT->drawRoundRect(xPos, yPos, proportionalWidth, m_height, 5, CFK_BLACK);   // borda fill
+    uint32_t proportionalWidth = map(m_currentValue, m_vmin, m_vmax, minWidth, innerWidth); // O +1 é para tirar a borda da contagem
+    WidgetBase::objTFT->fillRoundRect(innerX, innerY, proportionalWidth, innerHeight, innerRound, m_filledColor); // cor fill
+	
+    //WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, m_round,CFK_BLACK);   // borda fill
 
   }
 
   
-
+m_lastValue = m_currentValue;
   m_update = false;
 }
 
@@ -92,6 +110,7 @@ void VBar::start()
 {
 #if defined(DISP_DEFAULT)
   m_height = constrain(m_height, 20, WidgetBase::objTFT->height());
+  m_width = constrain(m_width, 20, WidgetBase::objTFT->width());
 #endif
 }
 
@@ -112,8 +131,8 @@ void VBar::drawBackground()
   {
     return;
   }
-  WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, 5, CFK_GREY11); // fundo total
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, 5, CFK_BLACK);     // borda total
+  WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, m_round, CFK_GREY11); // fundo total
+  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, m_round, CFK_BLACK);     // borda total
 }
 
 /**
@@ -125,7 +144,7 @@ void VBar::drawBackground()
  * @param _vmax Maximum value of the range.
  * @param _orientation Orientation of the bar (vertical or horizontal).
  */
-void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax, Orientation _orientation)
+void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax, int _round, Orientation _orientation)
 {
   if (!WidgetBase::objTFT)
   {
@@ -145,6 +164,7 @@ void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _
   m_currentValue = m_vmin;
   m_orientation = _orientation;
   m_update = true;
+  m_round = _round;
   start();
   loaded = true;
 }
@@ -155,5 +175,5 @@ void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _
  */
 void VBar::setup(const VerticalBarConfig& config)
 {
-  setup(config.width, config.height, config.filledColor, config.minValue, config.maxValue, config.orientation);
+  setup(config.width, config.height, config.filledColor, config.minValue, config.maxValue, config.round,config.orientation);
 }
