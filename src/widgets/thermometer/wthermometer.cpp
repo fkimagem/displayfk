@@ -135,12 +135,15 @@ void Thermometer::drawBackground()
   
   m_fillArea.height = m_height - (m_border * 2 + m_bulb.radius * 2 + (width/2));
 
+  WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, 5, m_config.backgroundColor);     // area do widget
   WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, 5, CFK_BLACK);     // area do widget
 
-  WidgetBase::objTFT->drawCircle(m_bulb.x, m_bulb.y, m_bulb.radius, CFK_BLACK); // desenha a borda do bulb
-  WidgetBase::objTFT->drawRoundRect(m_glassArea.x, m_glassArea.y, m_glassArea.width, m_glassArea.height, m_glassArea.width/2, CFK_BLACK);     // area do widget
-  WidgetBase::objTFT->fillRoundRect(m_glassArea.x, m_glassArea.y, m_glassArea.width, m_glassArea.height, m_glassArea.width/2, CFK_WHITE);     // area do widget
-  WidgetBase::objTFT->fillRoundRect(m_glassArea.x, m_bulb.y - m_bulb.radius, m_glassArea.width, m_bulb.radius, 0, m_filledColor);     // area do widget
+  WidgetBase::objTFT->drawCircle(m_bulb.x, m_bulb.y, m_bulb.radius + 1, CFK_BLACK); // desenha a borda do bulb
+
+  WidgetBase::objTFT->drawRoundRect(m_glassArea.x, m_glassArea.y, m_glassArea.width, m_glassArea.height, m_glassArea.width/2, CFK_BLACK);     // borda vidro
+  WidgetBase::objTFT->fillRoundRect(m_glassArea.x, m_glassArea.y, m_glassArea.width, m_glassArea.height, m_glassArea.width/2, CFK_WHITE);     // fundo vidro
+
+  WidgetBase::objTFT->fillRoundRect(m_glassArea.x, m_bulb.y - m_bulb.radius, m_glassArea.width, m_bulb.radius, 0, m_filledColor);// base do vidro (para nao ficar sobrando espaço em branco)
 
   for(uint8_t i = 0; i < m_colorLightGradientSize; i++)
     {
@@ -158,7 +161,7 @@ void Thermometer::drawBackground()
 	int size = 3;
 	for(auto i = 0; i <= amountSpace;i++){
 		int y = m_fillArea.y + i * space;
-		WidgetBase::objTFT->drawLine(m_fillArea.x - offset, y, m_fillArea.x - (offset + size), y, CFK_BLACK);
+		WidgetBase::objTFT->drawLine(m_fillArea.x - offset, y, m_fillArea.x - (offset + size), y, m_config.markColor);
 	}
 
 

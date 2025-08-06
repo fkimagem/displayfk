@@ -6,13 +6,15 @@
 
 /// @brief Configuration structure for VBar
 struct ThermometerConfig {
-  uint16_t width = 0;          ///< Width of the VBar display
-  uint16_t height = 0;         ///< Height of the VBar display
-  uint16_t filledColor = 0x0;    ///< Color used for the filled portion of the bar
-  int minValue = 0;                ///< Minimum value of the bar range
-  int maxValue = 0;                ///< Maximum value of the bar range
-  Label* subtitle = nullptr;
-  const char* unit = nullptr;
+  uint16_t width;          ///< Width of the VBar display
+  uint16_t height;         ///< Height of the VBar display
+  uint16_t filledColor;    ///< Color used for the filled portion of the bar
+  uint16_t backgroundColor;///< Color used for the background of the bar
+  uint16_t markColor; ///< Color used for the marks on the bar
+  int minValue;                ///< Minimum value of the bar range
+  int maxValue;                ///< Maximum value of the bar range
+  Label* subtitle;
+  const char* unit;
 };
 
 /// @brief Represents a vertical bar widget, used to display a value as a filled bar within a specified range.
