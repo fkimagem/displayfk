@@ -56,6 +56,32 @@ functionCB_t Label::getCallbackFunc()
     return cb;
 }
 
+void Label::setPrefix(const char* str){ 
+  if(m_prefix){
+    delete[] m_prefix;
+    m_prefix = nullptr;
+  }
+
+   // Aloca nova memória para prefixo
+    m_prefix = new char[strlen(str) + 1];
+    if (m_prefix) {
+        strcpy(m_prefix, str);
+    }
+}
+
+void Label::setSuffix(const char* str){
+  if(m_suffix){
+    delete[] m_suffix;
+    m_suffix = nullptr;
+  }
+
+   // Aloca nova memória para sufixo
+    m_suffix = new char[strlen(str) + 1];
+    if (m_suffix) {
+        strcpy(m_suffix, str);
+    }
+}
+
 /**
  * @brief Sets the text for the label.
  * @param str String to set as the label text.
@@ -185,9 +211,7 @@ void Label::forceUpdate()
  */
 void Label::setDecimalPlaces(uint8_t places)
 {
-  if(places > 5){
-    places = 5;
-  }
+  places = constrain(places, 0, 5);
   if(places != m_decimalPlaces){
     m_decimalPlaces = places;
     log_d("Decimal places set to %d", m_decimalPlaces);

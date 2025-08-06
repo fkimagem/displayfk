@@ -43,6 +43,8 @@ public:
   functionCB_t getCallbackFunc() override;
   void setText(const char* str);
   void setText(const String& str);
+  void setPrefix(const char* str);
+  void setSuffix(const char* str);
   void setTextFloat(float value, uint8_t decimalPlaces = 2);
   void setTextInt(int value);
   void redraw();
