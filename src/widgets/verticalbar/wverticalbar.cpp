@@ -75,8 +75,8 @@ void VBar::redraw()
   }else if(m_orientation == Orientation::HORIZONTAL){
 
     uint32_t proportionalWidth = map(m_currentValue, m_vmin, m_vmax, 0, m_width); // O +1 é para tirar a borda da contagem
-    WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, proportionalWidth, 5, m_filledColor); // cor fill
-    WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, proportionalWidth, 5, CFK_BLACK);   // borda fill
+    WidgetBase::objTFT->fillRoundRect(xPos, yPos, proportionalWidth, m_height, 5, m_filledColor); // cor fill
+    WidgetBase::objTFT->drawRoundRect(xPos, yPos, proportionalWidth, m_height, 5, CFK_BLACK);   // borda fill
 
   }
 
