@@ -116,6 +116,8 @@ private:
     int m_widthScreen = 0;
     int m_heightScreen = 0;
     int m_rotationScreen = 0;
+	uint16_t m_timeoutWTD = 0;
+	bool m_enableWTD = false;
 
     
 
@@ -318,7 +320,7 @@ public:
     void drawWidgetsOnScreen(const uint8_t currentScreenIndex);
     void setFontNormal(const GFXfont *_font);
     void setFontBold(const GFXfont *_font);
-    void createTask();
+    void createTask(bool enableWatchdog, uint16_t timeout_ms = 3000);
     void drawPng(uint16_t _x, uint16_t _y, const uint16_t _colors[], const uint8_t _mask[], uint16_t _w, uint16_t _h);
     void printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum, uint16_t _colorText, uint16_t _colorPadding, const GFXfont* _font);
     void enableTouchLog();
@@ -353,7 +355,7 @@ public:
     TouchScreen *touchExterno = nullptr; ///< External touch screen object.
 #endif
 
-    void changeWTD(bool enable);
+    void changeWTD();
 
 #ifdef DFK_CHECKBOX
     void setCheckbox(CheckBox *array[], uint8_t amount);
