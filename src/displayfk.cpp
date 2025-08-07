@@ -34,11 +34,18 @@ void DisplayFK::changeWTD(bool enable)
 {
     if (enable)
     {
+        uint16_t timeout_seconds = 3;
         Serial.println("Enabling watchdog");
-        uint8_t timeout_seconds = 5;
-        esp_err_t ret = esp_task_wdt_init(timeout_seconds, true);
+        esp_task_wdt_config_t config = {
+            .timeout_ms = timeout_seconds * 1000,         // Timeout em milissegundos (3 segundos)
+            .idle_core_mask = 0x03,     // Monitorar os dois núcleos (cores 0 e 1)
+            .trigger_panic = true       // Reiniciar o ESP32 quando timeout ocorrer
+        };
+        esp_task_wdt_deinit();
+        esp_err_t iniciou = esp_task_wdt_init(&config);     // Inicializa o watchdog com a configuração
+        esp_err_t adicionou = esp_task_wdt_add(NULL);         // Adiciona a tarefa atual (loop principal) para monitoramento
 
-        if (ret == ESP_OK)
+        if (iniciou == ESP_OK && adicionou == ESP_OK)
         {
             Serial.printf("Successful to enable watchdog with %i seconds\n", timeout_seconds);
         }
@@ -50,9 +57,9 @@ void DisplayFK::changeWTD(bool enable)
     else
     {
         Serial.println("Disabling watchdog");
-        esp_task_wdt_deinit();
+        esp_err_t deinit = esp_task_wdt_deinit();
         esp_err_t ret = esp_task_wdt_delete(m_hndTaskEventoTouch);
-        if (ret == ESP_OK)
+        if (ret == ESP_OK && deinit == ESP_OK)
         {
             Serial.println("Successful to disable watchdog");
         }
@@ -1677,6 +1684,8 @@ void DisplayFK::createTask()
     {
         DEBUG_E("Cant create task to read touch or draw widgets");
     }
+
+    changeWTD(true);
 }
 
 /**
