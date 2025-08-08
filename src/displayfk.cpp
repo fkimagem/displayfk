@@ -31,26 +31,22 @@ uint16_t DisplayFK::logFileCount = 1;
  */
 void DisplayFK::changeWTD()
 {
-    if (m_enableWTD)
-		{
-			Serial.println("Enabling watchdog");
-        esp_err_t iniciou = esp_task_wdt_init(m_timeoutWTD, true);  // timeout em segundos, trigger_panic = true
-		esp_err_t adicionou = esp_task_wdt_add(NULL);                    // Adiciona a tarefa atual (loop) ao watchdog
-        if (iniciou == ESP_OK && adicionou == ESP_OK)
+    if (m_enableWTD && m_watchdogInitialized){
+		esp_err_t adicionou = esp_task_wdt_add(m_hndTaskEventoTouch);                    // Adiciona a tarefa atual (loop) ao watchdog
+        if (adicionou == ESP_OK)
         {
-            Serial.printf("Successful to enable watchdog with %i seconds\n", m_timeoutWTD);
+            Serial.printf("Task of Display added to watchdog with %i seconds\n", m_timeoutWTD);
         }
         else
         {
-            Serial.printf("Error to turn on wtd with %i seconds\n", m_timeoutWTD);
+            Serial.printf("Error to add on watchdog with %i seconds to task Display\n", m_timeoutWTD);
         }
     }
     else
     {
         Serial.println("Disabling watchdog");
-        esp_err_t deinit = esp_task_wdt_deinit();
-        esp_err_t ret = esp_task_wdt_delete(m_hndTaskEventoTouch);
-        if (ret == ESP_OK && deinit == ESP_OK)
+        esp_err_t removeu = esp_task_wdt_delete(m_hndTaskEventoTouch);
+        if (removeu == ESP_OK)
         {
             Serial.println("Successful to disable watchdog");
         }
@@ -1665,13 +1661,31 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 /**
  * @brief Creates the event processing task
  */
-void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_ms)
+void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
 {
-	m_timeoutWTD = timeout_ms;
+	m_timeoutWTD = timeout_s;
 	m_enableWTD = enableWatchdog;
 	
     this->setup();
     this->startKeyboards();
+
+    if(m_enableWTD){
+        esp_err_t iniciou = esp_task_wdt_init(m_timeoutWTD, true);  // timeout em segundos, trigger_panic = true
+        m_watchdogInitialized = (iniciou == ESP_OK);
+        if(iniciou == ESP_OK){
+            DEBUG_D("WDT initialized with %i seconds timeout", m_timeoutWTD);
+        }else{
+            DEBUG_E("WDT initialization failed");
+        }
+    }else{
+        esp_err_t deinit = esp_task_wdt_deinit();
+        if(deinit == ESP_OK){
+            DEBUG_D("WDT deinitialized");
+        }else{
+            DEBUG_E("WDT deinitialization failed");
+        }
+    }
+
 
     BaseType_t xRetorno;
     xRetorno = xTaskCreatePinnedToCore(DisplayFK::TaskEventoTouch, "TaskEventoTouch", configMINIMAL_STACK_SIZE + 3048, this, 1, &m_hndTaskEventoTouch, 0);
