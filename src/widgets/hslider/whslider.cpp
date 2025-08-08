@@ -46,9 +46,11 @@ bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
   m_myTime = millis();
   // Serial.println("Calculating slider");
   bool detected = false;
+  int32_t offsetRadius = 10; // Offset to account for the radius of the slider handle
+  int32_t radiusToDetect = m_radius + offsetRadius; // Add a small margin for touch detection
   int32_t deltaX = (*_xTouch - m_currentPos) * (*_xTouch - m_currentPos);
-  int32_t deltaY = (*_yTouch - (yPos + m_radius)) * (*_yTouch - (yPos + m_radius));
-  int32_t radiusQ = m_radius * m_radius;
+  int32_t deltaY = (*_yTouch - (yPos + radiusToDetect)) * (*_yTouch - (yPos + radiusToDetect));
+  int32_t radiusQ = radiusToDetect * radiusToDetect;
 
   if ((deltaX < radiusQ) && (deltaY < radiusQ))
   {
