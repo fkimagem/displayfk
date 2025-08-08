@@ -157,9 +157,9 @@ void VAnalog::redraw()
     WidgetBase::objTFT->setFont(&RobotoRegular5pt7b);
     TextBound_t textBg;
     textBg.x = xPos + 2;
-    textBg.y = yPos + m_height - 2 - m_paddingDraw;
+    textBg.y = yPos + m_height - 2 - m_paddingDraw - m_padding;
     textBg.width = m_width - 4;
-    textBg.height = m_paddingDraw;
+    textBg.height = m_paddingDraw + m_padding;
     WidgetBase::objTFT->fillRect(textBg.x, textBg.y, textBg.width, textBg.height, m_backgroundColor);
     printText(String(m_currentValue).c_str(), xPos + (m_width / 2), yPos + m_height - m_paddingDraw, BC_DATUM);
 #endif
