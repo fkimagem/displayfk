@@ -23,7 +23,10 @@ Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _sc
                                                          m_pixels(nullptr), 
                                                          m_maskAlpha(nullptr), 
                                                          m_fs(nullptr),
-                                                         m_path(nullptr)
+                                                         m_path(nullptr),
+                                                         m_ownedPixels(nullptr),
+                                                         m_ownedMask(nullptr),
+                                                         m_ownsBuffers(false)
 {
 }
 
@@ -32,14 +35,14 @@ Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _sc
  */
 Image::~Image()
 {
-  if (m_pixels) {
-    delete[] m_pixels;
-    m_pixels = nullptr;
-  }
-  if (m_maskAlpha) {
-    delete[] m_maskAlpha;
-    m_maskAlpha = nullptr;
-  }
+  if(m_ownedPixels) {
+      delete[] m_ownedPixels;
+      m_ownedPixels = nullptr;
+    }
+    if(m_ownedMask) {
+      delete[] m_ownedMask;
+      m_ownedMask = nullptr;
+    }
 }
 
  /** 
@@ -80,6 +83,127 @@ functionCB_t Image::getCallbackFunc()
 }
 
 
+bool Image::readFileFromDisk(){
+  if (m_source == SourceFile::EMBED){
+    DEBUG_E("Cannot read from embedded source");
+    return false;
+  }
+
+  if(!m_fs){
+    DEBUG_E("No source defined to find image");
+    return false;
+  }
+
+  fs::File file = m_fs->open(m_path, "r");
+    if (!file)
+    {
+      DEBUG_E("Cant open file");
+      return false;
+    }
+
+    if(file.isDirectory()) {
+      DEBUG_E("Path is a directory");
+      file.close();
+      return false;
+    }
+
+    if(!file.available()) {
+      DEBUG_E("File is empty");
+      file.close();
+      return false;
+    }
+
+    size_t size = file.size();
+    if(size < 4) {
+      log_e("File is too small");
+      file.close();
+      return false;
+    }
+
+    // Get width
+    uint16_t arqWidth = ((file.read()) << 8) | file.read();
+    // Get height
+    uint16_t arqHeight = ((file.read()) << 8) | file.read();
+
+    m_width = arqWidth;
+    m_height = arqHeight;
+
+    if(m_width == 0 || m_height == 0) {
+      log_e("Invalid image size");
+      file.close();
+      return false;
+    }
+
+    DEBUG_D("Image size: %d x %d", m_width, m_height);
+
+    uint32_t bytesOfColor = m_width * m_height;
+
+    m_ownedPixels = new uint16_t[bytesOfColor];
+
+    if(!m_ownedPixels) {
+      DEBUG_E("Failed to allocate memory for image pixels");
+      file.close();
+      return false;
+    }
+
+    memset(m_ownedPixels, 0, bytesOfColor * sizeof(uint16_t));
+
+    uint8_t read_pixels = 2;
+    uint8_t pixel[read_pixels];// 2 bytes per pixel (color 565)
+    memset(pixel, 0, read_pixels);
+    
+    for (int y = 0; y < m_height; y++) {
+      for (int x = 0; x < m_width; x++) {
+        if (file.read(pixel, read_pixels) != read_pixels) {
+          DEBUG_E("Error reading pixel %d,%d", x, y);
+          file.close();
+          if(m_ownedPixels){
+            delete[] m_ownedPixels;
+            m_ownedPixels = nullptr;
+          }
+          return false;
+        }
+        uint16_t color = (pixel[0] << 8) | pixel[1];
+        m_ownedPixels[y * m_width + x] = color;
+      }
+    }
+
+    uint16_t maskLen = ((file.read()) << 8) | file.read();
+
+    if(maskLen == 0) {
+      DEBUG_E("Invalid mask length");
+      file.close();
+      if(m_ownedPixels){
+        delete[] m_ownedPixels;
+        m_ownedPixels = nullptr;
+      }
+      return false;
+    }
+    
+    m_ownedMask = new uint8_t[maskLen];
+
+    if(!m_ownedMask) {
+      DEBUG_E("Failed to allocate memory for image mask");
+      file.close();
+      if(m_ownedPixels){
+        delete[] m_ownedPixels;
+        m_ownedPixels = nullptr;
+      }
+      return false;
+    }
+
+    memset(m_ownedMask, 0, maskLen);
+
+    for(int i = 0; i < maskLen; i++) {
+      m_ownedMask[i] = file.read();
+    }
+
+    file.close();
+    return true;
+
+}
+
+
 /**
  * @brief Draws the image on the screen.
  * 
@@ -95,7 +219,7 @@ void Image::draw()
 
   m_update = false;
 
-  if (m_source == SourceFile::SD || m_source == SourceFile::SPIFFS) {
+  /*if (m_source == SourceFile::SD || m_source == SourceFile::SPIFFS) {
     // Free existing memory before allocating new
     if(m_pixels) {
       delete[] m_pixels;
@@ -220,8 +344,35 @@ void Image::draw()
     }
 
     file.close();
+  }*/
+
+  if(m_ownsBuffers){
+    if(!m_ownedPixels){
+      DEBUG_E("No owned pixels");
+      return;
+    }
+    if(!m_ownedMask){
+      DEBUG_E("No owned mask");
+      return;
+    }
+
+
+    WidgetBase::objTFT->draw16bitRGBBitmapWithMask(xPos, yPos, m_ownedPixels, m_ownedMask, m_width, m_height);
+
+  }else{
+    if(!m_pixels){
+      DEBUG_E("No owned pixels");
+      return;
+    }
+    if(!m_maskAlpha){
+      DEBUG_E("No owned mask");
+      return;
+    }
+
+    WidgetBase::objTFT->draw16bitRGBBitmapWithMask(xPos, yPos, m_pixels, m_maskAlpha, m_width, m_height);
   }
 
+  /*
   if(!m_pixels) {
     log_e("Image not loaded. Missing pixels");
     return;
@@ -253,7 +404,7 @@ void Image::draw()
       delete[] m_pixels;
       m_pixels = nullptr;
     }
-  }
+  }*/
   DEBUG_D("Image drawn");
 }
 
@@ -267,7 +418,7 @@ void Image::draw()
  * @param w The width of the bitmap.
  * @param h The height of the bitmap.
  */
-void Image::draw16bitRGBBitmapWithMask(int16_t x, int16_t y, uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
+void Image::draw16bitRGBBitmapWithMask(int16_t x, int16_t y, uint16_t const *bitmap, const uint8_t *mask, int16_t w, int16_t h)
 {
   if (!bitmap || !mask) return;  // Proteção contra ponteiros nulos
   
@@ -345,15 +496,16 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
   m_source = _source;
   m_path = _path;
   m_angle = _angle;
+  m_ownsBuffers = true;
   
   // Libera memória existente se existir
-  if(m_pixels) {
-    delete[] m_pixels;
-    m_pixels = nullptr;
+  if(m_ownedPixels) {
+    delete[] m_ownedPixels;
+    m_ownedPixels = nullptr;
   }
-  if(m_maskAlpha) {
-    delete[] m_maskAlpha;
-    m_maskAlpha = nullptr;
+  if(m_ownedMask) {
+    delete[] m_ownedMask;
+    m_ownedMask = nullptr;
   }
 
   if(_path == nullptr) {
@@ -400,7 +552,7 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
   }
   DEBUG_D("Image setup with source %d", m_source);
 
-  loaded = true;
+  loaded = readFileFromDisk();
 }
 
 /**
@@ -412,7 +564,7 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
  * @param _angle Rotation angle in degrees.
  * @param _cb Callback function to execute when the image is interacted with.
  */
-void Image::setup(uint16_t *_pixels, uint16_t _width, uint16_t _height, uint8_t *_maskAlpha, float _angle, functionCB_t _cb)
+void Image::setup(const uint16_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb)
 {
   if (loaded) {
     log_w("Widget already loaded");
@@ -420,11 +572,11 @@ void Image::setup(uint16_t *_pixels, uint16_t _width, uint16_t _height, uint8_t 
   }
   
   // Libera memória existente se existir
-  if(m_pixels && m_source != SourceFile::EMBED) {
+  if(m_pixels) {
     delete[] m_pixels;
     m_pixels = nullptr;
   }
-  if(m_maskAlpha && m_source != SourceFile::EMBED) {
+  if(m_maskAlpha) {
     delete[] m_maskAlpha;
     m_maskAlpha = nullptr;
   }
@@ -432,6 +584,7 @@ void Image::setup(uint16_t *_pixels, uint16_t _width, uint16_t _height, uint8_t 
   m_source = SourceFile::EMBED;
   m_pixels = _pixels;
   m_maskAlpha = _maskAlpha;
+  m_ownsBuffers = false; // Não possui os buffers, apenas referencia
   m_width = _width;
   m_height = _height;
   m_angle = _angle;

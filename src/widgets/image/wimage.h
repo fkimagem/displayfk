@@ -41,10 +41,10 @@ struct ImageFromFileConfig {
  * the mask alpha, and the callback function to be called when the image is touched.
  */
 struct ImageFromPixelsConfig {
-  uint16_t *pixels; ///< Pointer to the pixel map data.
+  const uint16_t *pixels; ///< Pointer to the pixel map data.
   uint16_t width; ///< Width of the image.
   uint16_t height; ///< Height of the image.
-  uint8_t *maskAlpha; ///< Pointer to the alpha mask data for transparency.
+  const uint8_t *maskAlpha; ///< Pointer to the alpha mask data for transparency.
   functionCB_t cb; ///< Callback function to be called when the image is touched.
   float angle; ///< Rotation angle of the image.  
 };
@@ -82,13 +82,18 @@ private:
   uint16_t m_width = 0; ///< Width of the image.
   uint16_t m_height = 0; ///< Height of the image.
   unsigned long m_myTime = 0; ///< Timestamp for handling timing-related functions.
-  uint16_t *m_pixels = nullptr; ///< Pointer to the pixel map data.
-  uint8_t *m_maskAlpha = nullptr; ///< Pointer to the alpha mask data for transparency.
+  const uint16_t *m_pixels = nullptr; ///< Pointer to the pixel map data.
+  const uint8_t *m_maskAlpha = nullptr; ///< Pointer to the alpha mask data for transparency.
+  uint16_t *m_ownedPixels = nullptr; ///< Pointer to the owned pixel map data.
+  uint8_t  *m_ownedMask   = nullptr; ///< Pointer to the owned alpha mask data.
+  bool m_ownsBuffers = false; ///< Flag indicating if the buffers are owned by this instance.
+
   float m_angle = 0; ///< Rotation angle in degrees.
   fs::FS *m_fs = nullptr;
   void setup(SourceFile _source, const char* _path, functionCB_t _cb, float _angle);
-  void setup(uint16_t *_pixels, uint16_t _width, uint16_t _height, uint8_t *_maskAlpha, float _angle, functionCB_t _cb);
-  void draw16bitRGBBitmapWithMask(int16_t x, int16_t y, uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h);
+  void setup(const uint16_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb);
+  void draw16bitRGBBitmapWithMask(int16_t x, int16_t y, const uint16_t *bitmap, const uint8_t *mask, int16_t w, int16_t h);
+  bool readFileFromDisk();
 };
 
 
