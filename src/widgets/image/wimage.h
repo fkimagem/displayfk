@@ -92,7 +92,6 @@ private:
   fs::FS *m_fs = nullptr;
   void setup(SourceFile _source, const char* _path, functionCB_t _cb, float _angle);
   void setup(const uint16_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb);
-  void draw16bitRGBBitmapWithMask(int16_t x, int16_t y, const uint16_t *bitmap, const uint8_t *mask, int16_t w, int16_t h);
   bool readFileFromDisk();
 };
 
