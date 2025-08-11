@@ -134,7 +134,7 @@ void NumberBox::redraw()
   TextBound_t area;
   WidgetBase::objTFT->getTextBounds("M", xPos, yPos, &area.x, &area.y, &area.width, &area.height);
   uint16_t qtdLetrasMax = m_width / area.width;
-  const char* conteudo = m_value.getLastChars(qtdLetrasMax);
+  const char* conteudo = m_value.getFirstChars(qtdLetrasMax);
 
 
 #if defined(DISP_DEFAULT)

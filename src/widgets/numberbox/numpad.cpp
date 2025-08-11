@@ -338,6 +338,7 @@ void Numpad::setup()
  */
 void Numpad::open(NumberBox *_field)
 {
+    m_myTime = millis() + (TIMEOUT_CLICK * 3);// Espera o tempo de 3 clicks para iniciar a detecção, evitando apertar tecla assim que abre.
     m_field = _field;
     WidgetBase::usingKeyboard = true;
     m_content = m_field->getValueChar();

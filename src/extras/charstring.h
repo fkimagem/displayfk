@@ -32,6 +32,7 @@ public:
     const char* substring_cstr(int startIndex, int count) const;
 
     const char* getLastChars(int qtdLetras) const;
+    const char* getFirstChars(int qtdLetras) const;
 
     int toInt() const;
 

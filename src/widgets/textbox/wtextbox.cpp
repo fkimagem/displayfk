@@ -123,7 +123,7 @@ void TextBox::redraw()
   WidgetBase::objTFT->setTextColor(m_letterColor);
 
   uint16_t qtdLetrasMax = m_width / area.width;
-  const char *conteudo = m_value.getLastChars(qtdLetrasMax);
+  const char *conteudo = m_value.getFirstChars(qtdLetrasMax);
 
   log_d("Draw %d letters from %s in space %d", qtdLetrasMax, conteudo, m_width);
 

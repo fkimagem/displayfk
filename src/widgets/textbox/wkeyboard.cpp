@@ -239,17 +239,7 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
 
     const char* conteudo = m_content.getLastChars(qtdLetrasMax);
 
-    /*String str_mostra = content.getString();
-
-    if (str_mostra.length() > qtdLetrasMax)
-    {
-        //str_mostra = content.substring_cstr(content.countChars() - qtdLetras, qtdLetras);
-        str_mostra = str_mostra.substring(str_mostra.length() - qtdLetrasMax);
-    }*/
-
-
 #if defined(DISP_DEFAULT)
-        //printText(conteudo, pontoPreview.x + 2, pontoPreview.y + (pontoPreview.height / 2), ML_DATUM, true, CFK_WHITE);
         printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, lastArea, CFK_WHITE);
 #endif
 
@@ -285,9 +275,6 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
 
 #if defined(DISP_DEFAULT)
                     WidgetBase::objTFT->setTextColor(baseBorder);
-                    //WidgetBase::objTFT->setTextSize(1);
-                    //WidgetBase::objTFT->setCursor(xCenter, yCenter);
-                    //WidgetBase::objTFT->print(letter);
 
                     WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
                     TextBound_t area;
@@ -298,7 +285,6 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
                     }
 
                     printText(letter, xCenter, yCenter, MC_DATUM);
-                    //WidgetBase::objTFT->fillCircle(xCenter, yCenter, 2, CFK_GREEN);
 #endif
                 }
             }
@@ -420,6 +406,7 @@ void WKeyboard::clear()
  */
 void WKeyboard::open(TextBox *_field)
 {
+    m_myTime = millis() + (TIMEOUT_CLICK * 3);// Espera o tempo de 3 clicks para iniciar a detecção, evitando apertar tecla assim que abre.
     m_field = _field;
     WidgetBase::usingKeyboard = true;
     m_content = m_field->getValue();

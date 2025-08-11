@@ -176,6 +176,23 @@ const char *CharString::getLastChars(int qtdLetras) const
     return &m_str[m_length - qtdLetras];
 }
 
+const char *CharString::getFirstChars(int qtdLetras) const
+{
+    if (qtdLetras <= 0 || m_length == 0) {
+        return "";
+    }
+    // Cria uma string temporária estática para armazenar o resultado
+    static char result[MAX_LENGTH_CSTR + 1];
+    
+    // Copia os primeiros qtdLetras caracteres
+    for (int i = 0; i < qtdLetras; i++) {
+        result[i] = m_str[i];
+    }
+    result[qtdLetras] = '\0'; // Adiciona o terminador nulo
+    
+    return result;
+}
+
 /**
  * @brief Converts the CharString's content to an integer.
  * @return The integer value represented by the string.
