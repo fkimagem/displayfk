@@ -27,6 +27,8 @@ void loadWidgets();
 // Prototypes for callback functions
 void statusmotor_cb();
 void tbvelocidade_cb();
+void savepng_cb();
+void savepng1_cb();
 void recuperarDados();
 void salvarStatusMotor();
 void salvarVelocidade();
@@ -51,9 +53,9 @@ Arduino_ESP32RGBPanel *rgbpanel = nullptr;
 Arduino_RGB_Display *tft = nullptr;
 uint8_t rotationScreen = 1;
 DisplayFK myDisplay;
-Label log(360, 430, 0);
+Label txtlog(360, 430, 0);
 const uint8_t qtdLabel = 1;
-Label *arrayLabel[qtdLabel] = {&log};
+Label *arrayLabel[qtdLabel] = {&txtlog};
 NumberBox tbvelocidade(274, 184, 0);
 const uint8_t qtdNumberbox = 1;
 NumberBox *arrayNumberbox[qtdNumberbox] = {&tbvelocidade};
@@ -100,13 +102,13 @@ void salvarVelocidade(){
 }
 
 void mostrarLog(const char* mensagem){
-    log.setText(mensagem);
+    txtlog.setText(mensagem);
     currentTempoLog = millis() + tempoClearLog;
     logComMensagem = true;
 }   
 
 void limparLog(){
-    log.setText("");
+    txtlog.setText("");
     logComMensagem = false;
 }
 
@@ -163,7 +165,6 @@ void screen0(){
     //This screen has a/an toggleButton
     myDisplay.printText("Motor", 350, 277, TL_DATUM, CFK_COLOR06, CFK_GREY5, &RobotoRegular10pt7b);
     //This screen has a/an imagem
-    myDisplay.printText("Log", 360, 432, TL_DATUM, CFK_COLOR04, CFK_GREY3, &RobotoRegular10pt7b);
     myDisplay.drawWidgetsOnScreen(0);
 }
 
@@ -179,7 +180,7 @@ void loadWidgets(){
             .prefix = "",
             .suffix = ""
         };
-    log.setup(configLabel0);
+    txtlog.setup(configLabel0);
     myDisplay.setLabel(arrayLabel,qtdLabel);
 
     Numpad::m_backgroundColor = CFK_GREY3;
@@ -213,7 +214,7 @@ void loadWidgets(){
             .width = SavepngW,
             .height = SavepngH,
             .maskAlpha = SavepngMask,
-            .cb = nullptr,
+            .cb = savepng_cb,
             .angle = 0
         };
     savepng.setup(configImage0);
@@ -222,7 +223,7 @@ void loadWidgets(){
             .width = SavepngW,
             .height = SavepngH,
             .maskAlpha = SavepngMask,
-            .cb = nullptr,
+            .cb = savepng1_cb,
             .angle = 0
         };
     savepng1.setup(configImage1);
@@ -234,11 +235,24 @@ void loadWidgets(){
 // You dont need call it. Make sure it is as short and quick as possible.
 void tbvelocidade_cb(){
     nb0_val = tbvelocidade.getValue();
-    salvarVelocidade();
+    
 }
 // This function is a callback of this element statusmotor.
 // You dont need call it. Make sure it is as short and quick as possible.
 void statusmotor_cb(){
     switch0_val = statusmotor.getStatus();
+    
+}
+
+void savepng_cb(){
+    // Image Savepng clicked
+    Serial.println("Image Savepng clicked");
+    salvarVelocidade();
+}
+// This function is a callback of this element savepng1.
+// You dont need call it. Make sure it is as short and quick as possible.
+void savepng1_cb(){
+    // Image Savepng clicked
+    Serial.println("Image Savepng clicked");
     salvarStatusMotor();
 }
