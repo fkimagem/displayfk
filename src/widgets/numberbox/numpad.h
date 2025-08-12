@@ -35,9 +35,7 @@ private:
     /// @brief 2D array defining the characters displayed on the Numpad keys
     static const Key_t m_pad[NROWS][NCOLS];
 
-    static uint16_t m_backgroundColor;
-    static uint16_t m_letterColor;
-    static uint16_t m_keyColor;
+    
 
     /// @brief Screen width available for the Numpad
     int32_t m_screenW;
@@ -72,7 +70,9 @@ private:
     void removeLetter();
 
 public:
-    
+    static uint16_t m_backgroundColor;
+    static uint16_t m_letterColor;
+    static uint16_t m_keyColor;
 
     /// @brief Pointer to the NumberBox associated with the Numpad
     NumberBox *m_field = nullptr;

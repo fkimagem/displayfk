@@ -22,9 +22,7 @@ private:
     static const uint16_t aCols = ACOLS; ///< Number of columns in the alphabet layout.
     static const Key_t m_alphabet[AROWS][ACOLS]; ///< Lowercase alphabet layout for the keyboard.
     static const Key_t m_alphabetCap[AROWS][ACOLS]; ///< Uppercase alphabet layout for the keyboard.
-    static uint16_t m_backgroundColor;
-    static uint16_t m_letterColor;
-    static uint16_t m_keyColor;
+    
     GFXfont *m_fontKeys = nullptr;
     GFXfont *m_fontPreview = nullptr;
 
@@ -43,6 +41,10 @@ private:
     void removeLetter();
 
 public:
+    static uint16_t m_backgroundColor;
+    static uint16_t m_letterColor;
+    static uint16_t m_keyColor;
+
     /// @brief Enum for specifying keyboard input types.
     enum class KeyboardType
     {
