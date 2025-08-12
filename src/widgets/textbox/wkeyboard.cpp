@@ -175,7 +175,7 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
 
         // const char *letter = (Keyboard::_alphabet[yIndexClick][xIndexClick]);
         
-        if (letter.label == '\0')
+        if (letter.type == PressedKeyType::EMPTY)
         {
             log_d("Empty key. Changing to previous one.");
             xIndexClick--;
