@@ -124,6 +124,28 @@
 
 #endif
 
+#if defined(FONT_NOKIAN)
+#include "../fonts/Nokian/Nokian2pt7b.h"
+#include "../fonts/Nokian/Nokian3pt7b.h"
+#include "../fonts/Nokian/Nokian4pt7b.h"
+#include "../fonts/Nokian/Nokian5pt7b.h"
+#include "../fonts/Nokian/Nokian6pt7b.h"
+#include "../fonts/Nokian/Nokian7pt7b.h"
+#include "../fonts/Nokian/Nokian8pt7b.h"
+#include "../fonts/Nokian/Nokian9pt7b.h"
+#include "../fonts/Nokian/Nokian10pt7b.h"
+#include "../fonts/Nokian/Nokian11pt7b.h"
+#include "../fonts/Nokian/Nokian12pt7b.h"
+#include "../fonts/Nokian/Nokian13pt7b.h"
+#include "../fonts/Nokian/Nokian14pt7b.h"
+#include "../fonts/Nokian/Nokian15pt7b.h"
+#include "../fonts/Nokian/Nokian20pt7b.h"
+#include "../fonts/Nokian/Nokian25pt7b.h"
+#include "../fonts/Nokian/Nokian30pt7b.h"
+#include "../fonts/Nokian/Nokian40pt7b.h"
+#include "../fonts/Nokian/Nokian50pt7b.h"
+#endif
+
 /*
 #define FONT_PIXEL
 #define FONT_SCORED
