@@ -104,7 +104,7 @@ void TextButton::redraw()
 
 #if defined(DISP_DEFAULT)
         //WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
-        WidgetBase::objTFT->setFont(GetBestRobotoBold(m_width - (2*m_offsetMargin), m_height - (2*m_offsetMargin), m_text));
+        WidgetBase::objTFT->setFont(getBestRobotoBold(m_width - (2*m_offsetMargin), m_height - (2*m_offsetMargin), m_text));
         printText(m_text, xPos + m_width/2, yPos + (m_height / 2), MC_DATUM);
         //showOrigin(CFK_RED);
         //WidgetBase::objTFT->drawCircle(xPos + width/2, yPos + (height / 2), 4, CFK_WHITE);

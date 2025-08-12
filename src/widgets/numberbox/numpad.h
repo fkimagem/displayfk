@@ -6,6 +6,7 @@
 #include "../../extras/charstring.h"
 #include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
 
+
 /// @brief Number of rows in the numpad grid
 #define NROWS 4
 
@@ -32,7 +33,7 @@ private:
     static const uint16_t aCols = NCOLS;
     
     /// @brief 2D array defining the characters displayed on the Numpad keys
-    static const char *m_pad[NROWS][NCOLS];
+    static const Key_t m_pad[NROWS][NCOLS];
 
     /// @brief Screen width available for the Numpad
     int32_t m_screenW;
@@ -63,24 +64,7 @@ private:
     void removeLetter();
 
 public:
-    /// @brief Defines different types of keys that can be pressed on the Numpad
-    enum class PressedKeyType
-    {
-        /// @brief No key pressed
-        NONE = 0,
-        
-        /// @brief A numeric key
-        NUMBER = 2,
-        
-        /// @brief Another type of key
-        ANOTHER = 3,
-        
-        /// @brief A control key (such as clear)
-        CONTROL = 4,
-        
-        /// @brief A return/confirm key
-        RETURN = 5
-    };
+    
 
     /// @brief Pointer to the NumberBox associated with the Numpad
     NumberBox *m_field = nullptr;

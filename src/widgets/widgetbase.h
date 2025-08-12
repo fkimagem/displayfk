@@ -318,7 +318,10 @@ protected:
   functionCB_t cb = nullptr; ///< Callback function to execute when the widget is clicked.
 
 
-  const GFXfont* GetBestRobotoBold(uint16_t availableWidth, uint16_t availableHeight, const char* texto);
+  const GFXfont* getBestRobotoBold(uint16_t availableWidth, uint16_t availableHeight, const char* texto);
+  const GFXfont* getBestFontForArea(const char* text,uint16_t width,uint16_t height,const GFXfont* const fonts[],size_t fontCount);
+  const char* getFirstLettersForSpace(const char* textoCompleto, uint16_t width, uint16_t height);
+  const char* getLastLettersForSpace(const char* textoCompleto,uint16_t width,uint16_t height);
 
 
   void updateFont(FontType _f);

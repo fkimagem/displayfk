@@ -104,33 +104,22 @@ void TextBox::redraw()
   {
     updateFont(FontType::NORMAL);
   }
-  //uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
   log_d("Redraw textbox with value %s", m_value.getString());
 
-#if defined(DISP_BODMER)
-  // WidgetBase::objTFT->loadFont("FONTE15");
-  WidgetBase::objTFT->setFreeFont(&RobotoRegular10pt7b);
-  WidgetBase::objTFT->setTextPadding(m_width);
-  WidgetBase::objTFT->setTextDatum(ML_DATUM);
-#endif
-
-  TextBound_t area;
-  WidgetBase::objTFT->getTextBounds("M", xPos, yPos, &area.x, &area.y, &area.width, &area.height);
+  //TextBound_t area;
+  //WidgetBase::objTFT->getTextBounds("M", xPos, yPos, &area.x, &area.y, &area.width, &area.height);
 
   WidgetBase::objTFT->fillRect(xPos, yPos, m_width, m_height, m_backgroundColor);
   WidgetBase::objTFT->drawRect(xPos, yPos, m_width, m_height, m_letterColor);
   WidgetBase::objTFT->setTextColor(m_letterColor);
 
-  uint16_t qtdLetrasMax = m_width / area.width;
-  const char *conteudo = m_value.getFirstChars(qtdLetrasMax);
+  //uint16_t qtdLetrasMax = m_width / area.width;
+  //const char *conteudo = m_value.getFirstChars(qtdLetrasMax);
+  const char* conteudo = getFirstLettersForSpace(m_value.getString(), m_width, m_height);
 
-  log_d("Draw %d letters from %s in space %d", qtdLetrasMax, conteudo, m_width);
-
-#if defined(DISP_DEFAULT)
-
+  //log_d("Draw %d letters from %s in space %d", qtdLetrasMax, conteudo, m_width);
   printText(conteudo, xPos + m_padding, yPos + m_height / 2, ML_DATUM);
-#endif
 
   updateFont(FontType::UNLOAD);
 }

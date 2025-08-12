@@ -1,6 +1,7 @@
 #include "widgetbase.h"
 
 #define DEBUG_WIDGETBASE
+#define DEBUG_TEXT_BOUND
 
 #ifdef DEBUG_WIDGETBASE
 #define DEBUG_D(fmt, ...) Serial.printf(fmt, ##__VA_ARGS__)
@@ -237,6 +238,155 @@ void WidgetBase::addCallback(functionCB_t callback, CallbackOrigin origin){
     }
 }
 
+const char* WidgetBase::getLastLettersForSpace(const char* textoCompleto,uint16_t width,uint16_t height)
+{
+  static char buffer[256]; // Buffer estático para MCU
+  
+  if (!objTFT || !textoCompleto) {
+    buffer[0] = '\0';
+    return buffer;
+  }
+
+  // Se string vazia, retorna vazia
+  if (*textoCompleto == '\0') {
+    buffer[0] = '\0';
+    return buffer;
+  }
+
+  // Calcula o comprimento da string
+  size_t len = 0;
+  while (textoCompleto[len] != '\0' && len < sizeof(buffer) - 1) {
+    len++;
+  }
+
+  // Variáveis reutilizadas para medição
+  int16_t x1, y1;
+  uint16_t w, h;
+
+  // Testa do comprimento total até 0, mas pegando do final
+  for (size_t testLen = len; testLen > 0; --testLen) {
+    // Calcula posição inicial (pega os últimos testLen caracteres)
+    size_t startPos = len - testLen;
+    
+    // Copia substring do final para buffer
+    for (size_t i = 0; i < testLen; ++i) {
+      buffer[i] = textoCompleto[startPos + i];
+    }
+    buffer[testLen] = '\0';
+
+    // Mede o texto
+    objTFT->getTextBounds(buffer, 0, 0, &x1, &y1, &w, &h);
+
+    // Se cabe, retorna esta substring
+    if (w <= width && h <= height) {
+      return buffer;
+    }
+  }
+
+  // Nem um caractere coube
+  buffer[0] = '\0';
+  return buffer;
+}
+
+
+const char* WidgetBase::getFirstLettersForSpace(const char* textoCompleto,uint16_t width,uint16_t height)
+{
+  static char buffer[256]; // Buffer estático para MCU
+  
+  if (!objTFT || !textoCompleto) {
+    buffer[0] = '\0';
+    return buffer;
+  }
+
+  // Se string vazia, retorna vazia
+  if (*textoCompleto == '\0') {
+    buffer[0] = '\0';
+    return buffer;
+  }
+
+  // Calcula o comprimento da string
+  size_t len = 0;
+  while (textoCompleto[len] != '\0' && len < sizeof(buffer) - 1) {
+    len++;
+  }
+
+  // Variáveis reutilizadas para medição
+  int16_t x1, y1;
+  uint16_t w, h;
+
+  // Testa do comprimento total até 0
+  for (size_t testLen = len; testLen > 0; --testLen) {
+    // Copia substring para buffer
+    for (size_t i = 0; i < testLen; ++i) {
+      buffer[i] = textoCompleto[i];
+    }
+    buffer[testLen] = '\0';
+
+    // Mede o texto
+    objTFT->getTextBounds(buffer, 0, 0, &x1, &y1, &w, &h);
+
+    // Se cabe, retorna esta substring
+    if (w <= width && h <= height) {
+      return buffer;
+    }
+  }
+
+  // Nem um caractere coube
+  buffer[0] = '\0';
+  return buffer;
+}
+
+// Retorna o primeiro GFXfont* da lista que faz o texto caber em (width x height).
+// Observações:
+// - Percorre as fontes na ordem fornecida (primeira adequada é retornada).
+// - Altera temporariamente a fonte ativa do 'gfx' durante a medição.
+// - Retorna nullptr se nenhuma fonte couber.
+// - Para desempenho em MCU: sem alocações dinâmicas, sem STL, early exits.
+const GFXfont* WidgetBase::getBestFontForArea(
+    const char* text,
+    uint16_t width,
+    uint16_t height,
+    const GFXfont* const fonts[],
+    size_t fontCount)
+{
+  if (!objTFT || !fonts || fontCount == 0) {
+    return nullptr;
+  }
+
+  // Se texto for nulo, considere como string vazia (largura/altura 0) -> primeira fonte serve.
+  if (!text) {
+    return fonts[0];
+  }
+
+  // Se string vazia, cabe em qualquer fonte -> retorne a primeira para evitar medições desnecessárias.
+  if (*text == '\0') {
+    return fonts[0];
+  }
+
+  // Varíaveis reutilizadas para evitar re-declarações em loop.
+  int16_t x1, y1;
+  uint16_t w, h;
+
+  // Tente cada fonte, na ordem.
+  for (size_t i = 0; i < fontCount; ++i) {
+    const GFXfont* f = fonts[i];
+    if (!f) {
+      continue; // ignora entradas nulas
+    }
+
+    objTFT->setFont(f);
+    // Posição de referência pode ser 0,0 pois o que importa é w e h
+    objTFT->getTextBounds(text, 0, 0, &x1, &y1, &w, &h);
+
+    // Verifica se cabe.
+    if (w <= width && h <= height) {
+      return f; // primeira que couber
+    }
+  }
+
+  return nullptr; // nenhuma coube
+}
+
 /**
  * @brief Retrieves the best fitting Roboto Bold font for a given area.
  * @param availableWidth Available width for text.
@@ -244,17 +394,33 @@ void WidgetBase::addCallback(functionCB_t callback, CallbackOrigin origin){
  * @param texto Text string to be displayed.
  * @return Pointer to the best fitting font.
  */
-const GFXfont *WidgetBase::GetBestRobotoBold(uint16_t availableWidth, uint16_t availableHeight, const char* texto)
+const GFXfont *WidgetBase::getBestRobotoBold(uint16_t availableWidth, uint16_t availableHeight, const char* texto)
 {
+    const uint8_t amountFonts = 18;
     // Array de fontes disponíveis, ordenadas do maior para o menor
-    static const GFXfont* const fontes[] = {
+    static const GFXfont* const fontes[amountFonts] = {
         &RobotoBold50pt7b,
         &RobotoBold40pt7b,
         &RobotoBold30pt7b,
         &RobotoBold20pt7b,
-        &RobotoBold10pt7b
+        &RobotoBold15pt7b,
+        &RobotoBold14pt7b,
+        &RobotoBold13pt7b,
+        &RobotoBold12pt7b,
+        &RobotoBold11pt7b,
+        &RobotoBold10pt7b,
+        &RobotoBold9pt7b,
+        &RobotoBold8pt7b,
+        &RobotoBold7pt7b,
+        &RobotoBold6pt7b,
+        &RobotoBold5pt7b,
+        &RobotoBold4pt7b,
+        &RobotoBold3pt7b,
+        &RobotoBold2pt7b
     };
-    static const int numFontes = sizeof(fontes) / sizeof(fontes[0]);
+
+    return this->getBestFontForArea( texto, availableWidth, availableHeight, fontes, amountFonts);
+    /*static const int numFontes = sizeof(fontes) / sizeof(fontes[0]);
 
     // Função para calcular dimensões do texto
     auto calcularDimensoes = [](const GFXfont* font, const char* texto, uint16_t* width, uint16_t* height) {
@@ -276,7 +442,7 @@ const GFXfont *WidgetBase::GetBestRobotoBold(uint16_t availableWidth, uint16_t a
     }
 
     // Se nenhuma fonte se encaixou, retorna a menor fonte disponível
-    return fontes[numFontes - 1];
+    return fontes[numFontes - 1];*/
 }
 
 /**
@@ -365,7 +531,7 @@ void WidgetBase::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t
     objTFT->print(_texto);
 
     #ifdef DEBUG_TEXT_BOUND
-        objTFT->drawRect(lastTextBoud.x, lastTextBoud.y, lastTextBoud.width, lastTextBoud.height, CFK_MAGENTA);
+        objTFT->drawRect(lastTextBoud.x, lastTextBoud.y, lastTextBoud.width, lastTextBoud.height, CFK_DEEPPINK);
         objTFT->fillCircle(_x, _y, 3, CFK_RED);
         //log_d("Wrote on screen: %s at %d, %d", _texto, _x, _y);
     #endif

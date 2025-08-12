@@ -2055,7 +2055,7 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
 
             if (arrayTextBox[indice]->detectTouch(&xTouch, &yTouch) && keyboard) {
                 keyboard->open(arrayTextBox[indice]);
-                WKeyboard::PressedKeyType pressedKey = WKeyboard::PressedKeyType::NONE;
+                PressedKeyType pressedKey = PressedKeyType::NONE;
 
                 while (WidgetBase::usingKeyboard) {
                     uint16_t internal_xTouch = 0;
@@ -2063,7 +2063,7 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
                     int internal_zPressure = 0;
                     bool hasTouch = touchExterno && (touchExterno->getTouch(&internal_xTouch, &internal_yTouch, &internal_zPressure));
                     if (hasTouch && keyboard->detectTouch(&internal_xTouch, &internal_yTouch, &pressedKey)) {
-                        if (pressedKey == WKeyboard::PressedKeyType::RETURN) {
+                        if (pressedKey == PressedKeyType::RETURN) {
                             WidgetBase::loadScreen = keyboard->m_field->parentScreen;
                             keyboard->close();
                             functionCB_t cb = arrayTextBox[indice]->getCallbackFunc();
@@ -2097,7 +2097,7 @@ void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
             }
             if (arrayNumberbox[indice]->detectTouch(&xTouch, &yTouch) && numpad) {
                 numpad->open(arrayNumberbox[indice]);
-                Numpad::PressedKeyType pressedKey = Numpad::PressedKeyType::NONE;
+                PressedKeyType pressedKey = PressedKeyType::NONE;
 
                 while (WidgetBase::usingKeyboard) {
                     uint16_t internal_xTouch = 0;
@@ -2105,7 +2105,7 @@ void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
                     int internal_zPressure = 0;
                     bool hasTouch = touchExterno && (touchExterno->getTouch(&internal_xTouch, &internal_yTouch, &internal_zPressure));
                     if (hasTouch && numpad->detectTouch(&internal_xTouch, &internal_yTouch, &pressedKey)) {
-                        if (pressedKey == Numpad::PressedKeyType::RETURN) {
+                        if (pressedKey == PressedKeyType::RETURN) {
                             if (numpad->m_field && numpad->m_field->parentScreen) {
                                 WidgetBase::loadScreen = numpad->m_field->parentScreen;
                             }

@@ -10,7 +10,6 @@
 #define AROWS 5
 #define ACOLS 10
 
-//#define MAX_LENGTH_TEXT 30
 
 /// @brief Represents an on-screen keyboard widget with alphanumeric and numeric input modes.
 class WKeyboard : public WidgetBase
@@ -21,9 +20,12 @@ private:
     unsigned long m_myTime; ///< Timestamp for timing-related functions.
     static const uint16_t aRows = AROWS; ///< Number of rows in the alphabet layout.
     static const uint16_t aCols = ACOLS; ///< Number of columns in the alphabet layout.
-    static const char *m_alphabet[AROWS][ACOLS]; ///< Lowercase alphabet layout for the keyboard.
-    static const char *m_alphabetCap[AROWS][ACOLS]; ///< Uppercase alphabet layout for the keyboard.
-    
+    static const Key_t m_alphabet[AROWS][ACOLS]; ///< Lowercase alphabet layout for the keyboard.
+    static const Key_t m_alphabetCap[AROWS][ACOLS]; ///< Uppercase alphabet layout for the keyboard.
+    static uint16_t m_backgroundColor;
+    static uint16_t m_letterColor;
+    static uint16_t m_keyColor;
+
     int32_t m_screenW; ///< Width of the screen.
     int32_t m_screenH; ///< Height of the screen.
     uint16_t m_availableWidth; ///< Available width for rendering the keyboard.
@@ -48,16 +50,7 @@ public:
         DECIMAL = 3       ///< Decimal input type.
     };
 
-    /// @brief Enum for representing types of pressed keys.
-    enum class PressedKeyType
-    {
-        NONE = 0,   ///< No key pressed.
-        LETTER = 1, ///< Letter key pressed.
-        NUMBER = 2, ///< Number key pressed.
-        ANOTHER = 3, ///< Other type of key pressed.
-        CONTROL = 4, ///< Control key pressed (e.g., Shift, Caps Lock).
-        RETURN = 5  ///< Return/Enter key pressed.
-    };
+    
 
     TextBox *m_field = nullptr; ///< Pointer to the associated TextBox field.
    

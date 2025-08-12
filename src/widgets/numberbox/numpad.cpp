@@ -8,11 +8,19 @@
  * 1 2 3 .
  * -- 0 ++ OK
  */
-const char *Numpad::m_pad[Numpad::aRows][Numpad::aCols] = {
-    {"7", "8", "9", "+/-"},
-    {"4", "5", "6", "Del"},
-    {"1", "2", "3", "."},
-    {"--", "0", "++", "OK"}};
+const Key_t Numpad::m_pad[Numpad::aRows][Numpad::aCols] = {
+    // Linha 0 - Números e +/-
+    {{"7", PressedKeyType::NUMBER}, {"8", PressedKeyType::NUMBER}, {"9", PressedKeyType::NUMBER}, {"+/-", PressedKeyType::INVERT_VALUE}},
+    
+    // Linha 1 - Números e Del
+    {{"4", PressedKeyType::NUMBER}, {"5", PressedKeyType::NUMBER}, {"6", PressedKeyType::NUMBER}, {"Del", PressedKeyType::DEL}},
+    
+    // Linha 2 - Números e ponto decimal
+    {{"1", PressedKeyType::NUMBER}, {"2", PressedKeyType::NUMBER}, {"3", PressedKeyType::NUMBER}, {".", PressedKeyType::POINT}},
+    
+    // Linha 3 - Controles especiais
+    {{"--", PressedKeyType::DECREMENT}, {"0", PressedKeyType::NUMBER}, {"++", PressedKeyType::INCREMENT}, {"OK", PressedKeyType::RETURN}}
+};
 
 /**
  * @brief Constructs a Numpad widget at a specified position on a specified screen
@@ -67,12 +75,12 @@ functionCB_t Numpad::getCallbackFunc()
  * @param pressedKey Pointer to store the type of key that was pressed
  * @return True if a key is detected, otherwise false
  */
-bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, Numpad::PressedKeyType *pressedKey)
+bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType *pressedKey)
 {
     bool retorno = false;
     uint16_t xMax = xPos + m_availableWidth;
     uint16_t yMax = yPos + m_availableHeight;
-    (*pressedKey) = Numpad::PressedKeyType::NONE;
+    (*pressedKey) = PressedKeyType::NONE;
 
     if (millis() - m_myTime < TIMEOUT_CLICK)
     {
@@ -82,7 +90,7 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, Numpad::PressedKe
 
     if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) && (*_yTouch < yMax))
     {
-        (*pressedKey) = Numpad::PressedKeyType::NUMBER;
+        (*pressedKey) = PressedKeyType::NUMBER;
 
         int16_t aux_xIndexClick = ((*_xTouch) - xPos) / (m_keyW + 2);
         int16_t aux_yIndexClick = ((*_yTouch) - yPos) / (m_keyH + 2);
@@ -90,7 +98,9 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, Numpad::PressedKe
         uint16_t xIndexClick = constrain(aux_xIndexClick, 0, Numpad::aCols-1);
         uint16_t yIndexClick = constrain(aux_yIndexClick, 0, Numpad::aRows-1);
 
-        if (yIndexClick == 0 && xIndexClick == 3)
+        const Key_t letter = m_pad[yIndexClick][xIndexClick];
+
+        if (letter.type == PressedKeyType::INVERT_VALUE)
         {
             log_d("Invert value");
 
@@ -98,10 +108,10 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, Numpad::PressedKe
             m_content.setString(v);
 
             redraw(false, true);
-            (*pressedKey) = Numpad::PressedKeyType::CONTROL;
+            (*pressedKey) = PressedKeyType::INVERT_VALUE;
             return true;
         }
-        if (yIndexClick == 3 && xIndexClick == 0)
+        if (letter.type == PressedKeyType::DECREMENT)
         {
             log_d("Decrement value");
 
@@ -110,10 +120,10 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, Numpad::PressedKe
             m_content.setString(v);
 
             redraw(false, true);
-            (*pressedKey) = Numpad::PressedKeyType::CONTROL;
+            (*pressedKey) = PressedKeyType::DECREMENT;
             return true;
         }
-        if (yIndexClick == 3 && xIndexClick == 2)
+        if (letter.type == PressedKeyType::INCREMENT)
         {
             log_d("Increment value");
 
@@ -122,13 +132,13 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, Numpad::PressedKe
             m_content.setString(v);
 
             redraw(false, true);
-            (*pressedKey) = Numpad::PressedKeyType::CONTROL;
+            (*pressedKey) = PressedKeyType::INCREMENT;
             return true;
         }
 
-        const char *letter = m_pad[yIndexClick][xIndexClick];
+        //const char *letter = m_pad[yIndexClick][xIndexClick];
 
-        if (letter[0] == '\0')
+        if (letter.label[0] == '\0')
         {
             log_d("Empty key. None action.");
             return false;
@@ -136,38 +146,25 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, Numpad::PressedKe
 
         log_d("Index clicked: %d, %d = %s", xIndexClick, yIndexClick, letter);
 
-        if (isdigit(letter[0]))
+        switch(letter.type)
         {
-            log_d("Is number");
-            addLetter((char)letter[0]);
-        }
-        else if (isalpha(letter[0]))
-        {
-            if (strcmp(letter, "Del") == 0)
-            {
-                log_d("Is Delete");
+            case PressedKeyType::NUMBER:
+                log_d("Is number");
+                addLetter((char)letter.label[0]);
+            break;
+            case PressedKeyType::POINT:
+                addLetter((char)letter.label[0]);
+            break;
+            case PressedKeyType::RETURN:
+                (*pressedKey) = PressedKeyType::RETURN;
+            break;
+            case PressedKeyType::DEL:
+            log_d("Is Delete");
                 removeLetter();
-            }
-            else if (strcmp(letter, "OK") == 0)
-            {
-                log_d("Is OK");
-                (*pressedKey) = Numpad::PressedKeyType::RETURN;
-            }
-            else
-            {
-                log_d("Is letter");
-                addLetter((char)letter[0]);
-            }
-        }
-        else if (ispunct(letter[0]))
-        {
-            log_d("Is punct");
-            addLetter((char)letter[0]);
-        }
-        else
-        {
-            log_d("Another type");
-            addLetter((char)letter[0]);
+            break;
+            default:
+                log_d("Another type: %d", letter.type);
+            break;
         }
 
         retorno = true;
@@ -212,10 +209,6 @@ void Numpad::redraw(bool fullScreen, bool onlyContent)
     uint16_t qtdLetrasMax = m_pontoPreview.width / area.width;
     log_d("Box numpad %i / %i = %i", m_pontoPreview.width, area.width, qtdLetrasMax);
 
-#if defined(DISP_BODMER)
-    WidgetBase::objTFT->setTextDatum(ML_DATUM);
-    WidgetBase::objTFT->setTextPadding(pontoPreview.width);
-#endif
 
     const char* conteudo = m_content.getLastChars(qtdLetrasMax);
 
@@ -231,9 +224,9 @@ void Numpad::redraw(bool fullScreen, bool onlyContent)
         {
             for (auto col = 0; col < Numpad::aCols; ++col)
             {
-                const char *letter = m_pad[row][col];
+                const Key_t letter = m_pad[row][col];
 
-                if (letter[0] != '\0')
+                if (letter.type != PressedKeyType::EMPTY)
                 {
                     uint16_t keyScale = 1;
 
@@ -243,18 +236,16 @@ void Numpad::redraw(bool fullScreen, bool onlyContent)
                     WidgetBase::objTFT->fillRoundRect(xPos + ((m_keyW + 2) * col), yPos + ((m_keyH + 2) * row), m_keyW * keyScale + (2 * (keyScale - 1)), m_keyH, 4, lightBg);
                     WidgetBase::objTFT->drawRoundRect(xPos + ((m_keyW + 2) * col), yPos + ((m_keyH + 2) * row), m_keyW * keyScale + (2 * (keyScale - 1)), m_keyH, 4, baseBorder);
 
-#if defined(DISP_DEFAULT)
                     WidgetBase::objTFT->setTextColor(baseBorder);
                     WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
                     TextBound_t area;
-                    WidgetBase::objTFT->getTextBounds(letter, xCenter, yCenter, &area.x, &area.y, &area.width, &area.height);
+                    WidgetBase::objTFT->getTextBounds(letter.label, xCenter, yCenter, &area.x, &area.y, &area.width, &area.height);
 
                     if(area.width > m_keyW/2){
                         WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
                     }
 
-                    printText(letter, xCenter, yCenter, MC_DATUM);
-#endif
+                    printText(letter.label, xCenter, yCenter, MC_DATUM);
                 }
             }
         }
