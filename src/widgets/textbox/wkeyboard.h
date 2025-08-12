@@ -25,6 +25,8 @@ private:
     static uint16_t m_backgroundColor;
     static uint16_t m_letterColor;
     static uint16_t m_keyColor;
+    GFXfont *m_fontKeys = nullptr;
+    GFXfont *m_fontPreview = nullptr;
 
     int32_t m_screenW; ///< Width of the screen.
     int32_t m_screenH; ///< Height of the screen.

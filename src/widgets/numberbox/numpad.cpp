@@ -1,5 +1,10 @@
 #include "numpad.h"
 
+
+uint16_t Numpad::m_backgroundColor = CFK_GREY3;
+uint16_t Numpad::m_letterColor = CFK_BLACK;
+uint16_t Numpad::m_keyColor = CFK_GREY13;
+
 /**
  * @brief 2D array defining the characters displayed on the Numpad keys
  * Layout: 
@@ -8,7 +13,7 @@
  * 1 2 3 .
  * -- 0 ++ OK
  */
-const Key_t Numpad::m_pad[Numpad::aRows][Numpad::aCols] = {
+const Key_t Numpad::m_pad[NCOLS][NROWS] = {
     // Linha 0 - Números e +/-
     {{"7", PressedKeyType::NUMBER}, {"8", PressedKeyType::NUMBER}, {"9", PressedKeyType::NUMBER}, {"+/-", PressedKeyType::INVERT_VALUE}},
     
@@ -186,40 +191,28 @@ void Numpad::redraw(bool fullScreen, bool onlyContent)
     }
     if (fullScreen)
     {
-        WidgetBase::objTFT->fillScreen(WidgetBase::lightMode ? CFK_WHITE : CFK_BLACK);
+        WidgetBase::objTFT->fillScreen(Numpad::m_backgroundColor);
     }
 
-    uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
-    uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
+    WidgetBase::objTFT->fillRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, Numpad::m_backgroundColor);
+    WidgetBase::objTFT->drawRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, Numpad::m_letterColor);
 
-    WidgetBase::objTFT->fillRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, CFK_WHITE);
-    WidgetBase::objTFT->drawRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, baseBorder);
+    WidgetBase::objTFT->setTextColor(Numpad::m_letterColor);
 
-    if(m_keyH > 20){
-        WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
-    }else{
-        WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
-    }
-
-    WidgetBase::objTFT->setTextColor(CFK_BLACK);
-    TextBound_t area;
-    WidgetBase::objTFT->getTextBounds("M", 50, 50, &area.x, &area.y, &area.width, &area.height);
+    WidgetBase::objTFT->setFont(m_fontPreview);
+    const char* conteudo = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width, m_pontoPreview.height);
+    printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, m_lastArea, Numpad::m_backgroundColor);
 
 
-    uint16_t qtdLetrasMax = m_pontoPreview.width / area.width;
-    log_d("Box numpad %i / %i = %i", m_pontoPreview.width, area.width, qtdLetrasMax);
+    //const char* conteudo = m_content.getLastChars(qtdLetrasMax);
+    //printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, m_lastArea, Numpad::m_backgroundColor);
 
-
-    const char* conteudo = m_content.getLastChars(qtdLetrasMax);
-
-#if defined(DISP_DEFAULT)
-        printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, m_lastArea, CFK_WHITE);
-        
-#endif
-
+    WidgetBase::objTFT->setFont(m_fontKeys);
+    WidgetBase::objTFT->setTextColor(Numpad::m_letterColor);
+    
     if (!onlyContent)
     {
-        WidgetBase::objTFT->fillRect(xPos, yPos, m_availableWidth, m_availableHeight, WidgetBase::lightMode ? CFK_WHITE : CFK_BLACK);
+        WidgetBase::objTFT->fillRect(xPos, yPos, m_availableWidth, m_availableHeight, Numpad::m_backgroundColor);
         for (auto row = 0; row < Numpad::aRows; ++row)
         {
             for (auto col = 0; col < Numpad::aCols; ++col)
@@ -230,20 +223,21 @@ void Numpad::redraw(bool fullScreen, bool onlyContent)
                 {
                     uint16_t keyScale = 1;
 
-                    uint16_t xCenter = xPos + (((keyScale * (m_keyW + 2))) * col) + ((keyScale * (m_keyW + 2)) / 2);
-                    uint16_t yCenter = yPos + ((m_keyH + 2) * row) + (m_keyH / 2);
+                    //uint16_t xCenter = xPos + (((keyScale * (m_keyW + 2))) * col) + ((keyScale * (m_keyW + 2)) / 2);
+                    //uint16_t yCenter = yPos + ((m_keyH + 2) * row) + (m_keyH / 2);
+                    const int key_width = m_keyW * keyScale + (2 * (keyScale - 1));
+                    const int key_height = m_keyH;
+                    const int key_x = xPos + ((m_keyW + 2) * col);
+                    const int key_y = yPos + ((m_keyH + 2) * row);
+                    const int key_round = 4;
 
-                    WidgetBase::objTFT->fillRoundRect(xPos + ((m_keyW + 2) * col), yPos + ((m_keyH + 2) * row), m_keyW * keyScale + (2 * (keyScale - 1)), m_keyH, 4, lightBg);
-                    WidgetBase::objTFT->drawRoundRect(xPos + ((m_keyW + 2) * col), yPos + ((m_keyH + 2) * row), m_keyW * keyScale + (2 * (keyScale - 1)), m_keyH, 4, baseBorder);
+                    WidgetBase::objTFT->fillRoundRect(key_x, key_y, key_width, key_height, key_round, Numpad::m_keyColor);
+                    WidgetBase::objTFT->drawRoundRect(key_x, key_y, key_width, key_height, key_round, Numpad::m_letterColor);
 
-                    WidgetBase::objTFT->setTextColor(baseBorder);
-                    WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
-                    TextBound_t area;
-                    WidgetBase::objTFT->getTextBounds(letter.label, xCenter, yCenter, &area.x, &area.y, &area.width, &area.height);
+                    uint16_t xCenter = key_x + key_width / 2;
+                    uint16_t yCenter = key_y + key_height / 2;
 
-                    if(area.width > m_keyW/2){
-                        WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
-                    }
+                    
 
                     printText(letter.label, xCenter, yCenter, MC_DATUM);
                 }
@@ -319,6 +313,10 @@ void Numpad::setup()
 
     xPos = (m_screenW - m_availableWidth) / 2;
     yPos = m_screenH - m_availableHeight;
+
+    float percentUtilArea = 0.9;
+    m_fontKeys = const_cast<GFXfont*>(getBestRobotoBold(m_keyW * percentUtilArea, m_keyH * percentUtilArea, "CAP"));
+    m_fontPreview = m_fontKeys;// const_cast<GFXfont*>(getBestRobotoBold(m_pontoPreview.width * percentUtilArea, m_pontoPreview.height * percentUtilArea, "M"));
 
     loaded = true;
 }

@@ -35,6 +35,10 @@ private:
     /// @brief 2D array defining the characters displayed on the Numpad keys
     static const Key_t m_pad[NROWS][NCOLS];
 
+    static uint16_t m_backgroundColor;
+    static uint16_t m_letterColor;
+    static uint16_t m_keyColor;
+
     /// @brief Screen width available for the Numpad
     int32_t m_screenW;
     
@@ -55,6 +59,10 @@ private:
 
     /// @brief Last calculated area for the label
     TextBound_t m_lastArea = {0, 0, 0, 0};
+
+    GFXfont *m_fontKeys = nullptr;
+    GFXfont *m_fontPreview = nullptr;
+
 
     /// @brief Adds a character to the current Numpad input
     /// @param c Character to add

@@ -1,7 +1,7 @@
 #include "widgetbase.h"
 
 #define DEBUG_WIDGETBASE
-#define DEBUG_TEXT_BOUND
+//#define DEBUG_TEXT_BOUND
 
 #ifdef DEBUG_WIDGETBASE
 #define DEBUG_D(fmt, ...) Serial.printf(fmt, ##__VA_ARGS__)

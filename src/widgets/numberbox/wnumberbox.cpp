@@ -120,26 +120,17 @@ void NumberBox::redraw()
   WidgetBase::objTFT->fillRect(xPos, yPos, m_width, m_height, m_backgroundColor);
   WidgetBase::objTFT->drawRect(xPos, yPos, m_width, m_height, m_letterColor);
   WidgetBase::objTFT->setTextColor(m_letterColor);
+
   
-  //WidgetBase::objTFT->fillCircle(xPos, yPos, 2, CFK_RED);
-  //WidgetBase::objTFT->fillCircle(xPos + 2, yPos + (height / 2), 2, CFK_BLUE);
+  //TextBound_t area;
+  //WidgetBase::objTFT->getTextBounds("M", xPos, yPos, &area.x, &area.y, &area.width, &area.height);
+  //uint16_t qtdLetrasMax = m_width / area.width;
+  //const char* conteudo = m_value.getFirstChars(qtdLetrasMax);
+  //printText(conteudo, xPos + m_padding, yPos + m_height/2, ML_DATUM);
+  const char* conteudo = getFirstLettersForSpace(m_value.getString(), m_width, m_height);
 
-
-  #if defined(DISP_BODMER)
-  //WidgetBase::objTFT->loadFont("FONTE15");
-  WidgetBase::objTFT->setFreeFont(&RobotoRegular10pt7b);
-  WidgetBase::objTFT->setTextDatum(TL_DATUM);
-  #endif
-  
-  TextBound_t area;
-  WidgetBase::objTFT->getTextBounds("M", xPos, yPos, &area.x, &area.y, &area.width, &area.height);
-  uint16_t qtdLetrasMax = m_width / area.width;
-  const char* conteudo = m_value.getFirstChars(qtdLetrasMax);
-
-
-#if defined(DISP_DEFAULT)
-        printText(conteudo, xPos + m_padding, yPos + m_height/2, ML_DATUM);
-#endif
+  //log_d("Draw %d letters from %s in space %d", qtdLetrasMax, conteudo, m_width);
+  printText(conteudo, xPos + m_padding, yPos + m_height / 2, ML_DATUM);
 
 
   updateFont(FontType::UNLOAD);

@@ -301,11 +301,11 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
 
     WidgetBase::objTFT->setTextColor(WKeyboard::m_letterColor);
 
-    if(m_keyH > 20){
+    /*if(m_keyH > 20){
         WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
     }else{
         WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
-    }
+    }*/
 
 
     //TextBound_t area;
@@ -313,10 +313,12 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
     //uint16_t qtdLetrasMax = m_pontoPreview.width / area.width;
 
     //const char* conteudo = m_content.getLastChars(qtdLetrasMax);
+    WidgetBase::objTFT->setFont(m_fontPreview);
     const char* conteudo = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width, m_pontoPreview.height);
     printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, lastArea, WKeyboard::m_backgroundColor);
 
 
+    WidgetBase::objTFT->setFont(m_fontKeys);
     if (!onlyContent)
     {
         WidgetBase::objTFT->fillRect(xPos, yPos, m_availableWidth, m_availableHeight, WKeyboard::m_backgroundColor);
@@ -342,26 +344,22 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
 
                     // keyScale = (keyScale * (_keyW + 2));
 
-                    uint16_t xCenter = xPos + (((keyScale * (m_keyW + 2))) * col) + ((keyScale * (m_keyW + 2)) / 2);
-                    uint16_t yCenter = yPos + ((m_keyH + 2) * row) + (m_keyH / 2);
+                    //uint16_t xCenter = xPos + (((keyScale * (m_keyW + 2))) * col) + ((keyScale * (m_keyW + 2)) / 2);
+                    //uint16_t yCenter = yPos + ((m_keyH + 2) * row) + (m_keyH / 2);
 
                     const int key_width = m_keyW * keyScale + (2 * (keyScale - 1));
                     const int key_height = m_keyH;
                     const int key_x = xPos + ((m_keyW + 2) * col);
                     const int key_y = yPos + ((m_keyH + 2) * row);
                     const int key_round = 4;
+                    uint16_t xCenter = key_x + key_width / 2;
+                    uint16_t yCenter = key_y + key_height / 2;
 
                     WidgetBase::objTFT->fillRoundRect(key_x, key_y,key_width , key_height, key_round, WKeyboard::m_keyColor);
                     WidgetBase::objTFT->drawRoundRect(key_x, key_y, key_width, key_height, key_round, WKeyboard::m_letterColor);
 
-                    const GFXfont* font = getBestRobotoBold(key_width * percentUtilArea, key_height * percentUtilArea, letter.label);
-                    WidgetBase::objTFT->setFont(font);
-                    /*TextBound_t area;
-                    WidgetBase::objTFT->getTextBounds(letter.label, xCenter, yCenter, &area.x, &area.y, &area.width, &area.height);
-
-                    if(area.width > m_keyW/2){
-                        WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
-                    }*/
+                    //const GFXfont* font = getBestRobotoBold(key_width * percentUtilArea, key_height * percentUtilArea, letter.label);
+                    //WidgetBase::objTFT->setFont(font);
 
                     printText(letter.label, xCenter, yCenter, MC_DATUM);
                 }
@@ -453,6 +451,10 @@ void WKeyboard::setup()
 
     xPos = (m_screenW - m_availableWidth) / 2;
     yPos = m_screenH -m_availableHeight;
+
+    float percentUtilArea = 0.9;
+    m_fontKeys = const_cast<GFXfont*>(getBestRobotoBold(m_keyW * percentUtilArea, m_keyH * percentUtilArea, "CAP"));
+    m_fontPreview = m_fontKeys;// const_cast<GFXfont*>(getBestRobotoBold(m_pontoPreview.width * percentUtilArea, m_pontoPreview.height * percentUtilArea, "M"));
 
     m_capsLock = false;
     loaded = true;
