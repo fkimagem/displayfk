@@ -319,6 +319,7 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
 
 
     WidgetBase::objTFT->setFont(m_fontKeys);
+    WidgetBase::objTFT->setTextColor(WKeyboard::m_letterColor);
     if (!onlyContent)
     {
         WidgetBase::objTFT->fillRect(xPos, yPos, m_availableWidth, m_availableHeight, WKeyboard::m_backgroundColor);
