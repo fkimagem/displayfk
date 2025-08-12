@@ -18,7 +18,7 @@ uint16_t WKeyboard::m_backgroundColor = CFK_GREY3;
 uint16_t WKeyboard::m_letterColor = CFK_BLACK;
 uint16_t WKeyboard::m_keyColor = CFK_GREY13;
 
-    const Key_t WKeyboard::m_alphabet[WKeyboard::aRows][WKeyboard::aCols] = {
+    const Key_t WKeyboard::m_alphabet[AROWS][ACOLS] = {
     // Linha 0 - Números
     {{"1", PressedKeyType::NUMBER}, {"2", PressedKeyType::NUMBER}, {"3", PressedKeyType::NUMBER}, {"4", PressedKeyType::NUMBER}, {"5", PressedKeyType::NUMBER},
      {"6", PressedKeyType::NUMBER}, {"7", PressedKeyType::NUMBER}, {"8", PressedKeyType::NUMBER}, {"9", PressedKeyType::NUMBER}, {"0", PressedKeyType::NUMBER}},
@@ -54,29 +54,8 @@ uint16_t WKeyboard::m_keyColor = CFK_GREY13;
     {"A", "S", "D", "F", "G", "H", "J", "K", "L", "DEL"},
     {"Z", "X", "C", "V", "B", "N", "M", "{", "}", "CAP"},
     {"_", "'", ":", "<", ">", ";", "~", "[", "]", "OK"}};*/
-    const Key_t WKeyboard::m_alphabet[WKeyboard::aRows][WKeyboard::aCols] = {
-    // Linha 0 - Números
-    {{"1", PressedKeyType::NUMBER}, {"2", PressedKeyType::NUMBER}, {"3", PressedKeyType::NUMBER}, {"4", PressedKeyType::NUMBER}, {"5", PressedKeyType::NUMBER},
-     {"6", PressedKeyType::NUMBER}, {"7", PressedKeyType::NUMBER}, {"8", PressedKeyType::NUMBER}, {"9", PressedKeyType::NUMBER}, {"0", PressedKeyType::NUMBER}},
 
-    // Linha 1 - QWERTY topo
-    {{"q", PressedKeyType::LETTER}, {"w", PressedKeyType::LETTER}, {"e", PressedKeyType::LETTER}, {"r", PressedKeyType::LETTER}, {"t", PressedKeyType::LETTER},
-     {"y", PressedKeyType::LETTER}, {"u", PressedKeyType::LETTER}, {"i", PressedKeyType::LETTER}, {"o", PressedKeyType::LETTER}, {"p", PressedKeyType::LETTER}},
-
-    // Linha 2 - QWERTY meio + DEL
-    {{"a", PressedKeyType::LETTER}, {"s", PressedKeyType::LETTER}, {"d", PressedKeyType::LETTER}, {"f", PressedKeyType::LETTER}, {"g", PressedKeyType::LETTER},
-     {"h", PressedKeyType::LETTER}, {"j", PressedKeyType::LETTER}, {"k", PressedKeyType::LETTER}, {"l", PressedKeyType::LETTER}, {"DEL", PressedKeyType::DEL}},
-
-    // Linha 3 - QWERTY base + espaço, nulo, caps
-    {{"z", PressedKeyType::LETTER}, {"x", PressedKeyType::LETTER}, {"c", PressedKeyType::LETTER}, {"v", PressedKeyType::LETTER}, {"b", PressedKeyType::LETTER},
-     {"n", PressedKeyType::LETTER}, {"m", PressedKeyType::LETTER}, {" ", PressedKeyType::CONTROL}, {"\0", PressedKeyType::NONE}, {"CAP", PressedKeyType::CAPS}},
-
-    // Linha 4 - Símbolos, limpar, ok
-    {{":", PressedKeyType::SIGN}, {",", PressedKeyType::SIGN}, {"+", PressedKeyType::SIGN}, {"-", PressedKeyType::SIGN}, {"*", PressedKeyType::SIGN},
-     {"/", PressedKeyType::SIGN}, {"=", PressedKeyType::SIGN}, {".", PressedKeyType::SIGN}, {"CLR", PressedKeyType::CLR}, {"OK", PressedKeyType::RETURN}}
-};
-
-const Key_t WKeyboard::m_alphabetCap[WKeyboard::aRows][WKeyboard::aCols] = {
+const Key_t WKeyboard::m_alphabetCap[AROWS][ACOLS] = {
     // Linha 0 - Símbolos especiais
     {{"!", PressedKeyType::SIGN}, {"@", PressedKeyType::SIGN}, {"#", PressedKeyType::SIGN}, {"$", PressedKeyType::SIGN}, {"%", PressedKeyType::SIGN},
      {"^", PressedKeyType::SIGN}, {"&", PressedKeyType::SIGN}, {"?", PressedKeyType::SIGN}, {"(", PressedKeyType::SIGN}, {")", PressedKeyType::SIGN}},
