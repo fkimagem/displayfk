@@ -1,4 +1,4 @@
-const uint8_t Scoreboard3pt7bBitmaps[] PROGMEM = {
+const uint8_t Scoredboard3pt7bBitmaps[] PROGMEM = {
   0x00, 0x00, 0xFE, 0xF0, 0xBE, 0x88, 0xFE, 0xF0, 0x28, 0xFE, 0xF0, 0x80,
   0xF8, 0xC0, 0xC0, 0x00, 0x00, 0x00, 0xFE, 0xF0, 0x00, 0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFE, 0xF0, 0xFE, 0xF0,
@@ -10,7 +10,7 @@ const uint8_t Scoreboard3pt7bBitmaps[] PROGMEM = {
   0x80, 0xF0, 0x00, 0x00, 0x50, 0x80, 0x00, 0x80, 0xFE, 0xF0, 0xFE, 0xF0,
   0xFE, 0xF0, 0xFE, 0xF0 };
 
-const GFXglyph Scoreboard3pt7bGlyphs[] PROGMEM = {
+const GFXglyph Scoredboard3pt7bGlyphs[] PROGMEM = {
   {     0,   1,   1,   0,    0,    0 },   // 0x20 ' '
   {     1,   1,   4,   1,    0,   -3 },   // 0x21 '!'
   {     2,   3,   4,   0,    0,   -3 },   // 0x22 '"'
@@ -107,9 +107,9 @@ const GFXglyph Scoreboard3pt7bGlyphs[] PROGMEM = {
   {   108,   3,   4,   0,    0,   -3 },   // 0x7D '}'
   {   110,   3,   4,   0,    0,   -3 } }; // 0x7E '~'
 
-const GFXfont Scoreboard3pt7b PROGMEM = {
-  (uint8_t  *)Scoreboard3pt7bBitmaps,
-  (GFXglyph *)Scoreboard3pt7bGlyphs,
+const GFXfont Scoredboard3pt7b PROGMEM = {
+  (uint8_t  *)Scoredboard3pt7bBitmaps,
+  (GFXglyph *)Scoredboard3pt7bGlyphs,
   0x20, 0x7E, 6 };
 
 // Approx. 784 bytes

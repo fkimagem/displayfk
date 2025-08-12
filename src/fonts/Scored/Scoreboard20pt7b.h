@@ -1,4 +1,4 @@
-const uint8_t Scoreboard20pt7bBitmaps[] PROGMEM = {
+const uint8_t Scoredboard20pt7bBitmaps[] PROGMEM = {
   0x00, 0xF3, 0xFC, 0xFF, 0x3F, 0xC0, 0xF0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
   0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xC0, 0xFF, 0xFF, 0x80, 0xFF, 0xFF, 0x00,
   0xFF, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 0xFF, 0xFF, 0x0F,
@@ -194,7 +194,7 @@ const uint8_t Scoreboard20pt7bBitmaps[] PROGMEM = {
   0xFF, 0xFF, 0x0F, 0xFF, 0xFF, 0x0F, 0xFF, 0xFF, 0x0F, 0xFF, 0xFF, 0x0F,
   0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
-const GFXglyph Scoreboard20pt7bGlyphs[] PROGMEM = {
+const GFXglyph Scoredboard20pt7bGlyphs[] PROGMEM = {
   {     0,   1,   1,   2,    0,    0 },   // 0x20 ' '
   {     1,   2,  22,   5,    0,  -21 },   // 0x21 '!'
   {     7,  24,  24,   1,    0,  -23 },   // 0x22 '"'
@@ -291,9 +291,9 @@ const GFXglyph Scoreboard20pt7bGlyphs[] PROGMEM = {
   {  2182,  24,  24,   1,    0,  -23 },   // 0x7D '}'
   {  2254,  24,  24,   1,    0,  -23 } }; // 0x7E '~'
 
-const GFXfont Scoreboard20pt7b PROGMEM = {
-  (uint8_t  *)Scoreboard20pt7bBitmaps,
-  (GFXglyph *)Scoreboard20pt7bGlyphs,
+const GFXfont Scoredboard20pt7b PROGMEM = {
+  (uint8_t  *)Scoredboard20pt7bBitmaps,
+  (GFXglyph *)Scoredboard20pt7bGlyphs,
   0x20, 0x7E, 39 };
 
 // Approx. 2998 bytes
