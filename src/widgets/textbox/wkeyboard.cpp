@@ -268,7 +268,7 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
         retorno = true;
     }
 
-    WidgetBase::objTFT->fillCircle(*_xTouch, *_yTouch, 2, CFK_BLUE);
+    //WidgetBase::objTFT->fillCircle(*_xTouch, *_yTouch, 2, CFK_BLUE);
 
     return retorno;
 }
@@ -297,9 +297,9 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
     //uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
     WidgetBase::objTFT->fillRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, WKeyboard::m_backgroundColor);
-    WidgetBase::objTFT->drawRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, WKeyboard::m_letterColor);
+    WidgetBase::objTFT->drawRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, WKeyboard::m_keyColor);
 
-    WidgetBase::objTFT->setTextColor(WKeyboard::m_letterColor);
+    WidgetBase::objTFT->setTextColor(WKeyboard::m_keyColor);
 
     /*if(m_keyH > 20){
         WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
@@ -314,7 +314,7 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
 
     //const char* conteudo = m_content.getLastChars(qtdLetrasMax);
     WidgetBase::objTFT->setFont(m_fontPreview);
-    const char* conteudo = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width, m_pontoPreview.height);
+    const char* conteudo = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width * 0.9, m_pontoPreview.height * 0.9);
     printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, lastArea, WKeyboard::m_backgroundColor);
 
 

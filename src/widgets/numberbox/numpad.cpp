@@ -195,12 +195,12 @@ void Numpad::redraw(bool fullScreen, bool onlyContent)
     }
 
     WidgetBase::objTFT->fillRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, Numpad::m_backgroundColor);
-    WidgetBase::objTFT->drawRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, Numpad::m_letterColor);
+    WidgetBase::objTFT->drawRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, Numpad::m_keyColor);
 
-    WidgetBase::objTFT->setTextColor(Numpad::m_letterColor);
+    WidgetBase::objTFT->setTextColor(Numpad::m_keyColor);
 
     WidgetBase::objTFT->setFont(m_fontPreview);
-    const char* conteudo = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width, m_pontoPreview.height);
+    const char* conteudo = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width * 0.9, m_pontoPreview.height * 0.9);
     printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, m_lastArea, Numpad::m_backgroundColor);
 
 
@@ -209,7 +209,7 @@ void Numpad::redraw(bool fullScreen, bool onlyContent)
 
     WidgetBase::objTFT->setFont(m_fontKeys);
     WidgetBase::objTFT->setTextColor(Numpad::m_letterColor);
-    
+
     if (!onlyContent)
     {
         WidgetBase::objTFT->fillRect(xPos, yPos, m_availableWidth, m_availableHeight, Numpad::m_backgroundColor);

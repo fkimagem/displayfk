@@ -116,7 +116,7 @@ void TextBox::redraw()
 
   //uint16_t qtdLetrasMax = m_width / area.width;
   //const char *conteudo = m_value.getFirstChars(qtdLetrasMax);
-  const char* conteudo = getFirstLettersForSpace(m_value.getString(), m_width, m_height);
+  const char* conteudo = getFirstLettersForSpace(m_value.getString(), m_width * 0.9, m_height * 0.9);
 
   //log_d("Draw %d letters from %s in space %d", qtdLetrasMax, conteudo, m_width);
   printText(conteudo, xPos + m_padding, yPos + m_height / 2, ML_DATUM);
