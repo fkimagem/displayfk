@@ -108,7 +108,7 @@ m_lastValue = m_currentValue;
  */
 void VBar::start()
 {
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   m_height = constrain(m_height, 20, WidgetBase::objTFT->height());
   m_width = constrain(m_width, 20, WidgetBase::objTFT->width());
 #endif

@@ -85,7 +85,7 @@ void Thermometer::redraw()
  */
 void Thermometer::start()
 {
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   m_height = constrain(m_height, 20, WidgetBase::objTFT->height());
 #endif
 }

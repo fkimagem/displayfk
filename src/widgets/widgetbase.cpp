@@ -24,6 +24,8 @@ QueueHandle_t WidgetBase::xFilaCallback;
 
 #if defined(DISP_DEFAULT)
 Arduino_GFX *WidgetBase::objTFT = nullptr;
+#elif defined(DISP_PCD8544)
+Adafruit_PCD8544 *WidgetBase::objTFT = nullptr;
 #else
 #error "You need to define the display type in user_setup.h"
 #endif
@@ -420,29 +422,6 @@ const GFXfont *WidgetBase::getBestRobotoBold(uint16_t availableWidth, uint16_t a
     };
 
     return this->getBestFontForArea( texto, availableWidth, availableHeight, fontes, amountFonts);
-    /*static const int numFontes = sizeof(fontes) / sizeof(fontes[0]);
-
-    // Função para calcular dimensões do texto
-    auto calcularDimensoes = [](const GFXfont* font, const char* texto, uint16_t* width, uint16_t* height) {
-        TextBound_t area;
-        objTFT->setFont(font);
-        objTFT->getTextBounds(texto, 0, 0, &area.x, &area.y, &area.width, &area.height);
-        *width = area.width;
-        *height = area.height;
-    };
-
-    uint16_t textWidth, textHeight;
-    
-    // Testa cada fonte até encontrar uma que se encaixe
-    for (int i = 0; i < numFontes; i++) {
-        calcularDimensoes(fontes[i], texto, &textWidth, &textHeight);
-        if (textWidth <= availableWidth && textHeight <= availableHeight) {
-            return fontes[i];
-        }
-    }
-
-    // Se nenhuma fonte se encaixou, retorna a menor fonte disponível
-    return fontes[numFontes - 1];*/
 }
 
 /**
@@ -456,14 +435,14 @@ void WidgetBase::updateFont(FontType _f)
     {
     case FontType::NORMAL:
     {
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
         WidgetBase::objTFT->setFont(WidgetBase::fontNormal);
 #endif
     }
     break;
     case FontType::BOLD:
-    {
-#if defined(DISP_DEFAULT)
+    { 
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
         WidgetBase::objTFT->setFont(WidgetBase::fontBold);
 #endif
     }
@@ -471,7 +450,7 @@ void WidgetBase::updateFont(FontType _f)
 
     default:
     {
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
         WidgetBase::objTFT->setFont(nullptr);
 #endif
     }
@@ -479,7 +458,7 @@ void WidgetBase::updateFont(FontType _f)
     }
 }
 
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
 /**
  * @brief Prints text on the screen.
  * @param _texto Text to print.

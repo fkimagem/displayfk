@@ -26,32 +26,58 @@ constexpr uint16_t rgb2brg(uint16_t val) {
     return val;
 }
 #endif
+
+
+#if defined(DISP_DEFAULT)
 constexpr uint16_t process_color(uint16_t val) {
     return rgb2brg(invert_bits(val));
 }
+#elif defined(DISP_PCD8544)
+constexpr uint16_t process_color(uint16_t val) {
+    return (val == 0x0000) ? 0x1 : 0x0;
+}
+#endif
 
 #define DFK_TOUCHAREA 1
- #define DFK_CIRCLEBTN 1
- #define DFK_RECTBTN 1
- #define DFK_LED 1
- #define DFK_VBAR 1
- #define DFK_TOGGLE 1
- #define DFK_HSLIDER 1
- #define DFK_TEXTBOX 1
- #define DFK_CHECKBOX 1
- #define DFK_RADIO 1
- #define DFK_NUMBERBOX 1
- #define DFK_VANALOG 1
- #define DFK_GAUGE 1
- #define DFK_LINECHART 1
- #define DFK_LABEL 1
- #define DFK_IMAGE 1
- #define DFK_SD 1
- #define DFK_SPINBOX 1
- #define DFK_TEXTBUTTON 1
- #define DFK_CIRCULARBAR 1
- #define DFK_THERMOMETER 1
- //#define DFK_EXTERNALINPUT 1
+#define DFK_CIRCLEBTN 1
+#define DFK_RECTBTN 1
+#define DFK_LED 1
+#define DFK_VBAR 1
+#define DFK_TOGGLE 1
+#define DFK_HSLIDER 1
+#define DFK_TEXTBOX 1
+#define DFK_CHECKBOX 1
+#define DFK_RADIO 1
+#define DFK_NUMBERBOX 1
+#define DFK_VANALOG 1
+#define DFK_GAUGE 1
+#define DFK_LINECHART 1
+#define DFK_LABEL 1
+#define DFK_IMAGE 1
+#define DFK_SD 1
+#define DFK_SPINBOX 1
+#define DFK_TEXTBUTTON 1
+#define DFK_CIRCULARBAR 1
+#define DFK_THERMOMETER 1
+//#define DFK_EXTERNALINPUT 1
+
+#if defined(DISP_PCD8544)
+#undef DFK_TOUCHAREA
+#undef DFK_CIRCLEBTN
+#undef DFK_RECTBTN
+#undef DFK_TOGGLE
+#undef DFK_HSLIDER
+#undef DFK_TEXTBOX
+#undef DFK_CHECKBOX
+#undef DFK_RADIO
+#undef DFK_NUMBERBOX
+#undef DFK_VANALOG
+#undef DFK_GAUGE
+#undef DFK_LINECHART
+#undef DFK_SPINBOX
+#undef DFK_TEXTBUTTON
+
+#endif
 
 //These enumerate the text plotting alignment (reference datum point)
 #define TL_DATUM 0 // Top left (default)

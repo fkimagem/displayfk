@@ -65,22 +65,6 @@ void CircularBar::drawBackground()
 
     uint8_t borderOffset = 1;
     WidgetBase::objTFT->fillArc(xPos, yPos, m_radius + borderOffset, (m_radius - m_lineWeight - borderOffset), m_startAngle, m_endAngle, m_bkColor);
-
-    /*
-    if(!m_invertedFill){
-        //WidgetBase::objTFT->fillArc(xPos, yPos, m_radius + offsetBorda, (m_radius - m_lineWeight - offsetBorda), m_startAngle, m_endAngle, m_middleColor);
-        WidgetBase::objTFT->fillArc(xPos, yPos, m_radius + offsetBorda, (m_radius - m_lineWeight - offsetBorda), m_startAngle, m_endAngle, m_bkColor);
-    }else{
-        WidgetBase::objTFT->fillArc(xPos, yPos, m_radius + offsetBorda, (m_radius - m_lineWeight - offsetBorda), m_endAngle, m_startAngle, m_lineColor);
-    }*/
-    
-    //int xEnd = (cos(_startAngle * DEG_TO_RAD) * (_radius - _lineWeight / 2)) + xPos;
-    //int yEnd = (sin(_startAngle * DEG_TO_RAD) * (_radius - _lineWeight / 2)) + yPos;
-    //WidgetBase::objTFT->fillCircle(xEnd, yEnd, _lineWeight / 2, _middleColor);
-
-    //xEnd = (cos(_endAngle * DEG_TO_RAD) * (_radius - _lineWeight / 2)) + xPos;
-    //yEnd = (sin(_endAngle * DEG_TO_RAD) * (_radius - _lineWeight / 2)) + yPos;
-    //WidgetBase::objTFT->fillCircle(xEnd, yEnd, _lineWeight / 2, _middleColor);
     m_lastValue = m_vmin;
     redraw();
 }
@@ -124,7 +108,7 @@ void CircularBar::redraw()
     int lastAngleValue = map(m_lastValue, m_vmin, m_vmax, m_startAngle, m_endAngle);
 
 
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     int xEnd = 0, xStart = 0, xCursor = 0, xLastCursor = 0;
     int yEnd = 0, yStart = 0, yCursor = 0, yLastCursor = 0;
 
@@ -185,7 +169,7 @@ void CircularBar::redraw()
         WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
         // updateFont(FontType::BOLD);
 
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
         printText(char_arr, xPos, yPos, MC_DATUM);
 #endif
 

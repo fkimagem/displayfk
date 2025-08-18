@@ -102,7 +102,7 @@ void TextButton::redraw()
 
   WidgetBase::objTFT->setTextColor(m_textColor);
 
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
         //WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
         WidgetBase::objTFT->setFont(getBestRobotoBold(m_width - (2*m_offsetMargin), m_height - (2*m_offsetMargin), m_text));
         printText(m_text, xPos + m_width/2, yPos + (m_height / 2), MC_DATUM);
@@ -122,7 +122,7 @@ updateFont(FontType::UNLOAD);
  */
 void TextButton::start()
 {
-  #if defined(DISP_DEFAULT)
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   m_width = constrain(m_width, 5, WidgetBase::objTFT->width());
   m_height = constrain(m_height, 5, WidgetBase::objTFT->height());
   #endif

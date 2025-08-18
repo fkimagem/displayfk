@@ -295,7 +295,7 @@ void Numpad::setup()
         log_w("Keyboard already configured");
         return;
     }
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     m_screenW = WidgetBase::objTFT->width();
     m_screenH = WidgetBase::objTFT->height();
 #endif
@@ -331,7 +331,7 @@ void Numpad::open(NumberBox *_field)
     m_field = _field;
     WidgetBase::usingKeyboard = true;
     m_content = m_field->getValueChar();
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
 #endif
 
@@ -343,7 +343,7 @@ void Numpad::open(NumberBox *_field)
  */
 void Numpad::close()
 {
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     WidgetBase::objTFT->setFont(nullptr);
 #endif
     log_d("Value of content is: %s", m_content.getString());

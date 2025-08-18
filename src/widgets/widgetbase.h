@@ -12,6 +12,11 @@
 
 #if defined(DISP_DEFAULT)
 #include <Arduino_GFX_Library.h>
+#elif defined(DISP_PCD8544)
+#include <Adafruit_GFX.h>
+#include <Adafruit_PCD8544.h>
+#else
+#error "Unsupported display type"
 #endif
 
 #if defined(FONT_ROBOTO)
@@ -306,6 +311,8 @@ public:
 
 #if defined(DISP_DEFAULT)
   static Arduino_GFX *objTFT; ///< Pointer to the Arduino display object.
+#elif defined(DISP_PCD8544)
+  static Adafruit_PCD8544 *objTFT; ///< Pointer to the PCD8544 display object.
 #else
 #error "Choose a display model on user_setup.h"
 #endif
@@ -348,14 +355,10 @@ protected:
 
   void updateFont(FontType _f);
 
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   void printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum, TextBound_t &lastTextBoud, uint16_t _colorPadding);
   void printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum);
-
-  
-
   TextBound_t getTextBounds(const char* str, int16_t x, int16_t y);
-
   void drawRotatedImageOptimized(uint16_t *image, int16_t width, int16_t height, float angle, int16_t pivotX, int16_t pivotY, int16_t drawX, int16_t drawY);
 #endif
 

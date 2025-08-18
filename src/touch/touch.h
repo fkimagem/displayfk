@@ -76,7 +76,13 @@ private:
   //
   XPT2046 *m_ts = nullptr;
   uint16_t *m_calibration = nullptr;
+  #if defined(DISP_DEFAULT)
   Arduino_GFX *m_objTFT = nullptr;
+  #elif defined(DISP_PCD8544)
+  Adafruit_PCD8544 *m_objTFT = nullptr;
+  #else
+  #error "Undefined display type"
+  #endif
   uint16_t m_touchCalibration_x0 = 300;
   uint16_t m_touchCalibration_x1 = 3600;
   uint16_t m_touchCalibration_y0 = 300;
