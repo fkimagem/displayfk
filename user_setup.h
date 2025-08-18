@@ -45,8 +45,9 @@
 #endif
 */
 
-#define DISP_DEFAULT	
-#define TOUCH_GT911	
-#define HAS_TOUCH	
+//#define DISP_DEFAULT	
+#define DISP_PCD8544
+//#define TOUCH_GT911	
+//#define HAS_TOUCH	
 //#define INVERT_COLOR_BITS
 //#define IS_BGR

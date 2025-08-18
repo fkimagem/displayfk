@@ -138,7 +138,7 @@ void RectButton::redraw()
  */
 void RectButton::start()
 {
-  #if defined(DISP_DEFAULT)
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   width = constrain(width, 5, WidgetBase::objTFT->width());
   height = constrain(height, 5, WidgetBase::objTFT->height());
   #endif

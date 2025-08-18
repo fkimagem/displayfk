@@ -2197,6 +2197,10 @@ void DisplayFK::loopTask() {
     // Update widgets
     updateWidgets();
 
+    #if defined(DISP_PCD8544)
+    WidgetBase::objTFT->display();
+    #endif
+
     // Calculate and log execution time
     startTime = micros() - startTime;
     vTaskDelay(pdMS_TO_TICKS(1));

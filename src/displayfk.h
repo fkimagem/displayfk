@@ -57,7 +57,7 @@
 #include <FS.h>
 #include <Preferences.h>
 #include <SPI.h>
-#if defined(DISP_DEFAULT)
+#if defined(HAS_TOUCH)
 #include "touch/touch.h"
 #endif
 //#include "soc/timer_group_struct.h" //watchdog

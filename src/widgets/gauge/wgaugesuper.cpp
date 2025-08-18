@@ -254,7 +254,7 @@ void GaugeSuper::drawBackground()
 
   if (m_divisor > 1)
   {
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT)|| defined(DISP_PCD8544)
 
     char char_arr[20];
     sprintf(char_arr, "x%d", m_divisor);
@@ -302,7 +302,7 @@ void GaugeSuper::drawBackground()
         {
           alinhamento = BL_DATUM;
         }
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT)|| defined(DISP_PCD8544)
         char char_arr[20];
         sprintf(char_arr, "%d", m_intervals[m_indexCurrentStrip] / m_divisor);
         printText(char_arr, aX, aY, alinhamento);
@@ -313,7 +313,7 @@ void GaugeSuper::drawBackground()
       }
       if (i == 2 * m_maxAngle)
       {
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
         printText(String(m_vmax / m_divisor).c_str(), x0, y0, BL_DATUM);
 #endif
 
@@ -449,7 +449,7 @@ void GaugeSuper::redraw()
   WidgetBase::objTFT->setTextColor(m_textColor);
   if (m_showLabels)
   {
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     // WidgetBase::printText()
     uint16_t auxX = xPos - (m_availableWidth / 2) + 1;
     uint16_t auxY = yPos - m_borderSize;
@@ -462,7 +462,7 @@ void GaugeSuper::redraw()
     // Redraw texts
     // updateFont(FontType::BOLD);
     WidgetBase::objTFT->setTextColor(m_titleColor);
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     WidgetBase::objTFT->setFont(m_usedFont);
 
     TextBound_t tb_title = getTextBounds(m_title, xPos, yPos - (m_borderSize * 2));

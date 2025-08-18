@@ -82,16 +82,30 @@ private:
   uint16_t m_width = 0; ///< Width of the image.
   uint16_t m_height = 0; ///< Height of the image.
   unsigned long m_myTime = 0; ///< Timestamp for handling timing-related functions.
+  #if defined(DISP_DEFAULT)
   const uint16_t *m_pixels = nullptr; ///< Pointer to the pixel map data.
+  #elif defined(DISP_PCD8544)
+  const uint8_t *m_pixels = nullptr; ///< Pointer to the pixel map data.
+  #endif
   const uint8_t *m_maskAlpha = nullptr; ///< Pointer to the alpha mask data for transparency.
+
+  #if defined(DISP_DEFAULT)
   uint16_t *m_ownedPixels = nullptr; ///< Pointer to the owned pixel map data.
+  #elif defined(DISP_PCD8544)
+  uint8_t *m_ownedPixels = nullptr; ///< Pointer to the owned pixel map data.
+  #endif
+
   uint8_t  *m_ownedMask   = nullptr; ///< Pointer to the owned alpha mask data.
   bool m_ownsBuffers = false; ///< Flag indicating if the buffers are owned by this instance.
 
   float m_angle = 0; ///< Rotation angle in degrees.
   fs::FS *m_fs = nullptr;
   void setup(SourceFile _source, const char* _path, functionCB_t _cb, float _angle);
+  #if defined(DISP_DEFAULT)
   void setup(const uint16_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb);
+  #elif defined(DISP_PCD8544)
+  void setup(const uint8_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb);
+  #endif
   bool readFileFromDisk();
 };
 

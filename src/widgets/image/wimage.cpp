@@ -229,8 +229,11 @@ void Image::draw()
       return;
     }
 
-
+    #if defined(DISP_DEFAULT)
     WidgetBase::objTFT->draw16bitRGBBitmapWithMask(xPos, yPos, m_ownedPixels, m_ownedMask, m_width, m_height);
+    #elif defined(DISP_PCD8544)
+    WidgetBase::objTFT->drawBitmap(xPos, yPos, m_ownedPixels, m_width, m_height, CFK_BLACK);
+    #endif
 
   }else{
     if(!m_pixels){
@@ -242,7 +245,13 @@ void Image::draw()
       return;
     }
 
+    #if defined(DISP_DEFAULT)
     WidgetBase::objTFT->draw16bitRGBBitmapWithMask(xPos, yPos, m_pixels, m_maskAlpha, m_width, m_height);
+    #elif defined(DISP_PCD8544)
+    WidgetBase::objTFT->drawBitmap(xPos, yPos, m_pixels, m_width, m_height, CFK_BLACK);
+    #endif
+
+    
   }
   DEBUG_D("Image drawn");
 }
@@ -358,6 +367,7 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
  * @param _angle Rotation angle in degrees.
  * @param _cb Callback function to execute when the image is interacted with.
  */
+#if defined(DISP_DEFAULT)
 void Image::setup(const uint16_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb)
 {
   if (loaded) {
@@ -394,7 +404,55 @@ void Image::setup(const uint16_t *_pixels, uint16_t _width, uint16_t _height, co
   loaded = true;
   m_update = true;
 }
+#endif
 
+/**
+ * @brief Configures the Image widget with pixel data.
+ * @param _pixels Pointer to the pixel data array.
+ * @param _width Width of the image.
+ * @param _height Height of the image.
+ * @param _maskAlpha Pointer to the alpha mask array for transparency.
+ * @param _angle Rotation angle in degrees.
+ * @param _cb Callback function to execute when the image is interacted with.
+ */
+#if defined(DISP_PCD8544)
+void Image::setup(const uint8_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb)
+{
+  if (loaded) {
+    log_w("Widget already loaded");
+    return;
+  }
+  
+  // Libera memória existente se existir
+  if(m_pixels) {
+    delete[] m_pixels;
+    m_pixels = nullptr;
+  }
+  if(m_maskAlpha) {
+    delete[] m_maskAlpha;
+    m_maskAlpha = nullptr;
+  }
+  
+  m_source = SourceFile::EMBED;
+  m_pixels = _pixels;
+  m_maskAlpha = _maskAlpha;
+  m_ownsBuffers = false; // Não possui os buffers, apenas referencia
+  m_width = _width;
+  m_height = _height;
+  m_angle = _angle;
+  cb = _cb;
+
+  if(_pixels == nullptr) {
+    log_e("Pixels is nullptr");
+    return;
+  }
+
+  DEBUG_D("Image setup with pixels (%d x %d)", _width, _height);
+
+  loaded = true;
+  m_update = true;
+}
+#endif
 
 /**
  * @brief Configures the Image widget with a file source.
