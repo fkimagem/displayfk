@@ -175,6 +175,7 @@ void Label::setTextInt(int value)
  */
 void Label::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || !m_update || !loaded)
   {
     return;
@@ -182,7 +183,6 @@ void Label::redraw()
 
   log_d("Redraw label to value %s", m_text);
   WidgetBase::objTFT->setTextColor(m_letterColor);
-  #if defined(DISP_DEFAULT)
   WidgetBase::objTFT->setFont(m_fontFamily);
   WidgetBase::objTFT->setTextSize(m_fontSize);
   printText(m_text, xPos, yPos, m_datum, m_lastArea, m_backgroundColor);
@@ -190,11 +190,11 @@ void Label::redraw()
   WidgetBase::objTFT->setFont(nullptr);
   //WidgetBase::objTFT->setCursor(xPos, yPos);
   //WidgetBase::objTFT->print(text);
-  #endif
 
   
   //previousText = text;
   m_update = false;
+  #endif
 }
 
 /**
@@ -288,6 +288,7 @@ void Label::setup(const char *_text, const GFXfont *_fontFamily, uint16_t _datum
 
   // Aloca nova memória
   m_text = new char[textLength + prefixLength + suffixLength + 1];
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if(m_text != nullptr) {
     strcpy(m_text, _prefix);
     strcat(m_text, _text);
@@ -305,6 +306,7 @@ void Label::setup(const char *_text, const GFXfont *_fontFamily, uint16_t _datum
   } else {
     log_e("Failed to allocate memory for label text");
   }
+  #endif
 }
 
 /**

@@ -138,7 +138,11 @@ bool Image::readFileFromDisk(){
 
     uint32_t bytesOfColor = m_width * m_height;
 
+    #if defined(DISP_DEFAULT)
     m_ownedPixels = new uint16_t[bytesOfColor];
+    #elif defined(DISP_PCD8544)
+    m_ownedPixels = new uint8_t[bytesOfColor];
+    #endif
 
     if(!m_ownedPixels) {
       DEBUG_E("Failed to allocate memory for image pixels");
@@ -148,7 +152,13 @@ bool Image::readFileFromDisk(){
 
     memset(m_ownedPixels, 0, bytesOfColor * sizeof(uint16_t));
 
+     #if defined(DISP_DEFAULT)
     uint8_t read_pixels = 2;
+#elif defined(DISP_PCD8544)
+uint8_t read_pixels = 1;
+    #endif
+
+
     uint8_t pixel[read_pixels];// 2 bytes per pixel (color 565)
     memset(pixel, 0, read_pixels);
     
@@ -163,8 +173,14 @@ bool Image::readFileFromDisk(){
           }
           return false;
         }
+        #if defined(DISP_DEFAULT)
         uint16_t color = (pixel[0] << 8) | pixel[1];
         m_ownedPixels[y * m_width + x] = color;
+#elif defined(DISP_PCD8544)
+        uint8_t color = pixel[0];
+        m_ownedPixels[y * m_width + x] = color;
+    #endif
+        
       }
     }
 

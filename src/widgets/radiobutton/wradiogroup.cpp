@@ -84,6 +84,7 @@ functionCB_t RadioGroup::getCallbackFunc()
  */
 void RadioGroup::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;
@@ -109,6 +110,7 @@ void RadioGroup::redraw()
       WidgetBase::objTFT->drawCircle(r.x, r.y, m_radius * 0.75, baseBorder); // borda dentro
     }
   }
+  #endif
 }
 
 /**

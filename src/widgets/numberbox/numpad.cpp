@@ -185,6 +185,7 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType *p
  */
 void Numpad::redraw(bool fullScreen, bool onlyContent)
 {
+    #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     if(!loaded){
         Serial.println("Numpad not loaded");
         return;
@@ -244,6 +245,7 @@ void Numpad::redraw(bool fullScreen, bool onlyContent)
             }
         }
     }
+    #endif
 }
 
 /**

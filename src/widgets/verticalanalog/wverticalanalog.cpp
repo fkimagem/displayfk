@@ -47,7 +47,7 @@ void VAnalog::start()
 {
   m_padding = 20;
   m_width = 40; // fixa a largura do widget
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   m_height = constrain(m_height, 40, WidgetBase::objTFT->height());
 #endif
 
@@ -63,6 +63,7 @@ void VAnalog::start()
  */
 void VAnalog::drawBackground()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -86,15 +87,9 @@ void VAnalog::drawBackground()
     WidgetBase::objTFT->drawLine(xPos + (m_width / 2), yLinha, (xPos + m_width) - fimLinha, yLinha, m_textColor);
   }
   m_lastYArrow = yPos + m_paddingDraw + 4;
-  if (m_updateText)
-  {
-#if defined(DISP_BODMER)
-    // WidgetBase::objTFT->loadFont("FONTE15");
-    WidgetBase::objTFT->setFreeFont(&RobotoRegular10pt7b);
-#endif
-  }
   redraw();
   log_d("Finish draw vanalog");
+  #endif
 }
 
 /**
@@ -122,6 +117,7 @@ void VAnalog::setValue(int newValue, bool _viewValue)
  */
 void VAnalog::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   ////Serial.println(WidgetBase::usingKeyboard);
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
@@ -130,9 +126,7 @@ void VAnalog::redraw()
 
   if (m_updateText)
   {
-#if defined(DISP_DEFAULT)
     WidgetBase::objTFT->setFont(&RobotoRegular10pt7b);
-#endif
   }
   // uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;
   uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
@@ -153,7 +147,6 @@ void VAnalog::redraw()
   if (m_updateText)
   {
     WidgetBase::objTFT->setTextColor(m_textColor);
-#if defined(DISP_DEFAULT)
     WidgetBase::objTFT->setFont(&RobotoRegular5pt7b);
     TextBound_t textBg;
     textBg.x = xPos + 2;
@@ -162,9 +155,9 @@ void VAnalog::redraw()
     textBg.height = m_paddingDraw + m_padding;
     WidgetBase::objTFT->fillRect(textBg.x, textBg.y, textBg.width, textBg.height, m_backgroundColor);
     printText(String(m_currentValue).c_str(), xPos + (m_width / 2), yPos + m_height - m_paddingDraw, BC_DATUM);
-#endif
   }
   m_update = false;
+  #endif
 }
 
 /**

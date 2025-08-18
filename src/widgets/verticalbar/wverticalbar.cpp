@@ -54,6 +54,7 @@ void VBar::setValue(uint32_t newValue)
  */
 void VBar::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -99,8 +100,10 @@ void VBar::redraw()
   }
 
   
-m_lastValue = m_currentValue;
+  m_lastValue = m_currentValue;
   m_update = false;
+
+  #endif
 }
 
 /**
@@ -127,12 +130,14 @@ void VBar::forceUpdate()
  */
 void VBar::drawBackground()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
   }
   WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, m_round, CFK_GREY11); // fundo total
   WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, m_round, CFK_BLACK);     // borda total
+  #endif
 }
 
 /**

@@ -5,6 +5,8 @@
 #include "../../user_setup.h"
 #define INVERTE_BITS_16(x) ((uint16_t)(~(x)))
 
+#define UNUSED(v) (void)v;
+
 constexpr uint16_t invert_bits(uint16_t val) {
 	
 #ifdef INVERT_COLOR_BITS
@@ -76,6 +78,7 @@ constexpr uint16_t process_color(uint16_t val) {
 #undef DFK_LINECHART
 #undef DFK_SPINBOX
 #undef DFK_TEXTBUTTON
+#undef DFK_CIRCULARBAR
 
 #endif
 

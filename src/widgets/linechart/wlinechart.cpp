@@ -18,19 +18,23 @@
 
 void LineChart::initMutex()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (!m_mutex)
   {
     m_mutex = xSemaphoreCreateMutex();
   }
+  #endif
 }
 
 void LineChart::destroyMutex()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (m_mutex)
   {
     vSemaphoreDelete(m_mutex);
     m_mutex = nullptr;
   }
+  #endif
 }
 
 /**
@@ -41,7 +45,9 @@ void LineChart::destroyMutex()
  */
 LineChart::LineChart(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen)
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   initMutex();
+  #endif
 }
 
 /**
@@ -51,6 +57,7 @@ LineChart::LineChart(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x,
  */
 LineChart::~LineChart()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   destroyMutex();
   // Libera arrays de valores
   if (m_values)
@@ -73,6 +80,7 @@ LineChart::~LineChart()
     // Não liberamos m_colorsSeries aqui, pois é fornecido externamente no setup
     m_colorsSeries = nullptr;
   }
+  #endif
 }
 
 /**
@@ -102,6 +110,7 @@ functionCB_t LineChart::getCallbackFunc()
  */
 void LineChart::resetArray()
 {
+   #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (m_mutex)
     xSemaphoreTake(m_mutex, portMAX_DELAY);
   if (m_values)
@@ -116,6 +125,7 @@ void LineChart::resetArray()
   }
   if (m_mutex)
     xSemaphoreGive(m_mutex);
+    #endif
 }
 
 /**
@@ -125,18 +135,15 @@ void LineChart::resetArray()
  */
 void LineChart::start()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (m_vmax < m_vmin)
   {
     std::swap(m_vmin, m_vmax);
   }
 
-  // verticalDivision++;//Incrementa a contagem para mostrar a posição correta das linhas de divisao
-
-  // m_letra = &RobotoBold10pt7b;
-
   WidgetBase::objTFT->setFont(m_letra);
 
-#if defined(DISP_DEFAULT)
+
   int16_t x, y;
   uint16_t textSizeMin, textSizeMax, h;
   char char_arr_min[20];
@@ -148,7 +155,7 @@ void LineChart::start()
   objTFT->getTextBounds(char_arr_max, 10, 10, &x, &y, &textSizeMax, &h); // 10 é valor simbolico
 
   int16_t biggerText = max(textSizeMin, textSizeMax);
-#endif
+
 
   updateFont(FontType::UNLOAD);
 
@@ -217,6 +224,7 @@ void LineChart::start()
       m_values[i][j].currentValue = m_vmin;
     }
   }
+  #endif
 }
 
 /**
@@ -226,7 +234,7 @@ void LineChart::start()
  */
 void LineChart::drawBackground()
 {
-
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -248,7 +256,6 @@ void LineChart::drawBackground()
 
   objTFT->setFont(nullptr);
 
-#if defined(DISP_DEFAULT)
   WidgetBase::objTFT->setTextColor(m_textColor);
   printText(String(m_vmax).c_str(), xPos + m_borderSize + m_leftPadding - 4, m_yTovmax - m_topBottomPadding, TR_DATUM);
   printText(String(m_vmin).c_str(), xPos + m_borderSize + m_leftPadding - 4, m_yTovmin, BR_DATUM);
@@ -263,12 +270,11 @@ void LineChart::drawBackground()
       printText("0", xPos + m_borderSize + m_leftPadding - 4, yZero, BR_DATUM);
     }
   }
-#endif
   updateFont(FontType::UNLOAD);
 
   WidgetBase::objTFT->drawFastVLine(xPos + m_leftPadding + m_borderSize - 1, yPos + m_topBottomPadding + m_borderSize, m_maxHeight + 1, m_textColor); // linhaVertical
-  // WidgetBase::objTFT->drawFastHLine(xPos + leftPadding + _borderSize, (yPos + height) - (topBottomPadding + _borderSize) + 1, _maxWidth, textColor); // linhaVertical
   WidgetBase::objTFT->drawFastHLine(xPos + m_leftPadding + m_borderSize - 1, m_yTovmin + 1, m_maxWidth, m_textColor); // linhaVertical
+  #endif
 }
 
 /**
@@ -281,6 +287,7 @@ void LineChart::drawBackground()
  */
 bool LineChart::push(uint16_t serieIndex, int newValue)
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (m_mutex)
     xSemaphoreTake(m_mutex, portMAX_DELAY); // prioridade total para push
   if (!m_values || serieIndex >= m_amountSeries || m_amountPoints == 0)
@@ -317,6 +324,11 @@ bool LineChart::push(uint16_t serieIndex, int newValue)
 
   
   return true;
+
+  #else
+  return false;
+
+  #endif
 }
 
 /**
@@ -326,6 +338,7 @@ bool LineChart::push(uint16_t serieIndex, int newValue)
  */
 void LineChart::clearPreviousValues()
 {
+ #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (m_mutex && xSemaphoreTake(m_mutex, 0) != pdTRUE)
     return; // só executa se conseguir pegar o mutex imediatamente
             // Pinta a linha antiga com a cor do fundo
@@ -353,6 +366,7 @@ void LineChart::clearPreviousValues()
   }
   if (m_mutex)
     xSemaphoreGive(m_mutex);
+  #endif
 }
 
 /**
@@ -362,6 +376,7 @@ void LineChart::clearPreviousValues()
  */
 void LineChart::drawGrid()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   // Desenha a grade
   if (m_verticalDivision > 0)
   {
@@ -387,6 +402,8 @@ void LineChart::drawGrid()
     }
     WidgetBase::objTFT->drawFastVLine(maxX, yPos + m_topBottomPadding, m_maxHeight, m_gridColor);
   }
+
+  #endif
 }
 
 /**
@@ -397,6 +414,7 @@ void LineChart::drawGrid()
  */
 void LineChart::drawSerie(uint8_t serieIndex)
 {
+ #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (m_mutex && xSemaphoreTake(m_mutex, 0) != pdTRUE)
     return; // só executa se conseguir pegar o mutex imediatamente
 
@@ -433,6 +451,8 @@ void LineChart::drawSerie(uint8_t serieIndex)
 
   if (m_mutex)
     xSemaphoreGive(m_mutex);
+  
+  #endif
 }
 
 /**
@@ -443,8 +463,10 @@ void LineChart::drawSerie(uint8_t serieIndex)
  */
 void LineChart::drawMarkLineAt(int value)
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   uint16_t yZero = map(value, m_vmin, m_vmax, m_yTovmin, m_yTovmax);
   WidgetBase::objTFT->drawFastHLine(xPos + m_leftPadding + m_borderSize, yZero, m_maxWidth, m_textColor); // linha 0
+  #endif
 }
 
 /**
@@ -455,6 +477,7 @@ void LineChart::drawMarkLineAt(int value)
  */
 void LineChart::printValues(uint8_t serieIndex)
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   Serial.printf("Old: ");
   for (uint16_t i = 0; i < m_amountPoints; i++)
   {
@@ -467,6 +490,7 @@ void LineChart::printValues(uint8_t serieIndex)
     Serial.printf("%d\t", m_values[serieIndex][i].currentValue);
   }
   Serial.println();
+  #endif
 }
 
 /**
@@ -476,10 +500,12 @@ void LineChart::printValues(uint8_t serieIndex)
  */
 void LineChart::drawAllSeries()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   for (uint16_t serieIndex = 0; serieIndex < m_amountSeries; serieIndex++)
   {
     drawSerie(serieIndex);
   }
+  #endif
 }
 
 /**
@@ -489,6 +515,7 @@ void LineChart::drawAllSeries()
  */
 void LineChart::copyCurrentValuesToOldValues()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (m_mutex && xSemaphoreTake(m_mutex, portMAX_DELAY) == pdTRUE)
   {
     for (uint16_t serieIndex = 0; serieIndex < m_amountSeries; serieIndex++)
@@ -501,6 +528,7 @@ void LineChart::copyCurrentValuesToOldValues()
     }
     xSemaphoreGive(m_mutex);
   }
+  #endif
 }
 
 /**
@@ -510,6 +538,7 @@ void LineChart::copyCurrentValuesToOldValues()
  */
 void LineChart::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -549,6 +578,7 @@ void LineChart::redraw()
   DEBUG_D("Redrawing LineChart took %u us", endTime - startTime);
 
   m_blocked = false;
+  #endif
 }
 
 /**

@@ -70,18 +70,12 @@ functionCB_t GaugeSuper::getCallbackFunc()
  */
 void GaugeSuper::start()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (m_vmax < m_vmin)
   {
     std::swap(m_vmin, m_vmax);
-    /*int aux = m_vmin;
-    m_vmin = m_vmax;
-    m_vmax = aux;*/
   }
 
-  
-
-  // Configure the font
-  // m_usedFont = &RobotoBold10pt7b;
   WidgetBase::objTFT->setFont(m_usedFont);
 
   // Calculate text dimensions for values
@@ -149,6 +143,7 @@ void GaugeSuper::start()
   m_availableHeight = m_height - (2 * m_borderSize);
 
   m_update = true;
+  #endif
 }
 
 /**
@@ -159,6 +154,7 @@ void GaugeSuper::start()
  */
 void GaugeSuper::drawBackground()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !loaded)
   {
     return;
@@ -184,9 +180,6 @@ void GaugeSuper::drawBackground()
 
   WidgetBase::objTFT->fillRect(xPos - (m_availableWidth / 2), yPos - (m_availableHeight + m_borderSize), m_availableWidth, m_availableHeight, m_bkColor);
   WidgetBase::objTFT->drawRect(xPos - (m_availableWidth / 2), yPos - (m_availableHeight + m_borderSize), m_availableWidth, m_availableHeight, baseBorder);
-
-  // WidgetBase::objTFT->drawCircle(_origem.x, _origem.y, _radius, CFK_RED);
-  // WidgetBase::objTFT->fillCircle(_origem.x, _origem.y, 2, CFK_RED);
 
   // Draw colored strip with intervals less than 5 to be more precise
   for (int i = 0; i <= (2 * m_maxAngle); i += 1)
@@ -246,21 +239,13 @@ void GaugeSuper::drawBackground()
     absMax++;
     auxmax = auxmax / 10;
   }
-  /*if (absMin > 3 || absMax > 3)
-  {
-    m_divisor = absMin > absMax ? pow(10, (absMin - 3)) : pow(10, (absMax - 3));
-  }*/
 
 
   if (m_divisor > 1)
   {
-#if defined(DISP_DEFAULT)|| defined(DISP_PCD8544)
 
     char char_arr[20];
     sprintf(char_arr, "x%d", m_divisor);
-
-    //printText(char_arr, xPos + (m_availableWidth / 2) - 1, yPos + (m_availableHeight / 2) - 1, BR_DATUM);
-#endif
   }
 
   if (m_showLabels)
@@ -302,20 +287,16 @@ void GaugeSuper::drawBackground()
         {
           alinhamento = BL_DATUM;
         }
-#if defined(DISP_DEFAULT)|| defined(DISP_PCD8544)
         char char_arr[20];
         sprintf(char_arr, "%d", m_intervals[m_indexCurrentStrip] / m_divisor);
         printText(char_arr, aX, aY, alinhamento);
         //printText(String(m_intervals[m_indexCurrentStrip] / m_divisor).c_str(), aX, aY, alinhamento);
-#endif
         DEBUG_D("Writing \"%d\" at %d, %d", m_intervals[m_indexCurrentStrip] / m_divisor, aX, aY);
         m_indexCurrentStrip++;
       }
       if (i == 2 * m_maxAngle)
       {
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
         printText(String(m_vmax / m_divisor).c_str(), x0, y0, BL_DATUM);
-#endif
 
         DEBUG_D("Writing %d at %d, %d", m_vmax / m_divisor, x0, y0);
       }
@@ -363,6 +344,8 @@ void GaugeSuper::drawBackground()
 
   m_isFirstDraw = true;
 
+  #endif
+
   // WidgetBase::objTFT->fillCircle(m_origem.x, m_origem.y, 2, CFK_RED);
   // WidgetBase::objTFT->drawCircle(m_origem.x, m_origem.y, m_radius, CFK_RED);
 }
@@ -402,6 +385,8 @@ void GaugeSuper::setValue(int newValue)
  */
 void GaugeSuper::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -449,26 +434,22 @@ void GaugeSuper::redraw()
   WidgetBase::objTFT->setTextColor(m_textColor);
   if (m_showLabels)
   {
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     // WidgetBase::printText()
     uint16_t auxX = xPos - (m_availableWidth / 2) + 1;
     uint16_t auxY = yPos - m_borderSize;
     //TextBound_t tb_value = getTextBounds(buf, auxX, auxY);
     //printText(buf, auxX, auxY, BL_DATUM, m_textBoundForValue, m_bkColor); //Mostrar valor do gauge
-#endif
   }
   if (m_showTitle)
   {
     // Redraw texts
     // updateFont(FontType::BOLD);
     WidgetBase::objTFT->setTextColor(m_titleColor);
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     WidgetBase::objTFT->setFont(m_usedFont);
 
     TextBound_t tb_title = getTextBounds(m_title, xPos, yPos - (m_borderSize * 2));
     printText(m_title, xPos, yPos - (m_borderSize * 2), BC_DATUM);
     updateFont(FontType::UNLOAD);
-#endif
   }
   // store line values to erase later
   m_ltx = tx;
@@ -485,6 +466,7 @@ void GaugeSuper::redraw()
   m_update = false;
   m_isFirstDraw = false;
   updateFont(FontType::UNLOAD);
+  #endif
 }
 
 /**

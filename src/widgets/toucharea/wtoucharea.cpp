@@ -27,6 +27,7 @@ TouchArea::~TouchArea()
  */
 bool TouchArea::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
+  #if defined(HAS_TOUCH)
   if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen || !loaded)
   {
     return false;
@@ -46,6 +47,9 @@ bool TouchArea::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
     detectado = true;
   }
   return detectado;
+  #else
+  return false;
+  #endif
 }
 
 /**
@@ -74,6 +78,7 @@ void TouchArea::redraw()
  */
 void TouchArea::onClick()
 {
+  #if defined(DFK_TOUCHAREA)
   if(!loaded)
   {
     log_e("TouchArea widget not loaded");
@@ -82,6 +87,7 @@ void TouchArea::onClick()
   if(cb != nullptr){
     WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
   }
+  #endif
 }
 
 /**

@@ -42,12 +42,14 @@ void Led::setState(bool newValue)
 
 void Led::drawBackground()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded)
   {
     return;
   }
 
   WidgetBase::objTFT->drawCircle(xPos, yPos, m_radius, CFK_BLACK);
+  #endif
 }
 
 /**
@@ -58,6 +60,7 @@ void Led::drawBackground()
  */
 void Led::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !m_update || !loaded)
   {
     return;
@@ -78,6 +81,7 @@ void Led::redraw()
   }
 
   m_update = false;
+  #endif
 }
 
 /**

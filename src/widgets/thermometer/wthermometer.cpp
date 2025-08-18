@@ -54,6 +54,7 @@ void Thermometer::setValue(float newValue)
  */
 void Thermometer::redraw()
 {
+ #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -78,6 +79,7 @@ void Thermometer::redraw()
 
   m_lastValue = m_currentValue;
   m_update = false;
+  #endif
 }
 
 /**
@@ -103,6 +105,7 @@ void Thermometer::forceUpdate()
  */
 void Thermometer::drawBackground()
 {
+   #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -162,7 +165,7 @@ void Thermometer::drawBackground()
 		WidgetBase::objTFT->drawLine(m_fillArea.x - offset, y, m_fillArea.x - (offset + size), y, m_config.markColor);
 	}
 
-
+#endif
 }
 
 /**

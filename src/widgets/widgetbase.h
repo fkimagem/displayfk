@@ -335,7 +335,7 @@ public:
   virtual bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch);
 
   virtual functionCB_t getCallbackFunc();
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   static void recalculateTextPosition(const char* _texto, uint16_t *_x, uint16_t *_y, uint8_t _datum);
   #endif
 

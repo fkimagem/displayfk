@@ -57,16 +57,19 @@ functionCB_t CircularBar::getCallbackFunc()
  */
 void CircularBar::drawBackground()
 {
-
+ #if defined(DISP_DEFAULT)
     if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !loaded)
     {
         return;
     }
 
     uint8_t borderOffset = 1;
+    #if defined(DISP_DEFAULT)
     WidgetBase::objTFT->fillArc(xPos, yPos, m_radius + borderOffset, (m_radius - m_lineWeight - borderOffset), m_startAngle, m_endAngle, m_bkColor);
+    #endif
     m_lastValue = m_vmin;
     redraw();
+    #endif
 }
 
 /**
@@ -90,7 +93,7 @@ void CircularBar::setValue(int newValue)
  */
 void CircularBar::redraw()
 {
-
+ #if defined(DISP_DEFAULT)
     if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
     {
         return;
@@ -108,7 +111,6 @@ void CircularBar::redraw()
     int lastAngleValue = map(m_lastValue, m_vmin, m_vmax, m_startAngle, m_endAngle);
 
 
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     int xEnd = 0, xStart = 0, xCursor = 0, xLastCursor = 0;
     int yEnd = 0, yStart = 0, yCursor = 0, yLastCursor = 0;
 
@@ -153,7 +155,6 @@ void CircularBar::redraw()
         //WidgetBase::objTFT->fillCircle(xCursor, yCursor, m_lineWeight / 2 - 1, !m_invertedFill ? m_lineColor : m_middleColor);
     }
 
-#endif
 
     
 
@@ -169,12 +170,11 @@ void CircularBar::redraw()
         WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
         // updateFont(FontType::BOLD);
 
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
         printText(char_arr, xPos, yPos, MC_DATUM);
-#endif
 
         updateFont(FontType::UNLOAD);
     }
+    #endif
 }
 
 /**

@@ -96,6 +96,7 @@ functionCB_t NumberBox::getCallbackFunc()
  */
 void NumberBox::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;
@@ -134,6 +135,7 @@ void NumberBox::redraw()
 
 
   updateFont(FontType::UNLOAD);
+  #endif
 }
 
 /**
@@ -179,6 +181,7 @@ void NumberBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, 
   m_height = _height;
   m_font = _font;
   
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (_font)
   {
     WidgetBase::objTFT->setFont(_font);
@@ -186,6 +189,7 @@ void NumberBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, 
     WidgetBase::objTFT->getTextBounds("Mp", xPos, yPos, &area.x, &area.y, &area.width, &area.height);
     m_height = area.height + (m_padding * 2);
   }
+  #endif
 
   m_letterColor = _letterColor;
   m_backgroundColor = _backgroundColor;

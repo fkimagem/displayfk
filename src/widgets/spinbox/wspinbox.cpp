@@ -131,6 +131,7 @@ functionCB_t SpinBox::getCallbackFunc()
  */
 void SpinBox::redraw()
 {
+      #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded || !m_shouldRedraw)
     {
         return;
@@ -148,11 +149,11 @@ void SpinBox::redraw()
     WidgetBase::objTFT->setTextColor(m_textColor);
 
     WidgetBase::objTFT->fillRoundRect(xPos + (2 * m_offset) + btnW, yPos + m_offset, m_width - (4 * m_offset + 2 * btnW), btnH, m_radius, m_colorBase);
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     WidgetBase::objTFT->setFont(getBestRobotoBold(availableW, availableH, String(m_currentValue).c_str()));
     printText(String(m_currentValue).c_str(), xPos + m_width / 2, yPos + (m_height / 2) - 3, MC_DATUM, m_lastArea, m_colorBase);
-#endif
     updateFont(FontType::UNLOAD);
+#endif
+
 }
 
 /**
@@ -163,6 +164,7 @@ void SpinBox::redraw()
  */
 void SpinBox::drawBackground()
 {
+    #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded)
     {
         return;
@@ -196,6 +198,7 @@ void SpinBox::drawBackground()
     WidgetBase::objTFT->fillRect(btnRight.x - (sinalH/2), btnRight.y - (sinalW/2), sinalH, sinalW, m_textColor);
 
     m_shouldRedraw = true;
+    #endif
 
     //WidgetBase::objTFT->fillCircle(btnRight.x, btnRight.y, 4, CFK_YELLOW);
 }

@@ -88,6 +88,7 @@ void TextButton::setEnabled(bool newState)
  */
 void TextButton::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded)
   {
     return;
@@ -102,15 +103,14 @@ void TextButton::redraw()
 
   WidgetBase::objTFT->setTextColor(m_textColor);
 
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
         //WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
         WidgetBase::objTFT->setFont(getBestRobotoBold(m_width - (2*m_offsetMargin), m_height - (2*m_offsetMargin), m_text));
         printText(m_text, xPos + m_width/2, yPos + (m_height / 2), MC_DATUM);
         //showOrigin(CFK_RED);
         //WidgetBase::objTFT->drawCircle(xPos + width/2, yPos + (height / 2), 4, CFK_WHITE);
-#endif
 
 updateFont(FontType::UNLOAD);
+#endif
 
 }
 

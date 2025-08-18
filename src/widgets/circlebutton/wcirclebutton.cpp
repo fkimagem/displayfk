@@ -26,6 +26,7 @@ CircleButton::~CircleButton()
  */
 bool CircleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
+  #if defined(HAS_TOUCH)
   if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen || !loaded)
   {
     return false;
@@ -55,6 +56,9 @@ bool CircleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
     detected = true;
   }
   return detected;
+  #else
+  return false;
+  #endif
 }
 
 /**
@@ -111,6 +115,7 @@ void CircleButton::changeState()
  */
 void CircleButton::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;
@@ -126,6 +131,7 @@ void CircleButton::redraw()
   uint16_t bgColor = m_status ? m_pressedColor : lightBg;
   WidgetBase::objTFT->fillCircle(xPos, yPos, m_radius * 0.75, bgColor);  // Inner background
   WidgetBase::objTFT->drawCircle(xPos, yPos, m_radius * 0.75, baseBorder); // Inner border
+  #endif
 }
 
 /**

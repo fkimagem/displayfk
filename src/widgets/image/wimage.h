@@ -41,7 +41,11 @@ struct ImageFromFileConfig {
  * the mask alpha, and the callback function to be called when the image is touched.
  */
 struct ImageFromPixelsConfig {
+  #if defined(DISP_DEFAULT)
   const uint16_t *pixels; ///< Pointer to the pixel map data.
+  #elif defined(DISP_PCD8544)
+  const uint8_t *pixels; ///< Pointer to the pixel map data.
+  #endif
   uint16_t width; ///< Width of the image.
   uint16_t height; ///< Height of the image.
   const uint8_t *maskAlpha; ///< Pointer to the alpha mask data for transparency.

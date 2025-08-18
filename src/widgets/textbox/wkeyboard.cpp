@@ -141,6 +141,7 @@ functionCB_t WKeyboard::getCallbackFunc()
  */
 bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType *pressedKey)
 {
+    #if defined(HAS_TOUCH)
     bool retorno = false;
     uint16_t xMax = xPos + m_availableWidth;
     uint16_t yMax = yPos + m_availableHeight;
@@ -271,6 +272,9 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
     //WidgetBase::objTFT->fillCircle(*_xTouch, *_yTouch, 2, CFK_BLUE);
 
     return retorno;
+    #else
+    return false;
+    #endif
 }
 
 /**
@@ -283,6 +287,7 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
  */
 void WKeyboard::redraw(bool fullScreen, bool onlyContent)
 {
+    #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     if(!loaded){
         Serial.println("Keyboard not loaded");
         return;
@@ -369,6 +374,7 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
     }
 
     // WidgetBase::objTFT->drawCircle(210, 160, 10, CFK_FUCHSIA);
+    #endif
 }
 
 /**
@@ -411,7 +417,7 @@ void WKeyboard::removeLetter()
  */
 void WKeyboard::setup()
 {
-
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     if (!WidgetBase::objTFT)
     {
         log_e("TFT not defined on WidgetBase");
@@ -459,6 +465,7 @@ void WKeyboard::setup()
 
     m_capsLock = false;
     loaded = true;
+    #endif
 }
 
 /**

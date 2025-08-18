@@ -116,6 +116,7 @@ void CheckBox::changeState()
  */
 void CheckBox::redraw()
 {
+    #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
     if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
     {
         return;
@@ -145,6 +146,7 @@ void CheckBox::redraw()
         WidgetBase::objTFT->drawLine(p1.x, p1.y + 1, p2.x, p2.y + 1, CFK_WHITE);
         WidgetBase::objTFT->drawLine(p3.x, p3.y - 1, p2.x, p2.y + 1, CFK_WHITE);
     }
+    #endif
 }
 
 /**

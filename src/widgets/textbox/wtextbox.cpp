@@ -46,6 +46,7 @@ TextBox::~TextBox()
  */
 bool TextBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
+  #if defined(HAS_TOUCH)
   if (WidgetBase::currentScreen != screen || !loaded)
   {
     return false;
@@ -70,6 +71,9 @@ bool TextBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
   }
 
   return false;
+  #else
+  return false;
+  #endif
 }
 
 /**
@@ -89,6 +93,7 @@ functionCB_t TextBox::getCallbackFunc()
  */
 void TextBox::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;
@@ -122,6 +127,7 @@ void TextBox::redraw()
   printText(conteudo, xPos + m_padding, yPos + m_height / 2, ML_DATUM);
 
   updateFont(FontType::UNLOAD);
+  #endif
 }
 
 /**
@@ -158,6 +164,7 @@ void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, ui
   m_width = _width;
   m_height = _height;
 
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (_font)
   {
     WidgetBase::objTFT->setFont(_font);
@@ -165,6 +172,7 @@ void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, ui
     WidgetBase::objTFT->getTextBounds("Mp", xPos, yPos, &area.x, &area.y, &area.width, &area.height);
     m_height = area.height + (m_padding * 2);
   }
+  #endif
 
   m_letterColor = _letterColor;
   m_backgroundColor = _backgroundColor;

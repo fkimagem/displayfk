@@ -44,6 +44,7 @@ ToggleButton::~ToggleButton()
  */
 bool ToggleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
+  #if defined(HAS_TOUCH)
   if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen || !loaded)
   {
     return false;
@@ -73,6 +74,9 @@ bool ToggleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
     detectado = true;
   }
   return detectado;
+  #else
+  return false;
+  #endif
 }
 
 /**
@@ -130,6 +134,7 @@ void ToggleButton::forceUpdate(){
  */
 void ToggleButton::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;
@@ -162,6 +167,7 @@ void ToggleButton::redraw()
 
   WidgetBase::objTFT->fillCircle(posBall, yPos + m_height/2, raioBall, statusBall); // circulo
   WidgetBase::objTFT->drawCircle(posBall, yPos + m_height/2, raioBall, baseBorder);                                    // circulo
+  #endif
 }
 
 /**
@@ -171,7 +177,7 @@ void ToggleButton::redraw()
  */
 void ToggleButton::start()
 {
-#if defined(DISP_DEFAULT)
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   m_width = constrain(m_width, 30, WidgetBase::objTFT->width());
 #endif
   
@@ -240,11 +246,6 @@ void ToggleButton::setStatus(bool status)
     DEBUG_E("ToggleButton widget not loaded");
     return;
   }
-  /*if(m_status == status)
-  {
-    DEBUG_D("ToggleButton widget already set to this status");
-    return;
-  }*/
   DEBUG_D("Setting status to %d", status);
   m_status = status;
   m_shouldRedraw = true;

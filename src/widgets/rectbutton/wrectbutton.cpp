@@ -28,6 +28,7 @@ RectButton::~RectButton()
  */
 bool RectButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
+  #if defined(HAS_TOUCH)
   if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen || !loaded)
   {
     return false;
@@ -56,6 +57,9 @@ bool RectButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
     detectado = true;
   }
   return detectado;
+  #else
+  return false;
+  #endif
 }
 
 /**
@@ -112,6 +116,7 @@ void RectButton::forceUpdate(){
  */
 void RectButton::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded || !m_shouldRedraw)
   {
     return;
@@ -128,6 +133,7 @@ void RectButton::redraw()
   uint16_t bgColor = status ? pressedColor : lightBg;
   WidgetBase::objTFT->fillRoundRect(xPos + 6, yPos + 6, width - 12, height - 12, 5, bgColor);    // top botao
   WidgetBase::objTFT->drawRoundRect(xPos + 5, yPos + 5, width - 10, height - 10, 5, baseBorder); // borda top botao
+  #endif
 }
 
 /**

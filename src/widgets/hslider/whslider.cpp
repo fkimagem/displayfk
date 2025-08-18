@@ -28,6 +28,7 @@ HSlider::~HSlider()
  */
 bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
+#if defined(HAS_TOUCH)
   if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen || !loaded)
   {
     return false;
@@ -79,6 +80,9 @@ bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
   }
   // Serial.println("Calculated slider");
   return detected;
+  #else
+  return false;
+  #endif
 }
 
 /**
@@ -116,6 +120,7 @@ void HSlider::setEnabled(bool newState)
  */
 void HSlider::redraw()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;
@@ -144,6 +149,7 @@ void HSlider::redraw()
   //WidgetBase::objTFT->drawCircle(posCircleX, radius, radius * 0.75, baseBorder); // slider center
 
   m_lastPos = m_currentPos;
+  #endif
 }
 
 /**
@@ -154,6 +160,7 @@ void HSlider::redraw()
  */
 void HSlider::drawBackground()
 {
+  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
   if (WidgetBase::currentScreen != screen || !loaded)
   {
     return;
@@ -165,6 +172,7 @@ void HSlider::drawBackground()
   WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, m_radius, baseBorder);
 
   redraw();
+  #endif
 }
 
 /**
