@@ -247,7 +247,7 @@ bool Image::readFileFromDisk()
  */
 void Image::draw()
 {
-#if defined(USING_GRAPHIC_LIB)
+#if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -272,6 +272,8 @@ void Image::draw()
     WidgetBase::objTFT->draw16bitRGBBitmapWithMask(xPos, yPos, m_ownedPixels, m_ownedMask, m_width, m_height);
 #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
     WidgetBase::objTFT->drawBitmap(xPos, yPos, m_ownedPixels, m_width, m_height, CFK_BLACK);
+    #elif defined(DISP_U8G2)
+    WidgetBase::objTFT->drawXBMP(xPos, yPos, m_width, m_height, m_ownedPixels);
 #endif
   }
   else

@@ -7,11 +7,11 @@
 #include <SPI.h>
 
 // Configuração dos pinos (baseado no display.h original)
-#define clk 18
-#define dt 23
-#define cs 19
-#define dc 21
-#define rst 2
+#define clk 12
+#define dt 11
+#define cs 18
+#define dc 14
+#define rst 8
 
 // Inicialização do display U8g2
 U8G2_ST7565_NHD_C12864_F_4W_SW_SPI u8g2(U8G2_R0, clk, dt, cs, dc, rst);
