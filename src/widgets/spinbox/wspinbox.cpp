@@ -131,7 +131,7 @@ functionCB_t SpinBox::getCallbackFunc()
  */
 void SpinBox::redraw()
 {
-      #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+      #if defined(DISP_DEFAULT)
     if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded || !m_shouldRedraw)
     {
         return;
@@ -164,7 +164,7 @@ void SpinBox::redraw()
  */
 void SpinBox::drawBackground()
 {
-    #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+    #if defined(DISP_DEFAULT) 
     if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded)
     {
         return;

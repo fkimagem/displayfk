@@ -115,7 +115,7 @@ void CircleButton::changeState()
  */
 void CircleButton::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;

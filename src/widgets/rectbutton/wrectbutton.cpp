@@ -116,7 +116,7 @@ void RectButton::forceUpdate(){
  */
 void RectButton::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded || !m_shouldRedraw)
   {
     return;
@@ -144,7 +144,7 @@ void RectButton::redraw()
  */
 void RectButton::start()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   width = constrain(width, 5, WidgetBase::objTFT->width());
   height = constrain(height, 5, WidgetBase::objTFT->height());
   #endif

@@ -96,7 +96,7 @@ functionCB_t NumberBox::getCallbackFunc()
  */
 void NumberBox::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;
@@ -161,6 +161,7 @@ void NumberBox::forceUpdate()
  * 
  * Initializes the NumberBox properties and marks it as loaded when complete.
  */
+#if defined(USING_GRAPHIC_LIB)
 void NumberBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, uint16_t _backgroundColor, float _startValue, const GFXfont* _font, functionLoadScreen_t _funcPtr, functionCB_t _cb)
 {
   if (!WidgetBase::objTFT)
@@ -181,7 +182,7 @@ void NumberBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, 
   m_height = _height;
   m_font = _font;
   
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (_font)
   {
     WidgetBase::objTFT->setFont(_font);
@@ -197,14 +198,16 @@ void NumberBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, 
   
   loaded = true;
 }
-
+#endif
 /**
  * @brief Configures the NumberBox with parameters defined in a configuration structure.
  * @param config Structure containing the NumberBox configuration parameters.
  */
 void NumberBox::setup(const NumberBoxConfig& config)
 {
+  #if defined(USING_GRAPHIC_LIB)
   setup(config.width, config.height, config.letterColor, config.backgroundColor, config.startValue, config.font, config.funcPtr, config.callback);
+  #endif
 }
 
 /**

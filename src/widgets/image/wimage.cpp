@@ -20,11 +20,15 @@
  * @param _screen Screen number.
  */
 Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen), 
+  #if defined(USING_GRAPHIC_LIB)
                                                          m_pixels(nullptr), 
+                                                         #endif
                                                          m_maskAlpha(nullptr), 
                                                          m_fs(nullptr),
                                                          m_path(nullptr),
+                                                           #if defined(USING_GRAPHIC_LIB)
                                                          m_ownedPixels(nullptr),
+                                                         #endif
                                                          m_ownedMask(nullptr),
                                                          m_ownsBuffers(false)
 {
@@ -35,6 +39,7 @@ Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _sc
  */
 Image::~Image()
 {
+    #if defined(USING_GRAPHIC_LIB)
   if(m_ownedPixels) {
       delete[] m_ownedPixels;
       m_ownedPixels = nullptr;
@@ -43,6 +48,7 @@ Image::~Image()
       delete[] m_ownedMask;
       m_ownedMask = nullptr;
     }
+    #endif
 }
 
  /** 
@@ -84,6 +90,7 @@ functionCB_t Image::getCallbackFunc()
 
 
 bool Image::readFileFromDisk(){
+    #if defined(USING_GRAPHIC_LIB)
   if (m_source == SourceFile::EMBED){
     DEBUG_E("Cannot read from embedded source");
     return false;
@@ -140,7 +147,7 @@ bool Image::readFileFromDisk(){
 
     #if defined(DISP_DEFAULT)
     m_ownedPixels = new uint16_t[bytesOfColor];
-    #elif defined(DISP_PCD8544)
+    #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
     m_ownedPixels = new uint8_t[bytesOfColor];
     #endif
 
@@ -154,7 +161,7 @@ bool Image::readFileFromDisk(){
 
      #if defined(DISP_DEFAULT)
     uint8_t read_pixels = 2;
-#elif defined(DISP_PCD8544)
+#elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
 uint8_t read_pixels = 1;
     #endif
 
@@ -176,7 +183,7 @@ uint8_t read_pixels = 1;
         #if defined(DISP_DEFAULT)
         uint16_t color = (pixel[0] << 8) | pixel[1];
         m_ownedPixels[y * m_width + x] = color;
-#elif defined(DISP_PCD8544)
+#elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
         uint8_t color = pixel[0];
         m_ownedPixels[y * m_width + x] = color;
     #endif
@@ -216,7 +223,9 @@ uint8_t read_pixels = 1;
 
     file.close();
     return true;
-
+    #else
+    return false;
+  #endif
 }
 
 
@@ -228,6 +237,7 @@ uint8_t read_pixels = 1;
  */
 void Image::draw()
 {
+    #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -247,7 +257,7 @@ void Image::draw()
 
     #if defined(DISP_DEFAULT)
     WidgetBase::objTFT->draw16bitRGBBitmapWithMask(xPos, yPos, m_ownedPixels, m_ownedMask, m_width, m_height);
-    #elif defined(DISP_PCD8544)
+    #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
     WidgetBase::objTFT->drawBitmap(xPos, yPos, m_ownedPixels, m_width, m_height, CFK_BLACK);
     #endif
 
@@ -263,13 +273,14 @@ void Image::draw()
 
     #if defined(DISP_DEFAULT)
     WidgetBase::objTFT->draw16bitRGBBitmapWithMask(xPos, yPos, m_pixels, m_maskAlpha, m_width, m_height);
-    #elif defined(DISP_PCD8544)
+    #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
     WidgetBase::objTFT->drawBitmap(xPos, yPos, m_pixels, m_width, m_height, CFK_BLACK);
     #endif
 
     
   }
   DEBUG_D("Image drawn");
+  #endif
 }
 
 
@@ -303,6 +314,7 @@ void Image::forceUpdate()
  */
 void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float _angle)
 {
+    #if defined(USING_GRAPHIC_LIB)
   if (loaded) {
     log_w("Widget already loaded");
     return;
@@ -372,6 +384,7 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
   DEBUG_D("Image setup with source %d", m_source);
 
   loaded = readFileFromDisk();
+  #endif
 }
 
 /**
@@ -431,7 +444,7 @@ void Image::setup(const uint16_t *_pixels, uint16_t _width, uint16_t _height, co
  * @param _angle Rotation angle in degrees.
  * @param _cb Callback function to execute when the image is interacted with.
  */
-#if defined(DISP_PCD8544)
+#if defined(DISP_PCD8544) || defined(DISP_SSD1306)
 void Image::setup(const uint8_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb)
 {
   if (loaded) {
@@ -491,6 +504,8 @@ void Image::setup(const ImageFromFileConfig& config)
  */
 void Image::setup(const ImageFromPixelsConfig& config)
 {
+    #if defined(USING_GRAPHIC_LIB)
   setup(config.pixels, config.width, config.height, config.maskAlpha, config.angle, config.cb);
+  #endif
 }
 

@@ -11,7 +11,9 @@ struct TextBoxConfig {
     uint16_t letterColor;      ///< Text color for displaying the value
     uint16_t backgroundColor;  ///< Background color of the TextBox
     const char* startValue;    ///< Initial text value to display
+    #if defined(USING_GRAPHIC_LIB)
     const GFXfont* font;       ///< Font to use for the text
+    #endif
     functionLoadScreen_t funcPtr; ///< Function pointer to the parent screen's load function
     functionCB_t cb;           ///< Callback function to execute on interaction
 };
@@ -26,11 +28,15 @@ private:
     uint16_t m_backgroundColor; ///< Background color of the TextBox.
     uint16_t m_letterColor; ///< Text color for displaying the value.
     CharString m_value; ///< String representing the current text value.
+    #if defined(USING_GRAPHIC_LIB)
     const GFXfont *m_font; ///< Font to use for the text.
+    #endif
     uint8_t m_padding; ///< Padding of the TextBox.
     bool m_shouldRedraw; ///< Flag to indicate if the TextBox should be redrawn.
 
+    #if defined(USING_GRAPHIC_LIB)
     void setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, uint16_t _backgroundColor, const char* _startValue, const GFXfont* _font, functionLoadScreen_t _funcPtr, functionCB_t _cb);
+    #endif
 
 public:
     functionLoadScreen_t parentScreen; ///< Pointer to the function for loading the parent screen.

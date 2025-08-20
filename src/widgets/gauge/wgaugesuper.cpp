@@ -70,7 +70,7 @@ functionCB_t GaugeSuper::getCallbackFunc()
  */
 void GaugeSuper::start()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (m_vmax < m_vmin)
   {
     std::swap(m_vmin, m_vmax);
@@ -154,7 +154,7 @@ void GaugeSuper::start()
  */
 void GaugeSuper::drawBackground()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !loaded)
   {
     return;
@@ -385,7 +385,7 @@ void GaugeSuper::setValue(int newValue)
  */
 void GaugeSuper::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
 
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
@@ -499,6 +499,7 @@ void GaugeSuper::forceUpdate()
  * 
  * Initializes the gauge properties and marks it as loaded when complete.
  */
+  #if defined(USING_GRAPHIC_LIB)
 void GaugeSuper::setup(uint16_t width, const char *title, const int *intervals, const uint16_t *colors, uint8_t amountIntervals, int vmin, int vmax, uint16_t borderColor, uint16_t textColor, uint16_t backgroundColor, uint16_t titleColor, uint16_t agulhaColor, uint16_t marcadoresColor, bool showLabels, const GFXfont *_fontFamily)
 {
   if (!WidgetBase::objTFT)
@@ -593,7 +594,7 @@ void GaugeSuper::setup(uint16_t width, const char *title, const int *intervals, 
 
   loaded = true;
 }
-
+#endif
 
 /**
  * @brief Configures the GaugeSuper with parameters defined in a configuration structure.
@@ -601,7 +602,9 @@ void GaugeSuper::setup(uint16_t width, const char *title, const int *intervals, 
  */
 void GaugeSuper::setup(const GaugeConfig& config)
 {
+    #if defined(USING_GRAPHIC_LIB)
   setup(config.width, config.title, config.intervals, config.colors, config.amountIntervals, 
         config.minValue, config.maxValue, config.borderColor, config.textColor, config.backgroundColor, 
         config.titleColor, config.needleColor, config.markersColor, config.showLabels, config.fontFamily);
+    #endif
 }

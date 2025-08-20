@@ -88,7 +88,7 @@ void TextButton::setEnabled(bool newState)
  */
 void TextButton::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded)
   {
     return;
@@ -122,7 +122,7 @@ updateFont(FontType::UNLOAD);
  */
 void TextButton::start()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   m_width = constrain(m_width, 5, WidgetBase::objTFT->width());
   m_height = constrain(m_height, 5, WidgetBase::objTFT->height());
   #endif

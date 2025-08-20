@@ -134,7 +134,7 @@ void ToggleButton::forceUpdate(){
  */
 void ToggleButton::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;
@@ -177,7 +177,7 @@ void ToggleButton::redraw()
  */
 void ToggleButton::start()
 {
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(DISP_DEFAULT)
   m_width = constrain(m_width, 30, WidgetBase::objTFT->width());
 #endif
   

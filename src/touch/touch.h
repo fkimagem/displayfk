@@ -71,15 +71,16 @@ class TouchScreen
 {
 private:
 
-  // Private for each touch ci
+  // Private for each touch controller
   #if defined(TOUCH_XPT2046)
-  //
   XPT2046 *m_ts = nullptr;
   uint16_t *m_calibration = nullptr;
   #if defined(DISP_DEFAULT)
   Arduino_GFX *m_objTFT = nullptr;
   #elif defined(DISP_PCD8544)
   Adafruit_PCD8544 *m_objTFT = nullptr;
+  #elif defined(DISP_SSD1306)
+  Adafruit_SSD1306 *m_objTFT = nullptr;
   #else
   #error "Undefined display type"
   #endif

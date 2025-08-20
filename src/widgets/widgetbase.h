@@ -15,6 +15,12 @@
 #elif defined(DISP_PCD8544)
 #include <Adafruit_GFX.h>
 #include <Adafruit_PCD8544.h>
+#elif defined(DISP_SSD1306)
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#elif defined(DISP_U8G2)
+#include <Arduino.h>
+#include <U8g2lib.h>
 #else
 #error "Unsupported display type"
 #endif
@@ -299,8 +305,10 @@ public:
   static bool usingKeyboard;    ///< True if using a virtual keyboard.
   static uint8_t currentScreen; ///< Number of the current screen.
   static bool showingLog;       ///< True if log is being displayed.
+  #if defined(USING_GRAPHIC_LIB)
   static const GFXfont *fontNormal; ///< Pointer to the normal font.
   static const GFXfont *fontBold;   ///< Pointer to the bold font.
+  #endif
   static void addCallback(functionCB_t callback, CallbackOrigin origin);
   
 
@@ -313,10 +321,13 @@ public:
   static Arduino_GFX *objTFT; ///< Pointer to the Arduino display object.
 #elif defined(DISP_PCD8544)
   static Adafruit_PCD8544 *objTFT; ///< Pointer to the PCD8544 display object.
+#elif defined(DISP_SSD1306)
+  static Adafruit_SSD1306 *objTFT; ///< Pointer to the SSD1306 display object.
+#elif defined(DISP_U8G2)
+  static U8G2 *objTFT; ///< Pointer to the U8G2 display object.
 #else
 #error "Choose a display model on user_setup.h"
 #endif
-
 
   static uint16_t screenWidth;             ///< Width of the screen.
   static uint16_t screenHeight;            ///< Height of the screen.
@@ -335,7 +346,7 @@ public:
   virtual bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch);
 
   virtual functionCB_t getCallbackFunc();
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(USING_GRAPHIC_LIB)
   static void recalculateTextPosition(const char* _texto, uint16_t *_x, uint16_t *_y, uint8_t _datum);
   #endif
 
@@ -346,16 +357,16 @@ protected:
   bool loaded = false;        ///< True if the widget has been initialized.
   functionCB_t cb = nullptr; ///< Callback function to execute when the widget is clicked.
 
-
+#if defined(USING_GRAPHIC_LIB)
   const GFXfont* getBestRobotoBold(uint16_t availableWidth, uint16_t availableHeight, const char* texto);
   const GFXfont* getBestFontForArea(const char* text,uint16_t width,uint16_t height,const GFXfont* const fonts[],size_t fontCount);
   const char* getFirstLettersForSpace(const char* textoCompleto, uint16_t width, uint16_t height);
   const char* getLastLettersForSpace(const char* textoCompleto,uint16_t width,uint16_t height);
-
+#endif
 
   void updateFont(FontType _f);
 
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(USING_GRAPHIC_LIB)
   void printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum, TextBound_t &lastTextBoud, uint16_t _colorPadding);
   void printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum);
   TextBound_t getTextBounds(const char* str, int16_t x, int16_t y);

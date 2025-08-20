@@ -54,7 +54,7 @@ void VBar::setValue(uint32_t newValue)
  */
 void VBar::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -111,7 +111,7 @@ void VBar::redraw()
  */
 void VBar::start()
 {
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(USING_GRAPHIC_LIB)
   m_height = constrain(m_height, 20, WidgetBase::objTFT->height());
   m_width = constrain(m_width, 20, WidgetBase::objTFT->width());
 #endif
@@ -130,7 +130,7 @@ void VBar::forceUpdate()
  */
 void VBar::drawBackground()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;

@@ -32,8 +32,10 @@ Label::~Label()
     m_previousText = nullptr;
   }
   
+    #if defined(USING_GRAPHIC_LIB)
   // A fonte não é liberada aqui porque é apenas uma referência
   m_fontFamily = nullptr;
+  #endif
 }
 
 /**
@@ -175,7 +177,7 @@ void Label::setTextInt(int value)
  */
 void Label::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || !m_update || !loaded)
   {
     return;
@@ -237,6 +239,7 @@ void Label::setFontSize(uint8_t newSize)
  * @param _prefix Prefix text to display.
  * @param _suffix Suffix text to display.
  */
+  #if defined(USING_GRAPHIC_LIB)
 void Label::setup(const char *_text, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor, const char* _prefix, const char* _suffix)
 {
   if(!WidgetBase::objTFT){
@@ -288,7 +291,7 @@ void Label::setup(const char *_text, const GFXfont *_fontFamily, uint16_t _datum
 
   // Aloca nova memória
   m_text = new char[textLength + prefixLength + suffixLength + 1];
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(USING_GRAPHIC_LIB)
   if(m_text != nullptr) {
     strcpy(m_text, _prefix);
     strcat(m_text, _text);
@@ -325,6 +328,7 @@ void Label::setup(const String &_text, const GFXfont *_fontFamily, uint16_t _dat
  * @param _prefix Prefix text to display.
  * @param _suffix Suffix text to display.
  */
+
 void Label::setup(const float _value, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor, const char* _prefix, const char* _suffix)
 {
   char convertido[16];
@@ -339,12 +343,14 @@ void Label::setup(const float _value, const GFXfont *_fontFamily, uint16_t _datu
   sprintf(convertido, "%d", _value);
   this->setup(convertido, _fontFamily, _datum, _color, _bkColor);
 }*/
-
+#endif
 /**
  * @brief Configures the Label widget with parameters defined in a configuration structure.
  * @param config Structure containing the label configuration parameters.
  */
 void Label::setup(const LabelConfig& config)
 {
+  #if defined(USING_GRAPHIC_LIB)
   setup(config.text, config.fontFamily, config.datum, config.fontColor, config.backgroundColor, config.prefix, config.suffix);
+  #endif
 }

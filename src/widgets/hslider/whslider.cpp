@@ -120,7 +120,7 @@ void HSlider::setEnabled(bool newState)
  */
 void HSlider::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;
@@ -160,7 +160,7 @@ void HSlider::redraw()
  */
 void HSlider::drawBackground()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded)
   {
     return;

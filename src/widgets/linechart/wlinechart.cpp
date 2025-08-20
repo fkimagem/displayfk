@@ -18,7 +18,7 @@
 
 void LineChart::initMutex()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (!m_mutex)
   {
     m_mutex = xSemaphoreCreateMutex();
@@ -28,7 +28,7 @@ void LineChart::initMutex()
 
 void LineChart::destroyMutex()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (m_mutex)
   {
     vSemaphoreDelete(m_mutex);
@@ -45,7 +45,7 @@ void LineChart::destroyMutex()
  */
 LineChart::LineChart(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen)
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   initMutex();
   #endif
 }
@@ -57,7 +57,7 @@ LineChart::LineChart(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x,
  */
 LineChart::~LineChart()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   destroyMutex();
   // Libera arrays de valores
   if (m_values)
@@ -110,7 +110,7 @@ functionCB_t LineChart::getCallbackFunc()
  */
 void LineChart::resetArray()
 {
-   #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+   #if defined(DISP_DEFAULT)
   if (m_mutex)
     xSemaphoreTake(m_mutex, portMAX_DELAY);
   if (m_values)
@@ -135,7 +135,7 @@ void LineChart::resetArray()
  */
 void LineChart::start()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (m_vmax < m_vmin)
   {
     std::swap(m_vmin, m_vmax);
@@ -234,7 +234,7 @@ void LineChart::start()
  */
 void LineChart::drawBackground()
 {
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -287,7 +287,7 @@ void LineChart::drawBackground()
  */
 bool LineChart::push(uint16_t serieIndex, int newValue)
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (m_mutex)
     xSemaphoreTake(m_mutex, portMAX_DELAY); // prioridade total para push
   if (!m_values || serieIndex >= m_amountSeries || m_amountPoints == 0)
@@ -338,7 +338,7 @@ bool LineChart::push(uint16_t serieIndex, int newValue)
  */
 void LineChart::clearPreviousValues()
 {
- #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+ #if defined(DISP_DEFAULT)
   if (m_mutex && xSemaphoreTake(m_mutex, 0) != pdTRUE)
     return; // só executa se conseguir pegar o mutex imediatamente
             // Pinta a linha antiga com a cor do fundo
@@ -376,7 +376,7 @@ void LineChart::clearPreviousValues()
  */
 void LineChart::drawGrid()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   // Desenha a grade
   if (m_verticalDivision > 0)
   {
@@ -414,7 +414,7 @@ void LineChart::drawGrid()
  */
 void LineChart::drawSerie(uint8_t serieIndex)
 {
- #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+ #if defined(DISP_DEFAULT)
   if (m_mutex && xSemaphoreTake(m_mutex, 0) != pdTRUE)
     return; // só executa se conseguir pegar o mutex imediatamente
 
@@ -463,7 +463,7 @@ void LineChart::drawSerie(uint8_t serieIndex)
  */
 void LineChart::drawMarkLineAt(int value)
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   uint16_t yZero = map(value, m_vmin, m_vmax, m_yTovmin, m_yTovmax);
   WidgetBase::objTFT->drawFastHLine(xPos + m_leftPadding + m_borderSize, yZero, m_maxWidth, m_textColor); // linha 0
   #endif
@@ -477,7 +477,7 @@ void LineChart::drawMarkLineAt(int value)
  */
 void LineChart::printValues(uint8_t serieIndex)
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   Serial.printf("Old: ");
   for (uint16_t i = 0; i < m_amountPoints; i++)
   {
@@ -500,7 +500,7 @@ void LineChart::printValues(uint8_t serieIndex)
  */
 void LineChart::drawAllSeries()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   for (uint16_t serieIndex = 0; serieIndex < m_amountSeries; serieIndex++)
   {
     drawSerie(serieIndex);
@@ -515,7 +515,7 @@ void LineChart::drawAllSeries()
  */
 void LineChart::copyCurrentValuesToOldValues()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (m_mutex && xSemaphoreTake(m_mutex, portMAX_DELAY) == pdTRUE)
   {
     for (uint16_t serieIndex = 0; serieIndex < m_amountSeries; serieIndex++)
@@ -538,7 +538,7 @@ void LineChart::copyCurrentValuesToOldValues()
  */
 void LineChart::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -611,6 +611,7 @@ void LineChart::forceUpdate()
  * @param _maxPointsAmount Maximum number of points to show on the chart.
  * @param _font Font used for text on the chart.
  */
+  #if defined(USING_GRAPHIC_LIB)
 void LineChart::setup(uint16_t _width, uint16_t _height, int _vmin, int _vmax, uint8_t _amountSeries, uint16_t *_colorsSeries, uint16_t _gridColor, uint16_t _borderColor, uint16_t _backgroundColor, uint16_t _textColor, uint16_t _verticalDivision, bool _workInBackground, bool _showZeroLine, bool _boldLine, bool _showDots, uint16_t _maxPointsAmount, const GFXfont *_font)
 {
   if (!WidgetBase::objTFT)
@@ -665,7 +666,7 @@ void LineChart::setup(uint16_t _width, uint16_t _height, int _vmin, int _vmax, u
 
   loaded = true;
 }
-
+#endif
 /**
  * @brief Configures the LineChart using a configuration structure.
  * @param config Structure containing all configuration parameters.
@@ -674,10 +675,11 @@ void LineChart::setup(const LineChartConfig &config)
 {
   m_config = config;
 
-  
+    #if defined(USING_GRAPHIC_LIB)
   setup(config.width, config.height, config.minValue, config.maxValue, config.amountSeries,
         config.colorsSeries, config.gridColor, config.borderColor, config.backgroundColor,
         config.textColor, config.verticalDivision, config.workInBackground, config.showZeroLine,
         config.boldLine, config.showDots, config.maxPointsAmount,
         config.font);
+    #endif
 }

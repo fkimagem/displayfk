@@ -287,7 +287,7 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
  */
 void WKeyboard::redraw(bool fullScreen, bool onlyContent)
 {
-    #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+    #if defined(DISP_DEFAULT)
     if(!loaded){
         Serial.println("Keyboard not loaded");
         return;
@@ -417,7 +417,7 @@ void WKeyboard::removeLetter()
  */
 void WKeyboard::setup()
 {
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(DISP_DEFAULT)
     if (!WidgetBase::objTFT)
     {
         log_e("TFT not defined on WidgetBase");
@@ -429,7 +429,7 @@ void WKeyboard::setup()
         return;
     }
 
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(DISP_DEFAULT)
     m_screenW = WidgetBase::objTFT->width();
     m_screenH = WidgetBase::objTFT->height();
 #endif
@@ -460,9 +460,10 @@ void WKeyboard::setup()
     yPos = m_screenH -m_availableHeight;
 
     float percentUtilArea = 0.9;
-    m_fontKeys = const_cast<GFXfont*>(getBestRobotoBold(m_keyW * percentUtilArea, m_keyH * percentUtilArea, "CAP"));
-    m_fontPreview = m_fontKeys;// const_cast<GFXfont*>(getBestRobotoBold(m_pontoPreview.width * percentUtilArea, m_pontoPreview.height * percentUtilArea, "M"));
-
+    #if defined(USING_GRAPHIC_LIB)
+        m_fontKeys = const_cast<GFXfont*>(getBestRobotoBold(m_keyW * percentUtilArea, m_keyH * percentUtilArea, "CAP"));
+        m_fontPreview = m_fontKeys;// const_cast<GFXfont*>(getBestRobotoBold(m_pontoPreview.width * percentUtilArea, m_pontoPreview.height * percentUtilArea, "M"));
+    #endif
     m_capsLock = false;
     loaded = true;
     #endif
@@ -492,7 +493,7 @@ void WKeyboard::open(TextBox *_field)
     m_field = _field;
     WidgetBase::usingKeyboard = true;
     m_content = m_field->getValue();
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(DISP_DEFAULT)
     if(m_keyH > 20){
         WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
     }else{

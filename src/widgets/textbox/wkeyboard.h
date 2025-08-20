@@ -23,8 +23,10 @@ private:
     static const Key_t m_alphabet[AROWS][ACOLS]; ///< Lowercase alphabet layout for the keyboard.
     static const Key_t m_alphabetCap[AROWS][ACOLS]; ///< Uppercase alphabet layout for the keyboard.
     
+    #if defined(USING_GRAPHIC_LIB)
     GFXfont *m_fontKeys = nullptr;
     GFXfont *m_fontPreview = nullptr;
+    #endif
 
     int32_t m_screenW; ///< Width of the screen.
     int32_t m_screenH; ///< Height of the screen.

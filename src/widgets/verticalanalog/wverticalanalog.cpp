@@ -47,7 +47,7 @@ void VAnalog::start()
 {
   m_padding = 20;
   m_width = 40; // fixa a largura do widget
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(DISP_DEFAULT)
   m_height = constrain(m_height, 40, WidgetBase::objTFT->height());
 #endif
 
@@ -63,7 +63,7 @@ void VAnalog::start()
  */
 void VAnalog::drawBackground()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -117,7 +117,7 @@ void VAnalog::setValue(int newValue, bool _viewValue)
  */
 void VAnalog::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   ////Serial.println(WidgetBase::usingKeyboard);
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {

@@ -6,7 +6,9 @@
 /// @brief Configuration structure for Label
 struct LabelConfig {
   const char* text;          ///< Initial text to display
+  #if defined(USING_GRAPHIC_LIB)
   const GFXfont* fontFamily; ///< Pointer to the font used for the text
+  #endif
   uint16_t datum;            ///< Text alignment setting
   uint16_t fontColor;            ///< Color of the text
   uint16_t backgroundColor;          ///< Background color of the label
@@ -27,15 +29,17 @@ private:
   uint16_t m_datum; ///< Text alignment setting for the label.
   uint16_t m_letterColor; ///< Color of the text.
   uint16_t m_backgroundColor; ///< Background color of the label.
+  #if defined(USING_GRAPHIC_LIB)
   GFXfont *m_fontFamily = nullptr; ///< Pointer to the font used by the label.
+  #endif
   TextBound_t m_lastArea = {0, 0, 0, 0}; ///< Last calculated area for the label.
   uint8_t m_decimalPlaces;///< Number of decimal places to display
   uint8_t m_fontSize;///< Font size
 
+  #if defined(USING_GRAPHIC_LIB)
   void setup(const char *_text, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor, const char* _prefix, const char* _suffix);
-  //void setup(const String &_text, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor, const char* _prefix, const char* _suffix);
   void setup(const float _value, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor, const char* _prefix, const char* _suffix);
-
+  #endif
 public:
   Label(uint16_t _x, uint16_t _y, uint8_t _screen);
   ~Label();

@@ -54,7 +54,7 @@ void Thermometer::setValue(float newValue)
  */
 void Thermometer::redraw()
 {
- #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+ #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;
@@ -87,7 +87,7 @@ void Thermometer::redraw()
  */
 void Thermometer::start()
 {
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(USING_GRAPHIC_LIB)
   m_height = constrain(m_height, 20, WidgetBase::objTFT->height());
 #endif
 }
@@ -105,7 +105,7 @@ void Thermometer::forceUpdate()
  */
 void Thermometer::drawBackground()
 {
-   #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+   #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
   {
     return;

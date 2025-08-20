@@ -58,8 +58,10 @@ private:
     /// @brief Last calculated area for the label
     TextBound_t m_lastArea = {0, 0, 0, 0};
 
+      #if defined(USING_GRAPHIC_LIB)
     GFXfont *m_fontKeys = nullptr;
     GFXfont *m_fontPreview = nullptr;
+    #endif
 
 
     /// @brief Adds a character to the current Numpad input

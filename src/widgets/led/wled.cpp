@@ -42,7 +42,7 @@ void Led::setState(bool newValue)
 
 void Led::drawBackground()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded)
   {
     return;
@@ -60,7 +60,7 @@ void Led::drawBackground()
  */
 void Led::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !m_update || !loaded)
   {
     return;

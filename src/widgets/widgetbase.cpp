@@ -18,14 +18,20 @@ uint8_t WidgetBase::currentScreen = 0;
 bool WidgetBase::showingLog = false;
 bool WidgetBase::lightMode = true;
 uint16_t WidgetBase::backgroundColor = 0x0;
+#if defined(USING_GRAPHIC_LIB)
 const GFXfont *WidgetBase::fontNormal = nullptr;
 const GFXfont *WidgetBase::fontBold = nullptr;
+#endif
 QueueHandle_t WidgetBase::xFilaCallback;
 
 #if defined(DISP_DEFAULT)
 Arduino_GFX *WidgetBase::objTFT = nullptr;
 #elif defined(DISP_PCD8544)
 Adafruit_PCD8544 *WidgetBase::objTFT = nullptr;
+#elif defined(DISP_SSD1306)
+Adafruit_SSD1306 *WidgetBase::objTFT = nullptr;
+#elif defined(DISP_U8G2)
+U8G2 *WidgetBase::objTFT = nullptr;
 #else
 #error "You need to define the display type in user_setup.h"
 #endif
@@ -240,6 +246,8 @@ void WidgetBase::addCallback(functionCB_t callback, CallbackOrigin origin){
     }
 }
 
+
+#if defined(USING_GRAPHIC_LIB)
 const char* WidgetBase::getLastLettersForSpace(const char* textoCompleto,uint16_t width,uint16_t height)
 {
   static char buffer[256]; // Buffer estático para MCU
@@ -338,18 +346,16 @@ const char* WidgetBase::getFirstLettersForSpace(const char* textoCompleto,uint16
   return buffer;
 }
 
-// Retorna o primeiro GFXfont* da lista que faz o texto caber em (width x height).
-// Observações:
-// - Percorre as fontes na ordem fornecida (primeira adequada é retornada).
-// - Altera temporariamente a fonte ativa do 'gfx' durante a medição.
-// - Retorna nullptr se nenhuma fonte couber.
-// - Para desempenho em MCU: sem alocações dinâmicas, sem STL, early exits.
-const GFXfont* WidgetBase::getBestFontForArea(
-    const char* text,
-    uint16_t width,
-    uint16_t height,
-    const GFXfont* const fonts[],
-    size_t fontCount)
+/**
+ * @brief Retrieves the best fitting font for a given area.
+ * @param text Text to be displayed.
+ * @param width Available width for text.
+ * @param height Available height for text.
+ * @param fonts Array of available fonts.
+ * @param fontCount Number of fonts in the array.
+ * @return Pointer to the best fitting font, or nullptr if none fit.
+ */
+const GFXfont* WidgetBase::getBestFontForArea(const char* text, uint16_t width, uint16_t height, const GFXfont* const fonts[], size_t fontCount)
 {
   if (!objTFT || !fonts || fontCount == 0) {
     return nullptr;
@@ -435,14 +441,14 @@ void WidgetBase::updateFont(FontType _f)
     {
     case FontType::NORMAL:
     {
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(USING_GRAPHIC_LIB)
         WidgetBase::objTFT->setFont(WidgetBase::fontNormal);
 #endif
     }
     break;
     case FontType::BOLD:
     { 
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(USING_GRAPHIC_LIB)
         WidgetBase::objTFT->setFont(WidgetBase::fontBold);
 #endif
     }
@@ -450,7 +456,7 @@ void WidgetBase::updateFont(FontType _f)
 
     default:
     {
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(USING_GRAPHIC_LIB)
         WidgetBase::objTFT->setFont(nullptr);
 #endif
     }
@@ -458,7 +464,8 @@ void WidgetBase::updateFont(FontType _f)
     }
 }
 
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+
+
 /**
  * @brief Prints text on the screen.
  * @param _texto Text to print.

@@ -93,7 +93,7 @@ functionCB_t TextBox::getCallbackFunc()
  */
 void TextBox::redraw()
 {
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;
@@ -136,7 +136,9 @@ void TextBox::redraw()
  */
 void TextBox::setup(const TextBoxConfig& config)
 {
+  #if defined(USING_GRAPHIC_LIB)
   setup(config.width, config.height, config.letterColor, config.backgroundColor, config.startValue, config.font, config.funcPtr, config.cb);
+  #endif
 }
 
 /**
@@ -153,6 +155,7 @@ void TextBox::setup(const TextBoxConfig& config)
  * Initializes the TextBox properties and marks it as loaded when complete.
  * Adjusts height based on font metrics if a font is specified.
  */
+#if defined(USING_GRAPHIC_LIB)
 void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, uint16_t _backgroundColor, const char *_startValue, const GFXfont *_font, functionLoadScreen_t _funcPtr, functionCB_t _cb)
 {
   if (!WidgetBase::objTFT)
@@ -164,7 +167,7 @@ void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, ui
   m_width = _width;
   m_height = _height;
 
-  #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+  #if defined(DISP_DEFAULT)
   if (_font)
   {
     WidgetBase::objTFT->setFont(_font);
@@ -182,6 +185,7 @@ void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, ui
 
   loaded = true;
 }
+#endif
 
 /**
  * @brief Sets the text value displayed by the TextBox.

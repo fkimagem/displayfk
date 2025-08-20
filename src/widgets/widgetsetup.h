@@ -9,7 +9,7 @@
 
 constexpr uint16_t invert_bits(uint16_t val) {
 	
-#ifdef INVERT_COLOR_BITS
+#ifdef INVERT_COLORS_BITS
     return ~val;
 #else
     return val;
@@ -34,7 +34,7 @@ constexpr uint16_t rgb2brg(uint16_t val) {
 constexpr uint16_t process_color(uint16_t val) {
     return rgb2brg(invert_bits(val));
 }
-#elif defined(DISP_PCD8544)
+#elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
 constexpr uint16_t process_color(uint16_t val) {
     return (val == 0x0000) ? 0x1 : 0x0;
 }
@@ -63,7 +63,7 @@ constexpr uint16_t process_color(uint16_t val) {
 #define DFK_THERMOMETER 1
 //#define DFK_EXTERNALINPUT 1
 
-#if defined(DISP_PCD8544)
+#if defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
 #undef DFK_TOUCHAREA
 #undef DFK_CIRCLEBTN
 #undef DFK_RECTBTN
@@ -79,7 +79,17 @@ constexpr uint16_t process_color(uint16_t val) {
 #undef DFK_SPINBOX
 #undef DFK_TEXTBUTTON
 #undef DFK_CIRCULARBAR
+#endif
 
+#if defined(DISP_U8G2)
+#undef DFK_LABEL
+#undef DFK_THERMOMETER
+#undef DFK_VBAR
+#undef DFK_LED
+#endif
+
+#if defined(DISP_DEFAULT) || defined(DISP_PCD8544) || defined(DISP_SSD1306)
+#define USING_GRAPHIC_LIB
 #endif
 
 //These enumerate the text plotting alignment (reference datum point)

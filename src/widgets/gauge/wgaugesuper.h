@@ -20,7 +20,9 @@ struct GaugeConfig {
   uint16_t needleColor;          ///< Color of the needle
   uint16_t markersColor;      ///< Color of the markers
   bool showLabels;               ///< Flag to show text labels for intervals
+  #if defined(USING_GRAPHIC_LIB)
   const GFXfont* fontFamily;     ///< Font used for text rendering
+  #endif
 };
 
 /// @brief Represents a gauge widget with a needle and color-coded intervals.
@@ -63,14 +65,17 @@ private:
   uint8_t m_borderSize = 5; ///< Width of the border.
   uint16_t m_availableWidth; ///< Available width for drawing.
   uint16_t m_availableHeight; ///< Available height for drawing.
+  #if defined(USING_GRAPHIC_LIB)
   const GFXfont* m_usedFont = nullptr; ///< Font used for text rendering.
+  #endif
   TextBound_t m_textBoundForValue; ///< Bounding box for the displayed value text.
 
   CoordPoint_t m_origem; ///< Center of the gauge clock.
   
   void start();
+  #if defined(USING_GRAPHIC_LIB)
   void setup(uint16_t width, const char *title, const int *intervals, const uint16_t *colors, uint8_t amountIntervals, int vmin, int vmax, uint16_t borderColor, uint16_t textColor, uint16_t backgroundColor, uint16_t titleColor, uint16_t agulhaColor, uint16_t marcadoresColor, bool showLabels, const GFXfont *_fontFamily);
-
+  #endif
 public:
   
   GaugeSuper(uint16_t _x, uint16_t _y, uint8_t _screen);

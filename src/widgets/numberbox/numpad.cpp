@@ -185,7 +185,7 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType *p
  */
 void Numpad::redraw(bool fullScreen, bool onlyContent)
 {
-    #if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+    #if defined(DISP_DEFAULT)
     if(!loaded){
         Serial.println("Numpad not loaded");
         return;
@@ -297,7 +297,7 @@ void Numpad::setup()
         log_w("Keyboard already configured");
         return;
     }
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(DISP_DEFAULT)
     m_screenW = WidgetBase::objTFT->width();
     m_screenH = WidgetBase::objTFT->height();
 #endif
@@ -317,9 +317,10 @@ void Numpad::setup()
     yPos = m_screenH - m_availableHeight;
 
     float percentUtilArea = 0.9;
+      #if defined(USING_GRAPHIC_LIB)
     m_fontKeys = const_cast<GFXfont*>(getBestRobotoBold(m_keyW * percentUtilArea, m_keyH * percentUtilArea, "CAP"));
     m_fontPreview = m_fontKeys;// const_cast<GFXfont*>(getBestRobotoBold(m_pontoPreview.width * percentUtilArea, m_pontoPreview.height * percentUtilArea, "M"));
-
+    #endif
     loaded = true;
 }
 
@@ -333,7 +334,7 @@ void Numpad::open(NumberBox *_field)
     m_field = _field;
     WidgetBase::usingKeyboard = true;
     m_content = m_field->getValueChar();
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(DISP_DEFAULT)
     WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
 #endif
 
@@ -345,7 +346,7 @@ void Numpad::open(NumberBox *_field)
  */
 void Numpad::close()
 {
-#if defined(DISP_DEFAULT) || defined(DISP_PCD8544)
+#if defined(DISP_DEFAULT)
     WidgetBase::objTFT->setFont(nullptr);
 #endif
     log_d("Value of content is: %s", m_content.getString());

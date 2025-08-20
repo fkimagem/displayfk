@@ -30,7 +30,9 @@ struct LineChartConfig {
   bool boldLine;                 ///< Flag to make the line bold
   bool showDots;                 ///< Flag to show the dots on the line
   uint16_t maxPointsAmount;      ///< Maximum number of points to show on the chart
+    #if defined(USING_GRAPHIC_LIB)
   const GFXfont* font;           ///< Font used for text on the chart
+  #endif
   Label** subtitles;             ///< Array of pointers to Label for each series (can be nullptr)
 };
 
@@ -85,7 +87,9 @@ private:
   bool m_showDots = false; ///< Flag to show the dots on the line
   LineChartConfig m_config; ///< Pointer to the configuration structure
 
+    #if defined(USING_GRAPHIC_LIB)
   const GFXfont *m_letra = nullptr; ///< Font used for text on the chart.
+  #endif
   SemaphoreHandle_t m_mutex = nullptr; // Mutex para proteger acesso aos dados
   void initMutex();
   void destroyMutex();
@@ -99,8 +103,9 @@ private:
   void drawSerie(uint8_t serieIndex);
   void drawAllSeries();
   void copyCurrentValuesToOldValues();
+    #if defined(USING_GRAPHIC_LIB)
   void setup(uint16_t _width, uint16_t _height, int _vmin, int _vmax, uint8_t _amountSeries, uint16_t* _colorsSeries, uint16_t _gridColor, uint16_t _borderColor, uint16_t _backgroundColor, uint16_t _textColor,  uint16_t _verticalDivision, bool _workInBackground, bool _showZeroLine, bool _boldLine, bool _showDots, uint16_t _maxPointsAmount, const GFXfont* _font);
-
+#endif
 public:
   static constexpr uint16_t SHOW_ALL = 9999;//Considering the max amount of points is 9999
   LineChart(uint16_t _x, uint16_t _y, uint8_t _screen);
