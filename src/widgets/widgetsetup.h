@@ -109,8 +109,7 @@ constexpr uint16_t process_color(uint16_t val) {
 #define C_BASELINE 10 // Centre character baseline
 #define R_BASELINE 11 // Right character baseline
 
- // Default color definitions
-#define INVERTE_BITS_16(x) ((uint16_t)(~(x)))
+// Default color definitions
 
 // Declarações:
 constexpr uint16_t CFK_NO_COLOR     = process_color(0x0000);
@@ -148,7 +147,7 @@ constexpr uint16_t CFK_CHOCOLATE    = process_color(0xd343);
 constexpr uint16_t CFK_SADDLEBROWN  = process_color(0x8a22);
 
 // Defines for color palette
-#define INVERTE_BITS_16(x) ((uint16_t)(~(x)))
+//#define INVERTE_BITS_16(x) ((uint16_t)(~(x)))
 
 constexpr uint16_t CFK_COLOR01   = process_color(0xF800);
 constexpr uint16_t CFK_COLOR02   = process_color(0xF980);
@@ -199,6 +198,8 @@ constexpr uint16_t CFK_GREY13    = process_color(0xDEFB);
 constexpr uint16_t CFK_GREY14    = process_color(0xEF7D);
 
 
+#if defined(USING_GRAPHIC_LIB)
+
 #define FONT_ROBOTO
 #define FONT_SEGMENT7
 #define FONT_LED
@@ -210,6 +211,6 @@ constexpr uint16_t CFK_GREY14    = process_color(0xEF7D);
 #define FONT_URBAN
 #define FONT_VACATION
 
-
+#endif
 
 #endif
