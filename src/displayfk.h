@@ -66,8 +66,6 @@
 #include "freertos/timers.h"
 #include <esp_task_wdt.h>
 
-
-
 #include "widgets/widgetbase.h"
 
 #include "touch_widgets.h"
