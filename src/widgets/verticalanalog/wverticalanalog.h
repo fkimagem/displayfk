@@ -2,7 +2,9 @@
 #define WVANALOG
 
 #include "../widgetbase.h"
+#if defined(USING_GRAPHIC_LIB)
 #include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
+#endif
 
 /// @brief Configuration structure for VAnalog
 struct VerticalAnalogConfig {

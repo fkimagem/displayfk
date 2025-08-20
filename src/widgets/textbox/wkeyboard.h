@@ -4,7 +4,9 @@
 #include "../widgetbase.h"
 #include "wtextbox.h"
 #include "../../extras/charstring.h"
+#if defined(USING_GRAPHIC_LIB)
 #include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
+#endif
 
 //#define AROWS 6
 #define AROWS 5

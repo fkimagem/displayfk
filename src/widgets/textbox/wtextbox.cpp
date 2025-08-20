@@ -31,7 +31,9 @@ TextBox::~TextBox()
 {
   // A classe CharString cuida de sua própria memória
   // A fonte é apenas uma referência, não precisamos liberar
+  #if defined(USING_GRAPHIC_LIB)
   m_font = nullptr;
+  #endif
   parentScreen = nullptr;
   cb = nullptr;
 }
