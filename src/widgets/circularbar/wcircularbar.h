@@ -2,7 +2,10 @@
 #define WCircularBar
 
 #include "../widgetbase.h"
+
+#if defined(DISP_DEFAULT)
 #include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
+#endif
 
 /// @brief Configuration structure for CircularBar
 struct CircularBarConfig {

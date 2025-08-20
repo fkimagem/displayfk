@@ -74,6 +74,7 @@ functionCB_t InputExternal::getCallbackFunc()
  */
 void InputExternal::redraw()
 {
+  #if defined(USING_GRAPHIC_LIB)
     if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
     return;
@@ -81,6 +82,7 @@ void InputExternal::redraw()
 
   m_shouldRedraw = false;
 
+  
   if (m_font)
   {
     WidgetBase::objTFT->setFont(m_font);
@@ -89,6 +91,7 @@ void InputExternal::redraw()
   {
     updateFont(FontType::NORMAL);
   }
+  
 
   log_d("Redraw textbox with value %s", m_value.getString());
 
@@ -107,6 +110,7 @@ void InputExternal::redraw()
   printText(content, xPos + m_padding, yPos + m_height / 2, ML_DATUM);
 
   updateFont(FontType::UNLOAD);
+  #endif
 }
 
 /**
@@ -127,6 +131,7 @@ void InputExternal::forceUpdate()
  */
 void InputExternal::setup(const InputExternalConfig& config)
 {
+  #if defined(USING_GRAPHIC_LIB)
     if(m_loaded){
         log_d("InputExternal already loaded");
         return;
@@ -140,6 +145,9 @@ void InputExternal::setup(const InputExternalConfig& config)
     m_funcPtr = config.funcPtr;
     cb = config.cb;
     m_loaded = true;
+    #else
+    UNUSED(config);
+    #endif
 }
 
 /**
