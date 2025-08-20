@@ -961,13 +961,13 @@ void DisplayFK::addLog(const char *data)
 /**
  * @brief Constructor of the DisplayFK class
  */
-DisplayFK::DisplayFK() : m_configs(), m_runningTransaction(false)
+DisplayFK::DisplayFK() : m_configs(), m_runningTransaction(false), m_timer(nullptr), m_intervalMs(0), m_xAutoClick(0), m_yAutoClick(0), m_simulateAutoClick(false)
 {
     DisplayFK::instance = this;
+    #if defined(USING_GRAPHIC_LIB)
     WidgetBase::fontBold = const_cast<GFXfont *>(&RobotoBold5pt7b);
     WidgetBase::fontNormal = const_cast<GFXfont *>(&RobotoBold5pt7b);
-
-    
+    #endif
 
     
 }
@@ -988,6 +988,10 @@ void DisplayFK::startKeyboards(){
  */
 DisplayFK::~DisplayFK()
 {
+    if (m_timer != nullptr) {
+        xTimerDelete(m_timer, 0);
+    }
+/*
     // Free all static arrays
 #if defined(DFK_TOUCHAREA)
     if (arrayTouchArea) {
@@ -1150,6 +1154,7 @@ DisplayFK::~DisplayFK()
         m_nameLogFile = nullptr;
     }
 #endif
+*/
 
     // Free the log queue
     if (xFilaLog) {
@@ -1205,6 +1210,8 @@ void DisplayFK::finishTransaction(){
     m_runningTransaction = false;
 }
 
+
+#if defined(USING_GRAPHIC_LIB)
 /**
  * @brief Sets the normal font for widgets
  * @param _font Pointer to the font
@@ -1222,6 +1229,7 @@ void DisplayFK::setFontBold(const GFXfont *_font)
 {
     WidgetBase::fontBold = _font;
 }
+#endif
 
 #if defined(HAS_TOUCH) && defined(DISP_DEFAULT)
 
@@ -1718,7 +1726,11 @@ void DisplayFK::drawPng(uint16_t _x, uint16_t _y, const uint16_t _colors[], cons
             uint16_t _cor = _colors[(i * _w) + j];
             if (_bit)
             {
+                #if defined(USING_GRAPHIC_LIB)
                 WidgetBase::objTFT->drawPixel(posX, posY, _cor);
+                #elif defined(DISP_U8G2)
+                WidgetBase::objTFT->drawPixel(posX, posY);
+                #endif
             }
         }
     }
@@ -2185,6 +2197,15 @@ void DisplayFK::loopTask() {
     gesture = 0;
 #endif
 
+    if(m_simulateAutoClick){
+        m_simulateAutoClick = false;
+        hasTouch = true;
+        xTouch = m_xAutoClick;
+        yTouch = m_yAutoClick;
+        gesture = 0;
+        Serial.printf("Simulating click at (%i, %i)\n", xTouch, yTouch);
+    }
+
     if (hasTouch) {
         if(m_debugTouch){
             Serial.printf("Touch event: [%i, %i], %i, %i\n", xTouch, yTouch, zPressure, gesture);
@@ -2392,7 +2413,7 @@ void DisplayFK::recalibrate()
 }
 #endif
 
-
+#if defined(USING_GRAPHIC_LIB)
 void DisplayFK::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum, uint16_t _colorText, uint16_t _colorPadding, const GFXfont* _font){
     if(_font){
         WidgetBase::objTFT->setFont(_font);
@@ -2400,14 +2421,14 @@ void DisplayFK::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t 
         WidgetBase::objTFT->setFont(NULL);
     }
     
+    
     WidgetBase::objTFT->setTextColor(_colorText, _colorPadding);
     WidgetBase::recalculateTextPosition(_texto, &_x, &_y, _datum);
     WidgetBase::objTFT->setCursor(_x, _y);
     WidgetBase::objTFT->print(_texto);
     WidgetBase::objTFT->setFont(NULL);
-    
 }
-
+#endif
 /**
  * @brief Updates circular bars
  */
@@ -2653,4 +2674,50 @@ void DisplayFK::updateNumberBox(){
         }
     }
 #endif
+}
+
+void DisplayFK::setupAutoClick(uint32_t intervalMs, uint16_t x, uint16_t y) {
+    m_intervalMs = intervalMs;
+    m_xAutoClick = x;
+    m_yAutoClick = y;
+
+    if (m_timer != nullptr) {
+        xTimerDelete(m_timer, 0);
+        m_timer = nullptr;
+    }
+
+    // Cria o timer, mas não inicia
+    m_timer = xTimerCreate(
+        "SimTimer", 
+        pdMS_TO_TICKS(m_intervalMs), 
+        pdTRUE,             // Recarregável (periódico)
+        this,               // Passa ponteiro da instância como ID
+        DisplayFK::timerCallback
+    );
+}
+
+void DisplayFK::startAutoClick() {
+    if (m_timer != nullptr) {
+        xTimerStart(m_timer, 0);
+    }
+}
+
+void DisplayFK::stopAutoClick() {
+    if (m_timer != nullptr) {
+        m_simulateAutoClick = false; // Para simular o clique
+        xTimerStop(m_timer, 0);
+    }
+}
+
+void DisplayFK::timerCallback(TimerHandle_t xTimer) {
+    // Recupera a instância da classe
+    DisplayFK *instance = reinterpret_cast<DisplayFK *>(pvTimerGetTimerID(xTimer));
+    if (instance) {
+        instance->m_simulateAutoClick = true;
+    }
+}
+
+bool DisplayFK::isRunningAutoClick() {
+    if (m_timer == nullptr) return false;
+    return (xTimerIsTimerActive(m_timer) == pdTRUE);
 }

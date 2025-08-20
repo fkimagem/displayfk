@@ -63,6 +63,7 @@
 //#include "soc/timer_group_struct.h" //watchdog
 //#include "soc/timer_group_reg.h"    //watchdog
 #include "freertos/queue.h"
+#include "freertos/timers.h"
 #include <esp_task_wdt.h>
 
 
@@ -105,6 +106,12 @@ class DisplayFK
 private:
     static QueueHandle_t xFilaLog; ///< Queue handle for log data.
     TaskHandle_t m_hndTaskEventoTouch; ///< Handle for the touch event task.
+    TimerHandle_t m_timer;
+    uint32_t m_intervalMs;
+    uint16_t m_xAutoClick = 0;
+    uint16_t m_yAutoClick = 0;
+    bool m_simulateAutoClick = false;
+    static void timerCallback(TimerHandle_t xTimer);
     Preferences m_configs;             ///< Preferences for storing and accessing configuration data.
     char randomHexChar();
     static logMessage_t bufferLog[LOG_LENGTH]; ///< Array of log messages.
@@ -319,16 +326,22 @@ public:
     void startTransaction();
     void finishTransaction();
     void drawWidgetsOnScreen(const uint8_t currentScreenIndex);
+    #if defined(USING_GRAPHIC_LIB)
     void setFontNormal(const GFXfont *_font);
     void setFontBold(const GFXfont *_font);
+    void printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum, uint16_t _colorText, uint16_t _colorPadding, const GFXfont* _font);
+    #endif
     void createTask(bool enableWatchdog, uint16_t timeout_s = 3);
     void drawPng(uint16_t _x, uint16_t _y, const uint16_t _colors[], const uint8_t _mask[], uint16_t _w, uint16_t _h);
-    void printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum, uint16_t _colorText, uint16_t _colorPadding, const GFXfont* _font);
     void enableTouchLog();
     void disableTouchLog();
     void addLog(const char *data);
     void loopTask();
     TaskHandle_t getTaskHandle();
+    void setupAutoClick(uint32_t intervalMs, uint16_t x, uint16_t y);
+    void startAutoClick();
+    void stopAutoClick();
+    bool isRunningAutoClick();
 
 #if defined(HAS_TOUCH)
 #if defined(TOUCH_XPT2046)

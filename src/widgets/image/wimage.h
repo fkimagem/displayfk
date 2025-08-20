@@ -43,7 +43,7 @@ struct ImageFromFileConfig {
 struct ImageFromPixelsConfig {
   #if defined(DISP_DEFAULT)
   const uint16_t *pixels; ///< Pointer to the pixel map data.
-  #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
+  #elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
   const uint8_t *pixels; ///< Pointer to the pixel map data.
   #endif
   uint16_t width; ///< Width of the image.
@@ -88,14 +88,14 @@ private:
   unsigned long m_myTime = 0; ///< Timestamp for handling timing-related functions.
   #if defined(DISP_DEFAULT)
   const uint16_t *m_pixels = nullptr; ///< Pointer to the pixel map data.
-  #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
+  #elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
   const uint8_t *m_pixels = nullptr; ///< Pointer to the pixel map data.
   #endif
   const uint8_t *m_maskAlpha = nullptr; ///< Pointer to the alpha mask data for transparency.
 
   #if defined(DISP_DEFAULT)
   uint16_t *m_ownedPixels = nullptr; ///< Pointer to the owned pixel map data.
-  #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
+  #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)|| defined(DISP_U8G2)
   uint8_t *m_ownedPixels = nullptr; ///< Pointer to the owned pixel map data.
   #endif
 
@@ -107,7 +107,7 @@ private:
   void setup(SourceFile _source, const char* _path, functionCB_t _cb, float _angle);
   #if defined(DISP_DEFAULT)
   void setup(const uint16_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb);
-  #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
+  #elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
   void setup(const uint8_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb);
   #endif
   bool readFileFromDisk();
