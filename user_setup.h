@@ -52,4 +52,4 @@
 #define TOUCH_GT911	
 #define HAS_TOUCH	
 //#define INVERT_COLOR_BITS
-//#define IS_BGR
+#define IS_BGR

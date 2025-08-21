@@ -66,6 +66,7 @@
 // Prototypes for each screen
 void screen0();
 void loadWidgets();
+void textbutton_cb();
 
 // Prototypes for callback functions
 
@@ -85,7 +86,22 @@ Arduino_ESP32RGBPanel *rgbpanel = nullptr;
 Arduino_RGB_Display *tft = nullptr;
 uint8_t rotationScreen = 1;
 DisplayFK myDisplay;
-
+GaugeSuper widget(185, 420, 0);
+const uint8_t qtdGauge = 1;
+GaugeSuper *arrayGauge[qtdGauge] = {&widget};
+const uint8_t qtdIntervalG0 = 4;
+int range0[qtdIntervalG0] = {0,25,50,75};
+uint16_t colors0[qtdIntervalG0] = {CFK_COLOR17,CFK_COLOR11,CFK_COLOR04,CFK_COLOR03};
+Label term1(585, 390, 0);
+const uint8_t qtdLabel = 1;
+Label *arrayLabel[qtdLabel] = {&term1};
+TextButton textbutton(325, 25, 0);
+const uint8_t qtdTextButton = 1;
+TextButton *arrayTextButton[qtdTextButton] = {&textbutton};
+Thermometer thermometer(695, 145, 0);
+const uint8_t qtdThermometer = 1;
+Thermometer *arrayThermometer[qtdThermometer] = {&thermometer};
+int count = 0;
 void setup(){
     Serial.begin(115200);
     rgbpanel = new Arduino_ESP32RGBPanel(
@@ -109,15 +125,24 @@ void setup(){
     myDisplay.setInvertAxis(TOUCH_INVERT_X, TOUCH_INVERT_Y);
     myDisplay.setSwapAxis(TOUCH_SWAP_XY);
     myDisplay.startTouchGT911(DISPLAY_W, DISPLAY_H, rotationScreen, TC_SDA, TC_SCL, TC_INT, TC_RST);
-    //myDisplay.setupAutoClick(2000, 100, 100); // Setup auto click
-    //myDisplay.startAutoClick(); // Start auto click
+    myDisplay.enableTouchLog();
+    myDisplay.setupAutoClick(2000, 400, 50); // Setup auto click
+    myDisplay.startAutoClick(); // Start auto click
     loadWidgets(); // This function is used to setup with widget individualy
     WidgetBase::loadScreen = screen0; // Use this line to change between screens
     myDisplay.createTask(false, 3); // Initialize the task to read touch and draw
 }
 
 void loop(){
-    delay(2000);
+    float anglo = count * 0.0174533;
+    int valor = sin(anglo) * 50.0 + 50.0;
+    
+    widget.setValue(100-valor); //Use this command to change widget value.
+    thermometer.setValue(valor); //Use this command to change widget value.
+    delay(100);
+
+    
+    count++;
 }
 
 void screen0(){
@@ -133,4 +158,66 @@ void screen0(){
 
 // Configure each widgtes to be used
 void loadWidgets(){
+  GaugeConfig configGauge0 = {
+            .width = 261,
+            .title = "Title",
+            .intervals = range0,
+            .colors = colors0,
+            .amountIntervals = qtdIntervalG0,
+            .minValue = 0,
+            .maxValue = 100,
+            .borderColor = CFK_COLOR23,
+            .textColor = CFK_BLACK,
+            .backgroundColor = CFK_WHITE,
+            .titleColor = CFK_BLACK,
+            .needleColor = CFK_RED,
+            .markersColor = CFK_BLACK,
+            .showLabels = true,
+            .fontFamily = &RobotoBold10pt7b
+        };
+    widget.setup(configGauge0);
+    myDisplay.setGauge(arrayGauge,qtdGauge);
+
+    LabelConfig configLabel0 = {
+            .text = "99",
+            .fontFamily = &G7_Segment7_S520pt7b,
+            .datum = TL_DATUM,
+            .fontColor = CFK_COLOR01,
+            .backgroundColor = CFK_WHITE,
+            .prefix = "",
+            .suffix = "C"
+        };
+    term1.setup(configLabel0);
+    term1.setDecimalPlaces(0);
+    myDisplay.setLabel(arrayLabel,qtdLabel);
+
+    TextButtonConfig configTextButton0 = {
+            .width = 151,
+            .height = 50,
+            .radius = 10,
+            .backgroundColor = CFK_COLOR01,
+            .textColor = CFK_WHITE,
+            .text = "Button",
+            .callback = textbutton_cb
+        };
+
+    textbutton.setup(configTextButton0);
+    myDisplay.setTextButton(arrayTextButton,qtdTextButton);
+
+    ThermometerConfig configThermometer0 = {
+            .width = 27,
+            .height = 227,
+            .filledColor = CFK_COLOR01,
+            .backgroundColor = CFK_WHITE,
+            .markColor = CFK_BLACK,
+            .minValue = 0,
+            .maxValue = 100,
+            .subtitle = &term1,
+            .unit = "C"
+        };
+    thermometer.setup(configThermometer0);
+    myDisplay.setThermometer(arrayThermometer,qtdThermometer);
+}
+void textbutton_cb(){
+    Serial.print("Clicked on: ");Serial.println("textbutton_cb");
 }
