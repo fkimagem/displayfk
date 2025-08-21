@@ -2,8 +2,10 @@
 // Defines for font and files
 #define FORMAT_SPIFFS_IF_FAILED false
 #define DISPLAY_W 128
-#define DISPLAY_H 64
-#define DISP_SCLK	0x3C
+#define DISPLAY_H 32
+#define DISP_ADDRESS	0x3C
+#define DISP_SDA 14
+#define DISP_SCLK 13
 #define DISP_RST	-1
 
 // Prototypes for each screen
@@ -31,8 +33,9 @@ DisplayFK myDisplay;
 void setup(){
     // Touch model not defined. No need startTouch() function.
     Serial.begin(115200);
+    Wire.begin(DISP_SDA, DISP_SCLK);
     tft = new Adafruit_SSD1306(DISPLAY_W, DISPLAY_H, &Wire, DISP_RST);
-    if(!tft->begin(SSD1306_SWITCHCAPVCC, DISP_ADDRESS)) {
+    if(!tft->begin(SSD1306_SWITCHCAPVCC, DISP_ADDRESS, false, false)) {
         Serial.println("Failed to initialize SSD1306");
         for(;;);
     }
