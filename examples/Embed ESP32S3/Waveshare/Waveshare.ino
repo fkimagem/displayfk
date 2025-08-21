@@ -16,9 +16,12 @@
 #define TOUCH_INVERT_X	false
 #define TOUCH_INVERT_Y	false
 
-#define TEST_I2C
+
+
+//#define TEST_I2C
 #define TEST_WIDGETS
 #define TEST_IO
+
 
 #define EXAMPLE_LCD_NAME                        ST7262 // LCD model name
 #define EXAMPLE_LCD_WIDTH                       (800) // LCD width in pixels
@@ -73,6 +76,9 @@ void loadWidgets();
 void textbutton_cb();
 void scan_i2c();
 void test_widgets();
+void test_io();
+
+
 
 // Prototypes for callback functions
 
@@ -84,6 +90,27 @@ void test_widgets();
 #include <SPI.h>
 #include <Arduino_GFX_Library.h>
 #include <displayfk.h>
+#if defined(TEST_IO)
+#include <esp_io_expander.hpp>
+#endif
+
+#if defined(TEST_IO)
+#define EXAMPLE_I2C_ADDR    (ESP_IO_EXPANDER_I2C_CH422G_ADDRESS)
+#define EXAMPLE_I2C_SDA_PIN 8         // I2C data line pins
+#define EXAMPLE_I2C_SCL_PIN 9         // I2C clock line pin
+
+
+#define DI0 0                     // Digital Input 0
+#define DI0_mask 1ULL<<DI0       // Mask for Digital Input 0
+#define DI1 5                     // Digital Input 1
+#define DI1_mask 1ULL<<DI1       // Mask for Digital Input 1
+
+#define DO0 8                     // Digital Output 0
+#define DO0_mask 1ULL<<DO0       // Mask for Digital Output 0
+#define DO1 9                     // Digital Output 1
+#define DO1_mask 1ULL<<DO1       // Mask for Digital Output 1
+
+#endif
 
 // Create global objects. Constructor is: xPos, yPos and indexScreen
 // Create global objects. Constructor is: xPos, yPos and indexScreen
@@ -108,6 +135,10 @@ Thermometer thermometer(695, 145, 0);
 const uint8_t qtdThermometer = 1;
 Thermometer *arrayThermometer[qtdThermometer] = {&thermometer};
 int count = 0;
+#if defined(TEST_IO)
+esp_expander::CH422G *expander = NULL;
+#endif
+//ESP_IOExpander *expander = NULL;
 void setup(){
     Serial.begin(115200);
     rgbpanel = new Arduino_ESP32RGBPanel(
@@ -146,6 +177,10 @@ void loop(){
 
     #if defined(TEST_I2C)
     scan_i2c();
+    #endif
+
+    #if defined(TEST_IO)
+    test_io();
     #endif
 }
 
@@ -237,6 +272,7 @@ void test_widgets(){
 }
 
 void scan_i2c(){
+  #if defined(TEST_I2C)
     byte error, address; // Store error content, address value
   int nDevices = 0; // Number of recording devices
 
@@ -254,4 +290,38 @@ void scan_i2c(){
   if (nDevices == 0) { // Determine the number of devices. If it is 0, there is no device.
     printf("No I2C devices found.\r\n");
   }
+  #endif
+}
+
+void test_io(){
+  #if defined(TEST_IO)
+  Serial.println("Initialize IO expander"); // Print initialization message
+    /* Initialize IO expander */
+    //expander = new esp_expander::CH422G(EXAMPLE_I2C_SCL_PIN, EXAMPLE_I2C_SDA_PIN, EXAMPLE_I2C_ADDR);
+    expander = new esp_expander::CH422G(EXAMPLE_I2C_SCL_PIN, EXAMPLE_I2C_SDA_PIN, EXAMPLE_I2C_ADDR);
+    // Create an instance of the IO expander
+    expander->init(); // Initialize the expander
+    expander->begin(); // Begin expander operation
+
+    Serial.println("Set the OC pin to push-pull output mode.");
+    expander->enableOC_PushPull();
+
+    Serial.println("Set the IO0-7 pin to input mode.");
+    expander->enableAllIO_Input();
+
+    // Set output pins to default high
+    //expander->digitalWrite(DO0, 1); // Set DO0 high
+    //->digitalWrite(DO1, 1); // Set DO1 high
+
+    /*Serial.println("IO test example start"); // Print start message
+    while(1)
+    {
+        bool leituraDI0 = expander->digitalRead(DI0);
+        bool leituraDI1 = expander->digitalRead(DI1);
+
+        expander->digitalWrite(DO0, leituraDI0); // Set DO0 high
+        expander->digitalWrite(DO1, leituraDI1); // Set DO1 low
+        delay(100);
+    }*/
+    #endif
 }

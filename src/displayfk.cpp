@@ -1378,7 +1378,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #if defined(DFK_TOUCHAREA)
     if (m_touchAreaConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdTouchArea); indice++)
+        for ( uint32_t indice = 0; indice < (qtdTouchArea); indice++)
         {
             arrayTouchArea[indice]->redraw();
         }
@@ -1392,7 +1392,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_CHECKBOX
     if (m_checkboxConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdCheckbox); indice++)
+        for ( uint32_t indice = 0; indice < (qtdCheckbox); indice++)
         {
             arrayCheckbox[indice]->forceUpdate();
             arrayCheckbox[indice]->redraw();
@@ -1406,7 +1406,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_CIRCLEBTN
     if (m_circleButtonConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdCircleBtn); indice++)
+        for ( uint32_t indice = 0; indice < (qtdCircleBtn); indice++)
         {
             arrayCircleBtn[indice]->forceUpdate();
             arrayCircleBtn[indice]->redraw();
@@ -1420,7 +1420,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_SPINBOX
     if (m_spinboxConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdSpinbox); indice++)
+        for ( uint32_t indice = 0; indice < (qtdSpinbox); indice++)
         {
             arraySpinbox[indice]->drawBackground();
             arraySpinbox[indice]->redraw();
@@ -1434,7 +1434,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_GAUGE
     if (m_gaugeConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdGauge); indice++)
+        for ( uint32_t indice = 0; indice < (qtdGauge); indice++)
         {
             arrayGauge[indice]->forceUpdate();
             arrayGauge[indice]->drawBackground();
@@ -1450,7 +1450,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_CIRCULARBAR
     if (m_circularBarConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdCircularBar); indice++)
+        for ( uint32_t indice = 0; indice < (qtdCircularBar); indice++)
         {
             arrayCircularBar[indice]->forceUpdate();
             arrayCircularBar[indice]->drawBackground();
@@ -1465,7 +1465,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_HSLIDER
     if (m_hSliderConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdHSlider); indice++)
+        for ( uint32_t indice = 0; indice < (qtdHSlider); indice++)
         {
             arrayHSlider[indice]->forceUpdate();
             arrayHSlider[indice]->drawBackground();
@@ -1479,7 +1479,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_LABEL
     if (m_labelConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdLabel); indice++)
+        for ( uint32_t indice = 0; indice < (qtdLabel); indice++)
         {
             arrayLabel[indice]->forceUpdate();
             arrayLabel[indice]->redraw();
@@ -1493,7 +1493,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_LED
     if (m_ledConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdLed); indice++)
+        for ( uint32_t indice = 0; indice < (qtdLed); indice++)
         {
             arrayLed[indice]->forceUpdate();
             arrayLed[indice]->drawBackground();
@@ -1508,7 +1508,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_LINECHART
     if (m_lineChartConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdLineChart); indice++)
+        for ( uint32_t indice = 0; indice < (qtdLineChart); indice++)
         {
             arrayLineChart[indice]->forceUpdate();
             arrayLineChart[indice]->drawBackground();
@@ -1522,7 +1522,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_RADIO
     if (m_radioGroupConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdRadioGroup); indice++)
+        for ( uint32_t indice = 0; indice < (qtdRadioGroup); indice++)
         {
             arrayRadioGroup[indice]->forceUpdate();
             arrayRadioGroup[indice]->redraw();
@@ -1536,7 +1536,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_RECTBTN
     if (m_rectButtonConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdRectBtn); indice++)
+        for ( uint32_t indice = 0; indice < (qtdRectBtn); indice++)
         {
             arrayRectBtn[indice]->forceUpdate();
             arrayRectBtn[indice]->redraw();
@@ -1550,7 +1550,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_TOGGLE
     if (m_toggleConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdToggle); indice++)
+        for ( uint32_t indice = 0; indice < (qtdToggle); indice++)
         {
             arrayToggleBtn[indice]->forceUpdate();
             arrayToggleBtn[indice]->redraw();
@@ -1565,7 +1565,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_TEXTBUTTON
     if (m_textButtonConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdTextButton); indice++)
+        for ( uint32_t indice = 0; indice < (qtdTextButton); indice++)
         {
             arrayTextButton[indice]->redraw();
         }
@@ -1579,7 +1579,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_VBAR
     if (m_vBarConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdVBar); indice++)
+        for ( uint32_t indice = 0; indice < (qtdVBar); indice++)
         {
             arrayVBar[indice]->forceUpdate();
             arrayVBar[indice]->drawBackground();
@@ -1594,7 +1594,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_THERMOMETER
     if (m_thermometerConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdThermometer); indice++)
+        for ( uint32_t indice = 0; indice < (qtdThermometer); indice++)
         {
             arrayThermometer[indice]->forceUpdate();
             arrayThermometer[indice]->drawBackground();
@@ -1610,7 +1610,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_VANALOG
     if (m_vAnalogConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdVAnalog); indice++)
+        for ( uint32_t indice = 0; indice < (qtdVAnalog); indice++)
         {
             arrayVAnalog[indice]->forceUpdate();
             arrayVAnalog[indice]->drawBackground();
@@ -1624,7 +1624,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_TEXTBOX
     if (m_textboxConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdTextBox); indice++)
+        for ( uint32_t indice = 0; indice < (qtdTextBox); indice++)
         {
             arrayTextBox[indice]->forceUpdate();
             arrayTextBox[indice]->redraw();
@@ -1638,7 +1638,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_NUMBERBOX
     if (m_numberboxConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdNumberBox); indice++)
+        for ( uint32_t indice = 0; indice < (qtdNumberBox); indice++)
         {
             arrayNumberbox[indice]->forceUpdate();
             arrayNumberbox[indice]->redraw();
@@ -1652,7 +1652,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 #ifdef DFK_IMAGE
     if (m_imageConfigured)
     {
-        for (register uint32_t indice = 0; indice < (qtdImage); indice++)
+        for ( uint32_t indice = 0; indice < (qtdImage); indice++)
         {
             arrayImage[indice]->forceUpdate();
             arrayImage[indice]->draw();
@@ -1678,7 +1678,14 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
     this->startKeyboards();
 
     if(m_enableWTD){
-        esp_err_t iniciou = esp_task_wdt_init(m_timeoutWTD, true);  // timeout em segundos, trigger_panic = true
+        // Estrutura de configuração no ESP-IDF v5
+        esp_task_wdt_config_t twdt_config = {
+            .timeout_ms = m_timeoutWTD * 1000, // timeout em ms
+            .idle_core_mask = (1 << portNUM_PROCESSORS) - 1, // aplica a todos os cores
+            .trigger_panic = true,
+        };
+
+        esp_err_t iniciou = esp_task_wdt_init(&twdt_config);  // timeout em segundos, trigger_panic = true
         m_watchdogInitialized = (iniciou == ESP_OK);
         if(iniciou == ESP_OK){
             DEBUG_D("WDT initialized with %i seconds timeout", m_timeoutWTD);
@@ -1686,6 +1693,7 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
             DEBUG_E("WDT initialization failed");
         }
     }else{
+        esp_task_wdt_delete(NULL);
         esp_err_t deinit = esp_task_wdt_deinit();
         if(deinit == ESP_OK){
             DEBUG_D("WDT deinitialized");
