@@ -16,6 +16,10 @@
 #define TOUCH_INVERT_X	false
 #define TOUCH_INVERT_Y	false
 
+#define TEST_I2C
+#define TEST_WIDGETS
+#define TEST_IO
+
 #define EXAMPLE_LCD_NAME                        ST7262 // LCD model name
 #define EXAMPLE_LCD_WIDTH                       (800) // LCD width in pixels
 #define EXAMPLE_LCD_HEIGHT                      (480) // LCD height in pixels
@@ -67,6 +71,8 @@
 void screen0();
 void loadWidgets();
 void textbutton_cb();
+void scan_i2c();
+void test_widgets();
 
 // Prototypes for callback functions
 
@@ -134,15 +140,13 @@ void setup(){
 }
 
 void loop(){
-    float anglo = count * 0.0174533;
-    int valor = sin(anglo) * 50.0 + 50.0;
-    
-    widget.setValue(100-valor); //Use this command to change widget value.
-    thermometer.setValue(valor); //Use this command to change widget value.
-    delay(100);
+    #if defined(TEST_WIDGETS)
+    test_widgets();
+    #endif
 
-    
-    count++;
+    #if defined(TEST_I2C)
+    scan_i2c();
+    #endif
 }
 
 void screen0(){
@@ -213,11 +217,41 @@ void loadWidgets(){
             .minValue = 0,
             .maxValue = 100,
             .subtitle = &term1,
-            .unit = "C"
+            .unit = "C",
+            .decimalPlaces = 1
         };
     thermometer.setup(configThermometer0);
     myDisplay.setThermometer(arrayThermometer,qtdThermometer);
 }
 void textbutton_cb(){
     Serial.print("Clicked on: ");Serial.println("textbutton_cb");
+}
+
+void test_widgets(){
+    float anglo = count * 0.0174533;
+    int valor = sin(anglo) * 50.0 + 50.0;
+    widget.setValue(100-valor); //Use this command to change widget value.
+    thermometer.setValue(valor); //Use this command to change widget value.
+    delay(100);
+    count++;
+}
+
+void scan_i2c(){
+    byte error, address; // Store error content, address value
+  int nDevices = 0; // Number of recording devices
+
+  printf("Scanning for I2C devices ...\r\n");
+  for (address = 0x01; address < 0x7f; address++) { // Start scanning all devices from 0x01 to 0x7f
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+    if (error == 0) { // Determine whether the device exists, and if so, output the address
+      printf("I2C device found at address 0x%02X\n", address);
+      nDevices++;
+    } else if (error != 2) {
+      printf("Error %d at address 0x%02X\n", error, address);
+    }
+  }
+  if (nDevices == 0) { // Determine the number of devices. If it is 0, there is no device.
+    printf("No I2C devices found.\r\n");
+  }
 }

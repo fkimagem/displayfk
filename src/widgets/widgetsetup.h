@@ -34,9 +34,13 @@ constexpr uint16_t rgb2brg(uint16_t val) {
 constexpr uint16_t process_color(uint16_t val) {
     return rgb2brg(invert_bits(val));
 }
-#elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
+#elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
 constexpr uint16_t process_color(uint16_t val) {
     return (val == 0x0000) ? 0x1 : 0x0;
+}
+#elif defined(DISP_U8G2)
+constexpr uint16_t process_color(uint16_t val) {
+    return (val != 0x0000) ? 0x1 : 0x0;
 }
 #endif
 

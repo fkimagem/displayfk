@@ -43,7 +43,7 @@ functionCB_t Thermometer::getCallbackFunc()
  */
 void Thermometer::setValue(float newValue)
 {
-  m_currentValue = constrain(newValue, m_vmin, m_vmax);
+  m_currentValue = constrain(newValue, m_config.minValue, m_config.maxValue);
   // Serial.println("ajusta currentValue: " + String(currentValue));
   m_update = true;
   // redraw();
@@ -62,7 +62,7 @@ void Thermometer::redraw()
   
   
 
-  uint32_t heightFill = map(m_currentValue, m_vmin, m_vmax, 0, m_fillArea.height);
+  uint32_t heightFill = map(m_currentValue, m_config.minValue, m_config.maxValue, 0, m_fillArea.height);
   uint32_t diffHeight = m_fillArea.height - heightFill;
   int startY = m_fillArea.y + (m_fillArea.height - heightFill);
 
@@ -70,11 +70,11 @@ void Thermometer::redraw()
     if(m_currentValue < m_lastValue){
       WidgetBase::objTFT->fillRoundRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, diffHeight, 0, m_config.backgroundColor);     // area do widget
     }else{
-      WidgetBase::objTFT->fillRoundRect(m_fillArea.x, startY, m_fillArea.width, heightFill, 0, m_filledColor);     // area do widget
+      WidgetBase::objTFT->fillRoundRect(m_fillArea.x, startY, m_fillArea.width, heightFill, 0, m_config.filledColor);     // area do widget
     }
 
   if(m_config.subtitle){
-    m_config.subtitle->setTextFloat(m_lastValue);
+    m_config.subtitle->setTextFloat(m_lastValue, m_config.decimalPlaces);
   }
 
   m_lastValue = m_currentValue;
@@ -88,7 +88,7 @@ void Thermometer::redraw()
 void Thermometer::start()
 {
 #if defined(USING_GRAPHIC_LIB)
-  m_height = constrain(m_height, 20, WidgetBase::objTFT->height());
+  m_config.height = constrain(m_config.height, 20, WidgetBase::objTFT->height());
 #endif
 }
 
@@ -110,40 +110,33 @@ void Thermometer::drawBackground()
   {
     return;
   }
-  int radius = (m_width / 2) - m_border;
-  
-  m_bulb.x = xPos + (m_width / 2);
-  m_bulb.y = yPos + m_height - radius - m_border;
+  int radius = (m_config.width / 2) - m_border;
+
+  m_bulb.x = xPos + (m_config.width / 2);
+  m_bulb.y = yPos + m_config.height - radius - m_border;
   m_bulb.radius = radius;
 
-  int width = m_width / 3;
-  
+  int width = m_config.width / 3;
 
-  m_glassArea.x = xPos + ((m_width - width) / 2);
+  m_glassArea.x = xPos + ((m_config.width - width) / 2);
   m_glassArea.y = yPos + m_border;
   m_glassArea.width = width;
-  m_glassArea.height = m_height - radius;
-  
-  m_glassArea.x = xPos + ((m_width - width) / 2);
-  m_glassArea.y = yPos + m_border;
-  m_glassArea.width = width;
-  m_glassArea.height = m_height - (radius + m_border);
-  
-  m_fillArea.x = xPos + ((m_width - width) / 2);
+  //m_glassArea.height = m_config.height - radius;
+  m_glassArea.height = m_config.height - (radius + m_border);
+
+  m_fillArea.x = xPos + ((m_config.width - width) / 2);
   m_fillArea.y = yPos + m_border + (width/2);
   m_fillArea.width = width;
-  
-  m_fillArea.height = m_height - (m_border * 2 + m_bulb.radius * 2 + (width/2));
+  m_fillArea.height = m_config.height - (m_border * 2 + m_bulb.radius * 2 + (width/2));
 
-  WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, 5, m_config.backgroundColor);     // area do widget
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, 5, CFK_BLACK);     // area do widget
+  WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_config.width, m_config.height, 5, m_config.backgroundColor);     // area do widget
+  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_config.width, m_config.height, 5, CFK_BLACK);     // area do widget
 
-  
 
   WidgetBase::objTFT->drawRoundRect(m_glassArea.x -1, m_glassArea.y-1, m_glassArea.width+2, m_glassArea.height+2, m_glassArea.width/2, CFK_BLACK);     // borda vidro
   WidgetBase::objTFT->fillRoundRect(m_glassArea.x, m_glassArea.y, m_glassArea.width, m_glassArea.height, m_glassArea.width/2, m_config.backgroundColor);     // fundo vidro
 
-  WidgetBase::objTFT->fillRoundRect(m_glassArea.x, m_bulb.y - m_bulb.radius, m_glassArea.width, m_bulb.radius, 0, m_filledColor);// base do vidro (para nao ficar sobrando espaço em branco)
+  WidgetBase::objTFT->fillRoundRect(m_glassArea.x, m_bulb.y - m_bulb.radius, m_glassArea.width, m_bulb.radius, 0, m_config.filledColor);// base do vidro (para nao ficar sobrando espaço em branco)
 
   for(uint8_t i = 0; i < m_colorLightGradientSize; i++)
     {
@@ -188,16 +181,16 @@ void Thermometer::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor
     log_d("Thermometer widget already configured");
     return;
   }
-  m_width = _width;
-  m_height = _height;
-  m_filledColor = _filledColor;
+  //m_width = _width;
+  //m_height = _height;
+ // m_filledColor = _filledColor;
   for(uint8_t i = 0; i < m_colorLightGradientSize; i++)
   {
-    m_colorLightGradient[i] = WidgetBase::lightenToWhite565(m_filledColor, 0.08*i);
+    m_colorLightGradient[i] = WidgetBase::lightenToWhite565(m_config.filledColor, 0.08*i);
   }
-  m_vmin = _vmin;
-  m_vmax = _vmax;
-  m_currentValue = m_vmin;
+  //m_vmin = _vmin;
+  //m_vmax = _vmax;
+  m_currentValue = m_config.minValue;
   m_update = true;
   start();
   loaded = true;
