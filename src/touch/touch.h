@@ -35,7 +35,7 @@
     #include <SPI.h>
     #include <Arduino_GFX_Library.h>
   #elif defined(TOUCH_FT6236U)
-    #include "ft6236/src/FT6236.h"
+    #include "ft6236/FT6236.h"
   #elif defined(TOUCH_FT6336)
     #include "ft6336/src/FT6336U.h"
   #elif defined(TOUCH_CST816)

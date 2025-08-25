@@ -64,7 +64,12 @@
 //#include "soc/timer_group_reg.h"    //watchdog
 #include "freertos/queue.h"
 #include "freertos/timers.h"
+#if defined(PLATFORMIO)
+#include "esp_task_wdt.h"
+#elif defined(ARDUINO)
 #include <esp_task_wdt.h>
+#endif
+
 
 #include "widgets/widgetbase.h"
 

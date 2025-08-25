@@ -1678,20 +1678,30 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
     this->startKeyboards();
 
     if(m_enableWTD){
-        // Estrutura de configuração no ESP-IDF v5
-        esp_task_wdt_config_t twdt_config = {
-            .timeout_ms = m_timeoutWTD * 1000, // timeout em ms
-            .idle_core_mask = (1 << portNUM_PROCESSORS) - 1, // aplica a todos os cores
-            .trigger_panic = true,
-        };
+		esp_task_wdt_deinit();
+        #if defined(PLATFORMIO)
+            esp_err_t iniciou = esp_task_wdt_init(m_timeoutWTD * 1000, true);
+        #elif defined(ARDUINO)
+            esp_task_wdt_config_t twdt_config = {
+                .timeout_ms = m_timeoutWTD * 1000, // timeout em ms
+                .idle_core_mask = (1 << portNUM_PROCESSORS) - 1, // aplica a todos os cores
+                .trigger_panic = true,
+            };
 
-        esp_err_t iniciou = esp_task_wdt_init(&twdt_config);  // timeout em segundos, trigger_panic = true
+            esp_err_t iniciou = esp_task_wdt_init(&twdt_config);  // timeout em segundos, trigger_panic = true
+        #endif
+
+
+        #if defined(PLATFORMIO) || defined(ARDUINO)
         m_watchdogInitialized = (iniciou == ESP_OK);
         if(iniciou == ESP_OK){
             DEBUG_D("WDT initialized with %i seconds timeout", m_timeoutWTD);
+            esp_task_wdt_add(NULL);
         }else{
             DEBUG_E("WDT initialization failed");
         }
+        #endif
+		
     }else{
         esp_task_wdt_delete(NULL);
         esp_err_t deinit = esp_task_wdt_deinit();
@@ -2395,9 +2405,11 @@ void DisplayFK::checkCalibration()
     // Ajustar os valores de calibração da tela
     touchExterno->setCalibration(dados);
     Serial.println("Calibration OK");
+
     // WidgetBase::objTFT->setTouch(dadosDeCalibracao);
+    WidgetBase::objTFT->fillScreen(0xffff);
     WidgetBase::objTFT->setCursor(WidgetBase::objTFT->width() / 2, WidgetBase::objTFT->height() / 4);
-    WidgetBase::objTFT->print("Done");
+    WidgetBase::objTFT->print("Calibration done");
     // WidgetBase::objTFT->setTextPadding(WidgetBase::objTFT->textWidth(msg));
     // WidgetBase::objTFT->drawString(msg, WidgetBase::objTFT->width() / 2, WidgetBase::objTFT->height() / 2, 4);
     vTaskDelay(pdMS_TO_TICKS(1000));
