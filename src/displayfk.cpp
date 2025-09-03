@@ -12,6 +12,8 @@
 #define DEBUG_W(format, ...) 
 #endif
 
+#define RESET_WDT {if(m_enableWTD){esp_task_wdt_reset();}};
+
 
 DisplayFK *DisplayFK::instance = nullptr;
 bool DisplayFK::sdcardOK = false;
@@ -682,7 +684,7 @@ void DisplayFK::listFiles(fs::FS *fs, const char *dirname, uint8_t levels)
     uint16_t indiceFile = 1;
     while (file)
     {
-		esp_task_wdt_reset();
+		RESET_WDT
         if (file.isDirectory())
         {
             DEBUG_D("\tDIR: %s\n", file.name());
@@ -2101,7 +2103,7 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
                             return;
                         }
                     }
-					esp_task_wdt_reset();
+					RESET_WDT
                     vTaskDelay(pdMS_TO_TICKS(10));
                 }
             }
@@ -2145,7 +2147,7 @@ void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
                             return;
                         }
                     }
-					esp_task_wdt_reset();
+					RESET_WDT
                     vTaskDelay(pdMS_TO_TICKS(10));
                 }
             }
@@ -2264,7 +2266,7 @@ void DisplayFK::TaskEventoTouch(void *pvParameters)
         if(DisplayFK::instance){
             DisplayFK::instance->loopTask();
         }
-		esp_task_wdt_reset();
+        if(DisplayFK::instance->m_enableWTD){esp_task_wdt_reset();}
         vTaskDelay(pdMS_TO_TICKS(1));
     }
 }
