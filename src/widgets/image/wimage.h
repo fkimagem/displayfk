@@ -29,7 +29,8 @@ struct ImageFromFileConfig {
   SourceFile source; ///< Source of the image file.
   const char* path; ///< Path to the image file.
   functionCB_t cb; ///< Callback function to be called when the image is touched.
-  float angle; ///< Rotation angle of the image.
+  uint16_t backgroundColor;///< Background color of the image.
+  //float angle; ///< Rotation angle of the image.
 };
 
 
@@ -50,7 +51,8 @@ struct ImageFromPixelsConfig {
   uint16_t height; ///< Height of the image.
   const uint8_t *maskAlpha; ///< Pointer to the alpha mask data for transparency.
   functionCB_t cb; ///< Callback function to be called when the image is touched.
-  float angle; ///< Rotation angle of the image.  
+  uint16_t backgroundColor; ///< Background color of the image.
+  //float angle; ///< Rotation angle of the image.  
 };
 
 
@@ -71,6 +73,9 @@ public:
 
 
   void draw();
+
+  void show();
+  void hide();
   
 
   void forceUpdate();
@@ -80,6 +85,8 @@ public:
   
 
 private:
+bool m_showImage = true;
+uint16_t m_backgroundColor = 0x0000;
   bool m_update = false; ///< Flag indicating if the image should be updated.
   SourceFile m_source = SourceFile::EMBED; ///< Source of the image file.
   const char* m_path = nullptr; ///< Path to the image file.

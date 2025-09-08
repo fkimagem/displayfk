@@ -255,6 +255,11 @@ void Image::draw()
 
   m_update = false;
 
+  if(!m_showImage){
+    objTFT->fillRect(xPos, yPos, m_width, m_height, m_backgroundColor);
+    return;
+  };
+
   if (m_ownsBuffers)
   {
     if (!m_ownedPixels)
@@ -520,6 +525,7 @@ void Image::setup(const uint8_t *_pixels, uint16_t _width, uint16_t _height, con
 void Image::setup(const ImageFromFileConfig &config)
 {
   setup(config.source, config.path, config.cb, config.angle);
+  m_backgroundColor = config.backgroundColor;
 }
 
 /**
@@ -532,4 +538,18 @@ void Image::setup(const ImageFromFileConfig &config)
 void Image::setup(const ImageFromPixelsConfig &config)
 {
   setup(config.pixels, config.width, config.height, config.maskAlpha, config.angle, config.cb);
+  m_backgroundColor = config.backgroundColor;
+}
+
+
+void Image::show()
+{
+  m_showImage = true;
+  m_update = true;
+}
+
+void Image::hide()
+{
+  m_showImage = false;
+  m_update = true;
 }

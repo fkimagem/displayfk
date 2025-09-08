@@ -2173,7 +2173,7 @@ void DisplayFK::updateWidgets() {
         updateRadioGroup();
         updateRectButton();
         updateToggle();
-        //updateImage();
+        updateImage();
         //updateTextButton();
         updateSpinbox();
         updateNumberBox();
@@ -2643,7 +2643,7 @@ void DisplayFK::updateImage() {
 #ifdef DFK_IMAGE
     if (m_imageConfigured) {
         for (uint32_t indice = 0; indice < qtdImage; indice++) {
-            arrayImage[indice]->redraw();
+            arrayImage[indice]->draw();
         }
     }
 #endif
