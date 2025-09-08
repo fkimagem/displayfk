@@ -524,7 +524,7 @@ void Image::setup(const uint8_t *_pixels, uint16_t _width, uint16_t _height, con
  */
 void Image::setup(const ImageFromFileConfig &config)
 {
-  setup(config.source, config.path, config.cb, config.angle);
+  setup(config.source, config.path, config.cb, 0);
   m_backgroundColor = config.backgroundColor;
 }
 
@@ -537,7 +537,7 @@ void Image::setup(const ImageFromFileConfig &config)
  */
 void Image::setup(const ImageFromPixelsConfig &config)
 {
-  setup(config.pixels, config.width, config.height, config.maskAlpha, config.angle, config.cb);
+  setup(config.pixels, config.width, config.height, config.maskAlpha, 0, config.cb);
   m_backgroundColor = config.backgroundColor;
 }
 
