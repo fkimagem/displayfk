@@ -24,12 +24,7 @@ Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _sc
 #endif
                                                           m_maskAlpha(nullptr),
                                                           m_fs(nullptr),
-                                                          m_path(nullptr),
-#if defined(USING_GRAPHIC_LIB)
-                                                          m_ownedPixels(nullptr),
-#endif
-                                                          m_ownedMask(nullptr),
-                                                          m_ownsBuffers(false)
+                                                          m_path(nullptr)
 {
 }
 
@@ -38,18 +33,7 @@ Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _sc
  */
 Image::~Image()
 {
-#if defined(USING_GRAPHIC_LIB)
-  if (m_ownedPixels)
-  {
-    delete[] m_ownedPixels;
-    m_ownedPixels = nullptr;
-  }
-  if (m_ownedMask)
-  {
-    delete[] m_ownedMask;
-    m_ownedMask = nullptr;
-  }
-#endif
+clearBuffers();
 }
 
 /**
@@ -103,6 +87,8 @@ bool Image::readFileFromDisk()
     return false;
   }
 
+  log_d("Looking for file: %s", m_path);
+
   fs::File file = m_fs->open(m_path, "r");
   if (!file)
   {
@@ -151,25 +137,21 @@ bool Image::readFileFromDisk()
 
   uint32_t bytesOfColor = m_width * m_height;
 
-#if defined(DISP_DEFAULT)
-  m_ownedPixels = new uint16_t[bytesOfColor];
-#elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
-  m_ownedPixels = new uint8_t[bytesOfColor];
-#endif
+  m_pixels = new pixel_t[bytesOfColor];
 
-  if (!m_ownedPixels)
+  if (!m_pixels)
   {
     DEBUG_E("Failed to allocate memory for image pixels");
     file.close();
     return false;
   }
 
-  memset(m_ownedPixels, 0, bytesOfColor * sizeof(uint16_t));
+  memset(m_pixels, 0, bytesOfColor * sizeof(uint16_t));
 
 #if defined(DISP_DEFAULT)
-  uint8_t read_pixels = 2;
+  const uint8_t read_pixels = 2;
 #elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
-  uint8_t read_pixels = 1;
+  const uint8_t read_pixels = 1;
 #endif
 
   uint8_t pixel[read_pixels]; // 2 bytes per pixel (color 565)
@@ -183,19 +165,15 @@ bool Image::readFileFromDisk()
       {
         DEBUG_E("Error reading pixel %d,%d", x, y);
         file.close();
-        if (m_ownedPixels)
-        {
-          delete[] m_ownedPixels;
-          m_ownedPixels = nullptr;
-        }
+        clearBuffers();
         return false;
       }
 #if defined(DISP_DEFAULT)
       uint16_t color = (pixel[0] << 8) | pixel[1];
-      m_ownedPixels[y * m_width + x] = color;
+      m_pixels[y * m_width + x] = color;
 #elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
       uint8_t color = pixel[0];
-      m_ownedPixels[y * m_width + x] = color;
+      m_pixels[y * m_width + x] = color;
 #endif
     }
   }
@@ -206,38 +184,42 @@ bool Image::readFileFromDisk()
   {
     DEBUG_E("Invalid mask length");
     file.close();
-    if (m_ownedPixels)
-    {
-      delete[] m_ownedPixels;
-      m_ownedPixels = nullptr;
-    }
+    clearBuffers();
     return false;
   }
 
-  m_ownedMask = new uint8_t[maskLen];
+  m_maskAlpha = new uint8_t[maskLen];
 
-  if (!m_ownedMask)
+  if (!m_maskAlpha)
   {
     DEBUG_E("Failed to allocate memory for image mask");
     file.close();
-    if (m_ownedPixels)
-    {
-      delete[] m_ownedPixels;
-      m_ownedPixels = nullptr;
-    }
     return false;
   }
 
-  memset(m_ownedMask, 0, maskLen);
+  memset(m_maskAlpha, 0, maskLen);
 
   for (int i = 0; i < maskLen; i++)
   {
-    m_ownedMask[i] = file.read();
+    m_maskAlpha[i] = file.read();
   }
 
   file.close();
   return true;
 }
+
+
+void Image::drawBackground(){
+	#if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
+	if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+	  {
+		return;
+	  }
+	objTFT->fillRect(xPos, yPos, m_width, m_height, m_backgroundColor);
+	#endif
+}
+	
+
 
 /**
  * @brief Draws the image on the screen.
@@ -254,53 +236,21 @@ void Image::draw()
   }
 
   m_update = false;
-
+	
+	
   if(!m_showImage){
-    objTFT->fillRect(xPos, yPos, m_width, m_height, m_backgroundColor);
     return;
   };
 
-  if (m_ownsBuffers)
-  {
-    if (!m_ownedPixels)
-    {
-      DEBUG_E("No owned pixels");
-      return;
-    }
-    if (!m_ownedMask)
-    {
-      DEBUG_E("No owned mask");
-      return;
-    }
+  log_d("Redraw image: %d x %d", m_width, m_height);
 
 #if defined(DISP_DEFAULT)
-    WidgetBase::objTFT->draw16bitRGBBitmapWithMask(xPos, yPos, m_ownedPixels, m_ownedMask, m_width, m_height);
+  WidgetBase::objTFT->draw16bitRGBBitmapWithMask(xPos, yPos, m_pixels, m_maskAlpha, m_width, m_height);
 #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
-    WidgetBase::objTFT->drawBitmap(xPos, yPos, m_ownedPixels, m_width, m_height, CFK_BLACK);
-    #elif defined(DISP_U8G2)
-    WidgetBase::objTFT->drawXBMP(xPos, yPos, m_width, m_height, m_ownedPixels);
+  WidgetBase::objTFT->drawBitmap(xPos, yPos, m_pixels, m_width, m_height, CFK_BLACK);
+#elif defined(DISP_U8G2)
+  WidgetBase::objTFT->drawXBMP(xPos, yPos, m_width, m_height, m_pixels);
 #endif
-  }
-  else
-  {
-    if (!m_pixels)
-    {
-      DEBUG_E("No owned pixels");
-      return;
-    }
-    if (!m_maskAlpha)
-    {
-      DEBUG_E("No owned mask");
-      return;
-    }
-
-#if defined(DISP_DEFAULT)
-    WidgetBase::objTFT->draw16bitRGBBitmapWithMask(xPos, yPos, m_pixels, m_maskAlpha, m_width, m_height);
-#elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
-    WidgetBase::objTFT->drawBitmap(xPos, yPos, m_pixels, m_width, m_height, CFK_BLACK);
-#endif
-  }
-  DEBUG_D("Image drawn");
 #endif
 }
 
@@ -337,30 +287,19 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
 #if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
   if (loaded)
   {
-    log_w("Widget already loaded");
-    return;
+    log_w("Reconfigure Image");
+    //return;
   }
+
+  clearBuffers();
 
   m_width = 0;
   m_height = 0;
   cb = _cb;
-  m_update = true;
+  
   m_source = _source;
   m_path = _path;
   m_angle = _angle;
-  m_ownsBuffers = true;
-
-  // Libera memória existente se existir
-  if (m_ownedPixels)
-  {
-    delete[] m_ownedPixels;
-    m_ownedPixels = nullptr;
-  }
-  if (m_ownedMask)
-  {
-    delete[] m_ownedMask;
-    m_ownedMask = nullptr;
-  }
 
   if (_path == nullptr)
   {
@@ -409,6 +348,21 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
 
   loaded = readFileFromDisk();
 #endif
+m_update = true;
+}
+
+void Image::clearBuffers()
+{
+  if (m_pixels)
+  {
+    delete[] m_pixels;
+    m_pixels = nullptr;
+  }
+  if (m_maskAlpha)
+  {
+    delete[] m_maskAlpha;
+    m_maskAlpha = nullptr;
+  }
 }
 
 /**
@@ -420,31 +374,21 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
  * @param _angle Rotation angle in degrees.
  * @param _cb Callback function to execute when the image is interacted with.
  */
-#if defined(DISP_DEFAULT)
-void Image::setup(const uint16_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb)
+void Image::setup(const pixel_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb)
 {
   if (loaded)
   {
-    log_w("Widget already loaded");
+    log_w("Reconfigure Image");
+    //return;
     return;
   }
 
   // Libera memória existente se existir
-  if (m_pixels)
-  {
-    delete[] m_pixels;
-    m_pixels = nullptr;
-  }
-  if (m_maskAlpha)
-  {
-    delete[] m_maskAlpha;
-    m_maskAlpha = nullptr;
-  }
+  clearBuffers();
 
   m_source = SourceFile::EMBED;
-  m_pixels = _pixels;
-  m_maskAlpha = _maskAlpha;
-  m_ownsBuffers = false; // Não possui os buffers, apenas referencia
+   m_pixels = const_cast<pixel_t *>(_pixels);
+  m_maskAlpha = const_cast<uint8_t *>(_maskAlpha);
   m_width = _width;
   m_height = _height;
   m_angle = _angle;
@@ -461,59 +405,6 @@ void Image::setup(const uint16_t *_pixels, uint16_t _width, uint16_t _height, co
   loaded = true;
   m_update = true;
 }
-#endif
-
-/**
- * @brief Configures the Image widget with pixel data.
- * @param _pixels Pointer to the pixel data array.
- * @param _width Width of the image.
- * @param _height Height of the image.
- * @param _maskAlpha Pointer to the alpha mask array for transparency.
- * @param _angle Rotation angle in degrees.
- * @param _cb Callback function to execute when the image is interacted with.
- */
-#if defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
-void Image::setup(const uint8_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb)
-{
-  if (loaded)
-  {
-    log_w("Widget already loaded");
-    return;
-  }
-
-  // Libera memória existente se existir
-  if (m_pixels)
-  {
-    delete[] m_pixels;
-    m_pixels = nullptr;
-  }
-  if (m_maskAlpha)
-  {
-    delete[] m_maskAlpha;
-    m_maskAlpha = nullptr;
-  }
-
-  m_source = SourceFile::EMBED;
-  m_pixels = _pixels;
-  m_maskAlpha = _maskAlpha;
-  m_ownsBuffers = false; // Não possui os buffers, apenas referencia
-  m_width = _width;
-  m_height = _height;
-  m_angle = _angle;
-  cb = _cb;
-
-  if (_pixels == nullptr)
-  {
-    log_e("Pixels is nullptr");
-    return;
-  }
-
-  DEBUG_D("Image setup with pixels (%d x %d)", _width, _height);
-
-  loaded = true;
-  m_update = true;
-}
-#endif
 
 /**
  * @brief Configures the Image widget with a file source.
@@ -522,8 +413,9 @@ void Image::setup(const uint8_t *_pixels, uint16_t _width, uint16_t _height, con
  *
  * @param config Configuration structure containing file source, path, callback function, and rotation angle.
  */
-void Image::setup(const ImageFromFileConfig &config)
+void Image::setup(ImageFromFileConfig &config)
 {
+  log_d("Need to load file %s", config.toString().c_str());
   setup(config.source, config.path, config.cb, 0);
   m_backgroundColor = config.backgroundColor;
 }
@@ -535,7 +427,7 @@ void Image::setup(const ImageFromFileConfig &config)
  *
  * @param config Configuration structure containing pixel data, width, height, mask alpha, angle, and callback function.
  */
-void Image::setup(const ImageFromPixelsConfig &config)
+void Image::setup(ImageFromPixelsConfig &config)
 {
   setup(config.pixels, config.width, config.height, config.maskAlpha, 0, config.cb);
   m_backgroundColor = config.backgroundColor;

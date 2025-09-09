@@ -342,10 +342,9 @@ public:
   WidgetBase(uint16_t _x, uint16_t _y, uint8_t _screen);
 
   virtual ~WidgetBase();
-
   virtual bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch);
-
   virtual functionCB_t getCallbackFunc();
+  
 #if defined(USING_GRAPHIC_LIB)
   static void recalculateTextPosition(const char* _texto, uint16_t *_x, uint16_t *_y, uint8_t _datum);
   #endif

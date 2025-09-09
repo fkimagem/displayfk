@@ -1657,6 +1657,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
         for ( uint32_t indice = 0; indice < (qtdImage); indice++)
         {
             arrayImage[indice]->forceUpdate();
+			arrayImage[indice]->drawBackground();
             arrayImage[indice]->draw();
             //arrayImage[indice].redraw();
         }
@@ -2642,6 +2643,9 @@ void DisplayFK::updateToggle() {
 void DisplayFK::updateImage() {
 #ifdef DFK_IMAGE
     if (m_imageConfigured) {
+		for (uint32_t indice = 0; indice < qtdImage; indice++) {
+            arrayImage[indice]->drawBackground();
+        }
         for (uint32_t indice = 0; indice < qtdImage; indice++) {
             arrayImage[indice]->draw();
         }
