@@ -91,12 +91,19 @@ uint8_t FT6336U::read_touch1_misc(void) {
 }
 // Touch 2 functions
 uint16_t FT6336U::read_touch2_x(void) {
+    if ((read_td_status() & 0x0F) < 2) {
+        return 0; // sem segundo toque
+    }
+
     uint8_t read_buf[2];
     read_buf[0] = readByte(FT6336U_ADDR_TOUCH2_X);
     read_buf[1] = readByte(FT6336U_ADDR_TOUCH2_X + 1);
     return ((read_buf[0] & 0x0f) << 8) | read_buf[1];
 }
 uint16_t FT6336U::read_touch2_y(void) {
+    if ((read_td_status() & 0x0F) < 2) {
+        return 0; // sem segundo toque
+    }
     uint8_t read_buf[2];
     read_buf[0] = readByte(FT6336U_ADDR_TOUCH2_Y);
     read_buf[1] = readByte(FT6336U_ADDR_TOUCH2_Y + 1);
@@ -223,8 +230,10 @@ FT6336U_TouchPointType FT6336U::scan(void){
     if(touchPoint.touch_count == 0) {
         touchPoint.tp[0].status = release;
         touchPoint.tp[1].status = release;
+        DEBUG_PRINTLN("FT6336U Touch Count: 0");
     }
     else if(touchPoint.touch_count == 1) {
+        DEBUG_PRINTLN("FT6336U Touch Count: 1");
         uint8_t id1 = read_touch1_id(); // id1 = 0 or 1
         touchPoint.tp[id1].status = (touchPoint.tp[id1].status == release) ? touch : stream;
         touchPoint.tp[id1].x = read_touch1_x();
@@ -232,14 +241,15 @@ FT6336U_TouchPointType FT6336U::scan(void){
         touchPoint.tp[~id1 & 0x01].status = release;
     }
     else {
+        DEBUG_PRINTLN("FT6336U Touch Count: 2");
         uint8_t id1 = read_touch1_id(); // id1 = 0 or 1
         touchPoint.tp[id1].status = (touchPoint.tp[id1].status == release) ? touch : stream;
         touchPoint.tp[id1].x = read_touch1_x();
         touchPoint.tp[id1].y = read_touch1_y();
-        uint8_t id2 = read_touch2_id(); // id2 = 0 or 1(~id1 & 0x01)
-        touchPoint.tp[id2].status = (touchPoint.tp[id2].status == release) ? touch : stream;
-        touchPoint.tp[id2].x = read_touch2_x();
-        touchPoint.tp[id2].y = read_touch2_y();
+        //uint8_t id2 = read_touch2_id(); // id2 = 0 or 1(~id1 & 0x01)
+        //touchPoint.tp[id2].status = (touchPoint.tp[id2].status == release) ? touch : stream;
+        //touchPoint.tp[id2].x = read_touch2_x();
+        //touchPoint.tp[id2].y = read_touch2_y();
     }
 
     return touchPoint;
@@ -251,13 +261,16 @@ FT6336U_TouchPointType FT6336U::scan(void){
 uint8_t FT6336U::readByte(uint8_t addr) {
     uint8_t rdData = 0;
     uint8_t rdDataCount;
+    uint8_t retries = 0;
+    uint8_t maxRetries = 3;
     do {
         Wire.beginTransmission(I2C_ADDR_FT6336U);
         Wire.write(addr);
         Wire.endTransmission(false); // Restart
         delay(10);
         rdDataCount = Wire.requestFrom(I2C_ADDR_FT6336U, 1);
-    } while(rdDataCount == 0);
+        retries++;
+    } while(rdDataCount == 0 && retries < maxRetries);
     while(Wire.available()) {
         rdData = Wire.read();
     }

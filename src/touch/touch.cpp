@@ -449,8 +449,31 @@ bool TouchScreen::touch_touched()
   if (!touched)
     return false;
 
-  uint16_t rx = tp.tp[0].x; // raw X do FT6336
-  uint16_t ry = tp.tp[0].y; // raw Y do FT6336
+  /*
+  Example
+  tp = ft6336u.scan();
+  char tempString[128];
+  sprintf(tempString, "FT6336U TD Count %d / TD1 (%d, %4d, %4d) / TD2 (%d, %4d, %4d)\n", tp.touch_count, tp.tp[0].status, tp.tp[0].x, tp.tp[0].y, tp.tp[1].status, tp.tp[1].x, tp.tp[1].y);
+  Serial.print(tempString);
+  */
+
+  TouchStatusEnum status0 = (tp.tp[0].status);
+  TouchStatusEnum status1 = (tp.tp[1].status);
+
+  uint16_t rx = 0; // raw X do FT6336
+  uint16_t ry = 0; // raw Y do FT6336
+  if(status0 == TouchStatusEnum::stream){
+    rx = tp.tp[0].x;
+    ry = tp.tp[0].y;
+  }else if(status1 == TouchStatusEnum::stream){
+    rx = tp.tp[1].x;
+    ry = tp.tp[1].y;
+  }
+  if(m_logMessages){
+    char tempString[128];
+    sprintf(tempString, "FT6336U TD Count %d / TD1 (%d, %4d, %4d) / TD2 (%d, %4d, %4d)\n", tp.touch_count, tp.tp[0].status, tp.tp[0].x, tp.tp[0].y, tp.tp[1].status, tp.tp[1].x, tp.tp[1].y);
+    Serial.print(tempString);
+  }
   uint16_t sx, sy;          // coordenadas já convertidas
 
   switch (m_rotation & 3) // 0,1,2,3
