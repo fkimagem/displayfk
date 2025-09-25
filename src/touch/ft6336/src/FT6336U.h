@@ -92,7 +92,7 @@ typedef struct {
 
 
 // Uncomment to enable debug messages
-#define FT6336U_DEBUG
+//#define FT6336U_DEBUG
 
 // Define where debug output will be printed
 #define DEBUG_PRINTER Serial

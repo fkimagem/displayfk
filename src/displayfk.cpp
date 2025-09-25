@@ -1680,11 +1680,45 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
     this->setup();
     this->startKeyboards();
 
+    /*
+    ESP_ARDUINO_VERSION;
+
+    ESP_ARDUINO_VERSION_MAJOR;
+
+    ESP_ARDUINO_VERSION_MINOR;
+
+    ESP_ARDUINO_VERSION_PATCH;
+
+    ESP_ARDUINO_VERSION_VAL(1,2,3);
+    */
+
+    #if defined(ESP_ARDUINO_VERSION)
+    Serial.printf("ESP_ARDUINO_VERSION: %i\n", ESP_ARDUINO_VERSION);
+    #endif
+    #if defined(ESP_ARDUINO_VERSION_MAJOR)
+    Serial.printf("ESP_ARDUINO_VERSION_MAJOR: %i\n", ESP_ARDUINO_VERSION_MAJOR);
+    #if ESP_ARDUINO_VERSION_MAJOR == 3
+    #pragma message "ESP_ARDUINO_VERSION_MAJOR is 3.x"
+    #elif ESP_ARDUINO_VERSION_MAJOR == 2
+    #pragma message "ESP_ARDUINO_VERSION_MAJOR is 2.x"
+    #else
+    #pragma message "ESP_ARDUINO_VERSION_MAJOR is unknown"
+    #error "ESP_ARDUINO_VERSION_MAJOR is unknown"
+    #endif
+
+    #endif
+    #if defined(ESP_ARDUINO_VERSION_MINOR)
+    Serial.printf("ESP_ARDUINO_VERSION_MINOR: %i\n", ESP_ARDUINO_VERSION_MINOR);
+    #endif
+    #if defined(ESP_ARDUINO_VERSION_PATCH)
+    Serial.printf("ESP_ARDUINO_VERSION_PATCH: %i\n", ESP_ARDUINO_VERSION_PATCH);
+    #endif
+
     if(m_enableWTD){
 		esp_task_wdt_deinit();
-        #if defined(PLATFORMIO)
+        #if ESP_ARDUINO_VERSION_MAJOR == 2
             esp_err_t iniciou = esp_task_wdt_init(m_timeoutWTD * 1000, true);
-        #elif defined(ARDUINO)
+        #elif ESP_ARDUINO_VERSION_MAJOR == 3
             esp_task_wdt_config_t twdt_config = {
                 .timeout_ms = m_timeoutWTD * 1000, // timeout em ms
                 .idle_core_mask = (1 << portNUM_PROCESSORS) - 1, // aplica a todos os cores
@@ -1695,7 +1729,7 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
         #endif
 
 
-        #if defined(PLATFORMIO) || defined(ARDUINO)
+        #if (ESP_ARDUINO_VERSION_MAJOR == 2) || (ESP_ARDUINO_VERSION_MAJOR == 3)
         m_watchdogInitialized = (iniciou == ESP_OK);
         if(iniciou == ESP_OK){
             DEBUG_D("WDT initialized with %i seconds timeout", m_timeoutWTD);
