@@ -1017,13 +1017,35 @@ ScreenPoint_t TouchScreen::touchToTelaPonto0e2(int16_t xTouch, int16_t yTouch)
 
   if (m_swapAxis)
   {
-    screenPos.x = mapTouch(yTouch, p0.yTouch, p2.yTouch, p0.xScreen, p2.xScreen);
-    screenPos.y = mapTouch(xTouch, p0.xTouch, p2.xTouch, p0.yScreen, p2.yScreen);
+    if(m_invertXAxis){
+      screenPos.x = mapTouch(yTouch, p0.yTouch, p2.yTouch, p2.xScreen, p0.xScreen);
+    }else{
+      screenPos.x = mapTouch(yTouch, p0.yTouch, p2.yTouch, p0.xScreen, p2.xScreen);
+    }
+
+    if(m_invertYAxis){
+      screenPos.y = mapTouch(xTouch, p0.xTouch, p2.xTouch, p2.yScreen, p0.yScreen);
+    }else{
+      screenPos.y = mapTouch(xTouch, p0.xTouch, p2.xTouch, p0.yScreen, p2.yScreen);
+    }
+    
+    
   }
   else
   {
-    screenPos.x = mapTouch(xTouch, p0.xTouch, p2.xTouch, p0.xScreen, p2.xScreen);
-    screenPos.y = mapTouch(yTouch, p0.yTouch, p2.yTouch, p0.yScreen, p2.yScreen);
+    if(m_invertXAxis){
+      screenPos.x = mapTouch(xTouch, p0.xTouch, p2.xTouch, p2.xScreen, p0.xScreen);
+    }else{
+      screenPos.x = mapTouch(xTouch, p0.xTouch, p2.xTouch, p0.xScreen, p2.xScreen);
+    }
+
+    if(m_invertYAxis){
+      screenPos.y = mapTouch(yTouch, p0.yTouch, p2.yTouch, p2.yScreen, p0.yScreen);
+    }else{
+      screenPos.y = mapTouch(yTouch, p0.yTouch, p2.yTouch, p0.yScreen, p2.yScreen);
+    }
+    
+    
   }
 
   return screenPos;

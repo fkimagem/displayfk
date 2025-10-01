@@ -50,8 +50,8 @@
 //#define DISP_SSD1306
 //#define DISP_U8G2
 //#define TOUCH_FT6236U
-#define TOUCH_FT6336	
-//#define TOUCH_FT6336
+//#define TOUCH_FT6336	
+#define TOUCH_XPT2046
 //#define TOUCH_GT911	
 #define HAS_TOUCH
 //#define INVERT_COLOR_BITS
