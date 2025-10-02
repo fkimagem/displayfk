@@ -124,6 +124,8 @@ private:
   bool touch_has_signal();
   bool touch_touched();
   bool touch_released();
+
+  void showMap(const String& axis, int16_t minValue, int16_t maxValue);
   
 
   uint16_t m_widthScreen;      ///< Width of the screen.

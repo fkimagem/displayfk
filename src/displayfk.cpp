@@ -1258,6 +1258,9 @@ void DisplayFK::setTouchCorners(int x0, int x1, int y0, int y1){
     m_x1 = x1;
     m_y0 = y0;
     m_y1 = y1;
+
+    Serial.print("X0: "); Serial.print(m_x0); Serial.print(" X1: "); Serial.println(m_x1);
+    Serial.print("Y0: "); Serial.print(m_y0); Serial.print(" Y1: "); Serial.println(m_y1);
 }
 
 void DisplayFK::setInvertAxis(bool invertX, bool invertY){

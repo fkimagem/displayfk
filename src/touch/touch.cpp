@@ -109,12 +109,25 @@ void TouchScreen::setLogMessages(bool logMessages)
   m_logMessages = logMessages;
 }
 
-void TouchScreen::setTouchCorners(int x0, int y0, int x1, int y1)
+void TouchScreen::setTouchCorners(int x0, int x1, int y0, int y1)
 {
   m_x0 = x0;
   m_y0 = y0;
   m_x1 = x1;
   m_y1 = y1;
+
+  // print Range X
+    Serial.print("X0: ");
+    Serial.print(m_x0);
+    Serial.print(" X1: ");
+    Serial.println(m_x1);
+  
+  // print Range Y
+    Serial.print("Y0: ");
+    Serial.print(m_y0);
+    Serial.print(" Y1: ");
+    Serial.println(m_y1);
+  
 }
 
 void TouchScreen::setInvertAxis(bool invertX, bool invertY)
@@ -294,6 +307,16 @@ bool TouchScreen::touch_has_signal()
 #endif
 }
 
+void TouchScreen::showMap(const String& axis, int16_t minValue, int16_t maxValue){
+  Serial.print("Axis: ");
+  Serial.print(axis);
+  Serial.print(" (");
+  Serial.print(minValue);
+  Serial.print(" - ");
+  Serial.print(maxValue);
+  Serial.println(")");
+}
+
 /**
  * @brief Checks if the touch screen has been touched.
  * @return True if the touch screen has been touched, false otherwise.
@@ -470,22 +493,132 @@ bool TouchScreen::touch_touched()
     ry = tp.tp[1].y;
   }
   if(m_logMessages){
-    char tempString[128];
-    sprintf(tempString, "FT6336U TD Count %d / TD1 (%d, %4d, %4d) / TD2 (%d, %4d, %4d)\n", tp.touch_count, tp.tp[0].status, tp.tp[0].x, tp.tp[0].y, tp.tp[1].status, tp.tp[1].x, tp.tp[1].y);
-    Serial.print(tempString);
+    //char tempString[128];
+    //sprintf(tempString, "FT6336U TD Count %d / TD1 (%d, %4d, %4d) / TD2 (%d, %4d, %4d)\n", tp.touch_count, tp.tp[0].status, tp.tp[0].x, tp.tp[0].y, tp.tp[1].status, tp.tp[1].x, tp.tp[1].y);
+    //Serial.print(tempString);
+
+
+    char printString[128];
+    sprintf(printString, "Touch value x:%d, y:%d\n", rx, ry);
+    Serial.print(printString);
+
+    if(m_invertXAxis){
+      Serial.print("Invert X axis\n");
+    }
+    if(m_invertYAxis){
+      Serial.print("Invert Y axis\n");
+    }
   }
   uint16_t sx, sy;          // coordenadas já convertidas
 
-  switch (m_rotation & 3) // 0,1,2,3
+  int startX = 0;
+  int endX = 0;
+  int xToMap = 0;
+
+  if(!m_swapAxis){
+    xToMap = rx;
+    if(!m_invertXAxis){
+      startX = m_x0;
+      endX = m_x1;
+    }else{
+      startX = m_x1;
+      endX = m_x0; 
+    }
+  }else{
+    xToMap = ry;
+    if(!m_invertXAxis){
+      startX = m_y0;
+      endX = m_y1;
+    }else{
+      startX = m_y1;
+      endX = m_y0; 
+    }
+  }
+  // print mapping Serial.print('X', xToMap, startX, endX, 0, m_widthScreen - 1);
+  char printString[128];
+  sprintf(printString, "'X'\t%d \t%d, \t%d, \t%d, \t%d\n", xToMap, startX, endX, 0, m_widthScreen - 1);
+  Serial.print(printString);
+
+
+
+
+  sx = map(xToMap, startX, endX, 0, m_widthScreen - 1);
+
+  int startY = 0;
+  int endY = 0;
+  int yToMap = 0;
+
+  if(!m_swapAxis){
+    yToMap = ry;
+    if(!m_invertYAxis){
+      startY = m_y0;
+      endY = m_y1;
+    }else{
+      startY = m_y1;
+      endY = m_y0; 
+    }
+  }else{
+    yToMap = rx;
+    if(!m_invertYAxis){
+      startY = m_x0;
+      endY = m_x1;
+    }else{
+      startY = m_x1;
+      endY = m_x0; 
+    }
+  }
+
+  char printStringY[128];
+  sprintf(printStringY, "'Y'\t%d \t%d, \t%d, \t%d, \t%d\n", yToMap, startY, endY, 0, m_heightScreen - 1);
+  Serial.print(printStringY);
+  sy = map(yToMap, startY, endY, 0, m_heightScreen - 1);
+  
+
+  /*switch (m_rotation & 3) // 0,1,2,3
   {
   case 0: // Portrait   (0°)
-    sx = map(rx, m_x1, m_x0, 0, m_widthScreen - 1);
-    sy = map(ry, m_y0, m_y1, 0, m_heightScreen - 1);
+    if(m_invertXAxis){
+
+      showMap("X", m_x1, m_x0);
+
+      sx = map(rx, m_x1, m_x0, 0, m_widthScreen - 1);
+    }else{
+
+      showMap("X", m_x0, m_x1);
+
+      sx = map(rx, m_x0, m_x1, 0, m_widthScreen - 1);
+    }
+
+    if(m_invertYAxis){
+      showMap("Y", m_y1, m_y0);
+      sy = map(ry, m_y1, m_y0, 0, m_heightScreen - 1);
+    }else{
+      showMap("Y", m_y0, m_y1);
+      sy = map(ry, m_y0, m_y1, 0, m_heightScreen - 1);
+    }
+    
+    
     break;
 
   case 1: // Landscape  (90°)
-    sx = map(ry, m_y0, m_y1, 0, m_widthScreen - 1);
-    sy = map(rx, m_x0, m_x1, 0, m_heightScreen - 1);
+    if(m_invertXAxis){
+      showMap("X", m_y1, m_y0);
+      sx = map(ry, m_y1, m_y0, 0, m_widthScreen - 1);
+    }else{
+      showMap("X", m_y0, m_y1);
+      sx = map(ry, m_y0, m_y1, 0, m_widthScreen - 1);
+    }
+
+
+    if(m_invertYAxis){
+      showMap("Y", m_x0, m_x1);
+      sy = map(rx, m_x0, m_x1, 0, m_heightScreen - 1);
+    }else{
+      showMap("Y", m_x1, m_x0);
+      sy = map(rx, m_x1, m_x0, 0, m_heightScreen - 1);
+    }
+    
+    
     break;
 
   case 2: // Portrait   (180°)
@@ -497,7 +630,7 @@ bool TouchScreen::touch_touched()
     sx = map(ry, m_y1, m_y0, 0, m_widthScreen - 1);
     sy = map(rx, m_x1, m_x0, 0, m_heightScreen - 1);
     break;
-  }
+  }*/
 
   /* Garante que nada extrapole os limites físicos do display */
   m_touch_last_x = constrain(sx, 0, m_widthScreen - 1);
