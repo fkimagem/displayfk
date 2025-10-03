@@ -347,7 +347,7 @@ void Numpad::open(NumberBox *_field)
 void Numpad::close()
 {
 #if defined(DISP_DEFAULT)
-    WidgetBase::objTFT->setFont(nullptr);
+    WidgetBase::objTFT->setFont((GFXfont *)0);
 #endif
     log_d("Value of content is: %s", m_content.getString());
     log_d("Value of content is: %f", m_content.toFloat());

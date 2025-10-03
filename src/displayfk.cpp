@@ -2478,7 +2478,7 @@ void DisplayFK::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t 
     if(_font){
         WidgetBase::objTFT->setFont(_font);
     }else{
-        WidgetBase::objTFT->setFont(NULL);
+        WidgetBase::objTFT->setFont((GFXfont *)0);
     }
     
     
@@ -2486,7 +2486,7 @@ void DisplayFK::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t 
     WidgetBase::recalculateTextPosition(_texto, &_x, &_y, _datum);
     WidgetBase::objTFT->setCursor(_x, _y);
     WidgetBase::objTFT->print(_texto);
-    WidgetBase::objTFT->setFont(NULL);
+    WidgetBase::objTFT->setFont((GFXfont *)0);
 }
 #endif
 /**

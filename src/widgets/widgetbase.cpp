@@ -457,7 +457,7 @@ void WidgetBase::updateFont(FontType _f)
     default:
     {
 #if defined(USING_GRAPHIC_LIB)
-        WidgetBase::objTFT->setFont(nullptr);
+        WidgetBase::objTFT->setFont((GFXfont *)0);
 #endif
     }
     break;

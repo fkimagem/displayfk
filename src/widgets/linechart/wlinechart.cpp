@@ -254,7 +254,7 @@ void LineChart::drawBackground()
   WidgetBase::objTFT->fillRect(xPos + m_borderSize, yPos + m_borderSize, m_width - (2 * m_borderSize), m_height - (2 * m_borderSize), m_backgroundColor);
   WidgetBase::objTFT->setTextColor(CFK_RED);
 
-  objTFT->setFont(nullptr);
+  objTFT->setFont((GFXfont *)0);
 
   WidgetBase::objTFT->setTextColor(m_textColor);
   printText(String(m_vmax).c_str(), xPos + m_borderSize + m_leftPadding - 4, m_yTovmax - m_topBottomPadding, TR_DATUM);

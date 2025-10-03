@@ -65,7 +65,7 @@ void screen0()
   display->println("Teste");
 
   display->setCursor(posX,posY);
-  display->setFont(nullptr);
+  display->setFont((GFXfont *)0);
   display->println("Teste2");*/
 
   myDisplay.printText("Teste", posX, posY, TL_DATUM, CFK_BLACK, CFK_WHITE, &RobotoRegular5pt7b);

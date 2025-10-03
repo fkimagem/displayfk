@@ -189,7 +189,7 @@ void Label::redraw()
   WidgetBase::objTFT->setTextSize(m_fontSize);
   printText(m_text, xPos, yPos, m_datum, m_lastArea, m_backgroundColor);
   WidgetBase::objTFT->setTextSize(1);
-  WidgetBase::objTFT->setFont(nullptr);
+  WidgetBase::objTFT->setFont((GFXfont *)0);
   //WidgetBase::objTFT->setCursor(xPos, yPos);
   //WidgetBase::objTFT->print(text);
 
