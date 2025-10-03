@@ -485,17 +485,19 @@ bool TouchScreen::touch_touched()
 
   uint16_t rx = 0; // raw X do FT6336
   uint16_t ry = 0; // raw Y do FT6336
-  if(status0 == TouchStatusEnum::stream){
+  if(status0 == TouchStatusEnum::touch || status0 == TouchStatusEnum::stream){
     rx = tp.tp[0].x;
     ry = tp.tp[0].y;
-  }else if(status1 == TouchStatusEnum::stream){
+  }else if(status1 == TouchStatusEnum::touch || status1 == TouchStatusEnum::stream){
     rx = tp.tp[1].x;
     ry = tp.tp[1].y;
+  }else{
+    return false;
   }
   if(m_logMessages){
-    //char tempString[128];
-    //sprintf(tempString, "FT6336U TD Count %d / TD1 (%d, %4d, %4d) / TD2 (%d, %4d, %4d)\n", tp.touch_count, tp.tp[0].status, tp.tp[0].x, tp.tp[0].y, tp.tp[1].status, tp.tp[1].x, tp.tp[1].y);
-    //Serial.print(tempString);
+    char tempString[128];
+    sprintf(tempString, "FT6336U TD Count %d / TD1 (%d, %4d, %4d) / TD2 (%d, %4d, %4d)\n", tp.touch_count, tp.tp[0].status, tp.tp[0].x, tp.tp[0].y, tp.tp[1].status, tp.tp[1].x, tp.tp[1].y);
+    Serial.print(tempString);
 
 
     char printString[128];
@@ -535,9 +537,9 @@ bool TouchScreen::touch_touched()
     }
   }
   // print mapping Serial.print('X', xToMap, startX, endX, 0, m_widthScreen - 1);
-  char printString[128];
-  sprintf(printString, "'X'\t%d \t%d, \t%d, \t%d, \t%d\n", xToMap, startX, endX, 0, m_widthScreen - 1);
-  Serial.print(printString);
+  //char printString[128];
+  //sprintf(printString, "'X'\t%d \t%d, \t%d, \t%d, \t%d\n", xToMap, startX, endX, 0, m_widthScreen - 1);
+  //Serial.print(printString);
 
 
 
@@ -568,9 +570,9 @@ bool TouchScreen::touch_touched()
     }
   }
 
-  char printStringY[128];
-  sprintf(printStringY, "'Y'\t%d \t%d, \t%d, \t%d, \t%d\n", yToMap, startY, endY, 0, m_heightScreen - 1);
-  Serial.print(printStringY);
+  //char printStringY[128];
+  //sprintf(printStringY, "'Y'\t%d \t%d, \t%d, \t%d, \t%d\n", yToMap, startY, endY, 0, m_heightScreen - 1);
+  //Serial.print(printStringY);
   sy = map(yToMap, startY, endY, 0, m_heightScreen - 1);
   
 
