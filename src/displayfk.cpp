@@ -980,7 +980,7 @@ m_loopSemaphore = xSemaphoreCreateBinary();
 void DisplayFK::blockLoopTask()
 {
     // Tenta pegar o semáforo (sem timeout, bloqueia até conseguir)
-    if (m_loopSemaphore != nullptr)
+    if (m_loopSemaphore != nullptr && WidgetBase::usingKeyboard == false)
         xSemaphoreTake(m_loopSemaphore, portMAX_DELAY);
 }
 
@@ -990,7 +990,7 @@ void DisplayFK::blockLoopTask()
 void DisplayFK::freeLoopTask()
 {
     // Libera o semáforo para permitir que a Task continue
-    if (m_loopSemaphore != nullptr)
+    if (m_loopSemaphore != nullptr && WidgetBase::usingKeyboard == false)
         xSemaphoreGive(m_loopSemaphore);
 }
 
