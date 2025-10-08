@@ -970,8 +970,28 @@ DisplayFK::DisplayFK() : m_configs(), m_runningTransaction(false), m_timer(nullp
     WidgetBase::fontBold = const_cast<GFXfont *>(&RobotoBold5pt7b);
     WidgetBase::fontNormal = const_cast<GFXfont *>(&RobotoBold5pt7b);
     #endif
-
+m_loopSemaphore = xSemaphoreCreateBinary();
     
+}
+
+/**
+ * @brief Blocks the main loop task
+ */
+void DisplayFK::blockLoopTask()
+{
+    // Tenta pegar o semáforo (sem timeout, bloqueia até conseguir)
+    if (m_loopSemaphore != nullptr)
+        xSemaphoreTake(m_loopSemaphore, portMAX_DELAY);
+}
+
+/**
+ * @brief Unblocks the main loop task
+ */
+void DisplayFK::freeLoopTask()
+{
+    // Libera o semáforo para permitir que a Task continue
+    if (m_loopSemaphore != nullptr)
+        xSemaphoreGive(m_loopSemaphore);
 }
 
 void DisplayFK::startKeyboards(){
@@ -2224,6 +2244,7 @@ void DisplayFK::updateWidgets() {
  * @brief Main task loop
  */
 void DisplayFK::loopTask() {
+
     uint32_t startTime = micros();
     
     // Process screen loading
@@ -2292,8 +2313,6 @@ void DisplayFK::loopTask() {
 void DisplayFK::TaskEventoTouch(void *pvParameters)
 {
     //(void)pvParameters;
-    //DisplayFK *instance = static_cast<DisplayFK *>(pvParameters);
-
     DisplayFK::instance->changeWTD();
 
     DEBUG_D("TaskEventoTouch created");
@@ -2301,8 +2320,12 @@ void DisplayFK::TaskEventoTouch(void *pvParameters)
 
     for (;;)
     {
-        if(DisplayFK::instance){
-            DisplayFK::instance->loopTask();
+        if (xSemaphoreTake(DisplayFK::instance->m_loopSemaphore, pdMS_TO_TICKS(100)) == pdTRUE){
+            if(DisplayFK::instance){
+                DisplayFK::instance->loopTask();
+            }
+            // Libera o semáforo novamente para próxima iteração
+            xSemaphoreGive(DisplayFK::instance->m_loopSemaphore);
         }
         if(DisplayFK::instance->m_enableWTD){esp_task_wdt_reset();}
         vTaskDelay(pdMS_TO_TICKS(1));

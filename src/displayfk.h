@@ -77,7 +77,7 @@
 #include "output_widgets.h"
 
 #include "freertos/queue.h"
-
+#include <freertos/semphr.h>
 
 
 /**
@@ -129,6 +129,7 @@ private:
 	uint16_t m_timeoutWTD = 0;
 	bool m_enableWTD = false;
     bool m_watchdogInitialized = false;
+    SemaphoreHandle_t m_loopSemaphore;
 
     
 
@@ -345,6 +346,8 @@ public:
     void startAutoClick();
     void stopAutoClick();
     bool isRunningAutoClick();
+    void blockLoopTask();
+    void freeLoopTask();
 
 #if defined(HAS_TOUCH)
 #if defined(TOUCH_XPT2046)
