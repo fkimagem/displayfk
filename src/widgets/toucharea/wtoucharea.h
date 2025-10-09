@@ -18,6 +18,7 @@ private:
   uint16_t m_width; ///< Width of the TouchArea.
   uint16_t m_height; ///< Height of the TouchArea.
   bool m_status; ///< Current status of the TouchArea.
+  bool m_shouldRedraw = false; ///< Flag indicating if the TouchArea should be redrawn.
 
   void setup(uint16_t _width, uint16_t _height, functionCB_t _cb);
 
@@ -31,6 +32,8 @@ public:
   void setup(const TouchAreaConfig& config);
   bool getStatus();
   void onClick();
+  void hide() override;
+  void show() override;
 };
 
 #endif

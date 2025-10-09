@@ -369,3 +369,15 @@ void Numpad::insertChar(char c)
         log_e("Cant add char. Keyboard is not open");
     }
 }
+
+void Numpad::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void Numpad::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
+}

@@ -88,6 +88,7 @@ void TextButton::setEnabled(bool newState)
  */
 void TextButton::redraw()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded)
   {
@@ -189,4 +190,16 @@ void TextButton::setup(uint16_t _width, uint16_t _height, uint16_t _radius, uint
 void TextButton::setup(const TextButtonConfig& config)
 {
   setup(config.width, config.height, config.radius, config.backgroundColor, config.textColor, config.text, config.callback);
+}
+
+void TextButton::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void TextButton::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

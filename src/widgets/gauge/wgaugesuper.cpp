@@ -142,7 +142,7 @@ void GaugeSuper::start()
   m_availableWidth = m_width - (2 * m_borderSize);
   m_availableHeight = m_height - (2 * m_borderSize);
 
-  m_update = true;
+  m_shouldRedraw = true;
   #endif
 }
 
@@ -154,6 +154,7 @@ void GaugeSuper::start()
  */
 void GaugeSuper::drawBackground()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !loaded)
   {
@@ -366,7 +367,7 @@ void GaugeSuper::setValue(int newValue)
 
   if (m_lastValue != m_value)
   {
-    m_update = true;
+    m_shouldRedraw = true;
     DEBUG_D("Set GaugeSuper value to %d", m_value);
   }
   else
@@ -385,9 +386,10 @@ void GaugeSuper::setValue(int newValue)
  */
 void GaugeSuper::redraw()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
 
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
   {
     return;
   }
@@ -463,7 +465,7 @@ void GaugeSuper::redraw()
   WidgetBase::objTFT->drawLine(m_origem.x + 0 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 0, m_lastPointNeedle.y, m_agulhaColor); // -1 is to not draw on top of thin border line
   WidgetBase::objTFT->drawLine(m_origem.x + 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 1, m_lastPointNeedle.y, m_agulhaColor);     // -1 is to not draw on top of thin border line
 
-  m_update = false;
+  m_shouldRedraw = false;
   m_isFirstDraw = false;
   updateFont(FontType::UNLOAD);
   #endif
@@ -476,7 +478,7 @@ void GaugeSuper::redraw()
  */
 void GaugeSuper::forceUpdate()
 {
-  m_update = true;
+  m_shouldRedraw = true;
 }
 
 /**
@@ -607,4 +609,16 @@ void GaugeSuper::setup(const GaugeConfig& config)
         config.minValue, config.maxValue, config.borderColor, config.textColor, config.backgroundColor, 
         config.titleColor, config.needleColor, config.markersColor, config.showLabels, config.fontFamily);
     #endif
+}
+
+void GaugeSuper::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void GaugeSuper::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

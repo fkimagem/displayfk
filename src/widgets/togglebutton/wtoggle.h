@@ -20,7 +20,7 @@ private:
   uint16_t m_height; ///< Height of the ToggleButton.
   uint16_t m_pressedColor; ///< Color displayed when the button is toggled on.
   bool m_status; ///< Current on/off status of the button.
-  bool m_shouldRedraw; ///< Flag to indicate if the button should be redrawn.
+  bool m_shouldRedraw = false; ///< Flag to indicate if the button should be redrawn.
   bool m_enabled;
 
   void start();
@@ -40,5 +40,7 @@ public:
   void setEnabled(bool newState);
   void setStatus(bool status);
   void forceUpdate();
+  void show() override;
+  void hide() override;
 };
 #endif

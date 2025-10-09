@@ -27,7 +27,6 @@ private:
   uint16_t m_paddingDraw; ///< Padding within the drawing area.
   uint16_t m_drawArea; ///< Area for drawing the analog scale.
   uint32_t m_lastYArrow; ///< Last Y-coordinate of the arrow marker.
-  bool m_update; ///< Flag indicating if the display needs to be updated.
   bool m_updateText; ///< Flag indicating if the text display needs to be updated.
   uint16_t m_filledColor; ///< Color used for the filled portion of the scale.
   uint32_t m_vmin; ///< Minimum value of the scale.
@@ -41,6 +40,7 @@ private:
   uint16_t m_textColor; ///< Color of the text display.
   uint16_t m_arrowColor; ///< Color of the arrow marker.
   uint16_t m_borderColor; ///< Color of the display border.
+  bool m_shouldRedraw = false; ///< Flag indicating if the VAnalog should be redrawn.
 
   void start();
 
@@ -65,6 +65,8 @@ public:
   void forceUpdate();
 
   void setup(const VerticalAnalogConfig& config);
+  void show() override;
+  void hide() override;
 };
 
 #endif

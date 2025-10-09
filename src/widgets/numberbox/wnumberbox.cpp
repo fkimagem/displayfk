@@ -96,6 +96,11 @@ functionCB_t NumberBox::getCallbackFunc()
  */
 void NumberBox::redraw()
 {
+  if(!visible){
+    // draw rect with color background
+    
+    
+    return;}
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
@@ -239,4 +244,16 @@ float NumberBox::getValue()
 const char *NumberBox::getValueChar()
 {
   return m_value.getString();
+}
+
+void NumberBox::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void NumberBox::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

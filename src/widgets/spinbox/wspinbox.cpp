@@ -131,6 +131,7 @@ functionCB_t SpinBox::getCallbackFunc()
  */
 void SpinBox::redraw()
 {
+  if(!visible){return;}
       #if defined(DISP_DEFAULT)
     if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded || !m_shouldRedraw)
     {
@@ -164,6 +165,7 @@ void SpinBox::redraw()
  */
 void SpinBox::drawBackground()
 {
+  if(!visible){return;}
     #if defined(DISP_DEFAULT) 
     if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded)
     {
@@ -285,4 +287,16 @@ void SpinBox::setValue(int _value)
     if(cb != nullptr){
         WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
     }
+}
+
+void SpinBox::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void SpinBox::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

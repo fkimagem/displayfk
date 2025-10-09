@@ -74,6 +74,7 @@ functionCB_t InputExternal::getCallbackFunc()
  */
 void InputExternal::redraw()
 {
+  if(!visible){return;}
   #if defined(USING_GRAPHIC_LIB)
     if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {

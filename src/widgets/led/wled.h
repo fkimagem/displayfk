@@ -15,11 +15,11 @@ class Led : public WidgetBase
 private:
   static constexpr uint8_t m_colorLightGradientSize = 5;
   bool m_lastStatus; ///< Stores the last status of the LED for comparison.
-  bool m_update; ///< Flag indicating if the LED should be updated.
   uint16_t m_radius; ///< Radius of the LED.
   uint16_t m_colorOn; ///< Color displayed when the LED is on.
   bool m_status = false; ///< Current on/off status of the LED.
   uint16_t m_colorLightGradient[Led::m_colorLightGradientSize]; ///< Color gradient for the light effect.
+  bool m_shouldRedraw = false; ///< Flag indicating if the LED should be redrawn.
 
 
   void setup(uint16_t _radius, uint16_t _colorOn);
@@ -39,6 +39,9 @@ public:
 
   
   void forceUpdate();
+
+  void show() override;
+  void hide() override;
 
   
   void setup(const LedConfig& config);

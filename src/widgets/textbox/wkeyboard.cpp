@@ -536,3 +536,15 @@ void WKeyboard::insertChar(char c)
         log_e("Cant add char. Keyboard is not open");
     }
 }
+
+void WKeyboard::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void WKeyboard::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
+}

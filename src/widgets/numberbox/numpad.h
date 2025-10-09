@@ -28,6 +28,9 @@ private:
     /// @brief Timestamp for handling timing-related functions
     unsigned long m_myTime;
     
+    /// @brief Flag indicating if the numpad should be redrawn
+    bool m_shouldRedraw = false;
+    
     /// @brief Number of rows on the Numpad
     static const uint16_t aRows = NROWS;
     
@@ -102,6 +105,9 @@ public:
     void close();
 
     void insertChar(char c);
+
+    void show() override;
+  void hide() override;
 };
 
 #endif

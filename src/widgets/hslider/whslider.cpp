@@ -120,6 +120,7 @@ void HSlider::setEnabled(bool newState)
  */
 void HSlider::redraw()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
@@ -160,6 +161,7 @@ void HSlider::redraw()
  */
 void HSlider::drawBackground()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded)
   {
@@ -256,6 +258,18 @@ void HSlider::setValue(int _value){
  */
 void HSlider::forceUpdate(){
   m_shouldRedraw = true;
+}
+
+void HSlider::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void HSlider::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }
 
 

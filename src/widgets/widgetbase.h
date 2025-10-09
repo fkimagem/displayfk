@@ -344,12 +344,15 @@ public:
   virtual ~WidgetBase();
   virtual bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch);
   virtual functionCB_t getCallbackFunc();
+  virtual void show();
+  virtual void hide();
   
 #if defined(USING_GRAPHIC_LIB)
   static void recalculateTextPosition(const char* _texto, uint16_t *_x, uint16_t *_y, uint8_t _datum);
   #endif
 
 protected:
+  bool visible = true;        ///< True if the widget is visible.
   uint16_t xPos;              ///< X position of the widget.
   uint16_t yPos;              ///< Y position of the widget.
   uint8_t screen;             ///< Screen index for the widget.

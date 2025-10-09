@@ -95,6 +95,7 @@ functionCB_t TextBox::getCallbackFunc()
  */
 void TextBox::redraw()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
@@ -219,4 +220,16 @@ void TextBox::forceUpdate()
 const char *TextBox::getValue()
 {
   return m_value.getString();
+}
+
+void TextBox::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void TextBox::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

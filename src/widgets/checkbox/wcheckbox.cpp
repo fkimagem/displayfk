@@ -116,8 +116,9 @@ void CheckBox::changeState()
  */
 void CheckBox::redraw()
 {
+  if(!visible){return;}
     #if defined(DISP_DEFAULT)
-    if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
+    if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw || !visible)
     {
         return;
     }
@@ -213,4 +214,16 @@ void CheckBox::setStatus(bool status)
     if(cb != nullptr){
         WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
     }
+}
+
+void CheckBox::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void CheckBox::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

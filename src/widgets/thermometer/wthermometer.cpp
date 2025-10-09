@@ -45,7 +45,7 @@ void Thermometer::setValue(float newValue)
 {
   m_currentValue = constrain(newValue, m_config.minValue, m_config.maxValue);
   // Serial.println("ajusta currentValue: " + String(currentValue));
-  m_update = true;
+  m_shouldRedraw = true;
   // redraw();
 }
 
@@ -54,8 +54,9 @@ void Thermometer::setValue(float newValue)
  */
 void Thermometer::redraw()
 {
+  if(!visible){return;}
  #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
   {
     return;
   }
@@ -78,7 +79,7 @@ void Thermometer::redraw()
   }
 
   m_lastValue = m_currentValue;
-  m_update = false;
+  m_shouldRedraw = false;
   #endif
 }
 
@@ -97,7 +98,7 @@ void Thermometer::start()
  */
 void Thermometer::forceUpdate()
 {
-  m_update = true;
+  m_shouldRedraw = true;
 }
 
 /**
@@ -105,8 +106,9 @@ void Thermometer::forceUpdate()
  */
 void Thermometer::drawBackground()
 {
+  if(!visible){return;}
    #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
   {
     return;
   }
@@ -191,7 +193,7 @@ void Thermometer::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor
   //m_vmin = _vmin;
   //m_vmax = _vmax;
   m_currentValue = m_config.minValue;
-  m_update = true;
+  m_shouldRedraw = true;
   start();
   loaded = true;
 }
@@ -207,4 +209,16 @@ void Thermometer::setup(const ThermometerConfig& config)
         m_config.subtitle->setSuffix(m_config.unit);
     }
   setup(config.width, config.height, config.filledColor, config.minValue, config.maxValue);
+}
+
+void Thermometer::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void Thermometer::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

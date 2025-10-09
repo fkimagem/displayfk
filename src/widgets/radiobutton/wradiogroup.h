@@ -32,7 +32,7 @@ private:
   uint8_t m_group; ///< Group identifier for the radio buttons.
   uint8_t m_clickedId; ///< ID of the currently selected radio button.
   uint16_t m_amount; ///< Total number of radio buttons in the group.
-  bool m_shouldRedraw; ///< Flag to indicate if the radio buttons should be redrawn.
+  bool m_shouldRedraw = false; ///< Flag to indicate if the radio buttons should be redrawn.
 
   void setup(uint8_t _group, uint16_t _radius, uint8_t _amount, const radio_t *_buttons, uint8_t _defaultClickedId, functionCB_t _cb);
 
@@ -47,6 +47,8 @@ public:
   uint16_t getSelected();
   uint16_t getGroupId();
   void forceUpdate();
+  void show() override;
+  void hide() override;
 };
 
 #endif

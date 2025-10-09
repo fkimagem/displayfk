@@ -57,6 +57,7 @@ functionCB_t CircularBar::getCallbackFunc()
  */
 void CircularBar::drawBackground()
 {
+  if(!visible){return;}
  #if defined(DISP_DEFAULT)
     if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !loaded)
     {
@@ -82,7 +83,7 @@ void CircularBar::setValue(int newValue)
 {
     m_lastValue = m_value;
     m_value = newValue;
-    m_update = true;
+    m_shouldRedraw = true;
 }
 
 /**
@@ -93,8 +94,9 @@ void CircularBar::setValue(int newValue)
  */
 void CircularBar::redraw()
 {
+  if(!visible){return;}
  #if defined(DISP_DEFAULT)
-    if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+    if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
     {
         return;
     }
@@ -104,7 +106,7 @@ void CircularBar::redraw()
         return;
     }
 
-    m_update = false;
+    m_shouldRedraw = false;
 
     
     int angleValue = map(m_value, m_vmin, m_vmax, m_startAngle, m_endAngle);
@@ -184,7 +186,7 @@ void CircularBar::redraw()
  */
 void CircularBar::forceUpdate()
 {
-    m_update = true;
+    m_shouldRedraw = true;
 }
 
 /**
@@ -252,7 +254,7 @@ void CircularBar::setup(uint16_t radius, int vmin, int vmax, uint16_t startAngle
         m_showValue = false;
     }
 
-    m_update = true;
+    m_shouldRedraw = true;
     loaded = true;
 }
 
@@ -264,4 +266,16 @@ void CircularBar::setup(const CircularBarConfig& config)
 {
     setup(config.radius, config.minValue, config.maxValue, config.startAngle, config.endAngle, 
           config.thickness, config.color, config.backgroundColor, config.textColor, config.backgroundText, config.showValue, config.inverted);
+}
+
+void CircularBar::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void CircularBar::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

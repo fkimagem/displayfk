@@ -37,7 +37,6 @@ private:
   uint16_t m_indexCurrentStrip; ///< Index for the current color strip segment.
   int m_divisor; ///< Multiplier for range values (used to display values >999).
   unsigned long m_myTime; ///< Timestamp for updating the needle.
-  bool m_update; ///< Flag indicating if the needle should be updated.
   bool m_isFirstDraw; ///< Flag indicating if the gauge is being drawn for the first time.
   bool m_showLabels; ///< Flag to show text labels for intervals.
   bool m_showTitle; ///< Flag to display the title on the gauge.
@@ -73,6 +72,7 @@ private:
   TextBound_t m_textBoundForValue; ///< Bounding box for the displayed value text.
 
   CoordPoint_t m_origem; ///< Center of the gauge clock.
+  bool m_shouldRedraw = false; ///< Flag indicating if the GaugeSuper should be redrawn.
   
   void start();
   #if defined(USING_GRAPHIC_LIB)
@@ -97,6 +97,9 @@ public:
   void forceUpdate();
 
   void setup(const GaugeConfig& config);
+
+  void show() override;
+  void hide() override;
 };
 
 #endif

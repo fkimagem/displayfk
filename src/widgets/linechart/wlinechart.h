@@ -60,7 +60,6 @@ private:
   int16_t m_aux; ///< Auxiliary variable for calculations.
   unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
   bool m_blocked; ///< Indicates if the chart is currently blocked from updates.
-  bool m_update; ///< Flag to indicate if the chart needs to be updated.
 
   int m_vmin; ///< Minimum value for the chart range.
   int m_vmax; ///< Maximum value for the chart range.
@@ -77,6 +76,7 @@ private:
   uint16_t m_verticalDivision; ///< Spacing between vertical grid lines.
   bool m_workInBackground; ///< Flag for background drawing.
   bool m_showZeroLine = true; ///< Flag to show the zero line on the chart.
+  bool m_shouldRedraw = false; ///< Flag to indicate if the chart should be redrawn.
 
   uint16_t m_mainLineColor; ///< Color of the primary line.
   uint16_t m_secondLineColor; ///< Color of the secondary line.
@@ -119,6 +119,8 @@ public:
   void redraw();
   void forceUpdate();
   void setup(const LineChartConfig& config);
+  void show() override;
+  void hide() override;
 };
 
 #endif

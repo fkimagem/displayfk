@@ -81,8 +81,8 @@ public:
 
   void draw();
 
-  void show();
-  void hide();
+  void show() override;
+  void hide() override;
 
   void forceUpdate();
 
@@ -92,12 +92,12 @@ public:
 private:
   bool m_showImage = true;
   uint16_t m_backgroundColor = 0x0000;
-  bool m_update = false; ///< Flag indicating if the image should be updated.
   SourceFile m_source = SourceFile::EMBED; ///< Source of the image file.
   const char *m_path = nullptr;            ///< Path to the image file.
   uint16_t m_width = 0;                    ///< Width of the image.
   uint16_t m_height = 0;                   ///< Height of the image.
   unsigned long m_myTime = 0; ///< Timestamp for handling timing-related functions.
+  bool m_shouldRedraw = false; ///< Flag indicating if the Image should be redrawn.
   pixel_t *m_pixels = nullptr; ///< Pointer to the pixel map data.
   uint8_t *m_maskAlpha = nullptr; ///< Pointer to the alpha mask data for transparency.
 /*

@@ -63,8 +63,9 @@ void VAnalog::start()
  */
 void VAnalog::drawBackground()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
   {
     return;
   }
@@ -105,7 +106,7 @@ void VAnalog::setValue(int newValue, bool _viewValue)
   m_currentValue = constrain(newValue, m_vmin, m_vmax);
   m_updateText = _viewValue;
   ////Serial.println("ajusta currentValue: " + String(currentValue));
-  m_update = true;
+  m_shouldRedraw = true;
   // redraw();
 }
 
@@ -117,9 +118,10 @@ void VAnalog::setValue(int newValue, bool _viewValue)
  */
 void VAnalog::redraw()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
   ////Serial.println(WidgetBase::usingKeyboard);
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
   {
     return;
   }
@@ -156,7 +158,7 @@ void VAnalog::redraw()
     WidgetBase::objTFT->fillRect(textBg.x, textBg.y, textBg.width, textBg.height, m_backgroundColor);
     printText(String(m_currentValue).c_str(), xPos + (m_width / 2), yPos + m_height - m_paddingDraw, BC_DATUM);
   }
-  m_update = false;
+  m_shouldRedraw = false;
   #endif
 }
 
@@ -165,7 +167,7 @@ void VAnalog::redraw()
  */
 void VAnalog::forceUpdate()
 {
-  m_update = true;
+  m_shouldRedraw = true;
 }
 
 /**
@@ -207,7 +209,7 @@ void VAnalog::setup(uint16_t _width, uint16_t _height, int _vmin, int _vmax, uin
   m_borderColor = _borderColor;
 
   start();
-  m_update = true;
+  m_shouldRedraw = true;
   loaded = true;
 }
 
@@ -219,4 +221,16 @@ void VAnalog::setup(const VerticalAnalogConfig& config)
 {
   setup(config.width, config.height, config.minValue, config.maxValue, config.steps, 
         config.arrowColor, config.textColor, config.backgroundColor, config.borderColor);
+}
+
+void VAnalog::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void VAnalog::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

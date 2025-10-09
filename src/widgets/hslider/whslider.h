@@ -31,7 +31,7 @@ private:
   uint16_t m_minX; ///< Minimum X-coordinate for the slider handle position.
   uint16_t m_maxX; ///< Maximum X-coordinate for the slider handle position.
   int m_value = 0; ///< Current value of the slider.
-  bool m_shouldRedraw; ///< Flag to indicate if the slider should be redrawn.
+  bool m_shouldRedraw = false; ///< Flag to indicate if the slider should be redrawn.
   bool m_enabled = true; ///< Indicates whether the slider is enabled or disabled.
 
   void setup(uint16_t _width, uint16_t _pressedColor, int _vmin, int _vmax, uint32_t _radius, functionCB_t _cb);
@@ -49,5 +49,7 @@ public:
   void forceUpdate();
   bool getEnabled();
   void setEnabled(bool newState);
+  void show() override;
+  void hide() override;
 };
 #endif

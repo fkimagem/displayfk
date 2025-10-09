@@ -28,7 +28,7 @@ class CircularBar : public WidgetBase
 {
 private:
   unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
-  bool m_update; ///< Flag indicating if the display needs to be updated.
+  bool m_shouldRedraw = false; ///< Flag indicating if the circular bar should be redrawn.
   int m_vmin; ///< Minimum value of the bar range.
   int m_vmax; ///< Maximum value of the bar range.
   uint16_t m_startAngle; ///< Starting angle of the circular bar.
@@ -60,5 +60,7 @@ public:
   void redraw();
   void forceUpdate();
   void setup(const CircularBarConfig& config);
+  void show() override;
+  void hide() override;
 };
 #endif

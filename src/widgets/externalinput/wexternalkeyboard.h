@@ -27,10 +27,12 @@ public:
      */
     ~ExternalKeyboard();
     
+    void show() override;
+  void hide() override;
 
 private:
     // Private members will be added as needed
-    
+    bool m_shouldRedraw = false; ///< Flag indicating if the ExternalKeyboard should be redrawn.
     
 };
 #endif

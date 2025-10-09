@@ -45,7 +45,7 @@ void VBar::setValue(uint32_t newValue)
 {
   m_currentValue = constrain(newValue, m_vmin, m_vmax);
   // Serial.println("ajusta currentValue: " + String(currentValue));
-  m_update = true;
+  m_shouldRedraw = true;
   // redraw();
 }
 
@@ -54,8 +54,9 @@ void VBar::setValue(uint32_t newValue)
  */
 void VBar::redraw()
 {
+  if(!visible){return;}
   #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
   {
     return;
   }
@@ -101,7 +102,7 @@ void VBar::redraw()
 
   
   m_lastValue = m_currentValue;
-  m_update = false;
+  m_shouldRedraw = false;
 
   #endif
 }
@@ -122,7 +123,7 @@ void VBar::start()
  */
 void VBar::forceUpdate()
 {
-  m_update = true;
+  m_shouldRedraw = true;
 }
 
 /**
@@ -130,8 +131,9 @@ void VBar::forceUpdate()
  */
 void VBar::drawBackground()
 {
+  if(!visible){return;}
   #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
   {
     return;
   }
@@ -168,7 +170,7 @@ void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _
   m_vmax = _vmax;
   m_currentValue = m_vmin;
   m_orientation = _orientation;
-  m_update = true;
+  m_shouldRedraw = true;
   m_round = _round;
   start();
   loaded = true;
@@ -181,4 +183,16 @@ void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _
 void VBar::setup(const VerticalBarConfig& config)
 {
   setup(config.width, config.height, config.filledColor, config.minValue, config.maxValue, config.round,config.orientation);
+}
+
+void VBar::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void VBar::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

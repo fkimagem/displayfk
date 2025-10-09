@@ -2320,13 +2320,13 @@ void DisplayFK::TaskEventoTouch(void *pvParameters)
 
     for (;;)
     {
-        if (xSemaphoreTake(DisplayFK::instance->m_loopSemaphore, pdMS_TO_TICKS(100)) == pdTRUE){
+        //if (xSemaphoreTake(DisplayFK::instance->m_loopSemaphore, pdMS_TO_TICKS(100)) == pdTRUE){
             if(DisplayFK::instance){
                 DisplayFK::instance->loopTask();
             }
             // Libera o semáforo novamente para próxima iteração
-            xSemaphoreGive(DisplayFK::instance->m_loopSemaphore);
-        }
+        //    xSemaphoreGive(DisplayFK::instance->m_loopSemaphore);
+        //}
         if(DisplayFK::instance->m_enableWTD){esp_task_wdt_reset();}
         vTaskDelay(pdMS_TO_TICKS(1));
     }

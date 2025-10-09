@@ -68,6 +68,7 @@ functionCB_t TouchArea::getCallbackFunc()
  */
 void TouchArea::redraw()
 {
+  if(!visible){return;}
 }
 
 /**
@@ -142,4 +143,16 @@ void TouchArea::changeState()
 bool TouchArea::getStatus()
 {
   return m_status;
+}
+
+void TouchArea::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void TouchArea::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

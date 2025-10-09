@@ -112,7 +112,7 @@ void Label::setText(const char* str)
     strcpy(m_text, m_prefix);
     strcat(m_text, str);
     strcat(m_text, m_suffix);
-    m_update = true;
+    m_shouldRedraw = true;
   } else {
     log_e("Failed to allocate memory for label text");
   }
@@ -177,8 +177,9 @@ void Label::setTextInt(int value)
  */
 void Label::redraw()
 {
+  if(!visible){return;}
   #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != screen || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || !m_shouldRedraw || !loaded)
   {
     return;
   }
@@ -195,7 +196,7 @@ void Label::redraw()
 
   
   //previousText = text;
-  m_update = false;
+  m_shouldRedraw = false;
   #endif
 }
 
@@ -204,7 +205,7 @@ void Label::redraw()
  */
 void Label::forceUpdate()
 {
-  m_update = true;
+  m_shouldRedraw = true;
 }
 
 /**
@@ -304,7 +305,7 @@ void Label::setup(const char *_text, const GFXfont *_fontFamily, uint16_t _datum
     m_lastArea.y = 0;
     m_lastArea.width = 0;
     m_lastArea.height = 0;
-    m_update = true;
+    m_shouldRedraw = true;
     loaded = true;
   } else {
     log_e("Failed to allocate memory for label text");
@@ -353,4 +354,16 @@ void Label::setup(const LabelConfig& config)
   #if defined(USING_GRAPHIC_LIB)
   setup(config.text, config.fontFamily, config.datum, config.fontColor, config.backgroundColor, config.prefix, config.suffix);
   #endif
+}
+
+void Label::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void Label::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

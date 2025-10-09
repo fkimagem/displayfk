@@ -115,6 +115,7 @@ void CircleButton::changeState()
  */
 void CircleButton::redraw()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
@@ -215,4 +216,16 @@ void CircleButton::setStatus(bool _status){
   if(cb != nullptr){
     WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
   }
+}
+
+void CircleButton::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void CircleButton::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

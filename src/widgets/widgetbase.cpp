@@ -219,6 +219,16 @@ functionCB_t WidgetBase::getCallbackFunc()
     return nullptr;
 }
 
+void WidgetBase::show()
+{
+    
+}
+
+void WidgetBase::hide()
+{
+    
+}
+
 /**
  * @brief Adds a callback to the callback queue
  * @param callback Callback to be added

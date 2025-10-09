@@ -34,7 +34,7 @@ private:
   uint16_t m_colorBase = 0x8410; ///< Base color for the SpinBox display elements.
   uint16_t m_textColor = 0x00; ///< Text Color
   TextBound_t m_lastArea = {0,0,0,0}; ///< Last area of the SpinBox.
-  bool m_shouldRedraw; ///< Flag to indicate if the SpinBox should be redrawn.
+  bool m_shouldRedraw = false; ///< Flag indicating if the SpinBox should be redrawn.
 
   void start();
   void increaseValue();
@@ -51,6 +51,8 @@ public:
   void setup(const SpinBoxConfig& config);
   int getValue();
   void setValue(int _value);
+  void show() override;
+  void hide() override;
 };
 
 #endif

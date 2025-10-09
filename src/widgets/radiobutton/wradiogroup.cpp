@@ -84,6 +84,7 @@ functionCB_t RadioGroup::getCallbackFunc()
  */
 void RadioGroup::redraw()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
@@ -215,4 +216,16 @@ uint16_t RadioGroup::getSelected()
 uint16_t RadioGroup::getGroupId()
 {
   return m_group;
+}
+
+void RadioGroup::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void RadioGroup::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

@@ -210,8 +210,9 @@ bool Image::readFileFromDisk()
 
 
 void Image::drawBackground(){
+  if(!visible){return;}
 	#if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
-	if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+	if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
 	  {
 		return;
 	  }
@@ -230,12 +231,12 @@ void Image::drawBackground(){
 void Image::draw()
 {
 #if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
   {
     return;
   }
 
-  m_update = false;
+  m_shouldRedraw = false;
 	
 	
   if(!m_showImage){
@@ -262,6 +263,7 @@ void Image::draw()
  */
 void Image::redraw()
 {
+  if(!visible){return;}
   return;
 }
 
@@ -272,7 +274,7 @@ void Image::redraw()
  */
 void Image::forceUpdate()
 {
-  m_update = true;
+  m_shouldRedraw = true;
 }
 
 /**
@@ -348,7 +350,7 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
 
   loaded = readFileFromDisk();
 #endif
-m_update = true;
+m_shouldRedraw = true;
 }
 
 void Image::clearBuffers()
@@ -403,7 +405,7 @@ void Image::setup(const pixel_t *_pixels, uint16_t _width, uint16_t _height, con
   DEBUG_D("Image setup with pixels (%d x %d)", _width, _height);
 
   loaded = true;
-  m_update = true;
+  m_shouldRedraw = true;
 }
 
 /**
@@ -436,12 +438,12 @@ void Image::setup(ImageFromPixelsConfig &config)
 
 void Image::show()
 {
-  m_showImage = true;
-  m_update = true;
+  visible = true;
+  m_shouldRedraw = true;
 }
 
 void Image::hide()
 {
-  m_showImage = false;
-  m_update = true;
+  visible = false;
+  m_shouldRedraw = true;
 }

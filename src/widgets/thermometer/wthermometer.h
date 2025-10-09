@@ -23,7 +23,6 @@ class Thermometer : public WidgetBase
 {
 private:
   static constexpr uint8_t m_colorLightGradientSize = 5;
-  bool m_update; ///< Flag indicating if the display needs to be updated.
   // uint16_t m_filledColor; ///< Color used for the filled portion of the bar.
   // uint32_t m_vmin; ///< Minimum value of the bar range.
   // uint32_t m_vmax; ///< Maximum value of the bar range.
@@ -37,6 +36,7 @@ private:
   uint16_t m_colorLightGradient[Thermometer::m_colorLightGradientSize]; ///< Color gradient for the light effect.
   uint16_t m_border = 5;
   ThermometerConfig m_config;
+  bool m_shouldRedraw = false; ///< Flag indicating if the Thermometer should be redrawn.
 
   void start();
   void setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax);
@@ -51,5 +51,7 @@ public:
   void forceUpdate();
   void drawBackground();
   void setup(const ThermometerConfig& config);
+  void show() override;
+  void hide() override;
 };
 #endif

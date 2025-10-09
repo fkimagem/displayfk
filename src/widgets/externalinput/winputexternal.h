@@ -33,9 +33,11 @@ class InputExternal : public WidgetBase
     const char* getValueCChar();
     int getValueInt();
     float getValueFloat();
+    void show() override;
+  void hide() override;
 
 private:
-    bool m_shouldRedraw;
+    bool m_shouldRedraw = false;
     bool m_loaded;
     uint8_t m_padding;
     unsigned long m_myTime;

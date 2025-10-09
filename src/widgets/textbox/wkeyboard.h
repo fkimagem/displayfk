@@ -39,6 +39,7 @@ private:
     TextBound_t lastArea = {0,0,0,0};
     
     Rect_t m_pontoPreview; ///< Preview rectangle for the touch point.
+    bool m_shouldRedraw = false; ///< Flag indicating if the WKeyboard should be redrawn.
 
     void addLetter(char c);
 
@@ -85,6 +86,8 @@ public:
     void close();
 
     void insertChar(char c);
+    void show() override;
+  void hide() override;
 
 
 };

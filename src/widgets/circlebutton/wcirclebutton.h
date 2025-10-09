@@ -18,7 +18,7 @@ private:
   uint16_t m_radius;       ///< Radius of the circular button.
   uint16_t m_pressedColor; ///< Color displayed when the button is pressed.
   bool m_status;           ///< Current status of the button (pressed or not).
-  bool m_shouldRedraw;     ///< Flag to indicate if the button should be redrawn.
+  bool m_shouldRedraw = false;     ///< Flag to indicate if the button should be redrawn.
   bool m_enabled = true;   ///< Indicates whether the button is enabled or disabled.
   
   void start();
@@ -37,6 +37,8 @@ public:
   void setStatus(bool _status);
   bool getEnabled();
   void setEnabled(bool newState);
+  void show() override;
+  void hide() override;
 };
 
 //#endif

@@ -116,6 +116,7 @@ void RectButton::forceUpdate(){
  */
 void RectButton::redraw()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded || !m_shouldRedraw)
   {
@@ -219,5 +220,17 @@ void RectButton::setStatus(bool _status){
     WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
   }
   
+}
+
+void RectButton::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void RectButton::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }
 

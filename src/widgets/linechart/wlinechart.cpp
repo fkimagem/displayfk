@@ -234,8 +234,9 @@ void LineChart::start()
  */
 void LineChart::drawBackground()
 {
+  if(!visible){return;}
 #if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
   {
     return;
   }
@@ -318,7 +319,7 @@ bool LineChart::push(uint16_t serieIndex, int newValue)
   
 
   // NÃO atualiza oldValue aqui!
-  m_update = true;
+  m_shouldRedraw = true;
   if (m_mutex)
     xSemaphoreGive(m_mutex);
 
@@ -538,8 +539,9 @@ void LineChart::copyCurrentValuesToOldValues()
  */
 void LineChart::redraw()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
   {
     return;
   }
@@ -552,7 +554,7 @@ void LineChart::redraw()
   DEBUG_D("Redrawing LineChart");
   uint32_t startTime = micros();
 
-  m_update = false;
+  m_shouldRedraw = false;
   m_myTime = millis();
   m_blocked = true;
 
@@ -588,7 +590,7 @@ void LineChart::redraw()
  */
 void LineChart::forceUpdate()
 {
-  m_update = true;
+  m_shouldRedraw = true;
 }
 
 /**
@@ -650,7 +652,7 @@ void LineChart::setup(uint16_t _width, uint16_t _height, int _vmin, int _vmax, u
   m_showDots = _showDots;
 
   //_amountPoints = CLAMP(_amount, 2, 100);
-  m_update = true;
+  m_shouldRedraw = true;
   m_blocked = false;
 
   if (_font)
@@ -682,4 +684,16 @@ void LineChart::setup(const LineChartConfig &config)
         config.boldLine, config.showDots, config.maxPointsAmount,
         config.font);
     #endif
+}
+
+void LineChart::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void LineChart::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

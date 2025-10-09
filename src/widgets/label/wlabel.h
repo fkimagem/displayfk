@@ -20,11 +20,12 @@ struct LabelConfig {
 class Label : public WidgetBase
 {
 private:
-  bool m_update; ///< Flag indicating if the label text should be updated.
   char *m_text = nullptr; ///< Pointer to the current text displayed by the label.
   char* m_previousText = nullptr; ///< Pointer to the previously displayed text for comparison.
   char* m_prefix = nullptr; ///< Pointer to the prefix text displayed by the label.
   char* m_suffix = nullptr; ///< Pointer to the suffix text displayed by the label.
+
+  bool m_shouldRedraw = false; ///< Flag indicating if the label should be redrawn.
 
   uint16_t m_datum; ///< Text alignment setting for the label.
   uint16_t m_letterColor; ///< Color of the text.
@@ -56,6 +57,8 @@ public:
   void setDecimalPlaces(uint8_t places);
   void setFontSize(uint8_t newSize);
   void setup(const LabelConfig& config);
+  void show() override;
+  void hide() override;
   
   //void setup(const int _value, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor);
 };

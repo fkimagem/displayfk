@@ -18,4 +18,16 @@ ExternalKeyboard::~ExternalKeyboard()
 {
 }
 
+void ExternalKeyboard::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void ExternalKeyboard::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
+}
+
 

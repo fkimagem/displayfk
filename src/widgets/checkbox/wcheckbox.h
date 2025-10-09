@@ -19,7 +19,7 @@ private:
   uint16_t m_height; ///< Height of the CheckBox.
   uint16_t m_checkedColor; ///< Color displayed when the checkbox is checked.
   bool m_status; ///< Current checked/unchecked status of the CheckBox.
-  bool m_shouldRedraw; ///< Flag to indicate if the checkbox should be redrawn.
+  bool m_shouldRedraw = false; ///< Flag to indicate if the checkbox should be redrawn.
   bool m_enabled = true; ///< Indicates whether the checkbox is enabled or disabled.
 
   void changeState();
@@ -37,6 +37,8 @@ public:
   void setStatus(bool status);
   bool getEnabled();
   void setEnabled(bool newState);
+  void show() override;
+  void hide() override;
 };
 
 #endif

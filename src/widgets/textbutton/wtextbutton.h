@@ -27,6 +27,7 @@ private:
   uint8_t m_offsetMargin = 5; ///< Margin offset for positioning the text within the button.
   const char* m_text; ///< Text displayed on the button.
   bool m_enabled = true; ///< Indicates whether the button is enabled or disabled.
+  bool m_shouldRedraw = false; ///< Flag indicating if the TextButton should be redrawn.
 
   void start();
   void setup(uint16_t _width, uint16_t _height, uint16_t _radius, uint16_t _pressedColor, uint16_t _textColor, const char* _text, functionCB_t _cb);
@@ -41,6 +42,8 @@ public:
   void setup(const TextButtonConfig& config);
   bool getEnabled();
   void setEnabled(bool newState);
+  void show() override;
+  void hide() override;
 };
 
 #endif

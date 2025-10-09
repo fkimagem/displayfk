@@ -134,6 +134,7 @@ void ToggleButton::forceUpdate(){
  */
 void ToggleButton::redraw()
 {
+  if(!visible){return;}
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
   {
@@ -252,4 +253,16 @@ void ToggleButton::setStatus(bool status)
   if(cb != nullptr){
     WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
   }
+}
+
+void ToggleButton::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void ToggleButton::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }

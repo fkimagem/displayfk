@@ -20,7 +20,7 @@ private:
   uint16_t height; ///< Height of the rectangular button.
   uint16_t pressedColor; ///< Color displayed when the button is pressed.
   bool status; ///< Current on/off status of the button.
-  bool m_shouldRedraw; ///< Flag to indicate if the button should be redrawn.
+  bool m_shouldRedraw = false; ///< Flag to indicate if the button should be redrawn.
   bool m_enabled = true; ///< Indicates whether the button is enabled or disabled.
 
   void start();
@@ -39,6 +39,8 @@ public:
   void setStatus(bool _status);
   bool getEnabled();
   void setEnabled(bool newState);
+  void show() override;
+  void hide() override;
 };
 
 #endif

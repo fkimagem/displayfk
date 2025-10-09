@@ -18,7 +18,6 @@ struct VerticalBarConfig {
 class VBar : public WidgetBase
 {
 private:
-  bool m_update; ///< Flag indicating if the display needs to be updated.
   uint16_t m_filledColor; ///< Color used for the filled portion of the bar.
   uint32_t m_vmin; ///< Minimum value of the bar range.
   uint32_t m_vmax; ///< Maximum value of the bar range.
@@ -28,6 +27,7 @@ private:
   uint32_t m_lastValue; ///< Last value represented by the filled portion of the bar.
   Orientation m_orientation; ///< Orientation of the bar (vertical or horizontal).
   int m_round = 0;
+  bool m_shouldRedraw = false; ///< Flag indicating if the VBar should be redrawn.
 
   void start();
   void setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax, int _round, Orientation _orientation);
@@ -42,5 +42,7 @@ public:
   void forceUpdate();
   void drawBackground();
   void setup(const VerticalBarConfig& config);
+  void show() override;
+  void hide() override;
 };
 #endif

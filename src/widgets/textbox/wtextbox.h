@@ -32,7 +32,7 @@ private:
     const GFXfont *m_font; ///< Font to use for the text.
     #endif
     uint8_t m_padding; ///< Padding of the TextBox.
-    bool m_shouldRedraw; ///< Flag to indicate if the TextBox should be redrawn.
+    bool m_shouldRedraw = false; ///< Flag to indicate if the TextBox should be redrawn.
 
     #if defined(USING_GRAPHIC_LIB)
     void setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, uint16_t _backgroundColor, const char* _startValue, const GFXfont* _font, functionLoadScreen_t _funcPtr, functionCB_t _cb);
@@ -51,6 +51,8 @@ public:
     void setup(const TextBoxConfig& config);
     void setValue(const char* str);
     const char* getValue();
+    void show() override;
+  void hide() override;
 };
 
 #endif

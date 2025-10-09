@@ -36,12 +36,13 @@ void Led::setState(bool newValue)
 {
   m_status = newValue;
   // Serial.println("ajusta status: " + String(status));
-  m_update = true;
+  m_shouldRedraw = true;
   // redraw();
 }
 
 void Led::drawBackground()
 {
+  if(!visible){return;}
   #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded)
   {
@@ -60,8 +61,9 @@ void Led::drawBackground()
  */
 void Led::redraw()
 {
+  if(!visible){return;}
   #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !m_update || !loaded)
+  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !m_shouldRedraw || !loaded)
   {
     return;
   }
@@ -80,7 +82,7 @@ void Led::redraw()
     WidgetBase::objTFT->fillCircle(xPos, yPos, m_radius - 1, CFK_GREY11);
   }
 
-  m_update = false;
+  m_shouldRedraw = false;
   #endif
 }
 
@@ -89,7 +91,7 @@ void Led::redraw()
  */
 void Led::forceUpdate()
 {
-  m_update = true;
+  m_shouldRedraw = true;
 }
 
 /**
@@ -113,7 +115,7 @@ void Led::setup(uint16_t _radius, uint16_t _colorOn)
     m_colorLightGradient[i] = WidgetBase::lightenToWhite565(_colorOn, 0.08*i);
   }
   // size = constrain(_size, 1,3);
-  m_update = true;
+  m_shouldRedraw = true;
   loaded = true;
 }
 
@@ -124,4 +126,16 @@ void Led::setup(uint16_t _radius, uint16_t _colorOn)
 void Led::setup(const LedConfig& config)
 {
   setup(config.radius, config.colorOn);
+}
+
+void Led::show()
+{
+    visible = true;
+    m_shouldRedraw = true;
+}
+
+void Led::hide()
+{
+    visible = false;
+    m_shouldRedraw = true;
 }
