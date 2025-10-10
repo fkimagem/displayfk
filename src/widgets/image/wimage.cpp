@@ -18,23 +18,18 @@
  * @param _y Y position of the image.
  * @param _screen Screen number.
  */
-Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen),
+Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen)
+    : WidgetBase(_x, _y, _screen),
 #if defined(USING_GRAPHIC_LIB)
-                                                          m_pixels(nullptr),
+      m_pixels(nullptr),
 #endif
-                                                          m_maskAlpha(nullptr),
-                                                          m_fs(nullptr),
-                                                          m_path(nullptr)
-{
+      m_maskAlpha(nullptr), m_fs(nullptr), m_path(nullptr) {
 }
 
 /**
  * @brief Destructor for the Image class.
  */
-Image::~Image()
-{
-clearBuffers();
-}
+Image::~Image() { clearBuffers(); }
 
 /**
  * @brief Detects if the Image has been touched
@@ -42,14 +37,15 @@ clearBuffers();
  * @param _yTouch Pointer to the Y-coordinate of the touch
  * @return True if the touch is within the Image area, otherwise false
  */
-bool Image::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
-{
-  if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen || !loaded || !cb)
-  {
+bool Image::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
+  if (!visible) {
     return false;
   }
-  if (millis() - m_myTime < TIMEOUT_CLICK)
-  {
+  if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen ||
+      !loaded || !cb) {
+    return false;
+  }
+  if (millis() - m_myTime < TIMEOUT_CLICK) {
     return false;
   }
   m_myTime = millis();
@@ -57,8 +53,8 @@ bool Image::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
   uint16_t xMax = xPos + m_width;
   uint16_t yMax = yPos + m_height;
 
-  if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) && (*_yTouch < yMax))
-  {
+  if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) &&
+      (*_yTouch < yMax)) {
     detected = true;
   }
   return detected;
@@ -68,21 +64,15 @@ bool Image::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
  * @brief Retrieves the callback function associated with the image.
  * @return Pointer to the callback function.
  */
-functionCB_t Image::getCallbackFunc()
-{
-  return cb;
-}
+functionCB_t Image::getCallbackFunc() { return cb; }
 
-bool Image::readFileFromDisk()
-{
-  if (m_source == SourceFile::EMBED)
-  {
+bool Image::readFileFromDisk() {
+  if (m_source == SourceFile::EMBED) {
     DEBUG_E("Cannot read from embedded source");
     return false;
   }
 
-  if (!m_fs)
-  {
+  if (!m_fs) {
     DEBUG_E("No source defined to find image");
     return false;
   }
@@ -90,29 +80,25 @@ bool Image::readFileFromDisk()
   log_d("Looking for file: %s", m_path);
 
   fs::File file = m_fs->open(m_path, "r");
-  if (!file)
-  {
+  if (!file) {
     DEBUG_E("Cant open file");
     return false;
   }
 
-  if (file.isDirectory())
-  {
+  if (file.isDirectory()) {
     DEBUG_E("Path is a directory");
     file.close();
     return false;
   }
 
-  if (!file.available())
-  {
+  if (!file.available()) {
     DEBUG_E("File is empty");
     file.close();
     return false;
   }
 
   size_t size = file.size();
-  if (size < 4)
-  {
+  if (size < 4) {
     log_e("File is too small");
     file.close();
     return false;
@@ -126,8 +112,7 @@ bool Image::readFileFromDisk()
   m_width = arqWidth;
   m_height = arqHeight;
 
-  if (m_width == 0 || m_height == 0)
-  {
+  if (m_width == 0 || m_height == 0) {
     log_e("Invalid image size");
     file.close();
     return false;
@@ -139,8 +124,7 @@ bool Image::readFileFromDisk()
 
   m_pixels = new pixel_t[bytesOfColor];
 
-  if (!m_pixels)
-  {
+  if (!m_pixels) {
     DEBUG_E("Failed to allocate memory for image pixels");
     file.close();
     return false;
@@ -157,12 +141,9 @@ bool Image::readFileFromDisk()
   uint8_t pixel[read_pixels]; // 2 bytes per pixel (color 565)
   memset(pixel, 0, read_pixels);
 
-  for (int y = 0; y < m_height; y++)
-  {
-    for (int x = 0; x < m_width; x++)
-    {
-      if (file.read(pixel, read_pixels) != read_pixels)
-      {
+  for (int y = 0; y < m_height; y++) {
+    for (int x = 0; x < m_width; x++) {
+      if (file.read(pixel, read_pixels) != read_pixels) {
         DEBUG_E("Error reading pixel %d,%d", x, y);
         file.close();
         clearBuffers();
@@ -180,8 +161,7 @@ bool Image::readFileFromDisk()
 
   uint16_t maskLen = ((file.read()) << 8) | file.read();
 
-  if (maskLen == 0)
-  {
+  if (maskLen == 0) {
     DEBUG_E("Invalid mask length");
     file.close();
     clearBuffers();
@@ -190,8 +170,7 @@ bool Image::readFileFromDisk()
 
   m_maskAlpha = new uint8_t[maskLen];
 
-  if (!m_maskAlpha)
-  {
+  if (!m_maskAlpha) {
     DEBUG_E("Failed to allocate memory for image mask");
     file.close();
     return false;
@@ -199,8 +178,7 @@ bool Image::readFileFromDisk()
 
   memset(m_maskAlpha, 0, maskLen);
 
-  for (int i = 0; i < maskLen; i++)
-  {
+  for (int i = 0; i < maskLen; i++) {
     m_maskAlpha[i] = file.read();
   }
 
@@ -208,47 +186,50 @@ bool Image::readFileFromDisk()
   return true;
 }
 
-
-void Image::drawBackground(){
-  if(!visible){return;}
-	#if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
-	if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
-	  {
-		return;
-	  }
-	objTFT->fillRect(xPos, yPos, m_width, m_height, m_backgroundColor);
-	#endif
+void Image::drawBackground() {
+  if (!visible) {
+    return;
+  }
+#if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
+  if (WidgetBase::currentScreen != screen ||
+      WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded) {
+    return;
+  }
+  objTFT->fillRect(xPos, yPos, m_width, m_height, m_backgroundColor);
+#endif
 }
-	
-
 
 /**
  * @brief Draws the image on the screen.
  *
- * Loads and renders the image from its source (file or pixels) with optional rotation.
- * Only draws if the widget is on the current screen and needs updating.
+ * Loads and renders the image from its source (file or pixels) with optional
+ * rotation. Only draws if the widget is on the current screen and needs
+ * updating.
  */
-void Image::draw()
-{
+void Image::draw() {
+  if (!visible) {
+    return false;
+  }
 #if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
-  {
+  if (WidgetBase::currentScreen != screen ||
+      WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded) {
     return;
   }
 
   m_shouldRedraw = false;
-	
-	
-  if(!m_showImage){
+
+  if (!m_showImage) {
     return;
   };
 
   log_d("Redraw image: %d x %d", m_width, m_height);
 
 #if defined(DISP_DEFAULT)
-  WidgetBase::objTFT->draw16bitRGBBitmapWithMask(xPos, yPos, m_pixels, m_maskAlpha, m_width, m_height);
+  WidgetBase::objTFT->draw16bitRGBBitmapWithMask(
+      xPos, yPos, m_pixels, m_maskAlpha, m_width, m_height);
 #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
-  WidgetBase::objTFT->drawBitmap(xPos, yPos, m_pixels, m_width, m_height, CFK_BLACK);
+  WidgetBase::objTFT->drawBitmap(xPos, yPos, m_pixels, m_width, m_height,
+                                 CFK_BLACK);
 #elif defined(DISP_U8G2)
   WidgetBase::objTFT->drawXBMP(xPos, yPos, m_width, m_height, m_pixels);
 #endif
@@ -261,9 +242,10 @@ void Image::draw()
  * Handles loading and drawing the image from its source, which could be
  * embedded memory, SD card, or SPIFFS filesystem.
  */
-void Image::redraw()
-{
-  if(!visible){return;}
+void Image::redraw() {
+  if (!visible) {
+    return;
+  }
   return;
 }
 
@@ -272,25 +254,22 @@ void Image::redraw()
  *
  * Sets the update flag to trigger a redraw on the next cycle.
  */
-void Image::forceUpdate()
-{
-  m_shouldRedraw = true;
-}
+void Image::forceUpdate() { m_shouldRedraw = true; }
 
 /**
  * @brief Configures the Image widget with a source file.
  * @param _source Source location of the image file (SD, SPIFFS, or EMBED).
  * @param _path Path to the image file.
- * @param _cb Optional callback function to execute when the image is interacted with.
+ * @param _cb Optional callback function to execute when the image is interacted
+ * with.
  * @param _angle Optional rotation angle in degrees.
  */
-void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float _angle)
-{
+void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb,
+                  float _angle) {
 #if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
-  if (loaded)
-  {
+  if (loaded) {
     log_w("Reconfigure Image");
-    //return;
+    // return;
   }
 
   clearBuffers();
@@ -298,31 +277,25 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
   m_width = 0;
   m_height = 0;
   cb = _cb;
-  
+
   m_source = _source;
   m_path = _path;
   m_angle = _angle;
 
-  if (_path == nullptr)
-  {
+  if (_path == nullptr) {
     log_e("Path is nullptr");
     return;
   }
 
 #if defined(DFK_SD)
-  if (m_source == SourceFile::SD)
-  {
-    if (!WidgetBase::mySD)
-    {
+  if (m_source == SourceFile::SD) {
+    if (!WidgetBase::mySD) {
       log_e("SD not configured");
       return;
     }
     m_fs = WidgetBase::mySD;
-  }
-  else if (m_source == SourceFile::SPIFFS)
-  {
-    if (!SPIFFS.begin(false))
-    {
+  } else if (m_source == SourceFile::SPIFFS) {
+    if (!SPIFFS.begin(false)) {
       Serial.println("SPIFFS Mount Failed");
       return;
     }
@@ -330,19 +303,15 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
     m_fs = &SPIFFS;
   }
 #else
-  if (m_source == SourceFile::SD)
-  {
+  if (m_source == SourceFile::SD) {
     log_w("SD not configured");
     return;
-  }
-  else if (m_source == SourceFile::SPIFFS)
-  {
+  } else if (m_source == SourceFile::SPIFFS) {
     m_fs = &SPIFFS;
   }
 #endif
 
-  if (!m_fs)
-  {
+  if (!m_fs) {
     log_e("No source defined to find image");
     return;
   }
@@ -350,18 +319,15 @@ void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb, float
 
   loaded = readFileFromDisk();
 #endif
-m_shouldRedraw = true;
+  m_shouldRedraw = true;
 }
 
-void Image::clearBuffers()
-{
-  if (m_pixels)
-  {
+void Image::clearBuffers() {
+  if (m_pixels) {
     delete[] m_pixels;
     m_pixels = nullptr;
   }
-  if (m_maskAlpha)
-  {
+  if (m_maskAlpha) {
     delete[] m_maskAlpha;
     m_maskAlpha = nullptr;
   }
@@ -376,12 +342,11 @@ void Image::clearBuffers()
  * @param _angle Rotation angle in degrees.
  * @param _cb Callback function to execute when the image is interacted with.
  */
-void Image::setup(const pixel_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb)
-{
-  if (loaded)
-  {
+void Image::setup(const pixel_t *_pixels, uint16_t _width, uint16_t _height,
+                  const uint8_t *_maskAlpha, float _angle, functionCB_t _cb) {
+  if (loaded) {
     log_w("Reconfigure Image");
-    //return;
+    // return;
     return;
   }
 
@@ -389,15 +354,14 @@ void Image::setup(const pixel_t *_pixels, uint16_t _width, uint16_t _height, con
   clearBuffers();
 
   m_source = SourceFile::EMBED;
-   m_pixels = const_cast<pixel_t *>(_pixels);
+  m_pixels = const_cast<pixel_t *>(_pixels);
   m_maskAlpha = const_cast<uint8_t *>(_maskAlpha);
   m_width = _width;
   m_height = _height;
   m_angle = _angle;
   cb = _cb;
 
-  if (_pixels == nullptr)
-  {
+  if (_pixels == nullptr) {
     log_e("Pixels is nullptr");
     return;
   }
@@ -411,12 +375,13 @@ void Image::setup(const pixel_t *_pixels, uint16_t _width, uint16_t _height, con
 /**
  * @brief Configures the Image widget with a file source.
  *
- * Sets up the image with a file source, path, callback function, and rotation angle.
+ * Sets up the image with a file source, path, callback function, and rotation
+ * angle.
  *
- * @param config Configuration structure containing file source, path, callback function, and rotation angle.
+ * @param config Configuration structure containing file source, path, callback
+ * function, and rotation angle.
  */
-void Image::setup(ImageFromFileConfig &config)
-{
+void Image::setup(ImageFromFileConfig &config) {
   log_d("Need to load file %s", config.toString().c_str());
   setup(config.source, config.path, config.cb, 0);
   m_backgroundColor = config.backgroundColor;
@@ -425,25 +390,24 @@ void Image::setup(ImageFromFileConfig &config)
 /**
  * @brief Configures the Image widget with pixel data.
  *
- * Sets up the image with pixel data, width, height, mask alpha, angle, and callback function.
+ * Sets up the image with pixel data, width, height, mask alpha, angle, and
+ * callback function.
  *
- * @param config Configuration structure containing pixel data, width, height, mask alpha, angle, and callback function.
+ * @param config Configuration structure containing pixel data, width, height,
+ * mask alpha, angle, and callback function.
  */
-void Image::setup(ImageFromPixelsConfig &config)
-{
-  setup(config.pixels, config.width, config.height, config.maskAlpha, 0, config.cb);
+void Image::setup(ImageFromPixelsConfig &config) {
+  setup(config.pixels, config.width, config.height, config.maskAlpha, 0,
+        config.cb);
   m_backgroundColor = config.backgroundColor;
 }
 
-
-void Image::show()
-{
+void Image::show() {
   visible = true;
   m_shouldRedraw = true;
 }
 
-void Image::hide()
-{
+void Image::hide() {
   visible = false;
   m_shouldRedraw = true;
 }
