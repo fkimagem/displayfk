@@ -495,21 +495,21 @@ bool TouchScreen::touch_touched()
     return false;
   }
   if(m_logMessages){
-    char tempString[128];
-    sprintf(tempString, "FT6336U TD Count %d / TD1 (%d, %4d, %4d) / TD2 (%d, %4d, %4d)\n", tp.touch_count, tp.tp[0].status, tp.tp[0].x, tp.tp[0].y, tp.tp[1].status, tp.tp[1].x, tp.tp[1].y);
-    Serial.print(tempString);
+    //char tempString[128];
+    //sprintf(tempString, "FT6336U TD Count %d / TD1 (%d, %4d, %4d) / TD2 (%d, %4d, %4d)\n", tp.touch_count, tp.tp[0].status, tp.tp[0].x, tp.tp[0].y, tp.tp[1].status, tp.tp[1].x, tp.tp[1].y);
+    //Serial.print(tempString);
 
 
-    char printString[128];
-    sprintf(printString, "Touch value x:%d, y:%d\n", rx, ry);
-    Serial.print(printString);
+    //char printString[128];
+    //sprintf(printString, "Touch value x:%d, y:%d\n", rx, ry);
+    //Serial.print(printString);
 
-    if(m_invertXAxis){
+    /*if(m_invertXAxis){
       Serial.print("Invert X axis\n");
     }
     if(m_invertYAxis){
       Serial.print("Invert Y axis\n");
-    }
+    }*/
   }
   uint16_t sx, sy;          // coordenadas já convertidas
 

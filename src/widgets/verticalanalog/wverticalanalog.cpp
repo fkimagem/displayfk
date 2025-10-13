@@ -71,9 +71,9 @@ void VAnalog::drawBackground()
   }
   log_d("Redraw background vanalog at %i,%i with %i x %i", xPos, yPos, m_width, m_height);
 
-  uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;
-  uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
-  uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
+  //uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;
+  //uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
+  //uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
   // WidgetBase::objTFT->fillCircle(xPos, yPos, 10, CFK_RED);
   WidgetBase::objTFT->fillRect(xPos, yPos, m_width, m_height, m_backgroundColor); // Area do grafico lightBg
@@ -131,7 +131,7 @@ void VAnalog::redraw()
     WidgetBase::objTFT->setFont(&RobotoRegular10pt7b);
   }
   // uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;
-  uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
+  // uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
   // uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
   m_lastValue = m_currentValue;

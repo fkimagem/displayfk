@@ -8,11 +8,8 @@
  * Note: This function uses a static buffer, so its return value is only valid
  * until the next call.
  */
-const char *NumberBox::convertoToChar(float f) {
-  char str[50];
-  snprintf(str, sizeof(str), "%f", f);
-  log_d("Converting to const char %s", str);
-  return (const char *)str;
+String NumberBox::convertoToString(float f) {
+  return String(f);
 }
 
 /**

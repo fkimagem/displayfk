@@ -109,6 +109,7 @@ void CircularBar::redraw() {
   int lastAngleValue =
       map(m_lastValue, m_vmin, m_vmax, m_startAngle, m_endAngle);
 
+      /*
   int xEnd = 0, xStart = 0, xCursor = 0, xLastCursor = 0;
   int yEnd = 0, yStart = 0, yCursor = 0, yLastCursor = 0;
 
@@ -129,7 +130,7 @@ void CircularBar::redraw() {
       (cos(lastAngleValue * DEG_TO_RAD) * (m_radius - m_lineWeight / 2)) + xPos;
   yLastCursor =
       (sin(lastAngleValue * DEG_TO_RAD) * (m_radius - m_lineWeight / 2)) + yPos;
-
+*/
   uint16_t lastCursoColor = 0;
 
   // If the angle is 'going back' (decreasing)
@@ -153,6 +154,8 @@ void CircularBar::redraw() {
                                 lastAngleValue, angleValue,
                                 m_lineColor); // Paint the difference
     lastCursoColor = m_lineColor;
+  }else{
+    UNUSED(lastCursoColor);
   }
 
   if (m_lineWeight >= 10) {

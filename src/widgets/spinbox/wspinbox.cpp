@@ -73,12 +73,12 @@ bool SpinBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   m_myTime = millis();
   bool detectado = false;
 
-  uint16_t topY = {yPos};
-  uint16_t bottomY = {yPos + m_height};
+  uint16_t topY = yPos;
+  // uint16_t bottomY = yPos + m_height;
 
-  Rect_t boundsAreaDecrement = {xPos, topY, (m_width / 2), m_height};
-  Rect_t boundsAreaIncrement = {xPos + (m_width / 2), topY, (m_width / 2),
-                                m_height};
+  Rect_t boundsAreaDecrement = {.x = xPos, .y = topY, .width = (uint16_t)(m_width / 2), .height = m_height};
+  Rect_t boundsAreaIncrement = {.x = (uint16_t)(xPos + (m_width / 2)), .y = topY, .width = (uint16_t)(m_width / 2),
+                                .height = m_height};
 
   /*uint16_t d_x = xPos;
   uint16_t d_x_max = xPos + m_width;
@@ -178,7 +178,7 @@ void SpinBox::drawBackground() {
   uint16_t btnW = m_height - (2 * m_offset);
   uint16_t btnH = m_height - (2 * m_offset);
 
-  uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
+  // uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
 
   WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, m_radius,
                                     m_colorBase);

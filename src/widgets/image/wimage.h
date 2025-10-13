@@ -92,26 +92,18 @@ public:
 private:
   bool m_showImage = true;
   uint16_t m_backgroundColor = 0x0000;
+  pixel_t *m_pixels = nullptr; ///< Pointer to the pixel map data.
+  uint8_t *m_maskAlpha = nullptr; ///< Pointer to the alpha mask data for transparency.
   SourceFile m_source = SourceFile::EMBED; ///< Source of the image file.
+  fs::FS *m_fs = nullptr;
   const char *m_path = nullptr;            ///< Path to the image file.
   uint16_t m_width = 0;                    ///< Width of the image.
   uint16_t m_height = 0;                   ///< Height of the image.
   unsigned long m_myTime = 0; ///< Timestamp for handling timing-related functions.
   bool m_shouldRedraw = false; ///< Flag indicating if the Image should be redrawn.
-  pixel_t *m_pixels = nullptr; ///< Pointer to the pixel map data.
-  uint8_t *m_maskAlpha = nullptr; ///< Pointer to the alpha mask data for transparency.
-/*
-#if defined(DISP_DEFAULT)
-  uint16_t *m_ownedPixels = nullptr; ///< Pointer to the owned pixel map data.
-#elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
-  uint8_t *m_ownedPixels = nullptr; ///< Pointer to the owned pixel map data.
-#endif*/
-
-  //uint8_t *m_ownedMask = nullptr; ///< Pointer to the owned alpha mask data.
-  //bool m_ownsBuffers = false; ///< Flag indicating if the buffers are owned by this instance.
-
+  
   float m_angle = 0; ///< Rotation angle in degrees.
-  fs::FS *m_fs = nullptr;
+  
   void setup(SourceFile _source, const char *_path, functionCB_t _cb, float _angle);
   void setup(const pixel_t *_pixels, uint16_t _width, uint16_t _height, const uint8_t *_maskAlpha, float _angle, functionCB_t _cb);
   bool readFileFromDisk();

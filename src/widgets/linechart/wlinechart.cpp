@@ -550,9 +550,7 @@ void LineChart::redraw()
   {
     return;
   }
-  uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
   DEBUG_D("Redrawing LineChart");
-  uint32_t startTime = micros();
 
   m_shouldRedraw = false;
   m_myTime = millis();
@@ -575,9 +573,6 @@ void LineChart::redraw()
 
   // Pinta as linhas
   drawAllSeries();
-
-  uint32_t endTime = micros();
-  DEBUG_D("Redrawing LineChart took %u us", endTime - startTime);
 
   m_blocked = false;
   #endif

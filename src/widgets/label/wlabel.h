@@ -34,8 +34,8 @@ private:
   GFXfont *m_fontFamily = nullptr; ///< Pointer to the font used by the label.
   #endif
   TextBound_t m_lastArea = {0, 0, 0, 0}; ///< Last calculated area for the label.
-  uint8_t m_decimalPlaces;///< Number of decimal places to display
   uint8_t m_fontSize;///< Font size
+  uint8_t m_decimalPlaces;///< Number of decimal places to display
 
   #if defined(USING_GRAPHIC_LIB)
   void setup(const char *_text, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor, const char* _prefix, const char* _suffix);

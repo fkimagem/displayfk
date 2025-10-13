@@ -51,7 +51,7 @@ public:
     void setValue(float str);
     float getValue();
     const char* getValueChar();
-    const char* convertoToChar(float f);
+    String convertoToString(float f);
     void show() override;
   void hide() override;
 };

@@ -112,6 +112,7 @@ void GaugeSuper::start()
   int altura = raioSugerido * (1 - fastCos(aberturaArcoTotal / 2.0));
   m_radius = raioSugerido;
   DEBUG_D("Gauge radius %i\tsegment %i", m_radius, altura);
+  UNUSED(altura);
 
   //m_offsetYAgulha = (40 + m_textBoundForValue.height + m_borderSize);
   int seno = fastSin((90 - m_maxAngle)) * m_radius;
@@ -437,8 +438,8 @@ void GaugeSuper::redraw()
   if (m_showLabels)
   {
     // WidgetBase::printText()
-    uint16_t auxX = xPos - (m_availableWidth / 2) + 1;
-    uint16_t auxY = yPos - m_borderSize;
+    //uint16_t auxX = xPos - (m_availableWidth / 2) + 1;
+    //uint16_t auxY = yPos - m_borderSize;
     //TextBound_t tb_value = getTextBounds(buf, auxX, auxY);
     //printText(buf, auxX, auxY, BL_DATUM, m_textBoundForValue, m_bkColor); //Mostrar valor do gauge
   }
@@ -449,7 +450,7 @@ void GaugeSuper::redraw()
     WidgetBase::objTFT->setTextColor(m_titleColor);
     WidgetBase::objTFT->setFont(m_usedFont);
 
-    TextBound_t tb_title = getTextBounds(m_title, xPos, yPos - (m_borderSize * 2));
+    //TextBound_t tb_title = getTextBounds(m_title, xPos, yPos - (m_borderSize * 2));
     printText(m_title, xPos, yPos - (m_borderSize * 2), BC_DATUM);
     updateFont(FontType::UNLOAD);
   }

@@ -5,7 +5,15 @@
 #include "../../user_setup.h"
 #define INVERTE_BITS_16(x) ((uint16_t)(~(x)))
 
-#define UNUSED(v) (void)v;
+#ifndef UNUSED
+#define UNUSED(x) (void)x;
+#endif
+
+#define POINT_IN_RECT(px, py, rx, ry, rw, rh) \
+    ((px) >= (rx) && (px) <= (rx) + (rw) && (py) >= (ry) && (py) <= (ry) + (rh))
+
+#define POINT_IN_CIRCLE(px, py, cx, cy, r) \
+    (((px) - (cx)) * ((px) - (cx)) + ((py) - (cy)) * ((py) - (cy)) <= (r) * (r))
 
 constexpr uint16_t invert_bits(uint16_t val) {
 	

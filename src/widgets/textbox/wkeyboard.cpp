@@ -328,7 +328,7 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
     if (!onlyContent)
     {
         WidgetBase::objTFT->fillRect(xPos, yPos, m_availableWidth, m_availableHeight, WKeyboard::m_backgroundColor);
-        const float percentUtilArea = 0.9;
+        //const float percentUtilArea = 0.9;
 
         for (auto row = 0; row < WKeyboard::aRows; ++row)
         {

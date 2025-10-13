@@ -95,7 +95,7 @@ typedef struct {
 //#define FT6336U_DEBUG
 
 // Define where debug output will be printed
-#define DEBUG_PRINTER Serial
+// #define DEBUG_PRINTER Serial
 
 // Setup debug printing macros
 #ifdef FT6336U_DEBUG

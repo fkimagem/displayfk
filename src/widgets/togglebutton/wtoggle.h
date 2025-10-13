@@ -25,8 +25,8 @@ private:
 
   void start();
   void setup(uint16_t _width, uint16_t _height, uint16_t _pressedColor, functionCB_t _cb);
-  
-
+  Arduino_Canvas *m_canvas = nullptr;
+  void blitRowFromCanvas(int x, int y, int w);
 public:
   ToggleButton(uint16_t _x, uint16_t _y, uint8_t _screen);
   ~ToggleButton();

@@ -85,7 +85,7 @@ void TextButton::redraw() {
   }
 
   // uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;
-  uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
+  // uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
   WidgetBase::objTFT->fillRoundRect(xPos + 1, yPos + 1, m_width - 2,

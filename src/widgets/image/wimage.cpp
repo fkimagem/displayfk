@@ -208,7 +208,7 @@ void Image::drawBackground() {
  */
 void Image::draw() {
   if (!visible) {
-    return false;
+    return;
   }
 #if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
   if (WidgetBase::currentScreen != screen ||

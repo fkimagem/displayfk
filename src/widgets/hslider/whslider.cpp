@@ -1,5 +1,8 @@
 #include "whslider.h"
 
+// if defined detect touch only when on handler circle, else, detect on rect total area and calculate handler position
+// #define DETECT_ON_HANDLER
+
 /**
  * @brief Constructor for the HSlider class.
  * @param _x X-coordinate for the HSlider position.
@@ -42,10 +45,11 @@ bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   }
 
   m_myTime = millis();
-  // Serial.println("Calculating slider");
+
   bool detected = false;
-  int32_t offsetRadius =
-      10; // Offset to account for the radius of the slider handle
+
+  #if defined(DETECT_ON_HANDLER)
+  int32_t offsetRadius = 10; // Offset to account for the radius of the slider handle
   int32_t radiusToDetect =
       m_radius + offsetRadius; // Add a small margin for touch detection
   int32_t deltaX = (*_xTouch - m_currentPos) * (*_xTouch - m_currentPos);
@@ -59,26 +63,27 @@ bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
     m_currentPos = (*_xTouch);
     m_currentPos = constrain(m_currentPos, m_minX, m_maxX);
 
-    /*if (currentPos < xPos + (height / 2))
-    {
-      currentPos = xPos + (height / 2);
-      //Serial.println("Primeira pos");
-    }
-    if (currentPos > xPos + width - (height / 2))
-    {
-      currentPos = xPos + width - (height / 2);
-      //Serial.println("Ultima po");
-    }*/
-
     m_value = map(m_currentPos, m_minX, m_maxX, m_vmin, m_vmax);
-    /*float l = width - height;
-    float percent = (currentPos - (xPos + (height / 2))) / (l);
-    value = (((vmax - vmin) * percent) + vmin);*/
-
     m_shouldRedraw = true;
   }
-  // Serial.println("Calculated slider");
+#else
+
+if(POINT_IN_RECT(*_xTouch, *_yTouch, m_minX, yPos, (m_width - 2 * m_radius), m_height))
+{
+  detected = true;
+  m_currentPos = (*_xTouch);
+  m_currentPos = constrain(m_currentPos, m_minX, m_maxX);
+
+  m_value = map(m_currentPos, m_minX, m_maxX, m_vmin, m_vmax);
+  m_shouldRedraw = true;
+}
+#endif
+
+
   return detected;
+
+
+
 #else
   return false;
 #endif
@@ -133,9 +138,19 @@ void HSlider::redraw() {
 
   uint8_t fillRadius = 2;
 
-  WidgetBase::objTFT->fillRoundRect(m_minX, m_centerV - (fillRadius),
+  
+
+    if(m_lastPos > m_currentPos){
+      uint16_t bkColor = WidgetBase::lightMode ? CFK_WHITE : CFK_BLACK;
+      WidgetBase::objTFT->fillRoundRect(m_currentPos, m_centerV - (fillRadius),
+                                    m_lastPos - (m_currentPos), fillRadius * 2,
+                                    fillRadius, bkColor);
+    }else{
+      WidgetBase::objTFT->fillRoundRect(m_minX, m_centerV - (fillRadius),
                                     m_currentPos - (m_minX), fillRadius * 2,
                                     fillRadius, m_pressedColor);
+    }
+    
   WidgetBase::objTFT->fillCircle(m_currentPos, m_centerV, m_contentRadius,
                                  lightBg); // slider handle
   WidgetBase::objTFT->fillCircle(m_currentPos, m_centerV,

@@ -637,6 +637,7 @@ bool DisplayFK::startSD(uint8_t pinCS, SPIClass *spiShared, int hz)
 
     uint64_t cardSize = WidgetBase::mySD->cardSize() / (1024 * 1024);
     DEBUG_D("SD Card Size: %lluMB\n", cardSize);
+    UNUSED(cardSize);
 
     DEBUG_D("SD Done");
     DisplayFK::sdcardOK = true;
@@ -963,7 +964,7 @@ void DisplayFK::addLog(const char *data)
 /**
  * @brief Constructor of the DisplayFK class
  */
-DisplayFK::DisplayFK() : m_configs(), m_runningTransaction(false), m_timer(nullptr), m_intervalMs(0), m_xAutoClick(0), m_yAutoClick(0), m_simulateAutoClick(false)
+DisplayFK::DisplayFK() : m_runningTransaction(false), m_configs(), m_timer(nullptr), m_intervalMs(0), m_xAutoClick(0), m_yAutoClick(0), m_simulateAutoClick(false)
 {
     DisplayFK::instance = this;
     #if defined(USING_GRAPHIC_LIB)
@@ -1743,7 +1744,7 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
             esp_err_t iniciou = esp_task_wdt_init(m_timeoutWTD * 1000, true);
         #elif ESP_ARDUINO_VERSION_MAJOR == 3
             esp_task_wdt_config_t twdt_config = {
-                .timeout_ms = m_timeoutWTD * 1000, // timeout em ms
+                .timeout_ms = static_cast<uint32_t>(m_timeoutWTD * 1000), // timeout em ms m_timeoutWTD * 1000, // timeout em ms
                 .idle_core_mask = (1 << portNUM_PROCESSORS) - 1, // aplica a todos os cores
                 .trigger_panic = true,
             };
@@ -1890,6 +1891,26 @@ void DisplayFK::processTouchEvent(uint16_t xTouch, uint16_t yTouch, int zPressur
 
     // Process other touchable widgets
     processTouchableWidgets(xTouch, yTouch);
+}
+
+void DisplayFK::processTouchStatus(bool hasTouch){
+    if(hasTouch && m_lastTouchState == TouchEventType::NONE){
+        m_lastTouchState = TouchEventType::TOUCH_DOWN;
+    }else if(hasTouch && m_lastTouchState == TouchEventType::TOUCH_DOWN){
+        m_lastTouchState = TouchEventType::TOUCH_HOLD;
+    }else if(!hasTouch && (m_lastTouchState == TouchEventType::TOUCH_DOWN || m_lastTouchState == TouchEventType::TOUCH_HOLD)){
+        m_lastTouchState = TouchEventType::TOUCH_UP;
+    }else if(!hasTouch && m_lastTouchState == TouchEventType::TOUCH_UP){
+        m_lastTouchState = TouchEventType::NONE;
+    }
+
+    if(m_lastTouchState == TouchEventType::TOUCH_DOWN){
+        Serial.println("---------------------- APERTEI");
+    }else if(m_lastTouchState == TouchEventType::TOUCH_UP){
+        Serial.println("---------------------- SOLTEI");
+    }else if(m_lastTouchState == TouchEventType::TOUCH_HOLD){
+        //Serial.println("---------------------- APERTANDO");
+    }
 }
 
 /**
@@ -2240,6 +2261,14 @@ void DisplayFK::updateWidgets() {
     }
 }
 
+
+void DisplayFK::reloadScreen() {
+    if(m_lastScreen) {
+        Serial.println("Reloading screen");
+        WidgetBase::loadScreen = m_lastScreen;
+    }
+}
+
 /**
  * @brief Main task loop
  */
@@ -2249,6 +2278,7 @@ void DisplayFK::loopTask() {
     
     // Process screen loading
     if (WidgetBase::loadScreen) {
+        m_lastScreen = WidgetBase::loadScreen;
         log_d("Loading screen on taskloop");
         WidgetBase::loadScreen();
         WidgetBase::loadScreen = nullptr;
@@ -2262,7 +2292,7 @@ void DisplayFK::loopTask() {
     processCallback();
 
     // Process touch events
-#if defined(TOUCH_CS) || defined(HAS_TOUCH)
+#if defined(HAS_TOUCH)
     uint16_t xTouch, yTouch;
     int zPressure;
     bool hasTouch = false;
@@ -2285,9 +2315,11 @@ void DisplayFK::loopTask() {
         Serial.printf("Simulating click at (%i, %i)\n", xTouch, yTouch);
     }
 
+    processTouchStatus(hasTouch);
+
     if (hasTouch) {
         if(m_debugTouch){
-            Serial.printf("Touch event: [%i, %i], %i, %i\n", xTouch, yTouch, zPressure, gesture);
+            Serial.printf("Touch event: [%i, %i]\n", xTouch, yTouch);
             WidgetBase::objTFT->fillCircle(xTouch, yTouch, 2, CFK_FUCHSIA);
         }
         processTouchEvent(xTouch, yTouch, zPressure, gesture);
@@ -2303,6 +2335,9 @@ void DisplayFK::loopTask() {
 
     // Calculate and log execution time
     startTime = micros() - startTime;
+    
+
+
     vTaskDelay(pdMS_TO_TICKS(1));
 }
 

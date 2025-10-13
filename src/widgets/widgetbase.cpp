@@ -244,7 +244,7 @@ void WidgetBase::addCallback(functionCB_t callback, CallbackOrigin origin){
         
         if(uxQueueSpacesAvailable(WidgetBase::xFilaCallback) > 0){
             if(xQueueSend(WidgetBase::xFilaCallback, &callback, pdMS_TO_TICKS(50)) == pdPASS){
-                DEBUG_D("Callback added to queue. Origin: %d\n", origin);
+                DEBUG_D("Callback added to queue. Origin: %d\n", (int)origin);
             }else{
                 DEBUG_E("Can't add callback. Queue is full\n");
             }
