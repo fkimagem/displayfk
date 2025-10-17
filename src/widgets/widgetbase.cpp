@@ -229,6 +229,11 @@ void WidgetBase::hide()
     
 }
 
+bool WidgetBase::showingMyScreen()
+{
+    return WidgetBase::currentScreen == screen;
+}
+
 /**
  * @brief Adds a callback to the callback queue
  * @param callback Callback to be added

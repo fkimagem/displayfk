@@ -227,49 +227,8 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
             break;
         }
 
-        /*if (isdigit(letter.label))
-        {
-            log_d("Is number");
-            addLetter((char)letter.label);
-        }
-        else if (isalpha(letter.label))
-        {
-            if (strcmp(letter, "DEL") == 0)
-            {
-                log_d("Is Delete");
-                removeLetter();
-            }
-            else if (strcmp(letter, "OK") == 0)
-            {
-                log_d("Is OK");
-                (*pressedKey) = PressedKeyType::RETURN;
-            }
-            else if (strcmp(letter, "CLR") == 0)
-            {
-                log_d("Clear Field");
-                clear();
-            }
-            else
-            {
-                log_d("Is letter");
-                addLetter((char)letter[0]);
-            }
-        }
-        else if (ispunct(letter[0]))
-        {
-            log_d("Is punct");
-            addLetter((char)letter[0]);
-        }
-        else
-        {
-            log_d("Another type");
-            addLetter((char)letter[0]);
-        }*/
-
         retorno = true;
     }
-
-    //WidgetBase::objTFT->fillCircle(*_xTouch, *_yTouch, 2, CFK_BLUE);
 
     return retorno;
     #else
@@ -292,32 +251,18 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
         Serial.println("Keyboard not loaded");
         return;
     }
+    uint32_t startMillis = millis();
     if (fullScreen)
     {
         WidgetBase::objTFT->fillScreen(WKeyboard::m_backgroundColor);
     }
 
 
-    // uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
-    //uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
-
     WidgetBase::objTFT->fillRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, WKeyboard::m_backgroundColor);
     WidgetBase::objTFT->drawRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, WKeyboard::m_keyColor);
 
     WidgetBase::objTFT->setTextColor(WKeyboard::m_keyColor);
 
-    /*if(m_keyH > 20){
-        WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
-    }else{
-        WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
-    }*/
-
-
-    //TextBound_t area;
-    //WidgetBase::objTFT->getTextBounds("M", 10, 10, &area.x, &area.y, &area.width, &area.height);
-    //uint16_t qtdLetrasMax = m_pontoPreview.width / area.width;
-
-    //const char* conteudo = m_content.getLastChars(qtdLetrasMax);
     WidgetBase::objTFT->setFont(m_fontPreview);
     const char* conteudo = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width * 0.9, m_pontoPreview.height * 0.9);
     printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, lastArea, WKeyboard::m_backgroundColor);
@@ -347,12 +292,6 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
                             keyScale++;
                         }
                     }
-
-                    // keyScale = (keyScale * (_keyW + 2));
-
-                    //uint16_t xCenter = xPos + (((keyScale * (m_keyW + 2))) * col) + ((keyScale * (m_keyW + 2)) / 2);
-                    //uint16_t yCenter = yPos + ((m_keyH + 2) * row) + (m_keyH / 2);
-
                     const int key_width = m_keyW * keyScale + (2 * (keyScale - 1));
                     const int key_height = m_keyH;
                     const int key_x = xPos + ((m_keyW + 2) * col);
@@ -363,10 +302,7 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
 
                     WidgetBase::objTFT->fillRoundRect(key_x, key_y,key_width , key_height, key_round, WKeyboard::m_keyColor);
                     WidgetBase::objTFT->drawRoundRect(key_x, key_y, key_width, key_height, key_round, WKeyboard::m_letterColor);
-
-                    //const GFXfont* font = getBestRobotoBold(key_width * percentUtilArea, key_height * percentUtilArea, letter.label);
-                    //WidgetBase::objTFT->setFont(font);
-
+                    
                     printText(letter.label, xCenter, yCenter, MC_DATUM);
                 }
             }
@@ -375,6 +311,8 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
 
     // WidgetBase::objTFT->drawCircle(210, 160, 10, CFK_FUCHSIA);
     #endif
+    uint32_t endMillis = millis();
+    Serial.printf("WKeyboard::redraw: %i ms\n", endMillis - startMillis);
 }
 
 /**

@@ -21,6 +21,7 @@ QueueHandle_t DisplayFK::xFilaLog;
 logMessage_t DisplayFK::bufferLog[LOG_LENGTH];
 uint8_t DisplayFK::logIndex = 0;
 uint16_t DisplayFK::logFileCount = 1;
+StringPool DisplayFK::stringPool;
 
 
 #ifdef DFK_SD
@@ -62,19 +63,21 @@ void DisplayFK::changeWTD()
 #ifdef DFK_SD
 
 /**
- * @brief Generates a unique filename for logs
- * @return Pointer to the generated filename
+ * @brief Generates a unique filename for logs using string pool
+ * @return Pointer to the generated filename (managed by string pool)
  */
 const char* DisplayFK::generateNameFile() {
-    // Pre-calculate the total length needed: "/" + number + "-" + 32 chars + ".txt\0"
-    const size_t numberLength = 10; // Max length for uint16_t
-    const size_t totalLength = 1 + numberLength + 1 + 32 + 5; // "/" + number + "-" + random + ".txt\0"
-    
-    // Allocate memory for the filename
-    char* filename = new char[totalLength];
+    // Try to use string pool first
+    char* filename = stringPool.allocate();
     if (!filename) {
-        DEBUG_E("Failed to allocate memory for filename");
-        return nullptr;
+        DEBUG_E("String pool exhausted, falling back to dynamic allocation");
+        // Fallback to dynamic allocation if pool is exhausted
+        const size_t totalLength = 50; // "/" + number + "-" + 32 chars + ".txt\0"
+        filename = new(std::nothrow) char[totalLength];
+        if (!filename) {
+            DEBUG_E("Failed to allocate memory for filename");
+            return nullptr;
+        }
     }
 
     // Generate the random string first
@@ -85,10 +88,11 @@ const char* DisplayFK::generateNameFile() {
     randomString[32] = '\0';
 
     // Format the filename using snprintf for safety
-    int written = snprintf(filename, totalLength, "/%u-%s.txt", logFileCount, randomString);
-    if (written < 0 || written >= totalLength) {
+    int written = snprintf(filename, STRING_POOL_SIZE, "/%u-%s.txt", logFileCount, randomString);
+    if (written < 0 || written >= STRING_POOL_SIZE) {
         DEBUG_E("Failed to format filename");
-        delete[] filename;
+        // If using pool, deallocate it
+        stringPool.deallocate(filename);
         return nullptr;
     }
 
@@ -316,7 +320,6 @@ void DisplayFK::insertCharNumpad(char c)
     }else{
         DEBUG_E("Numpad not configured");
     }
-    
 }
 #endif
 
@@ -441,7 +444,6 @@ void DisplayFK::insertCharTextbox(char c)
     }else{
         DEBUG_E("Keyboard not configured");
     }
-    
 }
 #endif
 
@@ -696,7 +698,7 @@ void DisplayFK::listFiles(fs::FS *fs, const char *dirname, uint8_t levels)
                 size_t len1 = strlen(dirbase);
                 size_t len2 = strlen(file.name());
 
-                char* resultado = (char*) malloc(len1 + len2 + 1); 
+                char* resultado = new(std::nothrow) char[len1 + len2 + 1]; 
                 if (!resultado) continue;  // falha na alocação
 
                 strcpy(resultado, dirbase);  // copia str1
@@ -704,7 +706,7 @@ void DisplayFK::listFiles(fs::FS *fs, const char *dirname, uint8_t levels)
 
                 //String path = "/" + String(file.name());
                 listFiles(fs, resultado, levels - 1);
-                free(resultado);
+                delete[] resultado;
             }
         }
         else
@@ -997,12 +999,24 @@ void DisplayFK::freeLoopTask()
 
 void DisplayFK::startKeyboards(){
     #ifdef DFK_TEXTBOX
-        keyboard = new WKeyboard();
-        keyboard->setup();
+        if (!keyboard) {
+            keyboard = std::make_unique<WKeyboard>();
+            if (keyboard) {
+                keyboard->setup();
+            } else {
+                DEBUG_E("Failed to allocate memory for keyboard");
+            }
+        }
     #endif
     #ifdef DFK_NUMBERBOX
-        numpad = new Numpad();
-        numpad->setup();
+        if (!numpad) {
+            numpad = std::make_unique<Numpad>();
+            if (numpad) {
+                numpad->setup();
+            } else {
+                DEBUG_E("Failed to allocate memory for numpad");
+            }
+        }
     #endif
 }
 
@@ -1011,173 +1025,167 @@ void DisplayFK::startKeyboards(){
  */
 DisplayFK::~DisplayFK()
 {
+    // Clean up timer
     if (m_timer != nullptr) {
         xTimerDelete(m_timer, 0);
+        m_timer = nullptr;
     }
-/*
-    // Free all static arrays
+
+    // Clean up semaphore
+    if (m_loopSemaphore != nullptr) {
+        vSemaphoreDelete(m_loopSemaphore);
+        m_loopSemaphore = nullptr;
+    }
+
+    // Free all widget arrays (these are pointers to external arrays, not owned by this class)
+    // Note: The arrays themselves are managed by the user, we only store pointers
 #if defined(DFK_TOUCHAREA)
-    if (arrayTouchArea) {
-        delete[] arrayTouchArea;
-        arrayTouchArea = nullptr;
-    }
+    arrayTouchArea = nullptr;
+    qtdTouchArea = 0;
+    m_touchAreaConfigured = false;
 #endif
 
 #if defined(DFK_THERMOMETER)
-    if (arrayThermometer) {
-        delete[] arrayThermometer;
-        arrayThermometer = nullptr;
-    }
+    arrayThermometer = nullptr;
+    qtdThermometer = 0;
+    m_thermometerConfigured = false;
 #endif
 
 #ifdef DFK_CHECKBOX
-    if (arrayCheckbox) {
-        delete[] arrayCheckbox;
-        arrayCheckbox = nullptr;
-    }
+    arrayCheckbox = nullptr;
+    qtdCheckbox = 0;
+    m_checkboxConfigured = false;
 #endif
 
 #ifdef DFK_CIRCLEBTN
-    if (arrayCircleBtn) {
-        delete[] arrayCircleBtn;
-        arrayCircleBtn = nullptr;
-    }
+    arrayCircleBtn = nullptr;
+    qtdCircleBtn = 0;
+    m_circleButtonConfigured = false;
 #endif
 
 #ifdef DFK_GAUGE
-    if (arrayGauge) {
-        delete[] arrayGauge;
-        arrayGauge = nullptr;
-    }
+    arrayGauge = nullptr;
+    qtdGauge = 0;
+    m_gaugeConfigured = false;
 #endif
 
 #ifdef DFK_CIRCULARBAR
-    if (arrayCircularBar) {
-        delete[] arrayCircularBar;
-        arrayCircularBar = nullptr;
-    }
+    arrayCircularBar = nullptr;
+    qtdCircularBar = 0;
+    m_circularBarConfigured = false;
 #endif
 
 #ifdef DFK_HSLIDER
-    if (arrayHSlider) {
-        delete[] arrayHSlider;
-        arrayHSlider = nullptr;
-    }
+    arrayHSlider = nullptr;
+    qtdHSlider = 0;
+    m_hSliderConfigured = false;
 #endif
 
 #ifdef DFK_LABEL
-    if (arrayLabel) {
-        delete[] arrayLabel;
-        arrayLabel = nullptr;
-    }
+    arrayLabel = nullptr;
+    qtdLabel = 0;
+    m_labelConfigured = false;
 #endif
 
 #ifdef DFK_LED
-    if (arrayLed) {
-        delete[] arrayLed;
-        arrayLed = nullptr;
-    }
+    arrayLed = nullptr;
+    qtdLed = 0;
+    m_ledConfigured = false;
 #endif
 
 #ifdef DFK_LINECHART
-    if (arrayLineChart) {
-        delete[] arrayLineChart;
-        arrayLineChart = nullptr;
-    }
+    arrayLineChart = nullptr;
+    qtdLineChart = 0;
+    m_lineChartConfigured = false;
 #endif
 
 #ifdef DFK_RADIO
-    if (arrayRadioGroup) {
-        delete[] arrayRadioGroup;
-        arrayRadioGroup = nullptr;
-    }
+    arrayRadioGroup = nullptr;
+    qtdRadioGroup = 0;
+    m_radioGroupConfigured = false;
 #endif
 
 #ifdef DFK_RECTBTN
-    if (arrayRectBtn) {
-        delete[] arrayRectBtn;
-        arrayRectBtn = nullptr;
-    }
+    arrayRectBtn = nullptr;
+    qtdRectBtn = 0;
+    m_rectButtonConfigured = false;
 #endif
 
 #ifdef DFK_TOGGLE
-    if (arrayToggleBtn) {
-        delete[] arrayToggleBtn;
-        arrayToggleBtn = nullptr;
-    }
+    arrayToggleBtn = nullptr;
+    qtdToggle = 0;
+    m_toggleConfigured = false;
 #endif
 
 #ifdef DFK_VBAR
-    if (arrayVBar) {
-        delete[] arrayVBar;
-        arrayVBar = nullptr;
-    }
+    arrayVBar = nullptr;
+    qtdVBar = 0;
+    m_vBarConfigured = false;
 #endif
 
 #ifdef DFK_VANALOG
-    if (arrayVAnalog) {
-        delete[] arrayVAnalog;
-        arrayVAnalog = nullptr;
-    }
+    arrayVAnalog = nullptr;
+    qtdVAnalog = 0;
+    m_vAnalogConfigured = false;
 #endif
 
 #ifdef DFK_TEXTBOX
-    if (arrayTextBox) {
-        delete[] arrayTextBox;
-        arrayTextBox = nullptr;
-    }
-    if (keyboard) {
-        delete keyboard;
-        keyboard = nullptr;
-    }
+    arrayTextBox = nullptr;
+    qtdTextBox = 0;
+    m_textboxConfigured = false;
+    // Smart pointer will automatically clean up keyboard
+    keyboard.reset();
 #endif
 
 #ifdef DFK_NUMBERBOX
-    if (arrayNumberbox) {
-        delete[] arrayNumberbox;
-        arrayNumberbox = nullptr;
-    }
-    if (numpad) {
-        delete numpad;
-        numpad = nullptr;
-    }
+    arrayNumberbox = nullptr;
+    qtdNumberBox = 0;
+    m_numberboxConfigured = false;
+    // Smart pointer will automatically clean up numpad
+    numpad.reset();
 #endif
 
 #ifdef DFK_IMAGE
-    if (arrayImage) {
-        delete[] arrayImage;
-        arrayImage = nullptr;
-    }
+    arrayImage = nullptr;
+    qtdImage = 0;
+    m_imageConfigured = false;
 #endif
 
 #ifdef DFK_TEXTBUTTON
-    if (arrayTextButton) {
-        delete[] arrayTextButton;
-        arrayTextButton = nullptr;
-    }
+    arrayTextButton = nullptr;
+    qtdTextButton = 0;
+    m_textButtonConfigured = false;
 #endif
 
 #ifdef DFK_SPINBOX
-    if (arraySpinbox) {
-        delete[] arraySpinbox;
-        arraySpinbox = nullptr;
-    }
+    arraySpinbox = nullptr;
+    qtdSpinbox = 0;
+    m_spinboxConfigured = false;
 #endif
 
 #if defined(HAS_TOUCH)
-    if (touchExterno) {
-        delete touchExterno;
-        touchExterno = nullptr;
-    }
+    // Smart pointer will automatically clean up touch screen
+    touchExterno.reset();
 #endif
 
 #ifdef DFK_SD
+    // Clean up log filename (owned by this class)
     if (m_nameLogFile) {
         delete[] m_nameLogFile;
         m_nameLogFile = nullptr;
     }
 #endif
-*/
+
+#ifdef DFK_EXTERNALINPUT
+    // Clean up external keyboard (owned by this class)
+    if (externalKeyboard) {
+        delete externalKeyboard;
+        externalKeyboard = nullptr;
+    }
+    arrayInputExternal = nullptr;
+    qtdExternalInput = 0;
+    m_inputExternalConfigured = false;
+#endif
 
     // Free the log queue
     if (xFilaLog) {
@@ -1186,7 +1194,6 @@ DisplayFK::~DisplayFK()
     }
 
     // Reset static variables
-    //funcaoCB = nullptr;
     sdcardOK = false;
     logIndex = 0;
     logFileCount = 1;
@@ -1299,13 +1306,15 @@ void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = new TouchScreen();
+        touchExterno = std::make_unique<TouchScreen>();
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
             touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsXPT2046(w, h, _rotation, -1, -1, -1, pinCS, _sharedSPI, _objTFT, touchFrequency, displayFrequency, displayPinCS);
+        } else {
+            DEBUG_E("Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1314,13 +1323,15 @@ void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = new TouchScreen();
+        touchExterno = std::make_unique<TouchScreen>();
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
             touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsXPT2046(w, h, _rotation, pinSclk, pinMosi, pinMiso, pinCS, nullptr, _objTFT, touchFrequency, displayFrequency, displayPinCS);
+        } else {
+            DEBUG_E("Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1330,13 +1341,15 @@ void DisplayFK::startTouchFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, int
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = new TouchScreen();
+        touchExterno = std::make_unique<TouchScreen>();
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
             touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsFT6236U(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
+        } else {
+            DEBUG_E("Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1346,13 +1359,15 @@ void DisplayFK::startTouchFT6336(uint16_t w, uint16_t h, uint8_t _rotation, int8
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = new TouchScreen();
+        touchExterno = std::make_unique<TouchScreen>();
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
             touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsFT6336(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
+        } else {
+            DEBUG_E("Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1362,13 +1377,15 @@ void DisplayFK::startTouchCST816(uint16_t w, uint16_t h, uint8_t _rotation, int8
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = new TouchScreen();
+        touchExterno = std::make_unique<TouchScreen>();
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
             touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsCST816(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
+        } else {
+            DEBUG_E("Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1378,13 +1395,33 @@ void DisplayFK::startTouchGT911(uint16_t w, uint16_t h, uint8_t _rotation, int8_
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = new TouchScreen();
+        touchExterno = std::make_unique<TouchScreen>();
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
             touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsGT911(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
+        } else {
+            DEBUG_E("Failed to allocate memory for TouchScreen");
+        }
+    }
+}
+#elif defined (TOUCH_GSL3680)
+void DisplayFK::startTouchGSL3680(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST){
+    m_widthScreen = w;
+    m_rotationScreen = _rotation;
+    m_heightScreen = h;
+    if(!touchExterno){
+        touchExterno = std::make_unique<TouchScreen>();
+        if (touchExterno)
+        {
+            touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
+            touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
+            touchExterno->setSwapAxis(m_swapAxis);
+            touchExterno->startAsGSL3680(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
+        } else {
+            DEBUG_E("Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1398,6 +1435,8 @@ void DisplayFK::startTouchGT911(uint16_t w, uint16_t h, uint8_t _rotation, int8_
  */
 void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 {
+    uint32_t startMillis = millis();
+
     WidgetBase::currentScreen = currentScreenIndex;
     Serial.printf("Drawing widgets of screen:%i\n", WidgetBase::currentScreen);
 
@@ -1691,6 +1730,9 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
         DEBUG_W("Array of Image not configured");
     }
 #endif
+
+ uint32_t endMillis = millis();
+ Serial.printf("drawWidgetsOnScreen: %i ms\n", endMillis - startMillis);
 }
 
 /**
@@ -1957,7 +1999,7 @@ void DisplayFK::processEmptyAreaTouch(uint16_t xTouch, uint16_t yTouch) {
 }
 
 /**
- * @brief Processes touch in checkbox
+ * @brief Processes touch in checkbox (optimized for current screen)
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
  */
@@ -1967,14 +2009,16 @@ void DisplayFK::processCheckboxTouch(uint16_t xTouch, uint16_t yTouch) {
         return;
     }
     
-        for (uint32_t indice = 0; indice < qtdCheckbox; indice++) {
-            if (arrayCheckbox[indice]->detectTouch(&xTouch, &yTouch)) {
-                functionCB_t cb = arrayCheckbox[indice]->getCallbackFunc();
-                WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-                return;
-            }
+    for (uint32_t indice = 0; indice < qtdCheckbox; indice++) {
+        // Skip widgets not on current screen
+        if (!arrayCheckbox[indice]->showingMyScreen()) continue;
+        
+        if (arrayCheckbox[indice]->detectTouch(&xTouch, &yTouch)) {
+            functionCB_t cb = arrayCheckbox[indice]->getCallbackFunc();
+            WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
+            return;
         }
-    
+    }
 #endif
 }
 
@@ -1990,6 +2034,8 @@ void DisplayFK::processCircleButtonTouch(uint16_t xTouch, uint16_t yTouch) {
     }
     
         for (uint32_t indice = 0; indice < qtdCircleBtn; indice++) {
+            if (!arrayCircleBtn[indice]->showingMyScreen()) continue;
+            
             if (arrayCircleBtn[indice]->detectTouch(&xTouch, &yTouch)) {
                 functionCB_t cb = arrayCircleBtn[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
@@ -2000,7 +2046,7 @@ void DisplayFK::processCircleButtonTouch(uint16_t xTouch, uint16_t yTouch) {
 }
 
 /**
- * @brief Processes touch in horizontal slider
+ * @brief Processes touch in horizontal slider (optimized for current screen)
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
  */
@@ -2010,13 +2056,16 @@ void DisplayFK::processHSliderTouch(uint16_t xTouch, uint16_t yTouch) {
         return;
     }
     
-        for (uint32_t indice = 0; indice < qtdHSlider; indice++) {
-            if (arrayHSlider[indice]->detectTouch(&xTouch, &yTouch)) {
-                functionCB_t cb = arrayHSlider[indice]->getCallbackFunc();
-                WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-                return;
-            }
+    for (uint32_t indice = 0; indice < qtdHSlider; indice++) {
+        // Skip widgets not on current screen
+        if (!arrayHSlider[indice]->showingMyScreen()) continue;
+        
+        if (arrayHSlider[indice]->detectTouch(&xTouch, &yTouch)) {
+            functionCB_t cb = arrayHSlider[indice]->getCallbackFunc();
+            WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
+            return;
         }
+    }
 #endif
 }
 
@@ -2053,6 +2102,8 @@ void DisplayFK::processRectButtonTouch(uint16_t xTouch, uint16_t yTouch) {
     }
     
         for (uint32_t indice = 0; indice < qtdRectBtn; indice++) {
+            if (!arrayRectBtn[indice]->showingMyScreen()) continue;
+            
             if (arrayRectBtn[indice]->detectTouch(&xTouch, &yTouch)) {
                 functionCB_t cb = arrayRectBtn[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
@@ -2074,6 +2125,8 @@ void DisplayFK::processImageTouch(uint16_t xTouch, uint16_t yTouch) {
     }
     
         for (uint32_t indice = 0; indice < qtdImage; indice++) {
+            if (!arrayImage[indice]->showingMyScreen()) continue;
+
             if (arrayImage[indice]->detectTouch(&xTouch, &yTouch)) {
                 functionCB_t cb = arrayImage[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
@@ -2095,6 +2148,8 @@ void DisplayFK::processSpinboxTouch(uint16_t xTouch, uint16_t yTouch) {
     }
     
         for (uint32_t indice = 0; indice < qtdSpinbox; indice++) {
+            if (!arraySpinbox[indice]->showingMyScreen()) continue;
+
             if (arraySpinbox[indice]->detectTouch(&xTouch, &yTouch)) {
                 functionCB_t cb = arraySpinbox[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
@@ -2106,7 +2161,7 @@ void DisplayFK::processSpinboxTouch(uint16_t xTouch, uint16_t yTouch) {
 }
 
 /**
- * @brief Processes touch in toggle button
+ * @brief Processes touch in toggle button (optimized for current screen)
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
  */
@@ -2116,14 +2171,16 @@ void DisplayFK::processToggleTouch(uint16_t xTouch, uint16_t yTouch) {
         return;
     }
 
-        for (uint32_t indice = 0; indice < qtdToggle; indice++) {
-            if (arrayToggleBtn[indice]->detectTouch(&xTouch, &yTouch)) {
-                //funcaoCB = arrayToggleBtn[indice].getCallbackFunc();
-                functionCB_t cb = arrayToggleBtn[indice]->getCallbackFunc();
-                WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-                return;
-            }
+    for (uint32_t indice = 0; indice < qtdToggle; indice++) {
+        // Skip widgets not on current screen
+        if (!arrayToggleBtn[indice]->showingMyScreen()) continue;
+        
+        if (arrayToggleBtn[indice]->detectTouch(&xTouch, &yTouch)) {
+            functionCB_t cb = arrayToggleBtn[indice]->getCallbackFunc();
+            WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
+            return;
         }
+    }
 #endif
 }
 
@@ -2139,6 +2196,8 @@ void DisplayFK::processTextButtonTouch(uint16_t xTouch, uint16_t yTouch) {
     }
     
     for (uint32_t indice = 0; indice < qtdTextButton; indice++) {
+        if (!arrayTextButton[indice]->showingMyScreen()) continue;
+
         if (arrayTextButton[indice]->detectTouch(&xTouch, &yTouch)) {
             functionCB_t cb = arrayTextButton[indice]->getCallbackFunc();
             WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
@@ -2164,7 +2223,9 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
                 continue;
             }
 
-            if (arrayTextBox[indice]->detectTouch(&xTouch, &yTouch) && keyboard) {
+            if (!arrayTextBox[indice]->showingMyScreen()) continue;
+
+            if (arrayTextBox[indice]->detectTouch(&xTouch, &yTouch)) {
                 keyboard->open(arrayTextBox[indice]);
                 PressedKeyType pressedKey = PressedKeyType::NONE;
 
@@ -2206,7 +2267,10 @@ void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
                 DEBUG_E("NumberBox pointer is null");
                 continue;
             }
-            if (arrayNumberbox[indice]->detectTouch(&xTouch, &yTouch) && numpad) {
+
+            if (!arrayNumberbox[indice]->showingMyScreen()) continue;
+
+            if (arrayNumberbox[indice]->detectTouch(&xTouch, &yTouch)) {
                 numpad->open(arrayNumberbox[indice]);
                 PressedKeyType pressedKey = PressedKeyType::NONE;
 
@@ -2235,46 +2299,70 @@ void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
 }
 
 /**
- * @brief Updates screen widgets
+ * @brief Updates screen widgets (optimized for current screen only)
  */
 void DisplayFK::updateWidgets() {
-    if (!m_runningTransaction) {
-        updateCircularBar();
-        updateGauge();
-        updateLabel();
-        updateLed();
-        updateLineChart();
-        updateVBar();
-        updateVAnalog();
-        updateCheckbox();
-        updateCircleButton();
-        updateHSlider();
-        updateRadioGroup();
-        updateRectButton();
-        updateToggle();
-        updateImage();
-        //updateTextButton();
-        updateSpinbox();
-        updateNumberBox();
-        updateTextBox();
-        updateThermometer();
-    }
+    if (m_runningTransaction) return;
+    
+    // Only process widgets from current screen
+    updateCircularBar();
+    updateGauge();
+    updateLabel();
+    updateLed();
+    updateLineChart();
+    updateVBar();
+    updateVAnalog();
+    updateCheckbox();
+    updateCircleButton();
+    updateHSlider();
+    updateRadioGroup();
+    updateRectButton();
+    updateToggle();
+    updateImage();
+    //updateTextButton();
+    updateSpinbox();
+    updateNumberBox();
+    updateTextBox();
+    updateThermometer();
 }
 
 
-void DisplayFK::reloadScreen() {
+void DisplayFK::refreshScreen() {
     if(m_lastScreen) {
         Serial.println("Reloading screen");
         WidgetBase::loadScreen = m_lastScreen;
     }
 }
 
+void DisplayFK::loadScreen(functionLoadScreen_t screen) {
+    WidgetBase::loadScreen = screen;
+}
+
+#if defined(DISP_DEFAULT)
+void DisplayFK::setDrawObject(Arduino_GFX *objTFT){
+    WidgetBase::objTFT = objTFT;
+}
+#elif defined(DISP_PCD8544)
+void DisplayFK::setDrawObject(Adafruit_PCD8544 *objTFT){
+    WidgetBase::objTFT = objTFT;
+}
+#elif defined(DISP_SSD1306)
+void DisplayFK::setDrawObject(Adafruit_SSD1306 *objTFT){
+    WidgetBase::objTFT = objTFT;
+}
+#elif defined(DISP_U8G2)
+void DisplayFK::setDrawObject(U8G2 *objTFT){
+    WidgetBase::objTFT = objTFT;
+}
+#endif
+
+
 /**
  * @brief Main task loop
  */
 void DisplayFK::loopTask() {
 
-    uint32_t startTime = micros();
+    uint32_t startTime = millis();
     
     // Process screen loading
     if (WidgetBase::loadScreen) {
@@ -2334,8 +2422,11 @@ void DisplayFK::loopTask() {
     #endif
 
     // Calculate and log execution time
-    startTime = micros() - startTime;
+    startTime = millis() - startTime;
     
+    if(startTime > 20){
+        Serial.printf("Time to loopTask: %i ms\n", startTime);
+    }
 
 
     vTaskDelay(pdMS_TO_TICKS(1));
@@ -2548,54 +2639,65 @@ void DisplayFK::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t 
 }
 #endif
 /**
- * @brief Updates circular bars
+ * @brief Updates circular bars (optimized for current screen)
  */
 void DisplayFK::updateCircularBar() {
 #ifdef DFK_CIRCULARBAR
-
-    if (m_circularBarConfigured) {
-        for (uint32_t indice = 0; indice < qtdCircularBar; indice++) {
-            arrayCircularBar[indice]->redraw();
-        }
+    if (!m_circularBarConfigured) return;
+    
+    for (uint32_t indice = 0; indice < qtdCircularBar; indice++) {
+        // Skip widgets not on current screen
+        if (!arrayCircularBar[indice]->showingMyScreen()) continue;
+        
+        arrayCircularBar[indice]->redraw();
     }
 #endif
 }
 
 /**
- * @brief Updates gauges
+ * @brief Updates gauges (optimized for current screen)
  */
 void DisplayFK::updateGauge() {
 #ifdef DFK_GAUGE
-    if (m_gaugeConfigured) {
-        for (uint32_t indice = 0; indice < qtdGauge; indice++) {
-            arrayGauge[indice]->redraw();
-        }
+    if (!m_gaugeConfigured) return;
+    
+    for (uint32_t indice = 0; indice < qtdGauge; indice++) {
+        // Skip widgets not on current screen
+        if (!arrayGauge[indice]->showingMyScreen()) continue;
+        
+        arrayGauge[indice]->redraw();
     }
 #endif
 }
 
 /**
- * @brief Updates labels
+ * @brief Updates labels (optimized for current screen)
  */
 void DisplayFK::updateLabel() {
 #ifdef DFK_LABEL
-    if (m_labelConfigured) {
-        for (uint32_t indice = 0; indice < qtdLabel; indice++) {
-            arrayLabel[indice]->redraw();
-        }
+    if (!m_labelConfigured) return;
+    
+    for (uint32_t indice = 0; indice < qtdLabel; indice++) {
+        // Skip widgets not on current screen
+        if (!arrayLabel[indice]->showingMyScreen()) continue;
+        
+        arrayLabel[indice]->redraw();
     }
 #endif
 }
 
 /**
- * @brief Updates LEDs
+ * @brief Updates LEDs (optimized for current screen)
  */
 void DisplayFK::updateLed() {
 #ifdef DFK_LED
-    if (m_ledConfigured) {
-        for (uint32_t indice = 0; indice < qtdLed; indice++) {
-            arrayLed[indice]->redraw();
-        }
+    if (!m_ledConfigured) return;
+    
+    for (uint32_t indice = 0; indice < qtdLed; indice++) {
+        // Skip widgets not on current screen
+        if (!arrayLed[indice]->showingMyScreen()) continue;
+        
+        arrayLed[indice]->redraw();
     }
 #endif
 }
@@ -2607,6 +2709,7 @@ void DisplayFK::updateLineChart() {
 #ifdef DFK_LINECHART
     if (m_lineChartConfigured) {
         for (uint32_t indice = 0; indice < qtdLineChart; indice++) {
+            if (!arrayLineChart[indice]->showingMyScreen()) continue;
             arrayLineChart[indice]->redraw();
         }
     }
@@ -2620,6 +2723,7 @@ void DisplayFK::updateVBar() {
 #ifdef DFK_VBAR
     if (m_vBarConfigured) {
         for (uint32_t indice = 0; indice < qtdVBar; indice++) {
+            if (!arrayVBar[indice]->showingMyScreen()) continue;
             arrayVBar[indice]->redraw();
         }
     }
@@ -2634,6 +2738,7 @@ void DisplayFK::updateThermometer() {
 #ifdef DFK_THERMOMETER
     if (m_thermometerConfigured) {
         for (uint32_t indice = 0; indice < qtdThermometer; indice++) {
+            if (!arrayThermometer[indice]->showingMyScreen()) continue;
             arrayThermometer[indice]->redraw();
         }
     }
@@ -2647,6 +2752,7 @@ void DisplayFK::updateVAnalog() {
 #ifdef DFK_VANALOG
     if (m_vAnalogConfigured) {
         for (uint32_t indice = 0; indice < qtdVAnalog; indice++) {
+            if (!arrayVAnalog[indice]->showingMyScreen()) continue;
             arrayVAnalog[indice]->redraw();
         }
     }
@@ -2654,14 +2760,17 @@ void DisplayFK::updateVAnalog() {
 }
 
 /**
- * @brief Updates checkboxes
+ * @brief Updates checkboxes (optimized for current screen)
  */
 void DisplayFK::updateCheckbox() {
 #ifdef DFK_CHECKBOX
-    if (m_checkboxConfigured) {
-        for (uint32_t indice = 0; indice < qtdCheckbox; indice++) {
-            arrayCheckbox[indice]->redraw();
-        }
+    if (!m_checkboxConfigured) return;
+    
+    for (uint32_t indice = 0; indice < qtdCheckbox; indice++) {
+        // Skip widgets not on current screen
+        if (!arrayCheckbox[indice]->showingMyScreen()) continue;
+        
+        arrayCheckbox[indice]->redraw();
     }
 #endif
 }
@@ -2673,6 +2782,7 @@ void DisplayFK::updateCircleButton() {
 #ifdef DFK_CIRCLEBTN
     if (m_circleButtonConfigured) {
         for (uint32_t indice = 0; indice < qtdCircleBtn; indice++) {
+            if (!arrayCircleBtn[indice]->showingMyScreen()) continue;
             arrayCircleBtn[indice]->redraw();
         }
     }
@@ -2680,14 +2790,17 @@ void DisplayFK::updateCircleButton() {
 }
 
 /**
- * @brief Updates horizontal sliders
+ * @brief Updates horizontal sliders (optimized for current screen)
  */
 void DisplayFK::updateHSlider() {
 #ifdef DFK_HSLIDER
-    if (m_hSliderConfigured) {
-        for (uint32_t indice = 0; indice < qtdHSlider; indice++) {
-            arrayHSlider[indice]->redraw();
-        }
+    if (!m_hSliderConfigured) return;
+    
+    for (uint32_t indice = 0; indice < qtdHSlider; indice++) {
+        // Skip widgets not on current screen
+        if (!arrayHSlider[indice]->showingMyScreen()) continue;
+        
+        arrayHSlider[indice]->redraw();
     }
 #endif
 }
@@ -2699,6 +2812,7 @@ void DisplayFK::updateRadioGroup() {
 #ifdef DFK_RADIO
     if (m_radioGroupConfigured) {
         for (uint32_t indice = 0; indice < qtdRadioGroup; indice++) {
+            if (!arrayRadioGroup[indice]->showingMyScreen()) continue;
             arrayRadioGroup[indice]->redraw();
         }
     }
@@ -2712,6 +2826,7 @@ void DisplayFK::updateRectButton() {
 #ifdef DFK_RECTBTN
     if (m_rectButtonConfigured) {
         for (uint32_t indice = 0; indice < qtdRectBtn; indice++) {
+            if (!arrayRectBtn[indice]->showingMyScreen()) continue;
             arrayRectBtn[indice]->redraw();
         }
     }
@@ -2719,14 +2834,17 @@ void DisplayFK::updateRectButton() {
 }
 
 /**
- * @brief Updates toggles
+ * @brief Updates toggles (optimized for current screen)
  */
 void DisplayFK::updateToggle() {
 #ifdef DFK_TOGGLE
-    if (m_toggleConfigured) {
-        for (uint32_t indice = 0; indice < qtdToggle; indice++) {
-            arrayToggleBtn[indice]->redraw();
-        }
+    if (!m_toggleConfigured) return;
+    
+    for (uint32_t indice = 0; indice < qtdToggle; indice++) {
+        // Skip widgets not on current screen
+        if (!arrayToggleBtn[indice]->showingMyScreen()) continue;
+        
+        arrayToggleBtn[indice]->redraw();
     }
 #endif
 }
@@ -2739,9 +2857,11 @@ void DisplayFK::updateImage() {
 #ifdef DFK_IMAGE
     if (m_imageConfigured) {
 		for (uint32_t indice = 0; indice < qtdImage; indice++) {
+            if (!arrayImage[indice]->showingMyScreen()) continue;
             arrayImage[indice]->drawBackground();
         }
         for (uint32_t indice = 0; indice < qtdImage; indice++) {
+            if (!arrayImage[indice]->showingMyScreen()) continue;
             arrayImage[indice]->draw();
         }
     }
@@ -2755,6 +2875,7 @@ void DisplayFK::updateTextButton() {
 #ifdef DFK_TEXTBUTTON
     if (m_textButtonConfigured) {
         for (uint32_t indice = 0; indice < qtdTextButton; indice++) {
+            if (!arrayTextButton[indice]->showingMyScreen()) continue;
             arrayTextButton[indice]->redraw();
         }
     }
@@ -2768,6 +2889,7 @@ void DisplayFK::updateSpinbox() {
 #ifdef DFK_SPINBOX
     if (m_spinboxConfigured) {
         for (uint32_t indice = 0; indice < qtdSpinbox; indice++) {
+            if (!arraySpinbox[indice]->showingMyScreen()) continue;
             arraySpinbox[indice]->redraw();
         }
     }
@@ -2781,6 +2903,7 @@ void DisplayFK::updateTextBox() {
 #ifdef DFK_TEXTBOX
     if (m_textboxConfigured) {
         for (uint32_t indice = 0; indice < qtdTextBox; indice++) {
+            if (!arrayTextBox[indice]->showingMyScreen()) continue;
             arrayTextBox[indice]->redraw();
         }
     }
@@ -2791,6 +2914,7 @@ void DisplayFK::updateNumberBox(){
     #ifdef DFK_NUMBERBOX
     if (m_numberboxConfigured) {
         for (uint32_t indice = 0; indice < qtdNumberBox; indice++) {
+            if (!arrayNumberbox[indice]->showingMyScreen()) continue;
             arrayNumberbox[indice]->redraw();
         }
     }
@@ -2841,4 +2965,14 @@ void DisplayFK::timerCallback(TimerHandle_t xTimer) {
 bool DisplayFK::isRunningAutoClick() {
     if (m_timer == nullptr) return false;
     return (xTimerIsTimerActive(m_timer) == pdTRUE);
+}
+
+/**
+ * @brief Frees a string from the string pool
+ * @param str Pointer to the string to free
+ */
+void DisplayFK::freeStringFromPool(const char* str) {
+    if (str) {
+        stringPool.deallocate(const_cast<char*>(str));
+    }
 }

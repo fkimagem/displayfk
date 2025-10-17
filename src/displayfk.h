@@ -56,9 +56,13 @@
 #include <FS.h>
 #include <Preferences.h>
 #include <SPI.h>
-#if defined(HAS_TOUCH)
+#include <memory>
+
+//#if defined(HAS_TOUCH)
 #include "touch/touch.h"
-#endif
+//#endif
+
+
 // #include "soc/timer_group_struct.h" //watchdog
 // #include "soc/timer_group_reg.h"    //watchdog
 #include "freertos/queue.h"
@@ -93,6 +97,16 @@
 #define LOG_MAX_SIZE (1000)
 
 /**
+ * @brief Size of the string pool for temporary strings
+ */
+#define STRING_POOL_SIZE (256)
+
+/**
+ * @brief Number of string buffers in the pool
+ */
+#define STRING_POOL_COUNT (8)
+
+/**
  * @brief Structure to hold a single log message
  */
 typedef struct
@@ -100,6 +114,51 @@ typedef struct
     char line[MAX_LINE_LENGTH]; ///< The actual log message text
     uint8_t line_length;        ///< Length of the message
 } logMessage_t;
+
+/**
+ * @brief Simple string pool for temporary string allocations
+ */
+class StringPool
+{
+private:
+    char pool[STRING_POOL_COUNT][STRING_POOL_SIZE];
+    bool inUse[STRING_POOL_COUNT];
+
+public:
+    StringPool()
+    {
+        for (int i = 0; i < STRING_POOL_COUNT; i++)
+        {
+            inUse[i] = false;
+        }
+    }
+
+    char *allocate()
+    {
+        for (int i = 0; i < STRING_POOL_COUNT; i++)
+        {
+            if (!inUse[i])
+            {
+                inUse[i] = true;
+                return pool[i];
+            }
+        }
+        return nullptr; // Pool exhausted
+    }
+
+    void deallocate(char *ptr)
+    {
+        for (int i = 0; i < STRING_POOL_COUNT; i++)
+        {
+            if (pool[i] == ptr)
+            {
+                inUse[i] = false;
+                pool[i][0] = '\0'; // Clear the string
+                return;
+            }
+        }
+    }
+};
 
 enum class TouchEventType
 {
@@ -118,7 +177,7 @@ public:
     static bool sdcardOK; ///< Indicates if the SD card is successfully initialized.
 
     // Variáveis públicas
-    TouchScreen *touchExterno = nullptr; ///< External touch screen object.
+    std::unique_ptr<TouchScreen> touchExterno; ///< External touch screen object.
 
     // Métodos públicos estáticos
     static void TaskEventoTouch(void *pvParamenters);
@@ -129,7 +188,20 @@ public:
 
     void setup();
     void startKeyboards();
-    void reloadScreen();
+    void refreshScreen();
+    void loadScreen(functionLoadScreen_t screen);
+
+#if defined(DISP_DEFAULT)
+    void setDrawObject(Arduino_GFX *objTFT); ///< Pointer to the Arduino display object.
+#elif defined(DISP_PCD8544)
+    void setDrawObject(Adafruit_PCD8544 *objTFT); ///< Pointer to the PCD8544 display object.
+#elif defined(DISP_SSD1306)
+    void setDrawObject(Adafruit_SSD1306 *objTFT); ///< Pointer to the SSD1306 display object.
+#elif defined(DISP_U8G2)
+    void setDrawObject(U8G2 *objTFT); ///< Pointer to the U8G2 display object.
+#else
+#error "Choose a display model on user_setup.h"
+#endif
 
     void startTransaction();
     void finishTransaction();
@@ -153,6 +225,9 @@ public:
     void blockLoopTask();
     void freeLoopTask();
 
+    // Memory management utilities
+    void freeStringFromPool(const char *str);
+
 #if defined(HAS_TOUCH)
 #if defined(TOUCH_XPT2046)
     void checkCalibration();
@@ -175,6 +250,8 @@ public:
     void startTouchCST816(uint16_t w, uint16_t h, uint8_t _rotation, uintint8_t8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST);
 #elif defined(TOUCH_GT911)
     void startTouchGT911(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST);
+#elif defined(TOUCH_GSL3680)
+    void startTouchGSL3680(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST);
 #endif
 #endif
 
@@ -279,10 +356,11 @@ public:
 
 private:
     // Variáveis privadas estáticas
-    static QueueHandle_t xFilaLog;     ///< Queue handle for log data.
+    static QueueHandle_t xFilaLog;             ///< Queue handle for log data.
     static logMessage_t bufferLog[LOG_LENGTH]; ///< Array of log messages.
     static uint8_t logIndex;                   ///< Index of the next log message to be written.
     static uint16_t logFileCount;              ///< Number of log files created
+    static StringPool stringPool;              ///< Pool for temporary string allocations
 
 #ifdef DFK_EXTERNALINPUT
     static uint8_t qtdExternalInput;           ///< Number of ExternalInput widgets.
@@ -396,10 +474,10 @@ private:
 #endif
 
 #ifdef DFK_TEXTBOX
-    uint8_t qtdTextBox = 0;           ///< Number of TextBox widgets.
-    TextBox **arrayTextBox = nullptr; ///< Array of TextBox widgets.
-    bool m_textboxConfigured = false; ///< Flag indicating if TextBox is configured.
-    WKeyboard *keyboard = nullptr;    ///< Pointer to the WKeyboard instance for text input.
+    uint8_t qtdTextBox = 0;              ///< Number of TextBox widgets.
+    TextBox **arrayTextBox = nullptr;    ///< Array of TextBox widgets.
+    bool m_textboxConfigured = false;    ///< Flag indicating if TextBox is configured.
+    std::unique_ptr<WKeyboard> keyboard; ///< Pointer to the WKeyboard instance for text input.
     // WKeyboard m_pKeyboard;            ///< Internal keyboard instance for TextBox.
 #endif
 
@@ -407,7 +485,7 @@ private:
     uint8_t qtdNumberBox = 0;             ///< Number of NumberBox widgets.
     NumberBox **arrayNumberbox = nullptr; ///< Array of NumberBox widgets.
     bool m_numberboxConfigured = false;   ///< Flag indicating if NumberBox is configured.
-    Numpad *numpad = nullptr;             ///< Pointer to the Numpad instance for number input.
+    std::unique_ptr<Numpad> numpad;       ///< Pointer to the Numpad instance for number input.
     // Numpad m_pNumpad;                   ///< Internal numpad instance for NumberBox.
 #endif
 
@@ -441,8 +519,8 @@ private:
 #endif
 
 #ifdef DFK_EXTERNALINPUT
-    bool m_inputExternalConfigured = false;    ///< Flag indicating if ExternalInput is configured.
-    ExternalKeyboard m_pExternalKeyboard;      ///< Internal numpad instance for NumberBox.
+    bool m_inputExternalConfigured = false; ///< Flag indicating if ExternalInput is configured.
+    ExternalKeyboard m_pExternalKeyboard;   ///< Internal numpad instance for NumberBox.
 #endif
 
     functionLoadScreen_t m_lastScreen = nullptr;

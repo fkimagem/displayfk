@@ -346,6 +346,7 @@ public:
   virtual functionCB_t getCallbackFunc();
   virtual void show();
   virtual void hide();
+  bool showingMyScreen();
   
 #if defined(USING_GRAPHIC_LIB)
   static void recalculateTextPosition(const char* _texto, uint16_t *_x, uint16_t *_y, uint8_t _datum);

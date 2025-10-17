@@ -184,6 +184,8 @@ void Numpad::redraw(bool fullScreen, bool onlyContent) {
     Serial.println("Numpad not loaded");
     return;
   }
+  uint32_t startMillis = millis();
+
   if (fullScreen) {
     WidgetBase::objTFT->fillScreen(Numpad::m_backgroundColor);
   }
@@ -204,11 +206,6 @@ void Numpad::redraw(bool fullScreen, bool onlyContent) {
   printText(conteudo, m_pontoPreview.x + 2,
             m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM,
             m_lastArea, Numpad::m_backgroundColor);
-
-  // const char* conteudo = m_content.getLastChars(qtdLetrasMax);
-  // printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y +
-  // (m_pontoPreview.height / 2), ML_DATUM, m_lastArea,
-  // Numpad::m_backgroundColor);
 
   WidgetBase::objTFT->setFont(m_fontKeys);
   WidgetBase::objTFT->setTextColor(Numpad::m_letterColor);
@@ -246,6 +243,12 @@ void Numpad::redraw(bool fullScreen, bool onlyContent) {
     }
   }
 #endif
+
+  uint32_t endMillis = millis();
+  if(m_canvas){
+    m_canvas->flush();
+  }
+  Serial.printf("Numpad::redraw: %i ms\n", endMillis - startMillis);
 }
 
 /**
@@ -313,8 +316,13 @@ void Numpad::setup() {
   m_fontKeys = const_cast<GFXfont *>(getBestRobotoBold(
       m_keyW * percentUtilArea, m_keyH * percentUtilArea, "CAP"));
   m_fontPreview = m_fontKeys; // const_cast<GFXfont*>(getBestRobotoBold(m_pontoPreview.width
-                              // * percentUtilArea, m_pontoPreview.height *
-                              // percentUtilArea, "M"));
+                  // * percentUtilArea, m_pontoPreview.height *
+                  // percentUtilArea, "M"));
+  m_canvas = new Arduino_Canvas(m_availableWidth, m_availableHeight, WidgetBase::objTFT, xPos, yPos);
+  if(m_canvas){
+    m_canvas->begin();
+    m_canvas->fillRect(0, 0, m_availableWidth, m_availableHeight, CFK_AQUA);
+  }
 #endif
   loaded = true;
 }

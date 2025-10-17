@@ -71,6 +71,18 @@ void TouchScreen::startAsGT911(uint16_t w, uint16_t h, uint8_t _rotation, uint8_
   m_pinRST = pinRST;
   touch_init();
 }
+#elif defined(TOUCH_GSL3680)
+void TouchScreen::startAsGSL3680(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST)
+{
+  // m_ts = new gsl3680_touch(TP_I2C_SDA, TP_I2C_SCL, TP_RST, TP_INT);
+  this->setDimension(w, h, _rotation);
+  m_ts = new gsl3680_touch(pinSDA, pinSCL, pinRST, pinINT);
+  m_pinSCL = pinSCL;
+  m_pinSDA = pinSDA;
+  m_pinINT = pinINT;
+  m_pinRST = pinRST;
+  touch_init();
+}
 #endif
 
 uint16_t TouchScreen::getWidthScreen()
@@ -232,6 +244,9 @@ void TouchScreen::touch_init()
 #elif defined(TOUCH_FT6336)
   m_ts->begin();
   showSetup();
+#elif defined(TOUCH_GSL3680)
+  m_ts->begin();
+  m_ts->set_rotation(m_rotation);
 #endif
 }
 
@@ -299,6 +314,8 @@ bool TouchScreen::touch_has_signal()
   return true;
 #elif defined(TOUCH_CST816)
   return true;
+#elif defined(TOUCH_GSL3680)
+  return true;
 #elif defined(TOUCH_FT6336)
   tp = m_ts->scan();
   return tp.touch_count > 0;
@@ -323,7 +340,11 @@ void TouchScreen::showMap(const String& axis, int16_t minValue, int16_t maxValue
  */
 bool TouchScreen::touch_touched()
 {
-#if defined(TOUCH_FT6236) && defined(HAS_TOUCH)
+#if !defined(HAS_TOUCH)
+  return false;
+#else
+
+#if defined(TOUCH_FT6236)
   if (m_touch_touched_flag)
   {
     m_touch_touched_flag = false;
@@ -337,7 +358,15 @@ bool TouchScreen::touch_touched()
     return false;
   }
 
-#elif defined(TOUCH_GT911) && defined(HAS_TOUCH)
+#elif defined(TOUCH_GSL3680)
+  uint16_t touchX, touchY;
+  bool touched = m_ts->getTouch(&touchX, &touchY);
+  m_touch_last_x = touchX;
+  m_touch_last_y = touchY;
+  return touched;
+
+
+#elif defined(TOUCH_GT911)
   m_ts->read();
   if (m_ts->isTouched)
   {
@@ -372,7 +401,7 @@ bool TouchScreen::touch_touched()
   }
   return false;
 
-#elif defined(TOUCH_XPT2046) && defined(HAS_TOUCH)
+#elif defined(TOUCH_XPT2046)
 
   if (!m_calibMatrix)
   {
@@ -425,7 +454,7 @@ bool TouchScreen::touch_touched()
     return false;
   }
 
-#elif defined(TOUCH_FT6236U) && defined(HAS_TOUCH)
+#elif defined(TOUCH_FT6236U)
   if (m_ts->touched())
   {
     // Retrieve a point
@@ -453,7 +482,7 @@ bool TouchScreen::touch_touched()
     return false;
   }
 
-#elif defined(TOUCH_CST816) && defined(HAS_TOUCH)
+#elif defined(TOUCH_CST816)
   bool touched;
   uint8_t gesture;
   uint16_t touchX, touchY;
@@ -467,7 +496,7 @@ bool TouchScreen::touch_touched()
   }
 
   return touched;
-#elif defined(TOUCH_FT6336) && defined(HAS_TOUCH)
+#elif defined(TOUCH_FT6336)
   bool touched = tp.touch_count > 0;
   if (!touched)
     return false;
@@ -642,6 +671,8 @@ bool TouchScreen::touch_touched()
   return true;
 #else
   return false;
+#endif
+
 #endif
 }
 
