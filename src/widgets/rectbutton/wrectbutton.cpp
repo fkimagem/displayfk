@@ -97,6 +97,7 @@ void RectButton::forceUpdate() { m_shouldRedraw = true; }
  * Only redraws if the button is on the current screen and needs updating.
  */
 void RectButton::redraw() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }

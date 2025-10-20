@@ -54,6 +54,7 @@ void Thermometer::setValue(float newValue)
  */
 void Thermometer::redraw()
 {
+  CHECK_TFT_VOID
   if(!visible){return;}
  #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
@@ -106,6 +107,7 @@ void Thermometer::forceUpdate()
  */
 void Thermometer::drawBackground()
 {
+  CHECK_TFT_VOID
   if(!visible){return;}
    #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)

@@ -285,6 +285,9 @@
 #endif
 
 #define HELPERS
+#define CHECK_TFT_BOOL {if(!WidgetBase::objTFT){return false;}}
+#define CHECK_TFT_VOID {if(!WidgetBase::objTFT){return;}}
+#define CHECK_VISIBLE {if(!visible){return;}}
 //#define DEBUG_TEXT_BOUND
 
 

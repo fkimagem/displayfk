@@ -1165,7 +1165,10 @@ DisplayFK::~DisplayFK()
 
 #if defined(HAS_TOUCH)
     // Smart pointer will automatically clean up touch screen
-    touchExterno.reset();
+    if(touchExterno){
+        touchExterno.reset();    
+    }
+    
 #endif
 
 #ifdef DFK_SD
@@ -1204,6 +1207,7 @@ DisplayFK::~DisplayFK()
  * @brief Sets up the display
  */
 void DisplayFK::setup(){
+    ESP_LOGD(TAG, "Initializing queues");
     DisplayFK::xFilaLog = xQueueCreate(LOG_LENGTH, sizeof(logMessage_t));
     WidgetBase::xFilaCallback = xQueueCreate(5, sizeof(functionCB_t));
     if (DisplayFK::xFilaLog == NULL)
@@ -1287,8 +1291,8 @@ void DisplayFK::setTouchCorners(int x0, int x1, int y0, int y1){
     m_y0 = y0;
     m_y1 = y1;
 
-    Serial.print("X0: "); Serial.print(m_x0); Serial.print(" X1: "); Serial.println(m_x1);
-    Serial.print("Y0: "); Serial.print(m_y0); Serial.print(" Y1: "); Serial.println(m_y1);
+    //Serial.print("X0: "); Serial.print(m_x0); Serial.print(" X1: "); Serial.println(m_x1);
+    //Serial.print("Y0: "); Serial.print(m_y0); Serial.print(" Y1: "); Serial.println(m_y1);
 }
 
 void DisplayFK::setInvertAxis(bool invertX, bool invertY){
@@ -1435,6 +1439,7 @@ void DisplayFK::startTouchGSL3680(uint16_t w, uint16_t h, uint8_t _rotation, int
  */
 void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
 {
+    CHECK_TFT_VOID
     uint32_t startMillis = millis();
 
     WidgetBase::currentScreen = currentScreenIndex;
@@ -1740,6 +1745,8 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
  */
 void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
 {
+    ESP_LOGD(TAG, "Creating task");
+
 	m_timeoutWTD = timeout_s;
 	m_enableWTD = enableWatchdog;
 	
@@ -1758,7 +1765,7 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
     ESP_ARDUINO_VERSION_VAL(1,2,3);
     */
 
-    #if defined(ESP_ARDUINO_VERSION)
+    /*#if defined(ESP_ARDUINO_VERSION)
     Serial.printf("ESP_ARDUINO_VERSION: %i\n", ESP_ARDUINO_VERSION);
     #endif
     #if defined(ESP_ARDUINO_VERSION_MAJOR)
@@ -1778,7 +1785,7 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
     #endif
     #if defined(ESP_ARDUINO_VERSION_PATCH)
     Serial.printf("ESP_ARDUINO_VERSION_PATCH: %i\n", ESP_ARDUINO_VERSION_PATCH);
-    #endif
+    #endif*/
 
     if(m_enableWTD){
 		esp_task_wdt_deinit();
@@ -1816,14 +1823,12 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
     }
 
 
-    BaseType_t xRetorno;
+    BaseType_t xRetorno = pdFAIL;
     xRetorno = xTaskCreatePinnedToCore(DisplayFK::TaskEventoTouch, "TaskEventoTouch", configMINIMAL_STACK_SIZE + 3048, this, 1, &m_hndTaskEventoTouch, 0);
     if (xRetorno == pdFAIL)
     {
         DEBUG_E("Cant create task to read touch or draw widgets");
     }
-
-    //changeWTD(true);
 }
 
 /**
@@ -1928,6 +1933,12 @@ void DisplayFK::processLogBuffer() {
 void DisplayFK::processTouchEvent(uint16_t xTouch, uint16_t yTouch, int zPressure, uint8_t gesture) {
     UNUSED(gesture);
     UNUSED(zPressure);
+
+    if(m_debugTouch){
+        Serial.printf("Touch pressed at [%i, %i]\n", xTouch, yTouch);
+        CHECK_TFT_VOID
+        WidgetBase::objTFT->fillCircle(xTouch, yTouch, 2, CFK_FUCHSIA);
+    }
     
     if (WidgetBase::usingKeyboard) return;
 
@@ -2217,6 +2228,9 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
     if(!m_textboxConfigured || !arrayTextBox || !keyboard){
         return;
     }
+    if(!touchExterno){
+        return;
+    }
         for (uint32_t indice = 0; indice < qtdTextBox; indice++) {
             if (arrayTextBox[indice] == nullptr) {
                 DEBUG_E("TextBox pointer is null");
@@ -2233,6 +2247,7 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
                     uint16_t internal_xTouch = 0;
                     uint16_t internal_yTouch = 0;
                     int internal_zPressure = 0;
+                    
                     bool hasTouch = touchExterno && (touchExterno->getTouch(&internal_xTouch, &internal_yTouch, &internal_zPressure));
                     if (hasTouch && keyboard->detectTouch(&internal_xTouch, &internal_yTouch, &pressedKey)) {
                         if (pressedKey == PressedKeyType::RETURN) {
@@ -2259,6 +2274,9 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
 void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
 #ifdef DFK_NUMBERBOX
         if(!m_numberboxConfigured || !arrayNumberbox || !numpad){
+            return;
+        }
+        if(!touchExterno){
             return;
         }
 
@@ -2387,8 +2405,10 @@ void DisplayFK::loopTask() {
     uint8_t gesture = 0;
 
 #if defined(DISP_DEFAULT)
+if(touchExterno){
     hasTouch = touchExterno && (touchExterno->getTouch(&xTouch, &yTouch, &zPressure));
     gesture = hasTouch ? touchExterno->getGesture() : 0;
+}
 #else
     hasTouch = false;
     gesture = 0;
@@ -2406,10 +2426,7 @@ void DisplayFK::loopTask() {
     processTouchStatus(hasTouch);
 
     if (hasTouch) {
-        if(m_debugTouch){
-            Serial.printf("Touch event: [%i, %i]\n", xTouch, yTouch);
-            WidgetBase::objTFT->fillCircle(xTouch, yTouch, 2, CFK_FUCHSIA);
-        }
+        
         processTouchEvent(xTouch, yTouch, zPressure, gesture);
     }
 #endif
@@ -2418,6 +2435,7 @@ void DisplayFK::loopTask() {
     updateWidgets();
 
     #if defined(DISP_PCD8544)
+    CHECK_TFT_VOID
     WidgetBase::objTFT->display();
     #endif
 
@@ -2441,6 +2459,7 @@ void DisplayFK::TaskEventoTouch(void *pvParameters)
     //(void)pvParameters;
     DisplayFK::instance->changeWTD();
 
+    //vTaskDelay(pdMS_TO_TICKS(3000));
     DEBUG_D("TaskEventoTouch created");
     // const TickType_t xDelay = 10 / portTICK_PERIOD_MS;
 
@@ -2471,7 +2490,9 @@ TaskHandle_t DisplayFK::getTaskHandle()
 void DisplayFK::enableTouchLog(){
     m_debugTouch = true;
     #if defined(HAS_TOUCH)
-    touchExterno->setLogMessages(true);
+    if(touchExterno){
+        touchExterno->setLogMessages(true);
+    }
     #endif
     
 }
@@ -2480,7 +2501,9 @@ void DisplayFK::enableTouchLog(){
 void DisplayFK::disableTouchLog(){
     m_debugTouch = false;
     #if defined(HAS_TOUCH)
-    touchExterno->setLogMessages(false);
+    if(touchExterno){
+        touchExterno->setLogMessages(false);
+    }
     #endif
 }
 
@@ -2563,6 +2586,7 @@ void DisplayFK::checkCalibration()
         // touchExterno->calibrateTouch(dadosDeCalibracao, corDaLinha, corFundoDaCaixa, tamanhoDaCaixa);
         // touchExterno->calibrateTouch9Points(dadosDeCalibracao, corDaLinha, corFundoDaCaixa, tamanhoDaCaixa);
 
+        
         touchExterno->calibrateTouchEstrutura(dados, lengthCalibrationPoints, &rectScreen, corDoMarcador, corDoFundo, raioDoMarcador);
         m_configs.putBool("jaCalibrado", true); // Salva a flag de calibração prévia
         // configs.putBytes("calib", dados, sizeof(dados));
@@ -2624,6 +2648,7 @@ void DisplayFK::recalibrate()
 
 #if defined(USING_GRAPHIC_LIB)
 void DisplayFK::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum, uint16_t _colorText, uint16_t _colorPadding, const GFXfont* _font){
+    CHECK_TFT_VOID
     if(_font){
         WidgetBase::objTFT->setFont(_font);
     }else{

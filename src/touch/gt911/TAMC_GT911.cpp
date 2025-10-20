@@ -2,6 +2,8 @@
 #include "TAMC_GT911.h"
 #include <Wire.h>
 
+#define LOG_GT911 1
+
 TAMC_GT911::TAMC_GT911(uint8_t _sda, uint8_t _scl, uint8_t _int, uint8_t _rst, uint16_t _width, uint16_t _height) :
   pinSda(_sda), pinScl(_scl), pinInt(_int), pinRst(_rst), width(_width), height(_height) {
 
@@ -73,7 +75,9 @@ void TAMC_GT911::setResolution(uint16_t _width, uint16_t _height) {
 //   onRead = isr;
 // }
 void TAMC_GT911::read(void) {
-  // Serial.println("TAMC_GT911::read");
+  #if defined(LOG_GT911)
+    Serial.println("TAMC_GT911::read");
+  #endif
   uint8_t data[7];
   uint8_t id;
   uint16_t x, y, size;
@@ -84,11 +88,13 @@ void TAMC_GT911::read(void) {
   uint8_t haveKey = pointInfo >> 4 & 1;
   isLargeDetect = pointInfo >> 6 & 1;
   touches = pointInfo & 0xF;
-  // Serial.print("bufferStatus: ");Serial.println(bufferStatus);
-  // Serial.print("largeDetect: ");Serial.println(isLargeDetect);
-  // Serial.print("proximityValid: ");Serial.println(proximityValid);
-  // Serial.print("haveKey: ");Serial.println(haveKey);
-  // Serial.print("touches: ");Serial.println(touches);
+  #if defined(LOG_GT911)
+  Serial.print("bufferStatus: ");Serial.println(bufferStatus);
+  Serial.print("largeDetect: ");Serial.println(isLargeDetect);
+  Serial.print("proximityValid: ");Serial.println(proximityValid);
+  Serial.print("haveKey: ");Serial.println(haveKey);
+  Serial.print("touches: ");Serial.println(touches);
+  #endif
   isTouched = touches > 0;
   if (bufferStatus == 1 && isTouched) {
     for (uint8_t i=0; i<touches; i++) {

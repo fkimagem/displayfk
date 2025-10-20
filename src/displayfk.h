@@ -172,6 +172,7 @@ enum class TouchEventType
 class DisplayFK
 {
 public:
+    const char *TAG = "DisplayFK";
     // Variáveis públicas estáticas
     static DisplayFK *instance;
     static bool sdcardOK; ///< Indicates if the SD card is successfully initialized.

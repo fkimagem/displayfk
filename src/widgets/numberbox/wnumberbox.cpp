@@ -83,6 +83,7 @@ functionCB_t NumberBox::getCallbackFunc() { return cb; }
  * Only redraws if the NumberBox is on the current screen and needs updating.
  */
 void NumberBox::redraw() {
+  CHECK_TFT_VOID
   if (!visible) {
     // draw rect with color background
 

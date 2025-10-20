@@ -187,6 +187,7 @@ bool Image::readFileFromDisk() {
 }
 
 void Image::drawBackground() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }
@@ -207,6 +208,7 @@ void Image::drawBackground() {
  * updating.
  */
 void Image::draw() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }

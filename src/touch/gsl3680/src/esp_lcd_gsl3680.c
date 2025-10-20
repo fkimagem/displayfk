@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdint.h>
-#include <assert.h>
-//#include <Arduino.h>
-#include <Wire.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
 #include "esp_err.h"
-#include "esp_heap_caps.h"
+#include "esp_log.h"
+#include "esp_check.h"
+#include "driver/gpio.h"
+#include "driver/i2c_master.h"
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_touch.h"
 #include "esp_lcd_gsl3680.h"
@@ -191,57 +193,79 @@ esp_err_t esp_lcd_touch_new_i2c_gsl3680(esp_lcd_panel_io_handle_t io, const esp_
     //esp_lcd_touch_io_gsl3680_config_t *gsl3680_config = (esp_lcd_touch_io_gsl3680_config_t *)esp_lcd_touch_gsl3680->config.driver_data;
 
     /* Prepare pin for touch controller reset */
-    if (esp_lcd_touch_gsl3680->config.rst_gpio_num != -1) {
-        pinMode(esp_lcd_touch_gsl3680->config.rst_gpio_num, OUTPUT);
+    if (esp_lcd_touch_gsl3680->config.rst_gpio_num != GPIO_NUM_NC) {
+        const gpio_config_t rst_gpio_config = {
+            .mode = GPIO_MODE_OUTPUT,
+            .pin_bit_mask = BIT64(esp_lcd_touch_gsl3680->config.rst_gpio_num),
+        };
+        ret = gpio_config(&rst_gpio_config);
+        ESP_GOTO_ON_ERROR(ret, err, TAG, "GPIO config failed");
     }
 
-    if (esp_lcd_touch_gsl3680->config.rst_gpio_num != -1 && esp_lcd_touch_gsl3680->config.int_gpio_num != -1) {
+    if (esp_lcd_touch_gsl3680->config.rst_gpio_num != GPIO_NUM_NC && esp_lcd_touch_gsl3680->config.int_gpio_num != GPIO_NUM_NC) {
         /* Prepare pin for touch controller int */
-        pinMode(esp_lcd_touch_gsl3680->config.int_gpio_num, OUTPUT);
+        const gpio_config_t int_gpio_config = {
+            .mode = GPIO_MODE_OUTPUT,
+            .intr_type = GPIO_INTR_DISABLE,
+            .pull_down_en = 0,
+            .pull_up_en = 1,
+            .pin_bit_mask = BIT64(esp_lcd_touch_gsl3680->config.int_gpio_num),
+        };
+        ret = gpio_config(&int_gpio_config);
+        ESP_GOTO_ON_ERROR(ret, err, TAG, "GPIO config failed");
 
-        digitalWrite(esp_lcd_touch_gsl3680->config.rst_gpio_num, esp_lcd_touch_gsl3680->config.levels.reset);
-        digitalWrite(esp_lcd_touch_gsl3680->config.int_gpio_num, 0);
-        delay(10);
+        ESP_RETURN_ON_ERROR(gpio_set_level(esp_lcd_touch_gsl3680->config.rst_gpio_num, esp_lcd_touch_gsl3680->config.levels.reset), TAG, "GPIO set level error!");
+        ESP_RETURN_ON_ERROR(gpio_set_level(esp_lcd_touch_gsl3680->config.int_gpio_num, 0), TAG, "GPIO set level error!");
+        vTaskDelay(pdMS_TO_TICKS(10));
 
         /* Select I2C addr, set output high or low */
         uint32_t gpio_level = 0;
-        digitalWrite(esp_lcd_touch_gsl3680->config.int_gpio_num, gpio_level);
-        delay(1);
+        //if (ESP_LCD_TOUCH_IO_I2C_GSL3680_ADDRESS == gsl3680_config->dev_addr) {
+            //gpio_level = 0;
+        //} else {
+            //gpio_level = 0;
+           // ESP_LOGE(TAG, "Addr (0x%X) is invalid", gsl3680_config->dev_addr);
+        //}
+        ESP_RETURN_ON_ERROR(gpio_set_level(esp_lcd_touch_gsl3680->config.int_gpio_num, gpio_level), TAG, "GPIO set level error!");
+        vTaskDelay(pdMS_TO_TICKS(1));
 
-        digitalWrite(esp_lcd_touch_gsl3680->config.rst_gpio_num, !esp_lcd_touch_gsl3680->config.levels.reset);
-        delay(10);
+        ESP_RETURN_ON_ERROR(gpio_set_level(esp_lcd_touch_gsl3680->config.rst_gpio_num, !esp_lcd_touch_gsl3680->config.levels.reset), TAG, "GPIO set level error!");
+        vTaskDelay(pdMS_TO_TICKS(10));
 
-        delay(50);
+        vTaskDelay(pdMS_TO_TICKS(50));
     } else {
-        //Serial.println("Unable to initialize the I2C address");
+        ESP_LOGW(TAG, "Unable to initialize the I2C address");
         /* Reset controller */
         ret = touch_gsl3680_reset(esp_lcd_touch_gsl3680);
-        if (ret != ESP_OK) {
-            goto err;
-        }
+        ESP_GOTO_ON_ERROR(ret, err, TAG, "GSL3680 reset failed");
     }
 
     /* Read status and config info */
-    //Serial.println("init gls3680");
+    ESP_LOGI(TAG,"init gls3680");
     touch_gsl3680_read_cfg(esp_lcd_touch_gsl3680);
     esp_lcd_touch_gsl3680_init(esp_lcd_touch_gsl3680);
     ret = esp_lcd_touch_gsl3680_read_ram_fw(esp_lcd_touch_gsl3680);
     // touch_gsl3680_read_cfg(esp_lcd_touch_gsl3680);
 
     /* Prepare pin for touch interrupt */
-    if (esp_lcd_touch_gsl3680->config.int_gpio_num != -1) {
-        pinMode(esp_lcd_touch_gsl3680->config.int_gpio_num, INPUT_PULLUP);
-        
+    if (esp_lcd_touch_gsl3680->config.int_gpio_num != GPIO_NUM_NC) {
+        const gpio_config_t int_gpio_config = {
+            .mode = GPIO_MODE_INPUT,
+            .intr_type = (esp_lcd_touch_gsl3680->config.levels.interrupt ? GPIO_INTR_POSEDGE : GPIO_INTR_NEGEDGE),
+            .pin_bit_mask = BIT64(esp_lcd_touch_gsl3680->config.int_gpio_num)
+        };
+        ret = gpio_config(&int_gpio_config);
+        ESP_GOTO_ON_ERROR(ret, err, TAG, "GPIO config failed");
+
         /* Register interrupt callback */
         if (esp_lcd_touch_gsl3680->config.interrupt_callback) {
-            // Note: Interrupt handling would need to be implemented separately
-            // esp_lcd_touch_register_interrupt_callback(esp_lcd_touch_gsl3680, esp_lcd_touch_gsl3680->config.interrupt_callback);
+            esp_lcd_touch_register_interrupt_callback(esp_lcd_touch_gsl3680, esp_lcd_touch_gsl3680->config.interrupt_callback);
         }
     }
  
 err:
     if (ret != ESP_OK) {
-        //Serial.printf("Error (0x%x)! Touch controller GSL3680 initialization failed!\n", ret);
+        ESP_LOGE(TAG, "Error (0x%x)! Touch controller GSL3680 initialization failed!", ret);
         if (esp_lcd_touch_gsl3680) {
             esp_lcd_touch_gsl3680_del(esp_lcd_touch_gsl3680);
         }
@@ -259,9 +283,9 @@ static esp_err_t esp_lcd_touch_gsl3680_enter_sleep(esp_lcd_touch_handle_t tp)
     // esp_err_t err = touch_gsl3680_i2c_write(tp, ESP_LCD_TOUCH_GSL3680_ENTER_SLEEP, 0x05);
     // ESP_RETURN_ON_ERROR(err, TAG, "Enter Sleep failed!");
 
-    if (tp->config.rst_gpio_num != -1) {
-        digitalWrite(tp->config.rst_gpio_num, 0);
-        delay(20);
+    if (tp->config.rst_gpio_num != GPIO_NUM_NC) {
+        ESP_RETURN_ON_ERROR(gpio_set_level(tp->config.rst_gpio_num, 0), TAG, "GPIO set level error!");
+        vTaskDelay(pdMS_TO_TICKS(20));
     }
 
     return ESP_OK;
@@ -269,10 +293,10 @@ static esp_err_t esp_lcd_touch_gsl3680_enter_sleep(esp_lcd_touch_handle_t tp)
 
 static esp_err_t esp_lcd_touch_gsl3680_exit_sleep(esp_lcd_touch_handle_t tp)
 {
-    if (tp->config.rst_gpio_num != -1) {
-        digitalWrite(tp->config.rst_gpio_num, 1);
-        delay(20);
-    }
+    esp_err_t ret;
+    ESP_RETURN_ON_ERROR(gpio_set_level(tp->config.rst_gpio_num, 1), TAG, "GPIO set level error!");
+    vTaskDelay(pdMS_TO_TICKS(20));
+
 
     return ESP_OK;
 }
@@ -298,7 +322,7 @@ static esp_err_t esp_lcd_touch_gsl3680_read_data(esp_lcd_touch_handle_t tp)
 
     err = touch_gsl3680_i2c_read(tp, ESP_LCD_TOUCH_GSL3680_READ_XY_REG, touch_data, 24);
     Finger_num = touch_data[0];
-    // //Serial.printf("0x80 = %d\n", touch_data[0]);
+    // ESP_LOGI(TAG,"0x80 = %d",touch_data[0]);
 
     x_poit = ((touch_data[7]&0x0f)<<8 )|touch_data[6];
 	y_poit = (touch_data[5]<<8)|touch_data[4];
@@ -462,19 +486,16 @@ static esp_err_t esp_lcd_touch_gsl3680_del(esp_lcd_touch_handle_t tp)
     assert(tp != NULL);
 
     /* Reset GPIO pin settings */
-    if (tp->config.int_gpio_num != -1) {
-        // Note: GPIO reset would need to be implemented separately
-        // gpio_reset_pin(tp->config.int_gpio_num);
+    if (tp->config.int_gpio_num != GPIO_NUM_NC) {
+        gpio_reset_pin(tp->config.int_gpio_num);
         if (tp->config.interrupt_callback) {
-            // Note: Interrupt handler removal would need to be implemented separately
-            // gpio_isr_handler_remove(tp->config.int_gpio_num);
+            gpio_isr_handler_remove(tp->config.int_gpio_num);
         }
     }
 
     /* Reset GPIO pin settings */
-    if (tp->config.rst_gpio_num != -1) {
-        // Note: GPIO reset would need to be implemented separately
-        // gpio_reset_pin(tp->config.rst_gpio_num);
+    if (tp->config.rst_gpio_num != GPIO_NUM_NC) {
+        gpio_reset_pin(tp->config.rst_gpio_num);
     }
 
     free(tp);
@@ -485,7 +506,7 @@ static esp_err_t esp_lcd_touch_gsl3680_del(esp_lcd_touch_handle_t tp)
 /*===================================================================================================================================================================================================*/
 static esp_err_t esp_lcd_touch_gsl3680_init(esp_lcd_touch_handle_t tp)
 {
-    //Serial.println("start init");
+    ESP_LOGI(TAG,"start init");
     esp_lcd_touch_gsl3680_clear_reg(tp);
     touch_gsl3680_reset(tp);
     esp_lcd_touch_gsl3680_load_fw(tp);
@@ -503,21 +524,19 @@ static esp_err_t touch_gsl3680_reset(esp_lcd_touch_handle_t tp)
     uint8_t addr;
     assert(tp != NULL);
 
-    if (tp->config.rst_gpio_num != -1) {
-        digitalWrite(tp->config.rst_gpio_num, 0);
-        delay(20);
-        digitalWrite(tp->config.rst_gpio_num, 1);
-        delay(20);
-    }
+    ESP_RETURN_ON_ERROR(gpio_set_level(tp->config.rst_gpio_num, 0), TAG, "GPIO set level error!");
+    vTaskDelay(pdMS_TO_TICKS(20));
+    ESP_RETURN_ON_ERROR(gpio_set_level(tp->config.rst_gpio_num, 1), TAG, "GPIO set level error!");
+    vTaskDelay(pdMS_TO_TICKS(20));
 
     addr = 0xe0;
     write_buf[0] = 0x88;
     touch_gsl3680_i2c_write(tp,addr,write_buf,1);
-    delay(10);
+    vTaskDelay(pdMS_TO_TICKS(10));
     addr = 0xe4;
     write_buf[0]=0x04;
     touch_gsl3680_i2c_write(tp,addr,write_buf,1);
-    delay(10);
+    vTaskDelay(pdMS_TO_TICKS(10));
 
     write_buf[0] =0x00;
     write_buf[1] =0x00;
@@ -525,7 +544,7 @@ static esp_err_t touch_gsl3680_reset(esp_lcd_touch_handle_t tp)
     write_buf[3] =0x00;
     touch_gsl3680_i2c_write(tp,0xbc,write_buf,4);
 
-    delay(10);
+    vTaskDelay(pdMS_TO_TICKS(10));
 
     return ESP_OK;
 }
@@ -543,27 +562,21 @@ static esp_err_t touch_gsl3680_read_cfg(esp_lcd_touch_handle_t tp)
     write[2] = 0x56;
     assert(tp != NULL);
 
-    //Serial.println("gsl3680 connect");
+    ESP_LOGI(TAG,"gsl3680 connect");
 
-    if (touch_gsl3680_i2c_read(tp, 0xf0, (uint8_t *)&buf, 4) != ESP_OK) {
-        return ESP_FAIL;
-    }
-    //Serial.printf("gsl3680 read reg 0xf0 before is %x %x %x %x\n", buf[0],buf[1],buf[2],buf[3]);
-    delay(20);
-    //Serial.println("gsl3680 writing 0xf0 0x12");
-    if (touch_gsl3680_i2c_write(tp,0xf0,write,4) != ESP_OK) {
-        return ESP_FAIL;
-    }
-    delay(20);
-    if (touch_gsl3680_i2c_read(tp, 0xf0, (uint8_t *)&buf, 4) != ESP_OK) {
-        return ESP_FAIL;
-    }
-    //Serial.printf("gsl3680 read reg 0xf0 after is %x %x %x %x\n", buf[0],buf[1],buf[2],buf[3]);
+    ESP_RETURN_ON_ERROR(touch_gsl3680_i2c_read(tp, 0xf0, (uint8_t *)&buf, 4), TAG, "gsl3680 read error!");
+    ESP_LOGI(TAG,"gsl3680 read reg 0xf0 before is %x %x %x %x",buf[0],buf[1],buf[2],buf[3]);
+    vTaskDelay(pdMS_TO_TICKS(20));
+    ESP_LOGI(TAG,"gsl3680 writing 0xf0 0x12");
+    ESP_RETURN_ON_ERROR(touch_gsl3680_i2c_write(tp,0xf0,write,4),TAG,"gsl3680 read error");
+    vTaskDelay(pdMS_TO_TICKS(20));
+    ESP_RETURN_ON_ERROR(touch_gsl3680_i2c_read(tp, 0xf0, (uint8_t *)&buf, 4), TAG, "gsl3680 read error!");
+    ESP_LOGI(TAG,"gsl3680 read reg 0xf0 after is %x %x %x %x",buf[0],buf[1],buf[2],buf[3]);
 
     if(i2c_buffer_read == i2c_buffer_write)
     {
         ret = ESP_OK;
-        //Serial.println("read cfg success");
+        ESP_LOGI(TAG,"read cfg success");
     }
     else 
         ret = ESP_FAIL;
@@ -577,11 +590,9 @@ static esp_err_t esp_lcd_touch_gsl3680_startup_chip(esp_lcd_touch_handle_t tp)
     uint8_t write_buf[4];
     uint8_t addr = 0xe0;
     write_buf[0] = 0x00;
-    //Serial.println("enter");
-    if (touch_gsl3680_i2c_write(tp,addr,write_buf,1) != ESP_OK) {
-        return ESP_FAIL;
-    }
-    delay(10);
+    ESP_LOGI(TAG,"enter");
+    ESP_RETURN_ON_ERROR(touch_gsl3680_i2c_write(tp,addr,write_buf,1),TAG,"gsl3680 read error");
+    vTaskDelay(pdMS_TO_TICKS(10));
 
     gsl_DataInit(gsl_config_data_id);
     return ret;
@@ -591,12 +602,10 @@ static esp_err_t esp_lcd_touch_gsl3680_read_ram_fw(esp_lcd_touch_handle_t tp)
 {
     uint8_t read_buf[4];
     uint8_t addr = 0xb0;
-    //Serial.println("enter read_ram_fw");
-    delay(30);
-    if (touch_gsl3680_i2c_read(tp, addr, (uint8_t *)&read_buf, 4) != ESP_OK) {
-        return ESP_FAIL;
-    }
-    //Serial.printf("gsl3680 startup_chip failed read 0xb0 = %x,%x,%x,%x\n", read_buf[3],read_buf[2],read_buf[1],read_buf[0]);
+    ESP_LOGI(TAG,"enter read_ram_fw");
+    vTaskDelay(pdMS_TO_TICKS(30));
+    ESP_RETURN_ON_ERROR(touch_gsl3680_i2c_read(tp, addr, (uint8_t *)&read_buf, 4), TAG, "gsl3680 read error!");
+    ESP_LOGI(TAG,"gsl3680 startup_chip failed read 0xb0 = %x,%x,%x,%x ",read_buf[3],read_buf[2],read_buf[1],read_buf[0]);
     if(read_buf[3] != 0x5a || read_buf[2] != 0x5a || read_buf[1] != 0x5a || read_buf[0] != 0x5a)
     {
          
@@ -610,48 +619,25 @@ static esp_err_t touch_gsl3680_i2c_read(esp_lcd_touch_handle_t tp, uint16_t reg,
     assert(tp != NULL);
     assert(data != NULL);
 
-    // Use Wire for I2C communication
-    Wire.beginTransmission(ESP_LCD_TOUCH_IO_I2C_GSL3680_ADDRESS);
-    Wire.write(reg >> 8);  // High byte
-    Wire.write(reg & 0xFF); // Low byte
-    if (Wire.endTransmission() != 0) {
-        return ESP_FAIL;
-    }
-    
-    Wire.requestFrom(ESP_LCD_TOUCH_IO_I2C_GSL3680_ADDRESS, len);
-    for (uint8_t i = 0; i < len; i++) {
-        if (Wire.available()) {
-            data[i] = Wire.read();
-        } else {
-            return ESP_FAIL;
-        }
-    }
-    
-    return ESP_OK;
+
+    /* Read data */
+    return esp_lcd_panel_io_rx_param(tp->io, reg, data, len);
+  
 }
 
 static esp_err_t touch_gsl3680_i2c_write(esp_lcd_touch_handle_t tp, uint16_t reg, uint8_t *data,uint8_t len)
 {
     assert(tp != NULL);
 
-    // Use Wire for I2C communication
-    Wire.beginTransmission(ESP_LCD_TOUCH_IO_I2C_GSL3680_ADDRESS);
-    Wire.write(reg >> 8);  // High byte
-    Wire.write(reg & 0xFF); // Low byte
-    for (uint8_t i = 0; i < len; i++) {
-        Wire.write(data[i]);
-    }
-    
-    if (Wire.endTransmission() != 0) {
-        return ESP_FAIL;
-    }
-    
-    return ESP_OK;
+    // *INDENT-OFF*
+    // /* Write data */
+    return esp_lcd_panel_io_tx_param(tp->io, reg, data, len);
+    // // *INDENT-ON*
 }
 
 static esp_err_t esp_lcd_touch_gsl3680_load_fw(esp_lcd_touch_handle_t tp)
 {
-    //Serial.println("start load fw");
+    ESP_LOGI(TAG,"start load fw");
     uint16_t addr;
     unsigned char wrbuf[4];
     uint16_t source_line = 0;
@@ -670,7 +656,7 @@ static esp_err_t esp_lcd_touch_gsl3680_load_fw(esp_lcd_touch_handle_t tp)
             touch_gsl3680_i2c_write(tp,addr,wrbuf,4);
         
     }
-    //Serial.println("load fw success");
+    ESP_LOGI(TAG,"load fw success");
     return ESP_OK;
 }
 
@@ -679,23 +665,23 @@ static esp_err_t esp_lcd_touch_gsl3680_clear_reg(esp_lcd_touch_handle_t tp)
     uint8_t addr;
     uint8_t wrbuf[4];
 
-    //Serial.println("clear reg");
+    ESP_LOGI(TAG,"clear reg");
     addr = 0xe0;
     wrbuf[0] = 0x88;
     touch_gsl3680_i2c_write(tp,addr,wrbuf,1);
-    delay(20);
+    vTaskDelay(pdMS_TO_TICKS(20));
     addr = 0x88;
     wrbuf[0] = 0x01;
     touch_gsl3680_i2c_write(tp,addr,wrbuf,1);
-    delay(5);
+    vTaskDelay(pdMS_TO_TICKS(5));
     addr = 0xe4;
     wrbuf[0] = 0x04;
     touch_gsl3680_i2c_write(tp,addr,wrbuf,1);
-    delay(5);
+    vTaskDelay(pdMS_TO_TICKS(5));
     addr = 0xe0;
     wrbuf[0] = 0x00;
     touch_gsl3680_i2c_write(tp,addr,wrbuf,1);
-    delay(20);
+    vTaskDelay(pdMS_TO_TICKS(20));
 
     return ESP_OK;
 }

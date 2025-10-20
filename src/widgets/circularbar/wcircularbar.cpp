@@ -49,6 +49,8 @@ functionCB_t CircularBar::getCallbackFunc() { return cb; }
  * Only draws if the widget is on the current screen and properly loaded.
  */
 void CircularBar::drawBackground() {
+  CHECK_TFT_VOID
+
   if (!visible) {
     return;
   }
@@ -90,6 +92,7 @@ void CircularBar::setValue(int newValue) {
  * updating.
  */
 void CircularBar::redraw() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }

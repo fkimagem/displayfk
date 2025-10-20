@@ -27,13 +27,12 @@ const int TOUCH_SCL = 8;//8
 const int TOUCH_SDA = 7;//7
 const int TOUCH_INT = 21;
 const int TOUCH_RST = 22;
-//const int TOUCH_INT = -1;
-//const int TOUCH_RST = -1;
 
 
 // Prototypes for each screen
 void screen0();
 void loadWidgets();
+void slider_cb();
 
 
 Arduino_ESP32DSIPanel *bus = nullptr;
@@ -44,6 +43,9 @@ DisplayFK myDisplay;
 CircularBar circload(155, 355, 0);
 const uint8_t qtdCircBar = 1;
 CircularBar *arrayCircularbar[qtdCircBar] = {&circload};
+HSlider slider(35, 485, 0);
+const uint8_t qtdHSlider = 1;
+HSlider *arrayHslider[qtdHSlider] = {&slider};
 
 void setup(){
     Serial.begin(115200);
@@ -53,7 +55,7 @@ void setup(){
     60000000 /* prefer_speed */);
 
     tft = new Arduino_DSI_Display(
-    800 /* width */, 1280 /* height */, bus, 0 /* rotation */, true /* auto_flush */,
+    800 /* width */, 1280 /* height */, bus, rotationScreen /* rotation */, true /* auto_flush */,
     27 /* RST */, jd9365_init_operations, sizeof(jd9365_init_operations) / sizeof(lcd_init_cmd_t));
 
     pinMode(DISP_LED, OUTPUT);
@@ -62,12 +64,13 @@ void setup(){
     tft->begin();
     //WidgetBase::objTFT = tft; // Reference to object to draw on screen
     myDisplay.setDrawObject(tft);
+    delay(100);
     // Setup touch
-    //myDisplay.setTouchCorners(TOUCH_MAP_X0, TOUCH_MAP_X1, TOUCH_MAP_Y0, TOUCH_MAP_Y1);
-    //myDisplay.setInvertAxis(TOUCH_INVERT_X, TOUCH_INVERT_Y);
-    //myDisplay.setSwapAxis(TOUCH_SWAP_XY);
-    //myDisplay.startTouchGSL3680(DISPLAY_W, DISPLAY_H, rotationScreen, TOUCH_SDA, TOUCH_SCL, TOUCH_INT, TOUCH_RST);
-    //myDisplay.enableTouchLog();
+    myDisplay.setTouchCorners(TOUCH_MAP_X0, TOUCH_MAP_X1, TOUCH_MAP_Y0, TOUCH_MAP_Y1);
+    myDisplay.setInvertAxis(TOUCH_INVERT_X, TOUCH_INVERT_Y);
+    myDisplay.setSwapAxis(TOUCH_SWAP_XY);
+    myDisplay.startTouchGSL3680(DISPLAY_W, DISPLAY_H, rotationScreen, TOUCH_SDA, TOUCH_SCL, TOUCH_INT, TOUCH_RST);
+    myDisplay.enableTouchLog();
     //myDisplay.setupAutoClick(2000, 100, 100); // Setup auto click
     //myDisplay.startAutoClick(); // Start auto click
     loadWidgets(); // This function is used to setup with widget individualy
@@ -81,6 +84,19 @@ void loop(){
     delay(2000);
 }
 
+void drawCollunm(int startX, int startY, bool border, int gridSize){
+  int steps = 1280 / gridSize;
+  int stepCor = 255/steps;
+  
+  for(auto i = 0; i < steps; i++){
+    uint16_t cor = stepCor * i;
+    tft->fillRect(startX, startY + i * gridSize, gridSize, gridSize, cor);
+    if(border){
+      tft->drawRect(startX, startY + i * gridSize, gridSize, gridSize, 0x0);  
+    }
+  }
+}
+
 void screen0(){
     tft->fillScreen(CFK_WHITE);
     WidgetBase::backgroundColor = CFK_WHITE;
@@ -90,7 +106,12 @@ void screen0(){
     tft->drawCircle(75, 185, 40, CFK_COLOR01);
     tft->fillCircle(200, 190, 40, CFK_COLOR11);
     tft->drawCircle(200, 190, 40, CFK_COLOR01);
-    //This screen has a/an circularBar
+
+    //drawCollunm(400, 0, true, 5);
+    
+
+    
+    
     myDisplay.drawWidgetsOnScreen(0);
 }
 
@@ -113,4 +134,20 @@ void loadWidgets(){
     circload.setup(configCirculaBar0);
     myDisplay.setCircularBar(arrayCircularbar,qtdCircBar);
 
+    HSliderConfig configHSlider0 = {
+            .width = 251,
+            .pressedColor = CFK_COLOR01,
+            .minValue = 0,
+            .maxValue = 100,
+            .radius = 20,
+            .callback = slider_cb
+        };
+    slider.setup(configHSlider0);
+    myDisplay.setHSlider(arrayHslider,qtdHSlider);
+
+}
+
+void slider_cb(){
+    int myValue = slider.getValue();
+    Serial.print("New value for slider is: ");Serial.println(myValue);
 }

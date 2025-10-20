@@ -114,6 +114,7 @@ void HSlider::setEnabled(bool newState) { m_enabled = newState; }
  * Only redraws if the slider is on the current screen and needs updating.
  */
 void HSlider::redraw() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }
@@ -172,6 +173,7 @@ void HSlider::redraw() {
  * Called during initial setup and when the slider needs a complete redraw.
  */
 void HSlider::drawBackground() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }

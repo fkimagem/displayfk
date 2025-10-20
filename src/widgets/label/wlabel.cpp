@@ -177,6 +177,7 @@ void Label::setTextInt(int value)
  */
 void Label::redraw()
 {
+  CHECK_TFT_VOID
   if(!visible){return;}
   #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || !m_shouldRedraw || !loaded)

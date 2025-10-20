@@ -98,6 +98,7 @@ void CircleButton::changeState() { m_status = !m_status; }
  * needs updating.
  */
 void CircleButton::redraw() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }

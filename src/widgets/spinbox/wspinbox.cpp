@@ -129,6 +129,7 @@ functionCB_t SpinBox::getCallbackFunc() { return cb; }
  * only redrawing if the SpinBox is on the current screen and needs updating.
  */
 void SpinBox::redraw() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }
@@ -166,6 +167,7 @@ void SpinBox::redraw() {
  * This is typically called once during setup rather than on every redraw.
  */
 void SpinBox::drawBackground() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }

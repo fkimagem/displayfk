@@ -179,6 +179,7 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
  * @param onlyContent If true, redraws only the content area
  */
 void Numpad::redraw(bool fullScreen, bool onlyContent) {
+  CHECK_TFT_VOID
 #if defined(DISP_DEFAULT)
   if (!loaded) {
     Serial.println("Numpad not loaded");
@@ -245,9 +246,6 @@ void Numpad::redraw(bool fullScreen, bool onlyContent) {
 #endif
 
   uint32_t endMillis = millis();
-  if(m_canvas){
-    m_canvas->flush();
-  }
   Serial.printf("Numpad::redraw: %i ms\n", endMillis - startMillis);
 }
 
@@ -284,6 +282,7 @@ void Numpad::removeLetter() {
  * Initializes the Numpad layout and appearance
  */
 void Numpad::setup() {
+  CHECK_TFT_VOID
   if (!WidgetBase::objTFT) {
     log_e("TFT not defined on WidgetBase");
     return;
@@ -318,11 +317,6 @@ void Numpad::setup() {
   m_fontPreview = m_fontKeys; // const_cast<GFXfont*>(getBestRobotoBold(m_pontoPreview.width
                   // * percentUtilArea, m_pontoPreview.height *
                   // percentUtilArea, "M"));
-  m_canvas = new Arduino_Canvas(m_availableWidth, m_availableHeight, WidgetBase::objTFT, xPos, yPos);
-  if(m_canvas){
-    m_canvas->begin();
-    m_canvas->fillRect(0, 0, m_availableWidth, m_availableHeight, CFK_AQUA);
-  }
 #endif
   loaded = true;
 }

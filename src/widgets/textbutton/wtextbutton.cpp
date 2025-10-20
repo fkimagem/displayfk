@@ -75,6 +75,7 @@ void TextButton::setEnabled(bool newState) { m_enabled = newState; }
  * The appearance adjusts based on the current display mode (light or dark).
  */
 void TextButton::redraw() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }

@@ -63,7 +63,8 @@ void VAnalog::start()
  */
 void VAnalog::drawBackground()
 {
-  if(!visible){return;}
+  CHECK_TFT_VOID
+  CHECK_VISIBLE
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
   {
@@ -118,6 +119,7 @@ void VAnalog::setValue(int newValue, bool _viewValue)
  */
 void VAnalog::redraw()
 {
+  CHECK_TFT_VOID
   if(!visible){return;}
   #if defined(DISP_DEFAULT)
   ////Serial.println(WidgetBase::usingKeyboard);

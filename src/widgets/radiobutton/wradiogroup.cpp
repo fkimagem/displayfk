@@ -74,6 +74,7 @@ functionCB_t RadioGroup::getCallbackFunc() { return cb; }
  * updating.
  */
 void RadioGroup::redraw() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }

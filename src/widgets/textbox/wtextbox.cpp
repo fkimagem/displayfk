@@ -85,6 +85,7 @@ functionCB_t TextBox::getCallbackFunc() { return cb; }
  * Only redraws if the TextBox is on the current screen and needs updating.
  */
 void TextBox::redraw() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }
@@ -131,6 +132,7 @@ void TextBox::redraw() {
  * @param config The configuration struct containing all setup parameters.
  */
 void TextBox::setup(const TextBoxConfig &config) {
+  CHECK_TFT_VOID
 #if defined(USING_GRAPHIC_LIB)
   setup(config.width, config.height, config.letterColor, config.backgroundColor,
         config.startValue, config.font, config.funcPtr, config.cb);

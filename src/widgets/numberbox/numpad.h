@@ -68,7 +68,7 @@ private:
     GFXfont *m_fontPreview = nullptr;
     #endif
 
-    Arduino_Canvas *m_canvas = nullptr;
+    //Arduino_Canvas *m_canvas = nullptr;
 
 
     /// @brief Adds a character to the current Numpad input

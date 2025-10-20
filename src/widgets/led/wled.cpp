@@ -42,6 +42,7 @@ void Led::setState(bool newValue)
 
 void Led::drawBackground()
 {
+  CHECK_TFT_VOID
   if(!visible){return;}
   #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !loaded)
@@ -61,6 +62,7 @@ void Led::drawBackground()
  */
 void Led::redraw()
 {
+  CHECK_TFT_VOID
   if(!visible){return;}
   #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard || !m_shouldRedraw || !loaded)

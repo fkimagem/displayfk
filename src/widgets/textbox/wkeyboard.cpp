@@ -355,6 +355,7 @@ void WKeyboard::removeLetter()
  */
 void WKeyboard::setup()
 {
+    CHECK_TFT_VOID
 #if defined(DISP_DEFAULT)
     if (!WidgetBase::objTFT)
     {
@@ -427,6 +428,7 @@ void WKeyboard::clear()
  */
 void WKeyboard::open(TextBox *_field)
 {
+    CHECK_TFT_VOID
     m_myTime = millis() + (TIMEOUT_CLICK * 3);// Espera o tempo de 3 clicks para iniciar a detecção, evitando apertar tecla assim que abre.
     m_field = _field;
     WidgetBase::usingKeyboard = true;

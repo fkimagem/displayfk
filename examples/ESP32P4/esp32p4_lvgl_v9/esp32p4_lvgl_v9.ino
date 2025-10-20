@@ -7,6 +7,7 @@
 #include "pins_config.h"
 #include "src/lcd/jd9365_lcd.h"
 #include "src/touch/gsl3680_touch.h"
+#include "esp_log.h"
 
 jd9365_lcd lcd = jd9365_lcd(LCD_RST);
 gsl3680_touch touch = gsl3680_touch(TP_I2C_SDA, TP_I2C_SCL, TP_RST, TP_INT);
@@ -52,10 +53,14 @@ void my_touchpad_read(lv_indev_t *indev_driver, lv_indev_data_t *data)
 void setup()
 {
   Serial.begin(115200);
-  esp_log_level_set("*", ESP_LOG_VERBOSE);  // ou ESP_LOG_INFO
+  esp_log_level_set("*", ESP_LOG_INFO);  // ou ESP_LOG_INFO
+  esp_log_set_vprintf(vprintf);  // garante saída no terminal padrão
   Serial.println("ESP32P4 MIPI DSI LVGL");
+  ESP_LOGI("MAIN", "Sistema inicializado");
   lcd.begin();
+  log_i("LCD begin");
   touch.begin();
+  log_i("TOUCH begin");
 
   lv_init();
   uint32_t buffer_size = LCD_H_RES * LCD_V_RES;

@@ -70,6 +70,7 @@ functionCB_t GaugeSuper::getCallbackFunc()
  */
 void GaugeSuper::start()
 {
+  CHECK_TFT_VOID
   #if defined(DISP_DEFAULT)
   if (m_vmax < m_vmin)
   {
@@ -155,6 +156,7 @@ void GaugeSuper::start()
  */
 void GaugeSuper::drawBackground()
 {
+  CHECK_TFT_VOID
   if(!visible){return;}
   #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !loaded)
@@ -387,6 +389,7 @@ void GaugeSuper::setValue(int newValue)
  */
 void GaugeSuper::redraw()
 {
+  CHECK_TFT_VOID
   if(!visible){return;}
   #if defined(DISP_DEFAULT)
 

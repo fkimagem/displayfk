@@ -6,6 +6,7 @@
 
 TouchScreen::TouchScreen()
 {
+  log_d("TouchScreen constructor");
 }
 
 #if defined(TOUCH_XPT2046)
@@ -25,6 +26,7 @@ void TouchScreen::startAsXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, uint
     digitalWrite(m_pinCS, HIGH);
   }
   touch_init();
+  log_d("Starting xpt2046 touch panel driver");
 }
 #elif defined(TOUCH_FT6236U)
 void TouchScreen::startAsFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST)
@@ -36,6 +38,7 @@ void TouchScreen::startAsFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, uint
   m_pinINT = pinINT;
   m_pinRST = pinRST;
   touch_init();
+  log_d("Starting ft6236 touch panel driver");
 }
 #elif defined(TOUCH_FT6336)
 void TouchScreen::startAsFT6336(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST)
@@ -47,6 +50,7 @@ void TouchScreen::startAsFT6336(uint16_t w, uint16_t h, uint8_t _rotation, uint8
   m_pinINT = pinINT;
   m_pinRST = pinRST;
   touch_init();
+  log_d("Starting ft6336 touch panel driver");
 }
 #elif defined(TOUCH_CST816)
 void TouchScreen::startAsCST816(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST)
@@ -58,6 +62,7 @@ void TouchScreen::startAsCST816(uint16_t w, uint16_t h, uint8_t _rotation, uint8
   m_pinINT = pinINT;
   m_pinRST = pinRST;
   touch_init();
+  log_d("Starting cst816 touch panel driver");
 }
 #elif defined(TOUCH_GT911)
 void TouchScreen::startAsGT911(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST)
@@ -70,18 +75,20 @@ void TouchScreen::startAsGT911(uint16_t w, uint16_t h, uint8_t _rotation, uint8_
   m_pinINT = pinINT;
   m_pinRST = pinRST;
   touch_init();
+  log_d("Starting gt911 touch panel driver");
 }
 #elif defined(TOUCH_GSL3680)
 void TouchScreen::startAsGSL3680(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST)
 {
   // m_ts = new gsl3680_touch(TP_I2C_SDA, TP_I2C_SCL, TP_RST, TP_INT);
   this->setDimension(w, h, _rotation);
-  m_ts = new gsl3680_touch(pinSDA, pinSCL, pinRST, pinINT);
+  m_ts = new GSL3680_touch(pinSDA, pinSCL, pinRST, pinINT);
   m_pinSCL = pinSCL;
   m_pinSDA = pinSDA;
   m_pinINT = pinINT;
   m_pinRST = pinRST;
   touch_init();
+  log_d("Starting gsl3680 touch panel driver");
 }
 #endif
 

@@ -97,6 +97,7 @@ void CheckBox::changeState() { m_status = !m_status; }
  * and needs updating.
  */
 void CheckBox::redraw() {
+  CHECK_TFT_VOID
   if (!visible) {
     return;
   }

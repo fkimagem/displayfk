@@ -135,6 +135,7 @@ void LineChart::resetArray()
  */
 void LineChart::start()
 {
+  CHECK_TFT_VOID
   #if defined(DISP_DEFAULT)
   if (m_vmax < m_vmin)
   {
@@ -234,6 +235,7 @@ void LineChart::start()
  */
 void LineChart::drawBackground()
 {
+  CHECK_TFT_VOID
   if(!visible){return;}
 #if defined(DISP_DEFAULT)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
@@ -339,6 +341,7 @@ bool LineChart::push(uint16_t serieIndex, int newValue)
  */
 void LineChart::clearPreviousValues()
 {
+  CHECK_TFT_VOID
  #if defined(DISP_DEFAULT)
   if (m_mutex && xSemaphoreTake(m_mutex, 0) != pdTRUE)
     return; // só executa se conseguir pegar o mutex imediatamente
@@ -377,6 +380,7 @@ void LineChart::clearPreviousValues()
  */
 void LineChart::drawGrid()
 {
+  CHECK_TFT_VOID
   #if defined(DISP_DEFAULT)
   // Desenha a grade
   if (m_verticalDivision > 0)
@@ -415,6 +419,7 @@ void LineChart::drawGrid()
  */
 void LineChart::drawSerie(uint8_t serieIndex)
 {
+  CHECK_TFT_VOID
  #if defined(DISP_DEFAULT)
   if (m_mutex && xSemaphoreTake(m_mutex, 0) != pdTRUE)
     return; // só executa se conseguir pegar o mutex imediatamente

@@ -54,6 +54,7 @@ void VBar::setValue(uint32_t newValue)
  */
 void VBar::redraw()
 {
+  CHECK_TFT_VOID
   if(!visible){return;}
   #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
@@ -131,6 +132,7 @@ void VBar::forceUpdate()
  */
 void VBar::drawBackground()
 {
+  CHECK_TFT_VOID
   if(!visible){return;}
   #if defined(USING_GRAPHIC_LIB)
   if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)

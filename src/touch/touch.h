@@ -49,8 +49,8 @@
     #include <Wire.h>
     #include "gt911/TAMC_GT911.h"
   #elif defined(TOUCH_GSL3680)
-    #include <Wire.h>
-    #include "gsl3680/gsl3680_touch.h"
+    //#include <Wire.h>
+    #include "gsl3680/src/gsl3680_touch.h"
   #endif
 
 
@@ -126,7 +126,7 @@ private:
   int8_t m_pinSCL = 0, m_pinSDA = 0, m_pinINT = 0, m_pinRST = 0;
 
   #elif defined(TOUCH_GSL3680)
-  gsl3680_touch *m_ts = nullptr;
+  GSL3680_touch *m_ts = nullptr;
   int8_t m_pinSCL = 0, m_pinSDA = 0, m_pinINT = 0, m_pinRST = 0;
   #else
   //
