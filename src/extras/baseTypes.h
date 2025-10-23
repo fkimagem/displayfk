@@ -7,6 +7,9 @@
 
 //#define CLAMP(cvalue, vmin, vmax) ((cvalue) < (vmin) ? (vmin) : ((cvalue) > (vmax) ? (vmax) : (cvalue))) ///< Trucate value between min and max
 #define TIMEOUT_CLICK 500
+#define TIMEOUT_REDRAW 50
+#define TIMEOUT_FAST_REDRAW 10
+
 #define DGTORAD(value) ((value) * 0.0174532925)
 
 

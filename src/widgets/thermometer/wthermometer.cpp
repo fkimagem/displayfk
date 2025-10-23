@@ -1,20 +1,28 @@
 #include "wthermometer.h"
 
+const char* Thermometer::TAG = "Thermometer";
+
 /**
  * @brief Constructor for the Thermometer class.
  * @param _x X position of the widget.
  * @param _y Y position of the widget.
  * @param _screen Screen number.
  */
-Thermometer::Thermometer(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen)
-{
+Thermometer::Thermometer(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen), m_config{} {
+  ESP_LOGD(TAG, "Thermometer created at (%d, %d) on screen %d", _x, _y, _screen);
 }
 
 /**
  * @brief Destructor for the Thermometer class.
  */
-Thermometer::~Thermometer()
-{
+Thermometer::~Thermometer() {
+    cleanupMemory();
+}
+
+void Thermometer::cleanupMemory() {
+    // Thermometer doesn't use dynamic memory allocation
+    // m_config.subtitle is a pointer to external Label object
+    ESP_LOGD(TAG, "Thermometer memory cleanup completed");
 }
 
 /**
@@ -34,7 +42,7 @@ bool Thermometer::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
  */
 functionCB_t Thermometer::getCallbackFunc()
 {
-  return cb;
+  return m_callback;
 }
 
 /**
@@ -55,12 +63,11 @@ void Thermometer::setValue(float newValue)
 void Thermometer::redraw()
 {
   CHECK_TFT_VOID
-  if(!visible){return;}
- #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
-  {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
   
   
 
@@ -81,7 +88,6 @@ void Thermometer::redraw()
 
   m_lastValue = m_currentValue;
   m_shouldRedraw = false;
-  #endif
 }
 
 /**
@@ -108,33 +114,32 @@ void Thermometer::forceUpdate()
 void Thermometer::drawBackground()
 {
   CHECK_TFT_VOID
-  if(!visible){return;}
-   #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
-  {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
   int radius = (m_config.width / 2) - m_border;
 
-  m_bulb.x = xPos + (m_config.width / 2);
-  m_bulb.y = yPos + m_config.height - radius - m_border;
+  m_bulb.x = m_xPos + (m_config.width / 2);
+  m_bulb.y = m_yPos + m_config.height - radius - m_border;
   m_bulb.radius = radius;
 
   int width = m_config.width / 3;
 
-  m_glassArea.x = xPos + ((m_config.width - width) / 2);
-  m_glassArea.y = yPos + m_border;
+  m_glassArea.x = m_xPos + ((m_config.width - width) / 2);
+  m_glassArea.y = m_yPos + m_border;
   m_glassArea.width = width;
   //m_glassArea.height = m_config.height - radius;
   m_glassArea.height = m_config.height - (radius + m_border);
 
-  m_fillArea.x = xPos + ((m_config.width - width) / 2);
-  m_fillArea.y = yPos + m_border + (width/2);
+  m_fillArea.x = m_xPos + ((m_config.width - width) / 2);
+  m_fillArea.y = m_yPos + m_border + (width/2);
   m_fillArea.width = width;
   m_fillArea.height = m_config.height - (m_border * 2 + m_bulb.radius * 2 + (width/2));
 
-  WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_config.width, m_config.height, 5, m_config.backgroundColor);     // area do widget
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_config.width, m_config.height, 5, CFK_BLACK);     // area do widget
+  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, 5, m_config.backgroundColor);     // area do widget
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, 5, CFK_BLACK);     // area do widget
 
 
   WidgetBase::objTFT->drawRoundRect(m_glassArea.x -1, m_glassArea.y-1, m_glassArea.width+2, m_glassArea.height+2, m_glassArea.width/2, CFK_BLACK);     // borda vidro
@@ -161,8 +166,6 @@ void Thermometer::drawBackground()
 		int y = m_fillArea.y + i * space;
 		WidgetBase::objTFT->drawLine(m_fillArea.x - offset, y, m_fillArea.x - (offset + size), y, m_config.markColor);
 	}
-
-#endif
 }
 
 /**
@@ -175,14 +178,10 @@ void Thermometer::drawBackground()
  */
 void Thermometer::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax)
 {
-  if (!WidgetBase::objTFT)
+  CHECK_TFT_VOID
+  if (m_loaded)
   {
-    log_e("TFT not defined on WidgetBase");
-    return;
-  }
-  if (loaded)
-  {
-    log_d("Thermometer widget already configured");
+    ESP_LOGD(TAG, "Thermometer widget already configured");
     return;
   }
   //m_width = _width;
@@ -197,7 +196,7 @@ void Thermometer::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor
   m_currentValue = m_config.minValue;
   m_shouldRedraw = true;
   start();
-  loaded = true;
+  m_loaded = true;
 }
 
 /**
@@ -206,21 +205,38 @@ void Thermometer::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor
  */
 void Thermometer::setup(const ThermometerConfig& config)
 {
-    m_config = config;
-    if(m_config.subtitle){
-        m_config.subtitle->setSuffix(m_config.unit);
-    }
+  CHECK_TFT_VOID
+  if (m_loaded) {
+    ESP_LOGW(TAG, "Thermometer already initialized");
+    return;
+  }
+
+  // Clean up any existing memory before setting new config
+  cleanupMemory();
+  
+  // Deep copy configuration
+  m_config = config;
+  
+  // Set up subtitle if provided
+  if(m_config.subtitle){
+    m_config.subtitle->setSuffix(m_config.unit);
+  }
+  
+  // Call the original setup method with config parameters
   setup(config.width, config.height, config.filledColor, config.minValue, config.maxValue);
+  
+  ESP_LOGD(TAG, "Thermometer configured: %dx%d, range=[%d,%d], unit='%s'", 
+           config.width, config.height, config.minValue, config.maxValue, config.unit);
 }
 
 void Thermometer::show()
 {
-    visible = true;
+    m_visible = true;
     m_shouldRedraw = true;
 }
 
 void Thermometer::hide()
 {
-    visible = false;
+    m_visible = false;
     m_shouldRedraw = true;
 }

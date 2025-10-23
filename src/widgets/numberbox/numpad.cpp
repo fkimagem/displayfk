@@ -1,5 +1,7 @@
 #include "numpad.h"
 
+const char* Numpad::TAG = "Numpad";
+
 uint16_t Numpad::m_backgroundColor = CFK_GREY3;
 uint16_t Numpad::m_letterColor = CFK_BLACK;
 uint16_t Numpad::m_keyColor = CFK_GREY13;
@@ -45,19 +47,27 @@ const Key_t Numpad::m_pad[NCOLS][NROWS] = {
  * @param _screen Screen identifier where the Numpad will be displayed
  */
 Numpad::Numpad(uint16_t _x, uint16_t _y, uint8_t _screen)
-    : WidgetBase(_x, _y, _screen) {}
+    : WidgetBase(_x, _y, _screen), m_config{} {}
 
 /**
  * @brief Default constructor for the Numpad class
  * Initializes a Numpad at position (0,0) on screen 0
  */
-Numpad::Numpad() : WidgetBase(0, 0, 0) {}
+Numpad::Numpad() : WidgetBase(0, 0, 0), m_config{} {}
 
 /**
  * @brief Destructor for the Numpad class
  * Cleans up any resources used by the Numpad
  */
-Numpad::~Numpad() {}
+Numpad::~Numpad() {
+    cleanupMemory();
+}
+
+void Numpad::cleanupMemory() {
+    // Numpad doesn't use dynamic memory allocation
+    // CharString handles its own memory management
+    ESP_LOGD(TAG, "Numpad memory cleanup completed");
+}
 
 /**
  * @brief Detects if the Numpad has been touched
@@ -71,7 +81,7 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) { return false; }
  * @brief Retrieves the callback function associated with the Numpad
  * @return Pointer to the callback function
  */
-functionCB_t Numpad::getCallbackFunc() { return cb; }
+functionCB_t Numpad::getCallbackFunc() { return m_callback; }
 
 /**
  * @brief Detects if a specific key on the Numpad has been touched, and returns
@@ -83,22 +93,33 @@ functionCB_t Numpad::getCallbackFunc() { return cb; }
  */
 bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
                          PressedKeyType *pressedKey) {
+
+  CHECK_VISIBLE_BOOL
+  CHECK_INITIALIZED_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_DEBOUNCE_CLICK_BOOL
+  CHECK_ENABLED_BOOL
+  CHECK_LOCKED_BOOL
+  CHECK_POINTER_TOUCH_NULL_BOOL
   bool retorno = false;
-  uint16_t xMax = xPos + m_availableWidth;
-  uint16_t yMax = yPos + m_availableHeight;
+  uint16_t xMax = m_xPos + m_availableWidth;
+  uint16_t yMax = m_yPos + m_availableHeight;
   (*pressedKey) = PressedKeyType::NONE;
 
-  if (millis() - m_myTime < TIMEOUT_CLICK) {
-    return false;
-  }
+  
   m_myTime = millis();
 
-  if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) &&
+  bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_availableWidth, m_availableHeight);
+  if(inBounds) {
+    m_myTime = millis();
+  }
+
+  if ((*_xTouch > m_xPos) && (*_xTouch < xMax) && (*_yTouch > m_yPos) &&
       (*_yTouch < yMax)) {
     (*pressedKey) = PressedKeyType::NUMBER;
 
-    int16_t aux_xIndexClick = ((*_xTouch) - xPos) / (m_keyW + 2);
-    int16_t aux_yIndexClick = ((*_yTouch) - yPos) / (m_keyH + 2);
+    int16_t aux_xIndexClick = ((*_xTouch) - m_xPos) / (m_keyW + 2);
+    int16_t aux_yIndexClick = ((*_yTouch) - m_yPos) / (m_keyH + 2);
 
     uint16_t xIndexClick = constrain(aux_xIndexClick, 0, Numpad::aCols - 1);
     uint16_t yIndexClick = constrain(aux_yIndexClick, 0, Numpad::aRows - 1);
@@ -106,34 +127,34 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
     const Key_t letter = m_pad[yIndexClick][xIndexClick];
 
     if (letter.type == PressedKeyType::INVERT_VALUE) {
-      log_d("Invert value");
+      ESP_LOGD(TAG, "Invert value");
 
       float v = m_content.toFloat() * -1;
       m_content.setString(v);
 
-      redraw(false, true);
+      drawKeys(false, true);
       (*pressedKey) = PressedKeyType::INVERT_VALUE;
       return true;
     }
     if (letter.type == PressedKeyType::DECREMENT) {
-      log_d("Decrement value");
+      ESP_LOGD(TAG, "Decrement value");
 
       float v = m_content.toFloat();
       v--;
       m_content.setString(v);
 
-      redraw(false, true);
+      drawKeys(false, true);
       (*pressedKey) = PressedKeyType::DECREMENT;
       return true;
     }
     if (letter.type == PressedKeyType::INCREMENT) {
-      log_d("Increment value");
+      ESP_LOGD(TAG, "Increment value");
 
       float v = m_content.toFloat();
       v++;
       m_content.setString(v);
 
-      redraw(false, true);
+      drawKeys(false, true);
       (*pressedKey) = PressedKeyType::INCREMENT;
       return true;
     }
@@ -141,15 +162,15 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
     // const char *letter = m_pad[yIndexClick][xIndexClick];
 
     if (letter.label[0] == '\0') {
-      log_d("Empty key. None action.");
+      ESP_LOGD(TAG, "Empty key. None action.");
       return false;
     }
 
-    log_d("Index clicked: %d, %d = %s", xIndexClick, yIndexClick, letter);
+    ESP_LOGD(TAG, "Index clicked: %d, %d = %s", xIndexClick, yIndexClick, letter);
 
     switch (letter.type) {
     case PressedKeyType::NUMBER:
-      log_d("Is number");
+      ESP_LOGD(TAG, "Is number");
       addLetter((char)letter.label[0]);
       break;
     case PressedKeyType::POINT:
@@ -159,11 +180,11 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
       (*pressedKey) = PressedKeyType::RETURN;
       break;
     case PressedKeyType::DEL:
-      log_d("Is Delete");
+      ESP_LOGD(TAG, "Is Delete");
       removeLetter();
       break;
     default:
-      log_d("Another type: %d", letter.type);
+      ESP_LOGD(TAG, "Another type: %d", letter.type);
       break;
     }
 
@@ -178,13 +199,9 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
  * @param fullScreen If true, redraws the entire screen
  * @param onlyContent If true, redraws only the content area
  */
-void Numpad::redraw(bool fullScreen, bool onlyContent) {
+void Numpad::drawKeys(bool fullScreen, bool onlyContent) {
   CHECK_TFT_VOID
-#if defined(DISP_DEFAULT)
-  if (!loaded) {
-    Serial.println("Numpad not loaded");
-    return;
-  }
+  CHECK_LOADED_VOID
   uint32_t startMillis = millis();
 
   if (fullScreen) {
@@ -212,7 +229,7 @@ void Numpad::redraw(bool fullScreen, bool onlyContent) {
   WidgetBase::objTFT->setTextColor(Numpad::m_letterColor);
 
   if (!onlyContent) {
-    WidgetBase::objTFT->fillRect(xPos, yPos, m_availableWidth,
+    WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_availableWidth,
                                  m_availableHeight, Numpad::m_backgroundColor);
     for (auto row = 0; row < Numpad::aRows; ++row) {
       for (auto col = 0; col < Numpad::aCols; ++col) {
@@ -222,12 +239,12 @@ void Numpad::redraw(bool fullScreen, bool onlyContent) {
           uint16_t keyScale = 1;
 
           // uint16_t xCenter = xPos + (((keyScale * (m_keyW + 2))) * col) +
-          // ((keyScale * (m_keyW + 2)) / 2); uint16_t yCenter = yPos + ((m_keyH
+          // ((keyScale * (m_keyW + 2)) / 2); uint16_t yCenter = m_yPos + ((m_keyH
           // + 2) * row) + (m_keyH / 2);
           const int key_width = m_keyW * keyScale + (2 * (keyScale - 1));
           const int key_height = m_keyH;
-          const int key_x = xPos + ((m_keyW + 2) * col);
-          const int key_y = yPos + ((m_keyH + 2) * row);
+          const int key_x = m_xPos + ((m_keyW + 2) * col);
+          const int key_y = m_yPos + ((m_keyH + 2) * row);
           const int key_round = 4;
 
           WidgetBase::objTFT->fillRoundRect(key_x, key_y, key_width, key_height,
@@ -243,10 +260,9 @@ void Numpad::redraw(bool fullScreen, bool onlyContent) {
       }
     }
   }
-#endif
 
   uint32_t endMillis = millis();
-  Serial.printf("Numpad::redraw: %i ms\n", endMillis - startMillis);
+  ESP_LOGD(TAG, "Numpad::redraw: %i ms", endMillis - startMillis);
 }
 
 /**
@@ -255,14 +271,14 @@ void Numpad::redraw(bool fullScreen, bool onlyContent) {
  */
 void Numpad::addLetter(char c) {
   if (c == '.' && m_content.containsChar('.')) {
-    log_e("Value of numberbox aleady has . character");
+    ESP_LOGE(TAG, "Value of numberbox aleady has . character");
     return;
   }
 
   if (m_content.addChar(c)) {
-    redraw(false, true);
+    drawKeys(false, true);
   } else {
-    log_e("numberbox has reached maximum lenght. The max lenght is %d",
+    ESP_LOGE(TAG, "numberbox has reached maximum lenght. The max lenght is %d",
           MAX_LENGTH_CSTR);
   }
 }
@@ -272,24 +288,20 @@ void Numpad::addLetter(char c) {
  */
 void Numpad::removeLetter() {
   if (!m_content.removeLastChar()) {
-    log_d("Char not removed");
+    ESP_LOGD(TAG, "Char not removed");
   }
-  redraw(false, true);
+  drawKeys(false, true);
 }
 
 /**
  * @brief Configures the Numpad settings
  * Initializes the Numpad layout and appearance
  */
-void Numpad::setup() {
-  CHECK_TFT_VOID
-  if (!WidgetBase::objTFT) {
-    log_e("TFT not defined on WidgetBase");
-    return;
-  }
-  if (loaded) {
-    log_w("Keyboard already configured");
-    return;
+bool Numpad::setup() {
+  CHECK_TFT_BOOL
+  if (m_loaded) {
+    ESP_LOGW(TAG, "Keyboard already configured");
+    return false;
   }
 #if defined(DISP_DEFAULT)
   m_screenW = WidgetBase::objTFT->width();
@@ -307,8 +319,8 @@ void Numpad::setup() {
   m_pontoPreview.height = (m_screenH * 0.2);
   m_pontoPreview.width = m_screenW / 2;
 
-  xPos = (m_screenW - m_availableWidth) / 2;
-  yPos = m_screenH - m_availableHeight;
+  m_xPos = (m_screenW - m_availableWidth) / 2;
+  m_yPos = m_screenH - m_availableHeight;
 
   float percentUtilArea = 0.9;
 #if defined(USING_GRAPHIC_LIB)
@@ -318,7 +330,57 @@ void Numpad::setup() {
                   // * percentUtilArea, m_pontoPreview.height *
                   // percentUtilArea, "M"));
 #endif
-  loaded = true;
+  m_loaded = true;
+  m_initialized = true;
+  return true;
+}
+
+void Numpad::setup(const NumpadConfig& config) {
+  CHECK_TFT_VOID
+  if (m_loaded) {
+    ESP_LOGW(TAG, "Numpad already configured");
+    return;
+  }
+
+  // Clean up any existing memory before setting new config
+  cleanupMemory();
+  
+  // Deep copy configuration
+  m_config = config;
+  
+  // Update static colors from config
+  m_backgroundColor = config.backgroundColor;
+  m_letterColor = config.letterColor;
+  m_keyColor = config.keyColor;
+  
+  #if defined(USING_GRAPHIC_LIB)
+  m_fontKeys = const_cast<GFXfont*>(config.fontKeys);
+  m_fontPreview = const_cast<GFXfont*>(config.fontPreview);
+  #endif
+  
+  // Initialize layout without calling setup() to avoid recursion
+  #if defined(DISP_DEFAULT)
+  m_screenW = WidgetBase::objTFT->width();
+  m_screenH = WidgetBase::objTFT->height();
+  #endif
+
+  m_availableWidth = m_screenW * 0.9;
+  m_availableHeight = (m_screenH * 0.75);
+
+  m_keyW = (m_availableWidth / Numpad::aCols) - 2;
+  m_keyH = (m_availableHeight / Numpad::aRows) - 2;
+
+  m_pontoPreview.x = m_screenW / 4;
+  m_pontoPreview.y = 1;
+  m_pontoPreview.height = (m_screenH * 0.2);
+  m_pontoPreview.width = m_screenW / 2;
+
+  m_xPos = (m_screenW - m_availableWidth) / 2;
+  m_yPos = m_screenH - m_availableHeight;
+
+  m_loaded = true;
+  m_initialized = true;
+  ESP_LOGD(TAG, "Numpad configured with custom settings");
 }
 
 /**
@@ -336,7 +398,7 @@ void Numpad::open(NumberBox *_field) {
   WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
 #endif
 
-  redraw(true, false);
+  drawKeys(true, false);
 }
 
 /**
@@ -346,8 +408,8 @@ void Numpad::close() {
 #if defined(DISP_DEFAULT)
   WidgetBase::objTFT->setFont((GFXfont *)0);
 #endif
-  log_d("Value of content is: %s", m_content.getString());
-  log_d("Value of content is: %f", m_content.toFloat());
+  ESP_LOGD(TAG, "Value of content is: %s", m_content.getString());
+  ESP_LOGD(TAG, "Value of content is: %f", m_content.toFloat());
 
   m_field->setValue(m_content.toFloat());
 
@@ -362,16 +424,22 @@ void Numpad::insertChar(char c) {
   if (WidgetBase::usingKeyboard) {
     addLetter(c);
   } else {
-    log_e("Cant add char. Keyboard is not open");
+    ESP_LOGE(TAG, "Cant add char. Keyboard is not open");
   }
 }
 
 void Numpad::show() {
-  visible = true;
+  m_visible = true;
   m_shouldRedraw = true;
 }
 
 void Numpad::hide() {
-  visible = false;
+  m_visible = false;
   m_shouldRedraw = true;
+}
+
+void Numpad::forceUpdate() { m_shouldRedraw = true; }
+
+void Numpad::redraw() {
+  drawKeys(false, false);
 }

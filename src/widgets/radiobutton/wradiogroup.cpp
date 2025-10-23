@@ -1,5 +1,7 @@
 #include "wradiogroup.h"
 
+const char* RadioGroup::TAG = "RadioGroup";
+
 /**
  * @brief Constructor for the RadioGroup class.
  * @param _screen Screen identifier where the RadioGroup will be displayed.
@@ -7,12 +9,35 @@
  * Creates a RadioGroup with position (0,0) on the specified screen.
  */
 RadioGroup::RadioGroup(uint8_t _screen)
-    : WidgetBase(0, 0, _screen), m_shouldRedraw(true) {}
+    : WidgetBase(0, 0, _screen), m_shouldRedraw(true), m_config{} {
+      m_config = {
+        .group = 0,
+        .radius = 0,
+        .amount = 0,
+        .buttons = nullptr,
+        .defaultClickedId = 0,
+        .callback = nullptr
+      };
+    }
 
 /**
  * @brief Destructor for the RadioGroup class.
  */
-RadioGroup::~RadioGroup() {}
+RadioGroup::~RadioGroup() {
+    cleanupMemory();
+}
+
+void RadioGroup::cleanupMemory() {
+  if (m_config.buttons) {
+    delete[] m_config.buttons;
+    m_config.buttons = nullptr;
+  }
+  if (m_buttons) {
+    delete[] m_buttons;
+    m_buttons = nullptr;
+  }
+  ESP_LOGD(TAG, "RadioGroup memory cleanup completed");
+}
 
 /**
  * @brief Forces the RadioGroup to redraw.
@@ -31,40 +56,31 @@ void RadioGroup::forceUpdate() { m_shouldRedraw = true; }
  * and updates the selected state if a button is touched.
  */
 bool RadioGroup::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
-  if (!visible) {
-    return false;
-  }
-  if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen ||
-      !loaded) {
-    return false;
-  }
+  CHECK_VISIBLE_BOOL
+  CHECK_USINGKEYBOARD_BOOL
+  CHECK_CURRENTSCREEN_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_DEBOUNCE_CLICK_BOOL
 
-  if (millis() - m_myTime < TIMEOUT_CLICK) {
-    return false;
-  }
-  m_myTime = millis();
-  bool detectado = false;
-
-  for (int16_t i = 0; i < m_amount; i++) {
+  for (int16_t i = 0; i < m_config.amount; i++) {
     radio_t r = m_buttons[i];
-    int32_t deltaX = (*_xTouch - r.x) * (*_xTouch - r.x);
-    int32_t deltaY = (*_yTouch - r.y) * (*_yTouch - r.y);
-    int32_t radiusQ = m_radius * m_radius;
-
-    if ((deltaX < radiusQ) && (deltaY < radiusQ)) {
+    bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, r.x, r.y, m_config.radius, m_config.radius);
+    if(inBounds) {
       m_clickedId = r.id;
       m_shouldRedraw = true;
-      detectado = true;
-    }
+      m_myTime = millis();
+      return true;
+    } 
+
   }
-  return detectado;
+  return false;
 }
 
 /**
  * @brief Retrieves the callback function associated with the RadioGroup.
  * @return Pointer to the callback function.
  */
-functionCB_t RadioGroup::getCallbackFunc() { return cb; }
+functionCB_t RadioGroup::getCallbackFunc() { return m_callback; }
 
 /**
  * @brief Redraws the radio buttons on the screen, updating their appearance.
@@ -75,13 +91,10 @@ functionCB_t RadioGroup::getCallbackFunc() { return cb; }
  */
 void RadioGroup::redraw() {
   CHECK_TFT_VOID
-  if (!visible) {
-    return;
-  }
-#if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw) {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
 
   m_shouldRedraw = false;
 
@@ -89,21 +102,20 @@ void RadioGroup::redraw() {
   uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
-  log_d("Redraw radiogroup");
+  ESP_LOGD(TAG, "Redraw radiogroup");
 
-  for (int16_t i = 0; i < m_amount; i++) {
+  for (int16_t i = 0; i < m_config.amount; i++) {
     radio_t r = m_buttons[i];
 
-    WidgetBase::objTFT->fillCircle(r.x, r.y, m_radius, lightBg);    // Botao
-    WidgetBase::objTFT->drawCircle(r.x, r.y, m_radius, baseBorder); // Botao
+    WidgetBase::objTFT->fillCircle(r.x, r.y, m_config.radius, lightBg);    // Botao
+    WidgetBase::objTFT->drawCircle(r.x, r.y, m_config.radius, baseBorder); // Botao
     if (r.id == m_clickedId) {
-      WidgetBase::objTFT->fillCircle(r.x, r.y, m_radius * 0.75,
+      WidgetBase::objTFT->fillCircle(r.x, r.y, m_config.radius * 0.75,
                                      r.color); // fundo dentro
-      WidgetBase::objTFT->drawCircle(r.x, r.y, m_radius * 0.75,
+      WidgetBase::objTFT->drawCircle(r.x, r.y, m_config.radius * 0.75,
                                      baseBorder); // borda dentro
     }
   }
-#endif
 }
 
 /**
@@ -115,69 +127,26 @@ void RadioGroup::redraw() {
  * in the group.
  */
 void RadioGroup::setSelected(uint16_t clickedId) {
-  if (!loaded) {
-    log_e("RadioGroup widget not loaded");
+  if (!m_loaded) {
+    ESP_LOGE(TAG, "RadioGroup widget not loaded");
     return;
   }
   if (m_clickedId == clickedId) {
-    log_d("RadioGroup widget already selected this id");
+    ESP_LOGD(TAG, "RadioGroup widget already selected this id");
     return;
   }
-  for (int16_t i = 0; i < m_amount; i++) {
+  for (int16_t i = 0; i < m_config.amount; i++) {
     radio_t r = (m_buttons[i]);
     if (r.id == clickedId) {
       m_clickedId = r.id;
       m_shouldRedraw = true;
-      if (cb != nullptr) {
-        WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
+      if (m_callback != nullptr) {
+        WidgetBase::addCallback(m_callback, WidgetBase::CallbackOrigin::SELF);
       }
     }
   }
 }
 
-/**
- * @brief Configures the RadioGroup widget with specific settings.
- * @param _group Group identifier for the radio buttons.
- * @param _radius Radius of each radio button.
- * @param _amount Number of radio buttons in the group.
- * @param _buttons Pointer to an array defining the radio buttons.
- * @param _defaultClickedId ID of the radio button to be selected by default.
- * @param _cb Callback function to execute on selection change.
- *
- * Initializes the RadioGroup properties and marks it as loaded when complete.
- */
-void RadioGroup::setup(uint8_t _group, uint16_t _radius, uint8_t _amount,
-                       const radio_t *_buttons, uint8_t _defaultClickedId,
-                       functionCB_t _cb) {
-  if (!WidgetBase::objTFT) {
-    log_e("TFT not defined on WidgetBase");
-    return;
-  }
-  if (loaded) {
-    log_d("RadioGroup widget already configured");
-    return;
-  }
-
-  m_group = _group;
-  m_radius = _radius;
-  m_amount = _amount;
-  cb = _cb;
-  m_buttons = _buttons;
-  m_clickedId = _defaultClickedId;
-
-  /*if(buttons){
-    delete buttons;
-  }
-  buttons = new radio_t[amount];
-  for(auto i = 0; i < _amount; ++i){
-    buttons[i].x = _buttons[i].x;
-    buttons[i].y = _buttons[i].y;
-    buttons[i].id = _buttons[i].id;
-    buttons[i].cor = _buttons[i].cor;
-  }*/
-
-  loaded = true;
-}
 
 /**
  * @brief Configures the RadioGroup with parameters defined in a configuration
@@ -185,8 +154,54 @@ void RadioGroup::setup(uint8_t _group, uint16_t _radius, uint8_t _amount,
  * @param config Structure containing the radio group configuration parameters.
  */
 void RadioGroup::setup(const RadioGroupConfig &config) {
-  setup(config.group, config.radius, config.amount, config.buttons,
-        config.defaultClickedId, config.callback);
+  CHECK_TFT_VOID
+  if (m_loaded) {
+    ESP_LOGW(TAG, "RadioGroup already initialized");
+    return;
+  }
+
+  // Validate config parameters
+  if (config.amount == 0) {
+    ESP_LOGE(TAG, "Invalid config: amount cannot be 0");
+    return;
+  }
+
+  // Clean up any existing memory before setting new config
+  cleanupMemory();
+  
+  // Copy non-pointer members first
+  m_config.group = config.group;
+  m_config.radius = config.radius;
+  m_config.amount = config.amount;
+  m_config.defaultClickedId = config.defaultClickedId;
+  m_config.callback = config.callback;
+  
+  // Deep copy buttons array
+  if (config.buttons && config.amount > 0) {
+    m_buttons = new radio_t[config.amount];
+    if (m_buttons == nullptr) {
+      ESP_LOGE(TAG, "Failed to allocate memory for buttons array");
+      return;
+    }
+    
+    // Copy each button
+    for (int i = 0; i < config.amount; i++) {
+      m_buttons[i] = config.buttons[i];
+    }
+    
+    // Update config to point to our deep copy
+    m_config.buttons = m_buttons;
+  } else {
+    m_buttons = nullptr;
+    m_config.buttons = nullptr;
+  }
+  
+  m_clickedId = config.defaultClickedId;
+  m_callback = config.callback;
+  m_loaded = true;
+  
+  ESP_LOGD(TAG, "RadioGroup configured: group=%d, radius=%d, amount=%d", 
+           m_config.group, m_config.radius, m_config.amount);
 }
 
 /**
@@ -199,14 +214,14 @@ uint16_t RadioGroup::getSelected() { return m_clickedId; }
  * @brief Retrieves the group ID of the RadioGroup.
  * @return Group identifier for the RadioGroup.
  */
-uint16_t RadioGroup::getGroupId() { return m_group; }
+uint16_t RadioGroup::getGroupId() { return m_config.group; }
 
 void RadioGroup::show() {
-  visible = true;
+  m_visible = true;
   m_shouldRedraw = true;
 }
 
 void RadioGroup::hide() {
-  visible = false;
+  m_visible = false;
   m_shouldRedraw = true;
 }

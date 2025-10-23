@@ -8,17 +8,28 @@
 #include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
 #endif
 
-
 /// @brief Number of rows in the numpad grid
 #define NROWS 4
 
 /// @brief Number of columns in the numpad grid
 #define NCOLS 4
 
+/// @brief Configuration structure for Numpad
+struct NumpadConfig {
+  uint16_t backgroundColor;      ///< Background color of the Numpad
+  uint16_t letterColor;          ///< Color for the text on keys
+  uint16_t keyColor;             ///< Color for the key backgrounds
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* fontKeys;       ///< Font for the keys
+  const GFXfont* fontPreview;    ///< Font for the preview area
+  #endif
+};
+
 /// @brief Represents a numeric keypad widget, allowing number input through an on-screen pad.
 class Numpad : public WidgetBase 
 {
 private:
+    static const char* TAG;
     /// @brief Y-coordinate starting point for the Numpad layout
     uint32_t m_yStart = 0;
     
@@ -62,6 +73,9 @@ private:
 
     /// @brief Last calculated area for the label
     TextBound_t m_lastArea = {0, 0, 0, 0};
+    
+    /// @brief Configuration structure for the Numpad
+    NumpadConfig m_config;
 
     #if defined(USING_GRAPHIC_LIB)
     GFXfont *m_fontKeys = nullptr;
@@ -77,6 +91,9 @@ private:
 
     /// @brief Removes the last character from the current Numpad input
     void removeLetter();
+    
+    /// @brief Cleans up memory used by the Numpad
+    void cleanupMemory();
 
 public:
     static uint16_t m_backgroundColor;
@@ -98,9 +115,14 @@ public:
     
     bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType *pressedKey);
 
-    void redraw(bool fullScreen, bool onlyContent);
+    void drawKeys(bool fullScreen, bool onlyContent);
 
-    void setup();
+    void redraw() override;
+
+    void forceUpdate() override;
+
+    bool setup();
+    void setup(const NumpadConfig& config);
 
     void open(NumberBox *_field);
 

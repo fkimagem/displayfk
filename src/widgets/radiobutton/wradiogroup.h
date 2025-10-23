@@ -26,27 +26,25 @@ struct RadioGroupConfig {
 class RadioGroup : public WidgetBase
 {
 private:
-  unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
-  const radio_t *m_buttons = nullptr; ///< Pointer to an array of radio button definitions.
-  uint16_t m_radius; ///< Radius of each radio button.
-  uint8_t m_group; ///< Group identifier for the radio buttons.
+  static const char* TAG;
+  radio_t *m_buttons = nullptr; ///< Pointer to an array of radio button definitions.
   uint8_t m_clickedId; ///< ID of the currently selected radio button.
-  uint16_t m_amount; ///< Total number of radio buttons in the group.
   bool m_shouldRedraw = false; ///< Flag to indicate if the radio buttons should be redrawn.
+  RadioGroupConfig m_config;
 
-  void setup(uint8_t _group, uint16_t _radius, uint8_t _amount, const radio_t *_buttons, uint8_t _defaultClickedId, functionCB_t _cb);
+  void cleanupMemory();
 
 public:
   RadioGroup(uint8_t _screen);
   ~RadioGroup();
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
-  void redraw();
+  void redraw() override;
   void setSelected(uint16_t clickedId);
   void setup(const RadioGroupConfig& config);
   uint16_t getSelected();
   uint16_t getGroupId();
-  void forceUpdate();
+  void forceUpdate() override;
   void show() override;
   void hide() override;
 };

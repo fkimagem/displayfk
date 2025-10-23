@@ -1,6 +1,8 @@
 #include "wlabel.h"
 #include "wlabel.h"
 
+const char* Label::TAG = "Label";
+
 /**
  * @brief Constructor for the Label class.
  * @param _x X-coordinate for the Label position.
@@ -8,17 +10,25 @@
  * @param _screen Screen identifier where the Label will be displayed.
  */
 Label::Label(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen),
+m_text(nullptr),
+m_previousText(nullptr),
+m_prefix(nullptr),
+m_suffix(nullptr),
+m_shouldRedraw(false),
+m_lastArea{0, 0, 0, 0},
 m_fontSize(1),
 m_decimalPlaces(1)
 {
+  m_config = {.text = nullptr, .fontFamily = nullptr, .datum = 0, .fontColor = 0, .backgroundColor = 0, .prefix = nullptr, .suffix = nullptr};
+  ESP_LOGD(TAG, "Label created at (%d, %d) on screen %d", _x, _y, _screen);
 }
 
 /**
- * @brief Destructor for the Label class.
+ * @brief Cleans up allocated memory before new assignment.
  * 
- * Frees allocated memory for text, previous text, and clears font pointer.
+ * Frees all dynamically allocated memory for text, prefix, and suffix.
  */
-Label::~Label()
+void Label::cleanupMemory()
 {
   // Libera memória do texto atual se existir
   if (m_text != nullptr) {
@@ -32,9 +42,32 @@ Label::~Label()
     m_previousText = nullptr;
   }
   
-    #if defined(USING_GRAPHIC_LIB)
+  // Libera memória do prefixo se existir
+  if (m_prefix != nullptr) {
+    delete[] m_prefix;
+    m_prefix = nullptr;
+  }
+  
+  // Libera memória do sufixo se existir
+  if (m_suffix != nullptr) {
+    delete[] m_suffix;
+    m_suffix = nullptr;
+  }
+}
+
+/**
+ * @brief Destructor for the Label class.
+ * 
+ * Frees allocated memory for text, previous text, and clears font pointer.
+ */
+Label::~Label()
+{
+  // Clean up all allocated memory
+  cleanupMemory();
+  
+  #if defined(USING_GRAPHIC_LIB)
   // A fonte não é liberada aqui porque é apenas uma referência
-  m_fontFamily = nullptr;
+  m_config.fontFamily = nullptr;
   #endif
 }
 
@@ -55,7 +88,7 @@ bool Label::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
  */
 functionCB_t Label::getCallbackFunc()
 {
-    return cb;
+    return m_callback;
 }
 
 void Label::setPrefix(const char* str){ 
@@ -64,11 +97,15 @@ void Label::setPrefix(const char* str){
     m_prefix = nullptr;
   }
 
-   // Aloca nova memória para prefixo
+  if (str != nullptr) {
+    // Aloca nova memória para prefixo
     m_prefix = new char[strlen(str) + 1];
     if (m_prefix) {
         strcpy(m_prefix, str);
+    } else {
+        ESP_LOGE(TAG, "Failed to allocate memory for prefix");
     }
+  }
 }
 
 void Label::setSuffix(const char* str){
@@ -77,11 +114,15 @@ void Label::setSuffix(const char* str){
     m_suffix = nullptr;
   }
 
-   // Aloca nova memória para sufixo
+  if (str != nullptr) {
+    // Aloca nova memória para sufixo
     m_suffix = new char[strlen(str) + 1];
     if (m_suffix) {
         strcpy(m_suffix, str);
+    } else {
+        ESP_LOGE(TAG, "Failed to allocate memory for suffix");
     }
+  }
 }
 
 /**
@@ -92,12 +133,13 @@ void Label::setSuffix(const char* str){
  */
 void Label::setText(const char* str)
 {
-  if(!loaded || str == nullptr){
+  CHECK_LOADED_VOID
+  if(str == nullptr){
     return;
   }
 
-  uint16_t prefixLength = strlen(m_prefix);
-  uint16_t suffixLength = strlen(m_suffix);
+  uint16_t prefixLength = m_prefix ? strlen(m_prefix) : 0;
+  uint16_t suffixLength = m_suffix ? strlen(m_suffix) : 0;
   uint16_t textLength = strlen(str);
 
   // Libera a memória anterior se existir
@@ -109,12 +151,28 @@ void Label::setText(const char* str)
   // Aloca nova memória
   m_text = new char[textLength + prefixLength + suffixLength + 1];
   if(m_text){
-    strcpy(m_text, m_prefix);
+    // Safely copy prefix, text, and suffix
+    if (m_prefix) {
+      strcpy(m_text, m_prefix);
+    } else {
+      m_text[0] = '\0';
+    }
     strcat(m_text, str);
-    strcat(m_text, m_suffix);
+    if (m_suffix) {
+      strcat(m_text, m_suffix);
+    }
     m_shouldRedraw = true;
   } else {
-    log_e("Failed to allocate memory for label text");
+    ESP_LOGE(TAG, "Failed to allocate memory for label text");
+    // Clean up prefix and suffix if text allocation failed
+    if (m_prefix) {
+      delete[] m_prefix;
+      m_prefix = nullptr;
+    }
+    if (m_suffix) {
+      delete[] m_suffix;
+      m_suffix = nullptr;
+    }
   }
 }
 
@@ -178,18 +236,17 @@ void Label::setTextInt(int value)
 void Label::redraw()
 {
   CHECK_TFT_VOID
-  if(!visible){return;}
+  CHECK_VISIBLE_VOID
   #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != screen || !m_shouldRedraw || !loaded)
-  {
-    return;
-  }
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
 
-  log_d("Redraw label to value %s", m_text);
-  WidgetBase::objTFT->setTextColor(m_letterColor);
-  WidgetBase::objTFT->setFont(m_fontFamily);
+  ESP_LOGD(TAG, "Redraw label to value %s", m_text);
+  WidgetBase::objTFT->setTextColor(m_config.fontColor);
+  WidgetBase::objTFT->setFont(m_config.fontFamily);
   WidgetBase::objTFT->setTextSize(m_fontSize);
-  printText(m_text, xPos, yPos, m_datum, m_lastArea, m_backgroundColor);
+  printText(m_text, m_xPos, m_yPos, m_config.datum, m_lastArea, m_config.backgroundColor);
   WidgetBase::objTFT->setTextSize(1);
   WidgetBase::objTFT->setFont((GFXfont *)0);
   //WidgetBase::objTFT->setCursor(xPos, yPos);
@@ -218,7 +275,7 @@ void Label::setDecimalPlaces(uint8_t places)
   places = constrain(places, 0, 5);
   if(places != m_decimalPlaces){
     m_decimalPlaces = places;
-    log_d("Decimal places set to %d", m_decimalPlaces);
+    ESP_LOGD(TAG, "Decimal places set to %d", m_decimalPlaces);
   }
 }
 
@@ -232,139 +289,89 @@ void Label::setFontSize(uint8_t newSize)
 }
 
 /**
- * @brief Configures the Label widget with specified const char array, font, alignment, and colors.
- * @param _text Initial text to display.
- * @param _fontFamily Pointer to the font used for the text.
- * @param _datum Text alignment setting.
- * @param _color Color of the text.
- * @param _bkColor Background color of the label.
- * @param _prefix Prefix text to display.
- * @param _suffix Suffix text to display.
- */
-  #if defined(USING_GRAPHIC_LIB)
-void Label::setup(const char *_text, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor, const char* _prefix, const char* _suffix)
-{
-  if(!WidgetBase::objTFT){
-    log_e("TFT not defined on WidgetBase");
-    return;
-  }
-  if (loaded) {
-    log_d("Label widget already configured");
-    return;
-  }
-
-  // Protege contra ponteiros nulos
-  _prefix = _prefix ? _prefix : "";
-  _suffix = _suffix ? _suffix : "";
-  _text   = _text   ? _text   : "";
-
-  uint16_t prefixLength = strlen(_prefix);
-  uint16_t suffixLength = strlen(_suffix);
-  uint16_t textLength = strlen(_text);
-
-  // Libera memória anterior se existir
-  if(m_text){
-    delete[] m_text;
-    m_text = nullptr;
-  }
-
-  if(m_prefix){
-    delete[] m_prefix;
-    m_prefix = nullptr;
-  }
-
-  if(m_suffix){
-    delete[] m_suffix;
-    m_suffix = nullptr;
-  }
-
-   // Aloca nova memória para prefixo
-    m_prefix = new char[prefixLength + 1];
-    if (m_prefix) {
-        strcpy(m_prefix, _prefix);
-    }
-
-    // Aloca nova memória para sufixo
-    m_suffix = new char[suffixLength + 1];
-    if (m_suffix) {
-        strcpy(m_suffix, _suffix);
-    }
-
-
-  // Aloca nova memória
-  m_text = new char[textLength + prefixLength + suffixLength + 1];
-  #if defined(USING_GRAPHIC_LIB)
-  if(m_text != nullptr) {
-    strcpy(m_text, _prefix);
-    strcat(m_text, _text);
-    strcat(m_text, _suffix);
-    m_fontFamily = const_cast<GFXfont*>(_fontFamily);
-    m_datum = _datum;
-    m_letterColor = _color;
-    m_backgroundColor = _bkColor;
-    m_lastArea.x = 0;
-    m_lastArea.y = 0;
-    m_lastArea.width = 0;
-    m_lastArea.height = 0;
-    m_shouldRedraw = true;
-    loaded = true;
-  } else {
-    log_e("Failed to allocate memory for label text");
-  }
-  #endif
-}
-
-/**
-void Label::setup(const String &_text, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor, const char* _prefix, const char* _suffix)
-{
-  this->setup(_text.c_str(), _fontFamily, _datum, _color, _bkColor, _prefix, _suffix);
-}*/
-
-/**
- * @brief Configures the Label widget with specified float, font, alignment, and colors.
- * @param _value float value to show.
- * @param _fontFamily Pointer to the font used for the text.
- * @param _datum Text alignment setting.
- * @param _color Color of the text.
- * @param _bkColor Background color of the label.
- * @param _prefix Prefix text to display.
- * @param _suffix Suffix text to display.
- */
-
-void Label::setup(const float _value, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor, const char* _prefix, const char* _suffix)
-{
-  char convertido[16];
-  dtostrf(_value, 2, 2, convertido);
-  //sprintf(convertido, "%.*2", _value);
-  this->setup(convertido, _fontFamily, _datum, _color, _bkColor, _prefix, _suffix);
-}
-
-/*void Label::setup(const int _value, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor)
-{
-  char convertido[16];
-  sprintf(convertido, "%d", _value);
-  this->setup(convertido, _fontFamily, _datum, _color, _bkColor);
-}*/
-#endif
-/**
  * @brief Configures the Label widget with parameters defined in a configuration structure.
  * @param config Structure containing the label configuration parameters.
  */
 void Label::setup(const LabelConfig& config)
 {
-  #if defined(USING_GRAPHIC_LIB)
-  setup(config.text, config.fontFamily, config.datum, config.fontColor, config.backgroundColor, config.prefix, config.suffix);
-  #endif
+  CHECK_TFT_VOID
+  if (m_loaded) {
+    ESP_LOGD(TAG, "Label widget already configured");
+    return;
+  }
+
+  // Clean up existing memory first
+  cleanupMemory();
+
+  // Copy config to member
+  m_config = config;
+
+  // Deep copy for text, prefix, and suffix
+  const char* text = config.text ? config.text : "";
+  const char* prefix = config.prefix ? config.prefix : "";
+  const char* suffix = config.suffix ? config.suffix : "";
+
+  uint16_t prefixLength = strlen(prefix);
+  uint16_t suffixLength = strlen(suffix);
+  uint16_t textLength = strlen(text);
+
+  // Allocate memory for prefix
+  m_prefix = new char[prefixLength + 1];
+  if (!m_prefix) {
+    ESP_LOGE(TAG, "Failed to allocate memory for prefix");
+    return;
+  }
+  strcpy(m_prefix, prefix);
+
+  // Allocate memory for suffix
+  m_suffix = new char[suffixLength + 1];
+  if (!m_suffix) {
+    ESP_LOGE(TAG, "Failed to allocate memory for suffix");
+    delete[] m_prefix;
+    m_prefix = nullptr;
+    return;
+  }
+  strcpy(m_suffix, suffix);
+
+  // Allocate memory for combined text
+  m_text = new char[textLength + prefixLength + suffixLength + 1];
+  if(!m_text) {
+    ESP_LOGE(TAG, "Failed to allocate memory for label text");
+    delete[] m_prefix;
+    delete[] m_suffix;
+    m_prefix = nullptr;
+    m_suffix = nullptr;
+    ESP_LOGE(TAG, "Failed to allocate memory for label text");
+    return;
+  }
+  // Safely copy prefix, text, and suffix
+  strcpy(m_text, prefix);
+  strcat(m_text, text);
+  strcat(m_text, suffix);
+    
+    #if defined(USING_GRAPHIC_LIB)
+    m_config.fontFamily = config.fontFamily;
+    #endif
+    m_config.datum = config.datum;
+    m_config.fontColor = config.fontColor;
+    m_config.backgroundColor = config.backgroundColor;
+    
+    m_lastArea.x = 0;
+    m_lastArea.y = 0;
+    m_lastArea.width = 0;
+    m_lastArea.height = 0;
+    m_shouldRedraw = true;
+    m_loaded = true;
 }
 
 void Label::show()
 {
-    visible = true;
+    m_visible = true;
     m_shouldRedraw = true;
 }
 
 void Label::hide()
 {
-    visible = false;
+    m_visible = false;
     m_shouldRedraw = true;
 }

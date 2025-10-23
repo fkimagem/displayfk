@@ -18,6 +18,7 @@ struct VerticalBarConfig {
 class VBar : public WidgetBase
 {
 private:
+  static const char* TAG; ///< Tag for logging
   uint16_t m_filledColor; ///< Color used for the filled portion of the bar.
   uint32_t m_vmin; ///< Minimum value of the bar range.
   uint32_t m_vmax; ///< Maximum value of the bar range.
@@ -38,8 +39,8 @@ public:
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
   void setValue(uint32_t newValue);
-  void redraw();
-  void forceUpdate();
+  void redraw() override;
+  void forceUpdate() override;
   void drawBackground();
   void setup(const VerticalBarConfig& config);
   void show() override;

@@ -1,16 +1,7 @@
 #include "wimage.h"
+#include <esp_log.h>
 
-#define DEBUG_IMAGE
-
-#if defined(DEBUG_IMAGE)
-#define DEBUG_D(format, ...) log_d(format, ##__VA_ARGS__)
-#define DEBUG_E(format, ...) log_e(format, ##__VA_ARGS__)
-#define DEBUG_W(format, ...) log_w(format, ##__VA_ARGS__)
-#else
-#define DEBUG_D(format, ...)
-#define DEBUG_E(format, ...)
-#define DEBUG_W(format, ...)
-#endif
+const char* Image::TAG = "Image";
 
 /**
  * @brief Constructor for the Image class.
@@ -24,6 +15,17 @@ Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen)
       m_pixels(nullptr),
 #endif
       m_maskAlpha(nullptr), m_fs(nullptr), m_path(nullptr) {
+
+        //initialize m_config with default values
+        m_config = {
+          .pixels = nullptr,
+          .width = 0,
+          .height = 0,
+          .maskAlpha = nullptr,
+          .cb = nullptr,
+          .backgroundColor = 0,
+          .angle = 0.0f
+        };
 }
 
 /**
@@ -38,25 +40,26 @@ Image::~Image() { clearBuffers(); }
  * @return True if the touch is within the Image area, otherwise false
  */
 bool Image::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
-  if (!visible) {
-    return false;
-  }
-  if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen ||
-      !loaded || !cb) {
-    return false;
-  }
-  if (millis() - m_myTime < TIMEOUT_CLICK) {
-    return false;
-  }
-  m_myTime = millis();
-  bool detected = false;
-  uint16_t xMax = xPos + m_width;
-  uint16_t yMax = yPos + m_height;
+  // Early validation checks using macros
+  CHECK_VISIBLE_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_USINGKEYBOARD_BOOL
+  CHECK_CURRENTSCREEN_BOOL
+  CHECK_POINTER_TOUCH_NULL_BOOL
+  CHECK_LOCKED_BOOL
+  CHECK_INITIALIZED_BOOL
+  CHECK_DEBOUNCE_CLICK_BOOL
+  CHECK_ENABLED_BOOL
 
-  if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) &&
-      (*_yTouch < yMax)) {
-    detected = true;
-  }
+  
+
+
+  bool detected = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_config.width, m_config.height);
+if(detected) {
+  m_myTime = millis();
+}
+  
+
   return detected;
 }
 
@@ -64,42 +67,46 @@ bool Image::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
  * @brief Retrieves the callback function associated with the image.
  * @return Pointer to the callback function.
  */
-functionCB_t Image::getCallbackFunc() { return cb; }
+functionCB_t Image::getCallbackFunc() { return m_callback; }
 
 bool Image::readFileFromDisk() {
   if (m_source == SourceFile::EMBED) {
-    DEBUG_E("Cannot read from embedded source");
+    ESP_LOGE(TAG, "Cannot read from embedded source");
     return false;
   }
 
   if (!m_fs) {
-    DEBUG_E("No source defined to find image");
+    ESP_LOGE(TAG, "No source defined to find image");
     return false;
   }
 
-  log_d("Looking for file: %s", m_path);
+  ESP_LOGD(TAG, "Looking for file: %s", m_path);
+
+  // Start file load performance timing
+  uint32_t fileLoadStartTime = micros();
+  m_metrics.fileLoadCount++;
 
   fs::File file = m_fs->open(m_path, "r");
   if (!file) {
-    DEBUG_E("Cant open file");
+    ESP_LOGE(TAG, "Cant open file");
     return false;
   }
 
   if (file.isDirectory()) {
-    DEBUG_E("Path is a directory");
+    ESP_LOGE(TAG, "Path is a directory");
     file.close();
     return false;
   }
 
   if (!file.available()) {
-    DEBUG_E("File is empty");
+    ESP_LOGE(TAG, "File is empty");
     file.close();
     return false;
   }
 
   size_t size = file.size();
   if (size < 4) {
-    log_e("File is too small");
+    ESP_LOGE(TAG, "File is too small");
     file.close();
     return false;
   }
@@ -109,23 +116,24 @@ bool Image::readFileFromDisk() {
   // Get height
   uint16_t arqHeight = ((file.read()) << 8) | file.read();
 
-  m_width = arqWidth;
-  m_height = arqHeight;
-
-  if (m_width == 0 || m_height == 0) {
-    log_e("Invalid image size");
+  if (arqWidth == 0 || arqHeight == 0) {
+    ESP_LOGE(TAG, "Invalid image size");
     file.close();
     return false;
   }
 
-  DEBUG_D("Image size: %d x %d", m_width, m_height);
+  ESP_LOGD(TAG, "Image size: %d x %d", arqWidth, arqHeight);
 
-  uint32_t bytesOfColor = m_width * m_height;
+  // Store dimensions in m_config
+  m_config.width = arqWidth;
+  m_config.height = arqHeight;
+
+  uint32_t bytesOfColor = arqWidth * arqHeight;
 
   m_pixels = new pixel_t[bytesOfColor];
 
   if (!m_pixels) {
-    DEBUG_E("Failed to allocate memory for image pixels");
+    ESP_LOGE(TAG, "Failed to allocate memory for image pixels");
     file.close();
     return false;
   }
@@ -138,31 +146,45 @@ bool Image::readFileFromDisk() {
   const uint8_t read_pixels = 1;
 #endif
 
-  uint8_t pixel[read_pixels]; // 2 bytes per pixel (color 565)
-  memset(pixel, 0, read_pixels);
+  // Optimized reading: read entire lines at once
+  const uint32_t lineSize = arqWidth * read_pixels;
+  uint8_t *lineBuffer = new uint8_t[lineSize];
+  
+  if (!lineBuffer) {
+    ESP_LOGE(TAG, "Failed to allocate line buffer");
+    file.close();
+    clearBuffers();
+    return false;
+  }
 
-  for (int y = 0; y < m_height; y++) {
-    for (int x = 0; x < m_width; x++) {
-      if (file.read(pixel, read_pixels) != read_pixels) {
-        DEBUG_E("Error reading pixel %d,%d", x, y);
-        file.close();
-        clearBuffers();
-        return false;
-      }
+  for (int y = 0; y < arqHeight; y++) {
+    // Read entire line at once
+    if (file.read(lineBuffer, lineSize) != lineSize) {
+      ESP_LOGE(TAG, "Error reading line %d", y);
+      delete[] lineBuffer;
+      file.close();
+      clearBuffers();
+      return false;
+    }
+    
+    // Process line pixels
+    for (int x = 0; x < arqWidth; x++) {
 #if defined(DISP_DEFAULT)
-      uint16_t color = (pixel[0] << 8) | pixel[1];
-      m_pixels[y * m_width + x] = color;
+      uint16_t color = (lineBuffer[x * 2] << 8) | lineBuffer[x * 2 + 1];
+      m_pixels[y * arqWidth + x] = color;
 #elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
-      uint8_t color = pixel[0];
-      m_pixels[y * m_width + x] = color;
+      uint8_t color = lineBuffer[x];
+      m_pixels[y * arqWidth + x] = color;
 #endif
     }
   }
+  
+  delete[] lineBuffer;
 
   uint16_t maskLen = ((file.read()) << 8) | file.read();
 
   if (maskLen == 0) {
-    DEBUG_E("Invalid mask length");
+    ESP_LOGE(TAG, "Invalid mask length");
     file.close();
     clearBuffers();
     return false;
@@ -171,7 +193,7 @@ bool Image::readFileFromDisk() {
   m_maskAlpha = new uint8_t[maskLen];
 
   if (!m_maskAlpha) {
-    DEBUG_E("Failed to allocate memory for image mask");
+    ESP_LOGE(TAG, "Failed to allocate memory for image mask");
     file.close();
     return false;
   }
@@ -183,21 +205,40 @@ bool Image::readFileFromDisk() {
   }
 
   file.close();
+  
+  // End file load performance timing
+  uint32_t fileLoadEndTime = micros();
+  m_metrics.lastFileLoadTime = fileLoadEndTime - fileLoadStartTime;
+  m_metrics.totalFileLoadTime += m_metrics.lastFileLoadTime;
+  if (m_metrics.lastFileLoadTime > m_metrics.maxFileLoadTime) {
+    m_metrics.maxFileLoadTime = m_metrics.lastFileLoadTime;
+  }
+  
   return true;
 }
 
+/**
+ * @brief Draws the background of the image widget.
+ *
+ * Fills the image area with the background color. Only draws if the widget
+ * is on the current screen and needs updating.
+ */
 void Image::drawBackground() {
   CHECK_TFT_VOID
-  if (!visible) {
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
+  
+  // Validate configuration using centralized method
+  if (!validateConfig()) {
+    ESP_LOGW(TAG, "Invalid configuration for background drawing");
     return;
   }
-#if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
-  if (WidgetBase::currentScreen != screen ||
-      WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded) {
-    return;
-  }
-  objTFT->fillRect(xPos, yPos, m_width, m_height, m_backgroundColor);
-#endif
+  
+  WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.backgroundColor);
+  ESP_LOGD(TAG, "Background drawn: %dx%d at (%d,%d)", m_config.width, m_config.height, m_xPos, m_yPos);
 }
 
 /**
@@ -209,46 +250,74 @@ void Image::drawBackground() {
  */
 void Image::draw() {
   CHECK_TFT_VOID
-  if (!visible) {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
+
 #if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
-  if (WidgetBase::currentScreen != screen ||
-      WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded) {
-    return;
-  }
 
   m_shouldRedraw = false;
 
-  if (!m_showImage) {
+  // If not visible, draw background only
+  if (!m_visible) {
+    // Validate configuration before drawing background
+    if (validateConfig()) {
+      WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.backgroundColor);
+      ESP_LOGD(TAG, "Image hidden - background drawn: %dx%d", m_config.width, m_config.height);
+    } else {
+      ESP_LOGW(TAG, "Cannot draw background - invalid configuration");
+    }
     return;
-  };
+  }
 
-  log_d("Redraw image: %d x %d", m_width, m_height);
+  // Validate configuration before drawing
+  if (!validateConfig()) {
+    ESP_LOGW(TAG, "Cannot draw image - invalid configuration");
+    return;
+  }
 
+  // Start performance timing
+  uint32_t startTime = micros();
+  m_metrics.drawCount++;
+
+  ESP_LOGD(TAG, "Redraw image: %d x %d (angle: %.1f°)", m_config.width, m_config.height, m_config.angle);
+
+  // Apply rotation if angle is not zero
+  if (m_config.angle != 0.0f) {
+    drawRotatedImage();
+  } else {
+    // Draw without rotation
 #if defined(DISP_DEFAULT)
-  WidgetBase::objTFT->draw16bitRGBBitmapWithMask(
-      xPos, yPos, m_pixels, m_maskAlpha, m_width, m_height);
+    WidgetBase::objTFT->draw16bitRGBBitmapWithMask(
+        m_xPos, m_yPos, m_config.pixels, m_config.maskAlpha, m_config.width, m_config.height);
 #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
-  WidgetBase::objTFT->drawBitmap(xPos, yPos, m_pixels, m_width, m_height,
-                                 CFK_BLACK);
+    WidgetBase::objTFT->drawBitmap(m_xPos, m_yPos, m_config.pixels, m_config.width, m_config.height,
+                                   CFK_BLACK);
 #elif defined(DISP_U8G2)
-  WidgetBase::objTFT->drawXBMP(xPos, yPos, m_width, m_height, m_pixels);
+    WidgetBase::objTFT->drawXBMP(m_xPos, m_yPos, m_config.width, m_config.height, m_config.pixels);
 #endif
+  }
+  
+  // End performance timing
+  uint32_t endTime = micros();
+  m_metrics.lastDrawTime = endTime - startTime;
+  m_metrics.totalDrawTime += m_metrics.lastDrawTime;
+  if (m_metrics.lastDrawTime > m_metrics.maxDrawTime) {
+    m_metrics.maxDrawTime = m_metrics.lastDrawTime;
+  }
 #endif
 }
 
 /**
  * @brief Redraws the image on the screen.
  *
- * Handles loading and drawing the image from its source, which could be
- * embedded memory, SD card, or SPIFFS filesystem.
+ * Simply calls the draw() method to render the image.
+ * All validation is handled by the draw() method itself.
  */
 void Image::redraw() {
-  if (!visible) {
-    return;
-  }
-  return;
+  draw();
 }
 
 /**
@@ -256,123 +325,405 @@ void Image::redraw() {
  *
  * Sets the update flag to trigger a redraw on the next cycle.
  */
-void Image::forceUpdate() { m_shouldRedraw = true; }
+void Image::forceUpdate() { 
+  m_shouldRedraw = true; 
+  ESP_LOGD(TAG, "Image force update requested");
+}
+
 
 /**
- * @brief Configures the Image widget with a source file.
- * @param _source Source location of the image file (SD, SPIFFS, or EMBED).
- * @param _path Path to the image file.
- * @param _cb Optional callback function to execute when the image is interacted
- * with.
- * @param _angle Optional rotation angle in degrees.
+ * @brief Configures the Image widget with a file source.
+ *
+ * Sets up the image with a file source, path, callback function, and rotation angle.
+ * Uses readFileFromDisk() to convert file to pixel data and maps to m_config.
+ *
+ * @param config Configuration structure containing file source, path, callback
+ * function, and rotation angle.
  */
-void Image::setup(SourceFile _source, const char *_path, functionCB_t _cb,
-                  float _angle) {
-#if defined(USING_GRAPHIC_LIB) || defined(DISP_U8G2)
-  if (loaded) {
-    log_w("Reconfigure Image");
-    // return;
+void Image::setupFromFile(ImageFromFileConfig &config) {
+  if (!WidgetBase::objTFT) {
+    ESP_LOGW(TAG, "TFT not defined on WidgetBase");
+    return;
   }
 
+  if (m_loaded) {
+    ESP_LOGW(TAG, "Image widget already configured");
+    return;
+  }
+
+  // Validate file configuration
+  if (config.path == nullptr) {
+    ESP_LOGE(TAG, "File path is null");
+    return;
+  }
+
+  if (strlen(config.path) == 0) {
+    ESP_LOGE(TAG, "File path is empty");
+    return;
+  }
+
+  // Clean up any existing memory
   clearBuffers();
 
-  m_width = 0;
-  m_height = 0;
-  cb = _cb;
+  // Set up file system and load file
+  m_source = config.source;
+  m_path = config.path;
+  m_callback = config.cb;
+  //m_backgroundColor = config.backgroundColor;
+  //m_angle = 0.0f; // File rotation not implemented yet
+  m_ownsMemory = true; // We will own the memory for file images
 
-  m_source = _source;
-  m_path = _path;
-  m_angle = _angle;
+  // Define file system
+  defineFileSystem(config.source);
 
-  if (_path == nullptr) {
-    log_e("Path is nullptr");
-    return;
-  }
+  // Load file from disk
+  if (readFileFromDisk()) {
+    // Map loaded data to unified configuration
+    m_config.pixels = m_pixels;
+    m_config.maskAlpha = m_maskAlpha;
+    m_config.cb = config.cb;
+    m_config.backgroundColor = config.backgroundColor;
+    m_config.angle = 0.0;
 
-#if defined(DFK_SD)
-  if (m_source == SourceFile::SD) {
-    if (!WidgetBase::mySD) {
-      log_e("SD not configured");
+    // Validate loaded configuration
+    if (!validateConfig()) {
+      ESP_LOGE(TAG, "Loaded image configuration is invalid");
+      clearBuffers();
       return;
     }
-    m_fs = WidgetBase::mySD;
-  } else if (m_source == SourceFile::SPIFFS) {
-    if (!SPIFFS.begin(false)) {
-      Serial.println("SPIFFS Mount Failed");
-      return;
-    }
 
-    m_fs = &SPIFFS;
+    m_loaded = true;
+    m_shouldRedraw = true;
+    
+    ESP_LOGD(TAG, "Image setup from file completed at (%d, %d) - %dx%d from %s", 
+             m_xPos, m_yPos, m_config.width, m_config.height, config.path);
+  } else {
+    ESP_LOGE(TAG, "Failed to load image from file: %s", config.path);
   }
-#else
-  if (m_source == SourceFile::SD) {
-    log_w("SD not configured");
-    return;
-  } else if (m_source == SourceFile::SPIFFS) {
-    m_fs = &SPIFFS;
-  }
-#endif
-
-  if (!m_fs) {
-    log_e("No source defined to find image");
-    return;
-  }
-  DEBUG_D("Image setup with source %d", m_source);
-
-  loaded = readFileFromDisk();
-#endif
-  m_shouldRedraw = true;
 }
 
-void Image::clearBuffers() {
-  if (m_pixels) {
-    delete[] m_pixels;
-    m_pixels = nullptr;
-  }
-  if (m_maskAlpha) {
-    delete[] m_maskAlpha;
-    m_maskAlpha = nullptr;
-  }
-}
 
 /**
  * @brief Configures the Image widget with pixel data.
- * @param _pixels Pointer to the pixel data array.
- * @param _width Width of the image.
- * @param _height Height of the image.
- * @param _maskAlpha Pointer to the alpha mask array for transparency.
- * @param _angle Rotation angle in degrees.
- * @param _cb Callback function to execute when the image is interacted with.
+ *
+ * Sets up the image with pixel data, dimensions, alpha mask, and callback function.
+ * Uses direct reference to avoid memory overhead for embedded images.
+ *
+ * @param config Configuration structure containing pixel data, dimensions, 
+ * alpha mask, and callback function.
  */
-void Image::setup(const pixel_t *_pixels, uint16_t _width, uint16_t _height,
-                  const uint8_t *_maskAlpha, float _angle, functionCB_t _cb) {
-  if (loaded) {
-    log_w("Reconfigure Image");
-    // return;
+void Image::setupFromPixels(ImageFromPixelsConfig &config) {
+  if (!WidgetBase::objTFT) {
+    ESP_LOGW(TAG, "TFT not defined on WidgetBase");
     return;
   }
 
-  // Libera memória existente se existir
+  if (m_loaded) {
+    ESP_LOGW(TAG, "Image widget already configured");
+    return;
+  }
+
+  // Clean up any existing memory
   clearBuffers();
 
-  m_source = SourceFile::EMBED;
-  m_pixels = const_cast<pixel_t *>(_pixels);
-  m_maskAlpha = const_cast<uint8_t *>(_maskAlpha);
-  m_width = _width;
-  m_height = _height;
-  m_angle = _angle;
-  cb = _cb;
-
-  if (_pixels == nullptr) {
-    log_e("Pixels is nullptr");
+  // Store configuration first for validation
+  m_config = config;
+  
+  // Validate configuration using centralized method
+  if (!validateConfig()) {
+    ESP_LOGE(TAG, "Invalid pixel configuration provided");
+    m_config = {}; // Reset to default
     return;
   }
 
-  DEBUG_D("Image setup with pixels (%d x %d)", _width, _height);
+  
+  m_ownsMemory = false; // We don't own the memory for embedded images
+  
+  // Map to legacy variables for compatibility
+  m_pixels = const_cast<pixel_t*>(config.pixels);
+  m_maskAlpha = const_cast<uint8_t*>(config.maskAlpha);
+  m_callback = config.cb;
+  //m_backgroundColor = config.backgroundColor;
+  m_source = SourceFile::EMBED;
 
-  loaded = true;
+  m_loaded = true;
   m_shouldRedraw = true;
+  m_initialized = true;
+  
+  ESP_LOGD(TAG, "Image setup from pixels completed at (%d, %d) - %dx%d", 
+           m_xPos, m_yPos, m_config.width, m_config.height);
 }
+
+/**
+ * @brief Defines the file system for the image.
+ * @param source Source of the image file.
+ */
+void Image::defineFileSystem(SourceFile source) {
+  if (source == SourceFile::SD) {
+    if (!WidgetBase::mySD) {
+      ESP_LOGE(TAG, "SD not configured");
+      return;
+    }
+    m_fs = WidgetBase::mySD;
+  } else if (source == SourceFile::SPIFFS) {
+    if (!SPIFFS.begin(false)) {
+      ESP_LOGE(TAG, "SPIFFS Mount Failed");
+      return;
+    }
+    m_fs = &SPIFFS;
+  } else {
+    ESP_LOGE(TAG, "Invalid source");
+    return;
+  }
+}
+
+/**
+ * @brief Prints performance metrics to the log.
+ *
+ * Displays comprehensive performance statistics including draw times,
+ * file load times, rotation times, and their averages.
+ */
+void Image::printMetrics() const {
+  ESP_LOGI(TAG, "=== Image Performance Metrics ===");
+  ESP_LOGI(TAG, "Draw Operations: %u calls", m_metrics.drawCount);
+  ESP_LOGI(TAG, "File Loads: %u calls", m_metrics.fileLoadCount);
+  ESP_LOGI(TAG, "Rotation Draws: %u calls", m_metrics.rotationDrawCount);
+  ESP_LOGI(TAG, "");
+  ESP_LOGI(TAG, "Draw Times (μs):");
+  ESP_LOGI(TAG, "  Last: %u", m_metrics.lastDrawTime);
+  ESP_LOGI(TAG, "  Average: %.2f", m_metrics.getAverageDrawTime());
+  ESP_LOGI(TAG, "  Maximum: %u", m_metrics.maxDrawTime);
+  ESP_LOGI(TAG, "  Total: %u", m_metrics.totalDrawTime);
+  ESP_LOGI(TAG, "");
+  ESP_LOGI(TAG, "File Load Times (μs):");
+  ESP_LOGI(TAG, "  Last: %u", m_metrics.lastFileLoadTime);
+  ESP_LOGI(TAG, "  Average: %.2f", m_metrics.getAverageFileLoadTime());
+  ESP_LOGI(TAG, "  Maximum: %u", m_metrics.maxFileLoadTime);
+  ESP_LOGI(TAG, "  Total: %u", m_metrics.totalFileLoadTime);
+  ESP_LOGI(TAG, "");
+  ESP_LOGI(TAG, "Rotation Times (μs):");
+  ESP_LOGI(TAG, "  Last: %u", m_metrics.lastRotationTime);
+  ESP_LOGI(TAG, "  Average: %.2f", m_metrics.getAverageRotationTime());
+  ESP_LOGI(TAG, "  Maximum: %u", m_metrics.maxRotationTime);
+  ESP_LOGI(TAG, "  Total: %u", m_metrics.totalRotationTime);
+  ESP_LOGI(TAG, "=====================================");
+}
+
+/**
+ * @brief Draws the image with rotation applied.
+ *
+ * Implements pixel-by-pixel rotation using trigonometric calculations.
+ * Supports rotation around the center of the image.
+ */
+void Image::drawRotatedImage() {
+  // Start rotation performance timing
+  uint32_t rotationStartTime = micros();
+  m_metrics.rotationDrawCount++;
+  
+  // Convert angle to radians
+  float angleRad = m_config.angle * PI / 180.0f;
+  float cosAngle = cos(angleRad);
+  float sinAngle = sin(angleRad);
+  
+  // Calculate center point
+  float centerX = m_config.width / 2.0f;
+  float centerY = m_config.height / 2.0f;
+  
+  // Calculate rotated dimensions (bounding box)
+  float cosAbs = fabs(cosAngle);
+  float sinAbs = fabs(sinAngle);
+  int rotatedWidth = (int)(m_config.width * cosAbs + m_config.height * sinAbs);
+  int rotatedHeight = (int)(m_config.width * sinAbs + m_config.height * cosAbs);
+  
+  ESP_LOGD(TAG, "Drawing rotated image: %dx%d -> %dx%d (%.1f°)", 
+           m_config.width, m_config.height, rotatedWidth, rotatedHeight, m_config.angle);
+  
+  // Draw rotated image pixel by pixel
+  for (int y = 0; y < rotatedHeight; y++) {
+    for (int x = 0; x < rotatedWidth; x++) {
+      // Calculate position relative to rotated center
+      float relX = x - rotatedWidth / 2.0f;
+      float relY = y - rotatedHeight / 2.0f;
+      
+      // Apply inverse rotation to get original coordinates
+      float origX = relX * cosAngle + relY * sinAngle + centerX;
+      float origY = -relX * sinAngle + relY * cosAngle + centerY;
+      
+      // Check if original coordinates are within bounds
+      if (origX >= 0 && origX < m_config.width && origY >= 0 && origY < m_config.height) {
+        int origXInt = (int)origX;
+        int origYInt = (int)origY;
+        int pixelIndex = origYInt * m_config.width + origXInt;
+        
+        // Draw pixel with rotation
+        int screenX = m_xPos + x - rotatedWidth / 2 + m_config.width / 2;
+        int screenY = m_yPos + y - rotatedHeight / 2 + m_config.height / 2;
+        
+        if (screenX >= 0 && screenX < WidgetBase::objTFT->width() && 
+            screenY >= 0 && screenY < WidgetBase::objTFT->height()) {
+          
+#if defined(DISP_DEFAULT)
+          uint16_t color = m_config.pixels[pixelIndex];
+          // Apply alpha mask if available
+          if (m_config.maskAlpha && m_config.maskAlpha[pixelIndex] < 255) {
+            // Skip transparent pixels
+            continue;
+          }
+          WidgetBase::objTFT->drawPixel(screenX, screenY, color);
+#elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
+          uint8_t color = m_config.pixels[pixelIndex];
+          if (color != 0) { // Only draw non-transparent pixels
+            WidgetBase::objTFT->drawPixel(screenX, screenY, color);
+          }
+#endif
+        }
+      }
+    }
+  }
+  
+  // End rotation performance timing
+  uint32_t rotationEndTime = micros();
+  m_metrics.lastRotationTime = rotationEndTime - rotationStartTime;
+  m_metrics.totalRotationTime += m_metrics.lastRotationTime;
+  if (m_metrics.lastRotationTime > m_metrics.maxRotationTime) {
+    m_metrics.maxRotationTime = m_metrics.lastRotationTime;
+  }
+}
+
+/**
+ * @brief Validates the current image configuration.
+ *
+ * Performs comprehensive validation of the image configuration including
+ * dimensions, pixel data, and display compatibility. Centralizes all
+ * validation logic to ensure consistency across the widget.
+ *
+ * @return true if configuration is valid, false otherwise
+ */
+bool Image::validateConfig() {
+  // Validate basic configuration
+  if (m_config.pixels == nullptr) {
+    ESP_LOGE(TAG, "Image pixels are null");
+    return false;
+  }
+  
+  if (m_config.width == 0 || m_config.height == 0) {
+    ESP_LOGE(TAG, "Invalid image dimensions: %dx%d", m_config.width, m_config.height);
+    return false;
+  }
+  
+  // Validate reasonable size limits
+  if (m_config.width > 4096 || m_config.height > 4096) {
+    ESP_LOGE(TAG, "Image dimensions too large: %dx%d (max: 4096x4096)", 
+             m_config.width, m_config.height);
+    return false;
+  }
+  
+  // Validate pixel count doesn't overflow
+  uint32_t pixelCount = static_cast<uint32_t>(m_config.width) * static_cast<uint32_t>(m_config.height);
+  if (pixelCount == 0 || pixelCount > 16777216) { // 16M pixels max
+    ESP_LOGE(TAG, "Invalid pixel count: %u", pixelCount);
+    return false;
+  }
+  
+  // Validate angle is reasonable
+  if (m_config.angle < -360.0f || m_config.angle > 360.0f) {
+    ESP_LOGW(TAG, "Angle out of range: %.1f° (normalizing to 0-360°)", m_config.angle);
+    // Normalize angle to 0-360 range
+    while (m_config.angle < 0.0f) m_config.angle += 360.0f;
+    while (m_config.angle >= 360.0f) m_config.angle -= 360.0f;
+  }
+  
+  // Validate display compatibility
+  if (!WidgetBase::objTFT) {
+    ESP_LOGE(TAG, "TFT display not initialized");
+    return false;
+  }
+  
+  // Validate position is within display bounds
+  if (m_xPos < 0 || m_yPos < 0) {
+    ESP_LOGW(TAG, "Image position is negative: (%d, %d)", m_xPos, m_yPos);
+    return false;
+  }
+  
+  // Check if image fits within display (with rotation consideration)
+  int maxWidth = WidgetBase::objTFT->width();
+  int maxHeight = WidgetBase::objTFT->height();
+  
+  if (m_config.angle == 0.0f) {
+    // Simple bounds check for non-rotated images
+    if (m_xPos + m_config.width > maxWidth || m_yPos + m_config.height > maxHeight) {
+      ESP_LOGW(TAG, "Image extends beyond display bounds: (%d+%d, %d+%d) > (%d, %d)", 
+               m_xPos, m_config.width, m_yPos, m_config.height, maxWidth, maxHeight);
+      return false;
+    }
+  } else {
+    // For rotated images, check bounding box
+    float angleRad = m_config.angle * PI / 180.0f;
+    float cosAbs = fabs(cos(angleRad));
+    float sinAbs = fabs(sin(angleRad));
+    int rotatedWidth = (int)(m_config.width * cosAbs + m_config.height * sinAbs);
+    int rotatedHeight = (int)(m_config.width * sinAbs + m_config.height * cosAbs);
+    
+    if (m_xPos + rotatedWidth > maxWidth || m_yPos + rotatedHeight > maxHeight) {
+      ESP_LOGW(TAG, "Rotated image extends beyond display bounds: (%d+%d, %d+%d) > (%d, %d)", 
+               m_xPos, rotatedWidth, m_yPos, rotatedHeight, maxWidth, maxHeight);
+      return false;
+    }
+  }
+  
+  ESP_LOGD(TAG, "Configuration validation passed: %dx%d at (%d,%d) angle=%.1f°", 
+           m_config.width, m_config.height, m_xPos, m_yPos, m_config.angle);
+  return true;
+}
+
+/**
+ * @brief Clears all buffers and resets memory management.
+ * 
+ * Handles memory cleanup based on whether the image is embedded or loaded from file.
+ * For embedded images, only clears references. For file images, deallocates memory.
+ */
+void Image::clearBuffers() {
+  // Clear unified configuration
+  m_config.pixels = nullptr;
+  m_config.maskAlpha = nullptr;
+  m_config.width = 0;
+  m_config.height = 0;
+  m_config.cb = nullptr;
+  m_config.backgroundColor = 0x0000;
+  m_config.angle = 0.0f;
+  
+  // Clear legacy variables
+  if (m_pixels) {
+    // Only delete if we own the memory
+    if (m_ownsMemory) {
+      delete[] m_pixels;
+    }
+    m_pixels = nullptr;
+  }
+  
+  if (m_maskAlpha) {
+    // Only delete if we own the memory
+    if (m_ownsMemory) {
+      delete[] m_maskAlpha;
+    }
+    m_maskAlpha = nullptr;
+  }
+  
+  // Clear file system references
+  if (m_fs) {
+    m_fs = nullptr;
+  }
+  if (m_path) {
+    m_path = nullptr;
+  }
+  
+  
+  // Reset state
+  m_ownsMemory = false;
+  m_loaded = false;
+  m_shouldRedraw = false;
+}
+
 
 /**
  * @brief Configures the Image widget with a file source.
@@ -383,33 +734,37 @@ void Image::setup(const pixel_t *_pixels, uint16_t _width, uint16_t _height,
  * @param config Configuration structure containing file source, path, callback
  * function, and rotation angle.
  */
-void Image::setup(ImageFromFileConfig &config) {
-  log_d("Need to load file %s", config.toString().c_str());
-  setup(config.source, config.path, config.cb, 0);
-  m_backgroundColor = config.backgroundColor;
+
+/**
+ * @brief Shows the image widget.
+ *
+ * Makes the image visible and marks it for redraw.
+ * Only works if the widget is properly loaded.
+ */
+void Image::show() {
+  if (!m_loaded) {
+    ESP_LOGW(TAG, "Cannot show unloaded image widget");
+    return;
+  }
+  
+  m_visible = true;
+  m_shouldRedraw = true;
+  ESP_LOGD(TAG, "Image shown at (%d, %d)", m_xPos, m_yPos);
 }
 
 /**
- * @brief Configures the Image widget with pixel data.
+ * @brief Hides the image widget.
  *
- * Sets up the image with pixel data, width, height, mask alpha, angle, and
- * callback function.
- *
- * @param config Configuration structure containing pixel data, width, height,
- * mask alpha, angle, and callback function.
+ * Makes the image invisible and marks it for redraw.
+ * Only works if the widget is properly loaded.
  */
-void Image::setup(ImageFromPixelsConfig &config) {
-  setup(config.pixels, config.width, config.height, config.maskAlpha, 0,
-        config.cb);
-  m_backgroundColor = config.backgroundColor;
-}
-
-void Image::show() {
-  visible = true;
-  m_shouldRedraw = true;
-}
-
 void Image::hide() {
-  visible = false;
+  if (!m_loaded) {
+    ESP_LOGW(TAG, "Cannot hide unloaded image widget");
+    return;
+  }
+  
+  m_visible = false;
   m_shouldRedraw = true;
+  ESP_LOGD(TAG, "Image hidden at (%d, %d)", m_xPos, m_yPos);
 }

@@ -15,6 +15,7 @@ struct ToggleButtonConfig {
 class ToggleButton : public WidgetBase
 {
 private:
+  static const char* TAG; ///< Tag for logging
   unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
   uint16_t m_width; ///< Width of the ToggleButton.
   uint16_t m_height; ///< Height of the ToggleButton.
@@ -33,13 +34,13 @@ public:
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
   void changeState();
-  void redraw();
+  void redraw() override;
+  void forceUpdate() override;
   void setup(const ToggleButtonConfig& config);
   bool getStatus();
   bool getEnabled();
   void setEnabled(bool newState);
   void setStatus(bool status);
-  void forceUpdate();
   void show() override;
   void hide() override;
 };

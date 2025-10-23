@@ -1,5 +1,7 @@
 #include "wtextbutton.h"
 
+const char* TextButton::TAG = "TextButton";
+
 /**
  * @brief Constructor for the TextButton class.
  * @param _x X-coordinate for the TextButton position.
@@ -7,12 +9,24 @@
  * @param _screen Screen identifier where the TextButton will be displayed.
  */
 TextButton::TextButton(uint16_t _x, uint16_t _y, uint8_t _screen)
-    : WidgetBase(_x, _y, _screen) {}
+    : WidgetBase(_x, _y, _screen), m_config{} {
+
+      m_config = {.width = 0, .height = 0, .radius = 0, .backgroundColor = 0, .textColor = 0, .text = "", .callback = nullptr};
+      ESP_LOGD(TAG, "TextButton created at (%d, %d) on screen %d", _x, _y, _screen);
+    }
 
 /**
  * @brief Destructor for the TextButton class.
  */
-TextButton::~TextButton() {}
+TextButton::~TextButton() {
+    cleanupMemory();
+}
+
+void TextButton::cleanupMemory() {
+    // TextButton doesn't use dynamic memory allocation
+    // m_text is a const pointer to external data
+    ESP_LOGD(TAG, "TextButton memory cleanup completed");
+}
 
 /**
  * @brief Detects if the TextButton has been touched.
@@ -21,40 +35,35 @@ TextButton::~TextButton() {}
  * @return True if the touch is within the TextButton area, otherwise false.
  */
 bool TextButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
-  if (!visible) {
-    return false;
-  }
-  if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen ||
-      !loaded) {
-    return false;
-  }
-  if (millis() - m_myTime < TIMEOUT_CLICK) {
-    return false;
-  }
+  CHECK_VISIBLE_BOOL
+  CHECK_USINGKEYBOARD_BOOL
+  CHECK_CURRENTSCREEN_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_DEBOUNCE_CLICK_BOOL
 
   if (!m_enabled) {
-    log_d("TextButton is disabled");
+    ESP_LOGD(TAG, "TextButton is disabled");
     return false;
   }
 
-  m_myTime = millis();
-  bool detectado = false;
-  uint16_t xMax = xPos + m_width;
-  uint16_t yMax = yPos + m_height;
+  
 
-  if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) &&
-      (*_yTouch < yMax)) {
-    redraw();
-    detectado = true;
+  bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_config.width, m_config.height);
+  if(inBounds) {
+    m_myTime = millis();
+    onClick();
+    m_shouldRedraw = true;
+    return true;
   }
-  return detectado;
+
+  return false;
 }
 
 /**
  * @brief Retrieves the callback function associated with the TextButton.
  * @return Pointer to the callback function.
  */
-functionCB_t TextButton::getCallbackFunc() { return cb; }
+functionCB_t TextButton::getCallbackFunc() { return m_callback; }
 
 /**
  * @brief Retrieves the current enabled state of the button.
@@ -76,37 +85,32 @@ void TextButton::setEnabled(bool newState) { m_enabled = newState; }
  */
 void TextButton::redraw() {
   CHECK_TFT_VOID
-  if (!visible) {
-    return;
-  }
-#if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard ||
-      !loaded) {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
 
   // uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;
   // uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
-  WidgetBase::objTFT->fillRoundRect(xPos + 1, yPos + 1, m_width - 2,
-                                    m_height - 2, m_radius,
-                                    m_pressedColor); // Botao
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, m_radius,
+  WidgetBase::objTFT->fillRoundRect(m_xPos + 1, m_yPos + 1, m_config.width - 2,
+                                    m_config.height - 2, m_config.radius,
+                                    m_config.backgroundColor); // Botao
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.radius,
                                     baseBorder); // borda Botao
 
-  WidgetBase::objTFT->setTextColor(m_textColor);
+  WidgetBase::objTFT->setTextColor(m_config.textColor);
 
   // WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
   WidgetBase::objTFT->setFont(getBestRobotoBold(
-      m_width - (2 * m_offsetMargin), m_height - (2 * m_offsetMargin), m_text));
-  printText(m_text, xPos + m_width / 2, yPos + (m_height / 2), MC_DATUM);
+      m_config.width - (2 * m_offsetMargin), m_config.height - (2 * m_offsetMargin), m_config.text));
+  printText(m_config.text, m_xPos + m_config.width / 2, m_yPos + (m_config.height / 2), MC_DATUM);
   // showOrigin(CFK_RED);
-  // WidgetBase::objTFT->drawCircle(xPos + width/2, yPos + (height / 2), 4,
+  // WidgetBase::objTFT->drawCircle(m_xPos + width/2, m_yPos + (height / 2), 4,
   // CFK_WHITE);
 
   updateFont(FontType::UNLOAD);
-#endif
 }
 
 /**
@@ -117,11 +121,11 @@ void TextButton::redraw() {
  */
 void TextButton::start() {
 #if defined(DISP_DEFAULT)
-  m_width = constrain(m_width, 5, WidgetBase::objTFT->width());
-  m_height = constrain(m_height, 5, WidgetBase::objTFT->height());
+  m_config.width = constrain(m_config.width, 5, WidgetBase::objTFT->width());
+  m_config.height = constrain(m_config.height, 5, WidgetBase::objTFT->height());
 #endif
 
-  loaded = true;
+  m_loaded = true;
 }
 
 /**
@@ -131,12 +135,12 @@ void TextButton::start() {
  * This is useful for programmatically activating the button.
  */
 void TextButton::onClick() {
-  if (!loaded) {
-    log_e("TextButton widget not loaded");
+  if (!m_loaded) {
+    ESP_LOGE(TAG, "TextButton widget not loaded");
     return;
   }
-  if (cb != nullptr) {
-    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
+  if (m_callback != nullptr) {
+    WidgetBase::addCallback(m_callback, WidgetBase::CallbackOrigin::SELF);
   }
 }
 
@@ -154,23 +158,15 @@ void TextButton::onClick() {
 void TextButton::setup(uint16_t _width, uint16_t _height, uint16_t _radius,
                        uint16_t _pressedColor, uint16_t _textColor,
                        const char *_text, functionCB_t _cb) {
-  if (!WidgetBase::objTFT) {
-    log_e("TFT not defined on WidgetBase");
+  CHECK_TFT_VOID
+  if (m_loaded) {
+    ESP_LOGD(TAG, "TextButton widget already configured");
     return;
   }
-  if (loaded) {
-    log_d("RectButton widget already configured");
-    return;
-  }
-  m_width = _width;
-  m_height = _height;
-  m_pressedColor = _pressedColor;
-  m_textColor = _textColor;
   m_text = _text;
-  m_radius = _radius;
-  cb = _cb;
+  m_callback = _cb;
 
-  loaded = true;
+  m_loaded = true;
 }
 
 /**
@@ -179,16 +175,34 @@ void TextButton::setup(uint16_t _width, uint16_t _height, uint16_t _radius,
  * @param config Structure containing the button configuration parameters.
  */
 void TextButton::setup(const TextButtonConfig &config) {
-  setup(config.width, config.height, config.radius, config.backgroundColor,
-        config.textColor, config.text, config.callback);
+  CHECK_TFT_VOID
+  if (m_loaded) {
+    ESP_LOGW(TAG, "TextButton already initialized");
+    return;
+  }
+
+  // Clean up any existing memory before setting new config
+  cleanupMemory();
+  
+  // Deep copy configuration
+  m_config = config;
+  m_text = config.text; // Note: This is a const pointer, no deep copy needed
+  m_callback = config.callback;
+  
+  m_loaded = true;
+  
+  ESP_LOGD(TAG, "TextButton configured: %dx%d, radius=%d, text='%s'", 
+           m_config.width, m_config.height, m_config.radius, m_config.text);
 }
 
 void TextButton::show() {
-  visible = true;
+  m_visible = true;
   m_shouldRedraw = true;
 }
 
 void TextButton::hide() {
-  visible = false;
+  m_visible = false;
   m_shouldRedraw = true;
 }
+
+void TextButton::forceUpdate() { m_shouldRedraw = true; }

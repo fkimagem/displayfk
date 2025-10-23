@@ -2,6 +2,7 @@
 //#define WIDGETBASE
 #pragma once
 
+#include <Arduino.h>
 #include <esp32-hal.h>
 #include <stdint.h>
 
@@ -285,16 +286,56 @@
 #endif
 
 #define HELPERS
+
+// START SECTION - MACROS FOR VALIDATION
 #define CHECK_TFT_BOOL {if(!WidgetBase::objTFT){return false;}}
 #define CHECK_TFT_VOID {if(!WidgetBase::objTFT){return;}}
-#define CHECK_VISIBLE {if(!visible){return;}}
-//#define DEBUG_TEXT_BOUND
+
+#define CHECK_VISIBLE_VOID {if(!m_visible){return;}}
+#define CHECK_VISIBLE_BOOL {if(!m_visible){return false;}}
+
+#define CHECK_DEBOUNCE_CLICK_BOOL {if(millis() - m_myTime < TIMEOUT_CLICK){return false;}}
+#define CHECK_DEBOUNCE_CLICK_VOID {if(millis() - m_myTime < TIMEOUT_CLICK){return;}}
+
+#define CHECK_DEBOUNCE_REDRAW_BOOL {if(millis() - m_myTime < TIMEOUT_REDRAW){return false;}}
+#define CHECK_DEBOUNCE_REDRAW_VOID {if(millis() - m_myTime < TIMEOUT_REDRAW){return;}}
+
+#define CHECK_DEBOUNCE_FAST_REDRAW_BOOL {if(millis() - m_myTime < TIMEOUT_FAST_REDRAW){return false;}}
+#define CHECK_DEBOUNCE_FAST_REDRAW_VOID {if(millis() - m_myTime < TIMEOUT_FAST_REDRAW){return;}}
+
+#define CHECK_ENABLED_BOOL {if(!m_enabled){ESP_LOGW(TAG, "Widget is disabled"); return false;}}
+#define CHECK_ENABLED_VOID {if(!m_enabled){ESP_LOGW(TAG, "Widget is disabled"); return;}}
+
+#define CHECK_LOCKED_BOOL {if(m_locked){ESP_LOGW(TAG, "Widget is locked"); return false;}}
+#define CHECK_LOCKED_VOID {if(m_locked){ESP_LOGW(TAG, "Widget is locked"); return;}}
+
+#define CHECK_INITIALIZED_BOOL {if(!m_initialized){return false;}}
+#define CHECK_INITIALIZED_VOID {if(!m_initialized){return;}}
+
+#define CHECK_LOADED_BOOL {if(!m_loaded){return false;}}
+#define CHECK_LOADED_VOID {if(!m_loaded){return;}}
+
+#define CHECK_USINGKEYBOARD_BOOL {if(WidgetBase::usingKeyboard){return false;}}
+#define CHECK_USINGKEYBOARD_VOID {if(WidgetBase::usingKeyboard){return;}}
+
+#define CHECK_CURRENTSCREEN_BOOL {if(WidgetBase::currentScreen != m_screen){return false;}}
+#define CHECK_CURRENTSCREEN_VOID {if(WidgetBase::currentScreen != m_screen){return;}}
+
+#define CHECK_SHOULDREDRAW_BOOL {if(!m_shouldRedraw){return false;}}
+#define CHECK_SHOULDREDRAW_VOID {if(!m_shouldRedraw){return;}}
+
+#define CHECK_POINTER_TOUCH_NULL_BOOL {if(_xTouch == nullptr || _yTouch == nullptr){ ESP_LOGW(TAG, "Touch coordinates are null"); return false;}}
+#define CHECK_POINTER_TOUCH_NULL_VOID {if(_xTouch == nullptr || _yTouch == nullptr){ ESP_LOGW(TAG, "Touch coordinates are null"); return;}}
+
+// END SECTION - MACROS FOR VALIDATION
 
 
-/// @brief Base class for all widgets.
+/// @brief Abstract base class for all widgets.
+/// @note This class cannot be instantiated directly. It must be inherited by concrete widget classes.
 class WidgetBase
 {
 private:
+  static const char* TAG; ///< Tag for logging identification
   static uint16_t convertToRGB565(uint8_t r, uint8_t g, uint8_t b);
   static void extract565toRGB(uint16_t color565, uint8_t &r, uint8_t &g, uint8_t &b);
 
@@ -313,6 +354,11 @@ public:
   static const GFXfont *fontBold;   ///< Pointer to the bold font.
   #endif
   static void addCallback(functionCB_t callback, CallbackOrigin origin);
+  static uint16_t screenWidth;             ///< Width of the screen.
+  static uint16_t screenHeight;            ///< Height of the screen.
+  static bool lightMode;                   ///< True for light mode, false for dark mode.
+  static functionLoadScreen_t loadScreen; ///< Pointer to the function that loads the screen.
+  static uint16_t backgroundColor;         ///< Background color for the widget.
   
 
   static uint16_t lightenColor565(unsigned short color, float factor);
@@ -332,11 +378,7 @@ public:
 #error "Choose a display model on user_setup.h"
 #endif
 
-  static uint16_t screenWidth;             ///< Width of the screen.
-  static uint16_t screenHeight;            ///< Height of the screen.
-  static bool lightMode;                   ///< True for light mode, false for dark mode.
-  static functionLoadScreen_t loadScreen; ///< Pointer to the function that loads the screen.
-  static uint16_t backgroundColor;         ///< Background color for the widget.
+  
 
 #if defined(DFK_SD)
   static fs::SDFS *mySD; ///< Pointer to the SD file system.
@@ -345,23 +387,43 @@ public:
   WidgetBase(uint16_t _x, uint16_t _y, uint8_t _screen);
 
   virtual ~WidgetBase();
-  virtual bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch);
-  virtual functionCB_t getCallbackFunc();
-  virtual void show();
-  virtual void hide();
+  virtual bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) = 0;
+  virtual functionCB_t getCallbackFunc() = 0;
+  virtual void show() = 0;
+  virtual void hide() = 0;
+  virtual void forceUpdate() = 0;
+  virtual void redraw() = 0;
+  
   bool showingMyScreen();
+  
+  // State management methods
+  bool isInitialized() const;
+  bool isEnabled() const;
+  void setEnabled(bool enabled);
+  bool isValidState() const;
+  bool validateParameters() const;
+  
+  // Lock management methods
+  void lock();
+  void unlock();
+  bool isLocked() const;
   
 #if defined(USING_GRAPHIC_LIB)
   static void recalculateTextPosition(const char* _texto, uint16_t *_x, uint16_t *_y, uint8_t _datum);
   #endif
 
 protected:
-  bool visible = true;        ///< True if the widget is visible.
-  uint16_t xPos;              ///< X position of the widget.
-  uint16_t yPos;              ///< Y position of the widget.
-  uint8_t screen;             ///< Screen index for the widget.
-  bool loaded = false;        ///< True if the widget has been initialized.
-  functionCB_t cb = nullptr; ///< Callback function to execute when the widget is clicked.
+  bool m_visible = true;        ///< True if the widget is visible
+  uint16_t m_xPos;              ///< X position of the widget
+  uint16_t m_yPos;              ///< Y position of the widget
+  uint8_t m_screen;             ///< Screen index for the widget
+  bool m_loaded = false;        ///< True if the widget has been initialized
+  bool m_enabled = true;        ///< True if the widget is enabled
+  bool m_initialized = false;   ///< True if the widget is properly initialized
+  bool m_shouldRedraw = true;   ///< Flag to indicate if the widget should be redrawn
+  bool m_locked = false;        ///< True if the widget is locked (prevents interaction)
+  unsigned long m_myTime = 0;   ///< Timestamp for handling timing-related functions (debounce, etc.)
+  functionCB_t m_callback = nullptr; ///< Callback function to execute when the widget is clicked
 
 #if defined(USING_GRAPHIC_LIB)
   const GFXfont* getBestRobotoBold(uint16_t availableWidth, uint16_t availableHeight, const char* texto);

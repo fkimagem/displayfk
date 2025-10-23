@@ -1,5 +1,7 @@
 #include "wtoucharea.h"
 
+const char* TouchArea::TAG = "[TouchArea]";
+
 /**
  * @brief Constructor for the TouchArea class.
  * @param _x X-coordinate for the TouchArea position.
@@ -23,38 +25,28 @@ TouchArea::~TouchArea() {}
  * Determines if a touch event occurred within the defined area's boundaries.
  */
 bool TouchArea::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
-  if (!visible) {
-    return false;
-  }
-#if defined(HAS_TOUCH)
-  if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen ||
-      !loaded) {
-    return false;
+  CHECK_VISIBLE_BOOL
+  CHECK_USINGKEYBOARD_BOOL
+  CHECK_CURRENTSCREEN_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_DEBOUNCE_CLICK_BOOL
+  CHECK_ENABLED_BOOL
+  CHECK_LOCKED_BOOL
+  CHECK_POINTER_TOUCH_NULL_BOOL
+
+  bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_width, m_height);
+  if(inBounds) {
+    m_myTime = millis();
   }
 
-  if (millis() - m_myTime < TIMEOUT_CLICK) {
-    return false;
-  }
-  m_myTime = millis();
-  bool detectado = false;
-  uint16_t xMax = xPos + m_width;
-  uint16_t yMax = yPos + m_height;
-
-  if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) &&
-      (*_yTouch < yMax)) {
-    detectado = true;
-  }
-  return detectado;
-#else
-  return false;
-#endif
+  return inBounds;
 }
 
 /**
  * @brief Retrieves the callback function associated with the TouchArea.
  * @return Pointer to the callback function.
  */
-functionCB_t TouchArea::getCallbackFunc() { return cb; }
+functionCB_t TouchArea::getCallbackFunc() { return m_callback; }
 
 /**
  * @brief Redraws the TouchArea on the screen.
@@ -62,7 +54,7 @@ functionCB_t TouchArea::getCallbackFunc() { return cb; }
  * Empty implementation since TouchArea is invisible by default.
  */
 void TouchArea::redraw() {
-  if (!visible) {
+  if (!m_visible) {
     return;
   }
 }
@@ -75,12 +67,12 @@ void TouchArea::redraw() {
  */
 void TouchArea::onClick() {
 #if defined(DFK_TOUCHAREA)
-  if (!loaded) {
-    log_e("TouchArea widget not loaded");
+  if (!m_loaded) {
+    ESP_LOGE(TAG, "TouchArea widget not loaded");
     return;
   }
-  if (cb != nullptr) {
-    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
+  if (m_callback != nullptr) {
+    WidgetBase::addCallback(m_callback, WidgetBase::CallbackOrigin::SELF);
   }
 #endif
 }
@@ -96,17 +88,17 @@ void TouchArea::onClick() {
  */
 void TouchArea::setup(uint16_t _width, uint16_t _height, functionCB_t _cb) {
   if (!WidgetBase::objTFT) {
-    log_e("TFT not defined on WidgetBase");
+    ESP_LOGE(TAG, "TFT not defined on WidgetBase");
     return;
   }
-  if (loaded) {
-    log_d("TouchArea widget already configured");
+  if (m_loaded) {
+    ESP_LOGD(TAG, "TouchArea widget already configured");
     return;
   }
   m_width = _width;
   m_height = _height;
-  cb = _cb;
-  loaded = true;
+  m_callback = _cb;
+  m_loaded = true;
 }
 
 /**
@@ -134,11 +126,13 @@ void TouchArea::changeState() {
 bool TouchArea::getStatus() { return m_status; }
 
 void TouchArea::show() {
-  visible = true;
+  m_visible = true;
   m_shouldRedraw = true;
 }
 
 void TouchArea::hide() {
-  visible = false;
+  m_visible = false;
   m_shouldRedraw = true;
 }
+
+void TouchArea::forceUpdate() { m_shouldRedraw = true; }

@@ -2,15 +2,6 @@
 
 
 
-#if defined(DEBUG_DISPLAY)
-#define DEBUG_D(format, ...) log_d(format, ##__VA_ARGS__)
-#define DEBUG_E(format, ...) log_e(format, ##__VA_ARGS__)
-#define DEBUG_W(format, ...) log_w(format, ##__VA_ARGS__)
-#else
-#define DEBUG_D(format, ...) 
-#define DEBUG_E(format, ...) 
-#define DEBUG_W(format, ...) 
-#endif
 
 #define RESET_WDT {if(m_enableWTD){esp_task_wdt_reset();}};
 
@@ -22,6 +13,8 @@ logMessage_t DisplayFK::bufferLog[LOG_LENGTH];
 uint8_t DisplayFK::logIndex = 0;
 uint16_t DisplayFK::logFileCount = 1;
 StringPool DisplayFK::stringPool;
+const char *DisplayFK::TAG = "DisplayFK";
+int DisplayFK::offsetSwipe = 50;
 
 
 #ifdef DFK_SD
@@ -38,24 +31,24 @@ void DisplayFK::changeWTD()
 		esp_err_t adicionou = esp_task_wdt_add(m_hndTaskEventoTouch);                    // Adiciona a tarefa atual (loop) ao watchdog
         if (adicionou == ESP_OK)
         {
-            Serial.printf("Task of Display added to watchdog with %i seconds\n", m_timeoutWTD);
+            ESP_LOGI(TAG, "Task of Display added to watchdog with %i seconds", m_timeoutWTD);
         }
         else
         {
-            Serial.printf("Error to add on watchdog with %i seconds to task Display\n", m_timeoutWTD);
+            ESP_LOGE(TAG, "Error to add on watchdog with %i seconds to task Display", m_timeoutWTD);
         }
     }
     else
     {
-        Serial.println("Disabling watchdog");
+        ESP_LOGI(TAG, "Disabling watchdog");
         esp_err_t removeu = esp_task_wdt_delete(m_hndTaskEventoTouch);
         if (removeu == ESP_OK)
         {
-            Serial.println("Successful to disable watchdog");
+            ESP_LOGI(TAG, "Successful to disable watchdog");
         }
         else
         {
-            Serial.println("Error to disable watchdog");
+            ESP_LOGE(TAG, "Error to disable watchdog");
         }
     }
 }
@@ -66,16 +59,16 @@ void DisplayFK::changeWTD()
  * @brief Generates a unique filename for logs using string pool
  * @return Pointer to the generated filename (managed by string pool)
  */
-const char* DisplayFK::generateNameFile() {
-    // Try to use string pool first
-    char* filename = stringPool.allocate();
+const char* DisplayFK::generateNameFile() const {
+    // Try to use string pool first with exception safety
+    char* filename = const_cast<DisplayFK*>(this)->allocateStringSafe("generateNameFile");
     if (!filename) {
-        DEBUG_E("String pool exhausted, falling back to dynamic allocation");
+        ESP_LOGE(TAG, "String pool exhausted, falling back to dynamic allocation");
         // Fallback to dynamic allocation if pool is exhausted
         const size_t totalLength = 50; // "/" + number + "-" + 32 chars + ".txt\0"
         filename = new(std::nothrow) char[totalLength];
         if (!filename) {
-            DEBUG_E("Failed to allocate memory for filename");
+            ESP_LOGE(TAG, "Failed to allocate memory for filename");
             return nullptr;
         }
     }
@@ -83,20 +76,21 @@ const char* DisplayFK::generateNameFile() {
     // Generate the random string first
     char randomString[33]; // 32 chars + null terminator
     for (int i = 0; i < 32; ++i) {
-        randomString[i] = randomHexChar();
+        uint8_t letter = random(65, 90);
+        randomString[i] = (char)letter;
     }
     randomString[32] = '\0';
 
     // Format the filename using snprintf for safety
     int written = snprintf(filename, STRING_POOL_SIZE, "/%u-%s.txt", logFileCount, randomString);
     if (written < 0 || written >= STRING_POOL_SIZE) {
-        DEBUG_E("Failed to format filename");
+        ESP_LOGE(TAG, "Failed to format filename");
         // If using pool, deallocate it
         stringPool.deallocate(filename);
         return nullptr;
     }
 
-    DEBUG_D("Generated filename: %s", filename);
+    ESP_LOGD(TAG, "Generated filename: %s", filename);
     logFileCount++;
     
     return filename;
@@ -106,7 +100,7 @@ const char* DisplayFK::generateNameFile() {
  * @brief Returns the current log filename
  * @return Current log filename
  */
-const char *DisplayFK::getLogFileName()
+const char *DisplayFK::getLogFileName() const
 {
     return m_nameLogFile;
 }
@@ -122,14 +116,23 @@ const char *DisplayFK::getLogFileName()
  */
 void DisplayFK::setCheckbox(CheckBox *array[], uint8_t amount)
 {
-    if (m_checkboxConfigured)
-    {
-        DEBUG_W("Checkbox already configured");
+    if (m_checkboxConfigured) {
+        ESP_LOGW(TAG, "Checkbox already configured");
         return;
     }
-    m_checkboxConfigured = (amount > 0 && array != nullptr);
+    
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid checkbox array configuration");
+        return;
+    }
+    
+    
+    
+    m_checkboxConfigured = true;
     arrayCheckbox = array;
     qtdCheckbox = amount;
+    ESP_LOGD(TAG, "Checkbox array configured with %d elements", amount);
 }
 
 #endif
@@ -143,14 +146,21 @@ void DisplayFK::setCheckbox(CheckBox *array[], uint8_t amount)
  */
 void DisplayFK::setCircleButton(CircleButton *array[], uint8_t amount)
 {
-    if (m_circleButtonConfigured)
-    {
-        DEBUG_W("CircleButton already conffigured");
+    if (m_circleButtonConfigured) {
+        ESP_LOGW(TAG, "CircleButton already configured");
         return;
     }
-    m_circleButtonConfigured = (amount > 0 && array != nullptr);
+    
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid circle button array configuration");
+        return;
+    }
+    
+    m_circleButtonConfigured = true;
     arrayCircleBtn = array;
     qtdCircleBtn = amount;
+    ESP_LOGD(TAG, "Circle button array configured with %d elements", amount);
 }
 
 #endif
@@ -166,9 +176,17 @@ void DisplayFK::setGauge(GaugeSuper *array[], uint8_t amount)
 {
     if (m_gaugeConfigured)
     {
-        DEBUG_W("Gauge already conffigured");
+        ESP_LOGW(TAG, "Gauge already configured");
         return;
     }
+
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid gauge array configuration");
+        return;
+    }
+
+
     m_gaugeConfigured = (amount > 0 && array != nullptr);
     arrayGauge = array;
     qtdGauge = amount;
@@ -187,9 +205,16 @@ void DisplayFK::setCircularBar(CircularBar *array[], uint8_t amount)
 {
     if (m_circularBarConfigured)
     {
-        DEBUG_W("CircularBar already configured");
+        ESP_LOGW(TAG, "CircularBar already configured");
         return;
     }
+
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid circular bar array configuration");
+        return;
+    }
+
     m_circularBarConfigured = (amount > 0 && array != nullptr);
     arrayCircularBar = array;
     qtdCircularBar = amount;
@@ -208,9 +233,16 @@ void DisplayFK::setHSlider(HSlider *array[], uint8_t amount)
 {
     if (m_hSliderConfigured)
     {
-        DEBUG_W("HSlider already conffigured");
+        ESP_LOGW(TAG, "HSlider already configured");
         return;
     }
+
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid horizontal slider array configuration");
+        return;
+    }
+
     m_hSliderConfigured = (amount > 0 && array != nullptr);
     arrayHSlider = array;
     qtdHSlider = amount;
@@ -229,9 +261,16 @@ void DisplayFK::setLabel(Label *array[], uint8_t amount)
 {
     if (m_labelConfigured)
     {
-        DEBUG_W("Label already conffigured");
+        ESP_LOGW(TAG, "Label already configured");
         return;
     }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid label array configuration");
+        return;
+    }
+
+
     m_labelConfigured = (amount > 0 && array != nullptr);
     arrayLabel = array;
     qtdLabel = amount;
@@ -249,9 +288,18 @@ void DisplayFK::setLed(Led *array[], uint8_t amount)
 {
     if (m_ledConfigured)
     {
-        DEBUG_W("Led already conffigured");
+        ESP_LOGW(TAG, "Led already configured");
         return;
     }
+
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid LED array configuration");
+        return;
+    }
+
+
+
     m_ledConfigured = (amount > 0 && array != nullptr);
     arrayLed = array;
     qtdLed = amount;
@@ -270,7 +318,12 @@ void DisplayFK::setLineChart(LineChart *array[], uint8_t amount)
 {
     if (m_lineChartConfigured)
     {
-        DEBUG_W("LineChart already conffigured");
+        ESP_LOGW(TAG, "LineChart already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid line chart array configuration");
         return;
     }
     m_lineChartConfigured = (amount > 0 && array != nullptr);
@@ -290,7 +343,12 @@ void DisplayFK::setNumberbox(NumberBox *array[], uint8_t amount)
 {
     if (m_numberboxConfigured)
     {
-        DEBUG_W("Numberbox already conffigured");
+        ESP_LOGW(TAG, "Numberbox already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid number box array configuration");
         return;
     }
     m_numberboxConfigured = (amount > 0 && array != nullptr);
@@ -318,7 +376,7 @@ void DisplayFK::insertCharNumpad(char c)
     if(DisplayFK::numpad){
         DisplayFK::numpad->insertChar(c);
     }else{
-        DEBUG_E("Numpad not configured");
+        ESP_LOGE(TAG, "Numpad not configured");
     }
 }
 #endif
@@ -334,7 +392,12 @@ void DisplayFK::setRadioGroup(RadioGroup *array[], uint8_t amount)
 {
     if (m_radioGroupConfigured)
     {
-        DEBUG_W("RadioGroup already conffigured");
+        ESP_LOGW(TAG, "RadioGroup already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid radio group array configuration");
         return;
     }
     m_radioGroupConfigured = (amount > 0 && array != nullptr);
@@ -354,7 +417,12 @@ void DisplayFK::setRectButton(RectButton *array[], uint8_t amount)
 {
     if (m_rectButtonConfigured)
     {
-        DEBUG_W("RectButton already conffigured");
+        ESP_LOGW(TAG, "RectButton already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid rect button array configuration");
         return;
     }
     m_rectButtonConfigured = (amount > 0 && array != nullptr);
@@ -374,7 +442,12 @@ void DisplayFK::setTextButton(TextButton *array[], uint8_t amount)
 {
     if (m_textButtonConfigured)
     {
-        DEBUG_W("TextButton already conffigured");
+        ESP_LOGW(TAG, "TextButton already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid text button array configuration");
         return;
     }
     m_textButtonConfigured = (amount > 0 && array != nullptr);
@@ -394,7 +467,12 @@ void DisplayFK::setSpinbox(SpinBox *array[], uint8_t amount)
 {
     if (m_spinboxConfigured)
     {
-        DEBUG_W("SpinBox already conffigured");
+        ESP_LOGW(TAG, "SpinBox already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid spin box array configuration");
         return;
     }
     m_spinboxConfigured = (amount > 0 && array != nullptr);
@@ -414,7 +492,12 @@ void DisplayFK::setTextbox(TextBox *array[], uint8_t amount)
 {
     if (m_textboxConfigured)
     {
-        DEBUG_W("Textbox already conffigured");
+        ESP_LOGW(TAG, "Textbox already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid text box array configuration");
         return;
     }
     m_textboxConfigured = (amount > 0 && array != nullptr);
@@ -442,7 +525,7 @@ void DisplayFK::insertCharTextbox(char c)
     if(DisplayFK::keyboard){
         keyboard->insertChar(c);
     }else{
-        DEBUG_E("Keyboard not configured");
+        ESP_LOGE(TAG, "Keyboard not configured");
     }
 }
 #endif
@@ -458,7 +541,12 @@ void DisplayFK::setThermometer(Thermometer *array[], uint8_t amount)
 {
     if (m_thermometerConfigured)
     {
-        DEBUG_W("Thermometer already conffigured");
+        ESP_LOGW(TAG, "Thermometer already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid thermometer array configuration");
         return;
     }
     m_thermometerConfigured = (amount > 0 && array != nullptr);
@@ -478,7 +566,12 @@ void DisplayFK::setToggle(ToggleButton *array[], uint8_t amount)
 {
     if (m_toggleConfigured)
     {
-        DEBUG_W("Toggle already conffigured");
+        ESP_LOGW(TAG, "Toggle already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid toggle button array configuration");
         return;
     }
     m_toggleConfigured = (amount > 0 && array != nullptr);
@@ -498,7 +591,12 @@ void DisplayFK::setTouchArea(TouchArea *array[], uint8_t amount)
 {
     if (m_touchAreaConfigured)
     {
-        DEBUG_W("TouchArea already conffigured");
+        ESP_LOGW(TAG, "TouchArea already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid touch area array configuration");
         return;
     }
     m_touchAreaConfigured = (amount > 0 && array != nullptr);
@@ -518,7 +616,12 @@ void DisplayFK::setVAnalog(VAnalog *array[], uint8_t amount)
 {
     if (m_vAnalogConfigured)
     {
-        DEBUG_W("VAnalog already conffigured");
+        ESP_LOGW(TAG, "VAnalog already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid analog viewer array configuration");
         return;
     }
     m_vAnalogConfigured = (amount > 0 && array != nullptr);
@@ -538,7 +641,12 @@ void DisplayFK::setVBar(VBar *array[], uint8_t amount)
 {
     if (m_vBarConfigured)
     {
-        DEBUG_W("VBar already conffigured");
+        ESP_LOGW(TAG, "VBar already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid vertical bar array configuration");
         return;
     }
     m_vBarConfigured = (amount > 0 && array != nullptr);
@@ -558,13 +666,18 @@ void DisplayFK::setImage(Image *array[], uint8_t amount)
 {
     if (m_imageConfigured)
     {
-        DEBUG_W("Image already configured");
+        ESP_LOGW(TAG, "Image already configured");
+        return;
+    }
+    // Robust input validation
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid image array configuration");
         return;
     }
     m_imageConfigured = (amount > 0 && array != nullptr);
     arrayImage = array;
     qtdImage = amount;
-    DEBUG_D("Configuring image: %i", amount);
+    ESP_LOGD(TAG, "Configuring image: %i", amount);
 }
 #endif
 
@@ -590,67 +703,8 @@ bool DisplayFK::startSD(uint8_t pinCS, SPIClass *spiShared)
  */
 bool DisplayFK::startSD(uint8_t pinCS, SPIClass *spiShared, int hz)
 {
-    if(!spiShared){
-        DEBUG_E("SPI for SD not configured");
-        return false;
-    }
-    if(hz <= 0){
-        hz = 4000000;
-        DEBUG_D("Setting Hz to default value: %i", hz);
-    }
-
-    DEBUG_D("Starting setup SD: CS: %i, velocidade: %i", pinCS, hz);
-
-    m_spiSD = *spiShared;
-    m_spiSD.setFrequency(hz);
-    if (!SD.begin(pinCS, m_spiSD, hz , "/sd", 5, false))
-    {
-        DEBUG_E("Card Mount Failed");
-        return false;
-    }
-
-    WidgetBase::mySD = &SD;
-
-    uint8_t cardType = WidgetBase::mySD->cardType();
-
-    if (cardType == CARD_NONE)
-    {
-        DEBUG_W("No SD card attached");
-        SD.end();
-        return false;
-    }
-
-    if (cardType == CARD_MMC)
-    {
-        DEBUG_D("SD Card Type: MMC");
-    }
-    else if (cardType == CARD_SD)
-    {
-        DEBUG_D("SD Card Type: SDSC");
-    }
-    else if (cardType == CARD_SDHC)
-    {
-        DEBUG_D("SD Card Type: SDHC");
-    }
-    else
-    {
-        DEBUG_D("SD Card Type: UNKNOWN");
-    }
-
-    uint64_t cardSize = WidgetBase::mySD->cardSize() / (1024 * 1024);
-    DEBUG_D("SD Card Size: %lluMB\n", cardSize);
-    UNUSED(cardSize);
-
-    DEBUG_D("SD Done");
-    DisplayFK::sdcardOK = true;
-
-    m_nameLogFile = generateNameFile();
-
-    writeFile(WidgetBase::mySD, m_nameLogFile, "Start Log");
-
-    listFiles(WidgetBase::mySD, "/", 1);
-    SD.end();
-    return true;
+    // Use exception-safe method
+    return startSDSafe(pinCS, spiShared, hz);
 }
 
 /**
@@ -663,23 +717,23 @@ void DisplayFK::listFiles(fs::FS *fs, const char *dirname, uint8_t levels)
 {
     if (!DisplayFK::sdcardOK)
     {
-        DEBUG_E("SD not configured");
+        ESP_LOGE(TAG, "SD not configured");
         return;
     }
     if(dirname[0] != '/'){
-        DEBUG_E("Path must start with /");
+        ESP_LOGE(TAG, "Path must start with /");
     }
-    DEBUG_D("Listing directory: %s\n", dirname);
+    ESP_LOGD(TAG, "Listing directory: %s", dirname);
 
     File root = fs->open(dirname);
     if (!root)
     {
-        DEBUG_E("Failed to open directory");
+        ESP_LOGE(TAG, "Failed to open directory");
         return;
     }
     if (!root.isDirectory())
     {
-        DEBUG_E("Not a directory");
+        ESP_LOGE(TAG, "Not a directory");
         return;
     }
 
@@ -690,7 +744,7 @@ void DisplayFK::listFiles(fs::FS *fs, const char *dirname, uint8_t levels)
 		RESET_WDT
         if (file.isDirectory())
         {
-            DEBUG_D("\tDIR: %s\n", file.name());
+            ESP_LOGD(TAG, "\tDIR: %s", file.name());
             //Serial.println(file.name());
             if (levels)
             {
@@ -711,7 +765,7 @@ void DisplayFK::listFiles(fs::FS *fs, const char *dirname, uint8_t levels)
         }
         else
         {
-            DEBUG_D("\t%i\tFILE: %s\tSIZE: %d\n", indiceFile, file.name(), file.size());
+            ESP_LOGD(TAG, "\t%i\tFILE: %s\tSIZE: %d", indiceFile, file.name(), file.size());
             indiceFile++;
             //Serial.print(file.name());
             //Serial.print("  SIZE: ");
@@ -731,20 +785,20 @@ void DisplayFK::appendFile(fs::FS *fs, const char *path, const char *message)
 {
     if (!DisplayFK::sdcardOK)
     {
-        DEBUG_E("SD not configured");
+        ESP_LOGE(TAG, "SD not configured");
         return;
     }
 
     auto len = strlen(message);
 
-    DEBUG_D("Appending %d bytes to file: %s", len, path);
+    ESP_LOGD(TAG, "Appending %d bytes to file: %s", len, path);
 
     File file = fs->open(path, FILE_APPEND);
     if (!file)
     {
-        DEBUG_E("Failed to open file for appending");
+        ESP_LOGE(TAG, "Failed to open file for appending");
         if(SD.totalBytes() == 0){
-            DEBUG_E("SD card empty");
+            ESP_LOGE(TAG, "SD card empty");
             DisplayFK::sdcardOK = false;
         }
         return;
@@ -752,25 +806,25 @@ void DisplayFK::appendFile(fs::FS *fs, const char *path, const char *message)
 
     if (file.size() > LOG_MAX_SIZE)
     {
-        DEBUG_E("Log too large");
+        ESP_LOGE(TAG, "Log too large");
         file.close();
         return;
     }
 
     if (len <= 1)
     {
-        DEBUG_W("Empty message isnt appended");
+        ESP_LOGW(TAG, "Empty message isnt appended");
         file.close();
         return;
     }
 
     if (file.println(message))
     {
-        DEBUG_D("Message appended");
+        ESP_LOGD(TAG, "Message appended");
     }
     else
     {
-        DEBUG_E("Append failed");
+        ESP_LOGE(TAG, "Append failed");
     }
     file.close();
 }
@@ -784,19 +838,19 @@ void DisplayFK::readFile(fs::FS *fs, const char *path)
 {
     if (!DisplayFK::sdcardOK)
     {
-        DEBUG_E("SD not configured");
+        ESP_LOGE(TAG, "SD not configured");
         return;
     }
-    DEBUG_D("Reading file: %s\n", path);
+    ESP_LOGD(TAG, "Reading file: %s", path);
 
     File file = fs->open(path);
     if (!file)
     {
-        DEBUG_E("Failed to open file for reading");
+        ESP_LOGE(TAG, "Failed to open file for reading");
         return;
     }
 
-    DEBUG_D("Read from file: ");
+    ESP_LOGD(TAG, "Read from file: ");
     while (file.available())
     {
         Serial.write(file.read());
@@ -813,17 +867,17 @@ void DisplayFK::createDir(fs::FS *fs, const char *path)
 {
     if (!DisplayFK::sdcardOK)
     {
-        DEBUG_E("SD not configured");
+        ESP_LOGE(TAG, "SD not configured");
         return;
     }
-    DEBUG_D("Creating Dir: %s\n", path);
+    ESP_LOGD(TAG, "Creating Dir: %s", path);
     if (fs->mkdir(path))
     {
-        DEBUG_D("Dir created");
+        ESP_LOGD(TAG, "Dir created");
     }
     else
     {
-        DEBUG_E("mkdir failed");
+        ESP_LOGE(TAG, "mkdir failed");
     }
 }
 
@@ -836,21 +890,21 @@ void DisplayFK::createDir(fs::FS *fs, const char *path)
 void DisplayFK::writeFile(fs::FS *fs, const char * path, const char * message){
     if (!DisplayFK::sdcardOK)
     {
-        DEBUG_E("SD not configured");
+        ESP_LOGE(TAG, "SD not configured");
         return;
     }
 
-    DEBUG_D("Writing file: %s\n", path);
+    ESP_LOGD(TAG, "Writing file: %s", path);
 
     File file = fs->open(path, FILE_WRITE);
   if(!file){
-    DEBUG_E("Failed to open file for writing");
+    ESP_LOGE(TAG, "Failed to open file for writing");
     return;
   }
   if(file.print(message)){
-    DEBUG_D("File written");
+    ESP_LOGD(TAG, "File written");
   } else {
-    DEBUG_E("Write failed");
+    ESP_LOGE(TAG, "Write failed");
   }
   file.close();
 }
@@ -866,20 +920,20 @@ void DisplayFK::writeFile(fs::FS *fs, const char * path, const char * message){
 void DisplayFK::appendLog(fs::FS *fs, const char *path, const logMessage_t* lines, uint8_t amount, bool createNewFile){
 if (!DisplayFK::sdcardOK)
     {
-        DEBUG_E("SD not configured");
+        ESP_LOGE(TAG, "SD not configured");
         return;
     }
     if(amount == 0){
-        DEBUG_D("No lines to append");
+        ESP_LOGD(TAG, "No lines to append");
         return;
     }
 
     File file = fs->open(path, FILE_APPEND);
     if (!file)
     {
-        DEBUG_E("Failed to open file for appending");
+        ESP_LOGE(TAG, "Failed to open file for appending");
         if(SD.totalBytes() == 0){
-            DEBUG_E("SD card empty");
+            ESP_LOGE(TAG, "SD card empty");
             DisplayFK::sdcardOK = false;
         }
         return;
@@ -887,16 +941,16 @@ if (!DisplayFK::sdcardOK)
 
     if (file.size() > LOG_MAX_SIZE)
     {
-        DEBUG_E("Log too large");
+        ESP_LOGE(TAG, "Log too large");
         file.close();
 
         if(createNewFile){
-            DEBUG_D("Creating new one");
+            ESP_LOGD(TAG, "Creating new one");
             m_nameLogFile = generateNameFile();
             writeFile(WidgetBase::mySD, m_nameLogFile, "Start Log");
             file = fs->open(getLogFileName(), FILE_APPEND);
             if (!file){
-                DEBUG_E("Failed to open new file created for appending");
+                ESP_LOGE(TAG, "Failed to open new file created for appending");
                 return;
             }
         }else{
@@ -906,20 +960,20 @@ if (!DisplayFK::sdcardOK)
     }
 
     uint8_t success = 0;
-    DEBUG_D("Starting write log with %d lines", amount);
+    ESP_LOGD(TAG, "Starting write log with %d lines", amount);
     for(int i = 0; i < amount; i++){
         if (file.println(lines[i].line))
         {
-            DEBUG_D("Message appended");
+            ESP_LOGD(TAG, "Message appended");
             success++;
         }
         else
         {
-            DEBUG_E("Append failed");
+            ESP_LOGE(TAG, "Append failed");
         }
     }
     file.close();
-    DEBUG_D("%d/%d lines appended", success, amount);
+    ESP_LOGD(TAG, "%d/%d lines appended", success, amount);
 }
 #endif
 
@@ -940,41 +994,462 @@ char DisplayFK::randomHexChar()
  */
 void DisplayFK::addLog(const char *data)
 {
-    if(DisplayFK::xFilaLog != NULL){
-        if(uxQueueSpacesAvailable(DisplayFK::xFilaLog) > 0){
-            const size_t lengthLine = strlen(data) + 1;
-            const size_t max_length = (lengthLine > MAX_LINE_LENGTH) ? MAX_LINE_LENGTH : lengthLine;
-            logMessage_t message;
-            for(int i = 0; i < max_length; ++i){
-            message.line[i] = data[i];
-            }
-            message.line_length = max_length;
-            message.line[message.line_length] = 0; // Add the terminating nul char
+    // Robust input validation
+    if (!data) {
+        ESP_LOGE(TAG, "Null data pointer");
+        return;
+    }
+    
+    if (!validateInput(data, MAX_LINE_LENGTH - 1)) {
+        ESP_LOGE(TAG, "Invalid log data");
+        return;
+    }
+    
+    if (DisplayFK::xFilaLog == NULL) {
+        ESP_LOGE(TAG, "Log queue not initialized");
+        return;
+    }
+    
+    if (uxQueueSpacesAvailable(DisplayFK::xFilaLog) <= 0) {
+        ESP_LOGE(TAG, "Log queue is full");
+        return;
+    }
+    
+    // Process log with safety
+    const size_t lengthLine = strlen(data) + 1;
+    const size_t max_length = std::min(lengthLine, static_cast<size_t>(MAX_LINE_LENGTH));
+    
+    logMessage_t message;
+    strncpy(message.line, data, max_length - 1);
+    message.line[max_length - 1] = '\0';  // Ensure null termination
+    message.line_length = max_length;
 
-            int ret = xQueueSend(DisplayFK::xFilaLog, (void*) &message, 0);
-            if(ret == pdTRUE){
-                Serial.printf("Add message to log: %s\n", message.line);
-            }else if(ret == errQUEUE_FULL){
-                Serial.println("Unable to send log data into the Queue");
-            }
-        }else{
-            DEBUG_E("Can't add log. Queue is full");
-        }
+    BaseType_t ret = xQueueSend(DisplayFK::xFilaLog, &message, 0);
+    if (ret == pdTRUE) {
+        ESP_LOGD(TAG, "Log message queued: %s", message.line);
+    } else if (ret == errQUEUE_FULL) {
+        ESP_LOGE(TAG, "Unable to send log data into the Queue");
+    } else {
+        ESP_LOGE(TAG, "Failed to queue log message: %d", ret);
     }
 }
 
 /**
  * @brief Constructor of the DisplayFK class
  */
-DisplayFK::DisplayFK() : m_runningTransaction(false), m_configs(), m_timer(nullptr), m_intervalMs(0), m_xAutoClick(0), m_yAutoClick(0), m_simulateAutoClick(false)
+DisplayFK::DisplayFK() 
+    : m_hndTaskEventoTouch(nullptr)
+    , m_runningTransaction(false)
+    , m_configs()
+    , m_timer(nullptr)
+    , m_intervalMs(0)
+    , m_xAutoClick(0)
+    , m_yAutoClick(0)
+    , m_simulateAutoClick(false)
+    , m_debugTouch(false)
+    , m_x0(0), m_y0(0), m_x1(0), m_y1(0)
+    , m_invertXAxis(false), m_invertYAxis(false), m_swapAxis(false)
+    , m_widthScreen(0), m_heightScreen(0), m_rotationScreen(0)
+    , m_timeoutWTD(0)
+    , m_enableWTD(false)
+    , m_watchdogInitialized(false)
+    , m_loopSemaphore(nullptr)
+    , m_lastTouchState(TouchEventType::NONE)
+    , m_lastTouchSwipeDirection(TouchSwipeDirection::NONE)
 {
+    // Set instance pointer (must be done first)
     DisplayFK::instance = this;
+
+    pressPoint.x = 0;
+    pressPoint.y = 0;
+    releasePoint.x = 0;
+    releasePoint.y = 0;
+    
+    // Initialize fonts (static members)
     #if defined(USING_GRAPHIC_LIB)
     WidgetBase::fontBold = const_cast<GFXfont *>(&RobotoBold5pt7b);
     WidgetBase::fontNormal = const_cast<GFXfont *>(&RobotoBold5pt7b);
     #endif
-m_loopSemaphore = xSemaphoreCreateBinary();
     
+    // Create critical resources with exception safety
+    if (!createSemaphoreSafe()) {
+        ESP_LOGE(TAG, "Failed to create loop semaphore safely");
+        // Continue anyway, but mark as failed
+    }
+    
+    // Initialize all widget configuration flags to false
+    initializeWidgetFlags();
+    
+    // Validate initialization
+    if (!validateInitialization()) {
+        ESP_LOGE(TAG, "Constructor initialization failed");
+    }
+    
+    ESP_LOGD(TAG, "DisplayFK constructor completed");
+}
+
+/**
+ * @brief Initialize all widget configuration flags to false
+ */
+void DisplayFK::initializeWidgetFlags()
+{
+    // Initialize widget configuration flags based on compile-time defines
+    #if defined(DFK_TOUCHAREA)
+    m_touchAreaConfigured = false;
+    arrayTouchArea = nullptr;
+    qtdTouchArea = 0;
+    #endif
+
+    #ifdef DFK_CHECKBOX
+    m_checkboxConfigured = false;
+    arrayCheckbox = nullptr;
+    qtdCheckbox = 0;
+    #endif
+
+    #ifdef DFK_CIRCLEBTN
+    m_circleButtonConfigured = false;
+    arrayCircleBtn = nullptr;
+    qtdCircleBtn = 0;
+    #endif
+
+    #ifdef DFK_GAUGE
+    m_gaugeConfigured = false;
+    arrayGauge = nullptr;
+    qtdGauge = 0;
+    #endif
+
+    #ifdef DFK_CIRCULARBAR
+    m_circularBarConfigured = false;
+    arrayCircularBar = nullptr;
+    qtdCircularBar = 0;
+    #endif
+
+    #ifdef DFK_HSLIDER
+    m_hSliderConfigured = false;
+    arrayHSlider = nullptr;
+    qtdHSlider = 0;
+    #endif
+
+    #ifdef DFK_LABEL
+    m_labelConfigured = false;
+    arrayLabel = nullptr;
+    qtdLabel = 0;
+    #endif
+
+    #ifdef DFK_LED
+    m_ledConfigured = false;
+    arrayLed = nullptr;
+    qtdLed = 0;
+    #endif
+
+    #ifdef DFK_LINECHART
+    m_lineChartConfigured = false;
+    arrayLineChart = nullptr;
+    qtdLineChart = 0;
+    #endif
+
+    #ifdef DFK_RADIO
+    m_radioGroupConfigured = false;
+    arrayRadioGroup = nullptr;
+    qtdRadioGroup = 0;
+    #endif
+
+    #ifdef DFK_RECTBTN
+    m_rectButtonConfigured = false;
+    arrayRectBtn = nullptr;
+    qtdRectBtn = 0;
+    #endif
+
+    #ifdef DFK_TOGGLE
+    m_toggleConfigured = false;
+    arrayToggleBtn = nullptr;
+    qtdToggle = 0;
+    #endif
+
+    #ifdef DFK_VBAR
+    m_vBarConfigured = false;
+    arrayVBar = nullptr;
+    qtdVBar = 0;
+    #endif
+
+    #ifdef DFK_VANALOG
+    m_vAnalogConfigured = false;
+    arrayVAnalog = nullptr;
+    qtdVAnalog = 0;
+    #endif
+
+    #ifdef DFK_TEXTBOX
+    m_textboxConfigured = false;
+    arrayTextBox = nullptr;
+    qtdTextBox = 0;
+    #endif
+
+    #ifdef DFK_NUMBERBOX
+    m_numberboxConfigured = false;
+    arrayNumberbox = nullptr;
+    qtdNumberBox = 0;
+    #endif
+
+    #ifdef DFK_IMAGE
+    m_imageConfigured = false;
+    arrayImage = nullptr;
+    qtdImage = 0;
+    #endif
+
+    #ifdef DFK_TEXTBUTTON
+    m_textButtonConfigured = false;
+    arrayTextButton = nullptr;
+    qtdTextButton = 0;
+    #endif
+
+    #ifdef DFK_SPINBOX
+    m_spinboxConfigured = false;
+    arraySpinbox = nullptr;
+    qtdSpinbox = 0;
+    #endif
+
+    #ifdef DFK_THERMOMETER
+    m_thermometerConfigured = false;
+    arrayThermometer = nullptr;
+    qtdThermometer = 0;
+    #endif
+
+    #ifdef DFK_EXTERNALINPUT
+    m_inputExternalConfigured = false;
+    #endif
+    
+    ESP_LOGD(TAG, "Widget flags initialized");
+}
+
+/**
+ * @brief Validate that the constructor completed successfully
+ * @return true if initialization was successful, false otherwise
+ */
+bool DisplayFK::validateInitialization() const
+{
+    // Check critical resources
+    if (!m_loopSemaphore) {
+        ESP_LOGE(TAG, "Loop semaphore not initialized");
+        return false;
+    }
+    
+    // Check instance pointer
+    if (DisplayFK::instance != this) {
+        ESP_LOGE(TAG, "Instance pointer not set correctly");
+        return false;
+    }
+    
+    ESP_LOGD(TAG, "Initialization validation passed");
+    return true;
+}
+
+/**
+ * @brief Clean up FreeRTOS resources
+ */
+void DisplayFK::cleanupFreeRTOSResources()
+{
+    ESP_LOGD(TAG, "Cleaning up FreeRTOS resources");
+    
+    // Stop and delete auto-click timer
+    if (m_timer != nullptr) {
+        if (xTimerIsTimerActive(m_timer)) {
+            xTimerStop(m_timer, 0);
+            ESP_LOGD(TAG, "Auto-click timer stopped");
+        }
+        xTimerDelete(m_timer, 0);
+        m_timer = nullptr;
+        ESP_LOGD(TAG, "Auto-click timer deleted");
+    }
+    
+    // Delete loop semaphore
+    if (m_loopSemaphore != nullptr) {
+        vSemaphoreDelete(m_loopSemaphore);
+        m_loopSemaphore = nullptr;
+        ESP_LOGD(TAG, "Loop semaphore deleted");
+    }
+    
+    // Remove task from watchdog if initialized
+    if (m_watchdogInitialized && m_hndTaskEventoTouch != nullptr) {
+        esp_err_t result = esp_task_wdt_delete(m_hndTaskEventoTouch);
+        if (result == ESP_OK) {
+            ESP_LOGD(TAG, "Task removed from watchdog");
+        } else {
+            ESP_LOGE(TAG, "Failed to remove task from watchdog: %s", esp_err_to_name(result));
+        }
+        m_watchdogInitialized = false;
+    }
+    
+    // Delete log queue
+    if (xFilaLog != nullptr) {
+        vQueueDelete(xFilaLog);
+        xFilaLog = nullptr;
+        ESP_LOGD(TAG, "Log queue deleted");
+    }
+    
+    ESP_LOGD(TAG, "FreeRTOS resources cleanup completed");
+}
+
+/**
+ * @brief Clean up dynamic memory allocations
+ */
+void DisplayFK::cleanupDynamicMemory()
+{
+    ESP_LOGD(TAG, "Cleaning up dynamic memory");
+    
+    #ifdef DFK_SD
+    // Clean up log filename (owned by this class)
+    if (m_nameLogFile != nullptr) {
+        delete[] m_nameLogFile;
+        m_nameLogFile = nullptr;
+        ESP_LOGD(TAG, "Log filename memory freed");
+    }
+    #endif
+    
+    #ifdef DFK_EXTERNALINPUT
+    // Clean up external keyboard (owned by this class)
+    if (externalKeyboard != nullptr) {
+        delete externalKeyboard;
+        externalKeyboard = nullptr;
+        ESP_LOGD(TAG, "External keyboard memory freed");
+    }
+    #endif
+    
+    ESP_LOGD(TAG, "Dynamic memory cleanup completed");
+}
+
+/**
+ * @brief Clean up widget resources
+ */
+void DisplayFK::cleanupWidgets()
+{
+    ESP_LOGD(TAG, "Cleaning up widget resources");
+    
+    // Clean up smart pointers (automatic cleanup)
+    #if defined(HAS_TOUCH)
+    if (touchExterno) {
+        touchExterno.reset();
+        ESP_LOGD(TAG, "Touch screen smart pointer reset");
+    }
+    #endif
+    
+    #ifdef DFK_TEXTBOX
+    if (keyboard) {
+        keyboard.reset();
+        ESP_LOGD(TAG, "Keyboard smart pointer reset");
+    }
+    #endif
+    
+    #ifdef DFK_NUMBERBOX
+    if (numpad) {
+        numpad.reset();
+        ESP_LOGD(TAG, "Numpad smart pointer reset");
+    }
+    #endif
+    
+    // Reset all widget arrays and flags
+    initializeWidgetFlags();
+    
+    ESP_LOGD(TAG, "Widget resources cleanup completed");
+}
+
+/**
+ * @brief Validate that cleanup was successful
+ * @return true if cleanup was successful, false otherwise
+ */
+bool DisplayFK::validateCleanup() const
+{
+    ESP_LOGD(TAG, "Validating cleanup");
+    
+    // Check FreeRTOS resources
+    if (m_timer != nullptr) {
+        ESP_LOGE(TAG, "Timer not properly cleaned up");
+        return false;
+    }
+    
+    if (m_loopSemaphore != nullptr) {
+        ESP_LOGE(TAG, "Loop semaphore not properly cleaned up");
+        return false;
+    }
+    
+    if (xFilaLog != nullptr) {
+        ESP_LOGE(TAG, "Log queue not properly cleaned up");
+        return false;
+    }
+    
+    // Check dynamic memory
+    #ifdef DFK_SD
+    if (m_nameLogFile != nullptr) {
+        ESP_LOGE(TAG, "Log filename not properly cleaned up");
+        return false;
+    }
+    #endif
+    
+    #ifdef DFK_EXTERNALINPUT
+    if (externalKeyboard != nullptr) {
+        ESP_LOGE(TAG, "External keyboard not properly cleaned up");
+        return false;
+    }
+    #endif
+    
+    // Check smart pointers
+    #if defined(HAS_TOUCH)
+    if (touchExterno) {
+        ESP_LOGE(TAG, "Touch screen smart pointer not properly cleaned up");
+        return false;
+    }
+    #endif
+    
+    #ifdef DFK_TEXTBOX
+    if (keyboard) {
+        ESP_LOGE(TAG, "Keyboard smart pointer not properly cleaned up");
+        return false;
+    }
+    #endif
+    
+    #ifdef DFK_NUMBERBOX
+    if (numpad) {
+        ESP_LOGE(TAG, "Numpad smart pointer not properly cleaned up");
+        return false;
+    }
+    #endif
+    
+    // Check StringPool allocations
+    uint32_t activeAllocations, totalAllocations, totalDeallocations;
+    stringPool.getStats(activeAllocations, totalAllocations, totalDeallocations);
+    
+    if (activeAllocations > 0) {
+        ESP_LOGE(TAG, "StringPool has %u active allocations not cleaned up", activeAllocations);
+        return false;
+    }
+    
+    ESP_LOGD(TAG, "Cleanup validation passed");
+    return true;
+}
+
+/**
+ * @brief Manual cleanup function for external use
+ */
+void DisplayFK::cleanup()
+{
+    ESP_LOGD(TAG, "Manual cleanup started");
+    
+    // Clean up resources in proper order
+    cleanupFreeRTOSResources();
+    cleanupDynamicMemory();
+    cleanupWidgets();
+    cleanupStringPool();
+    
+    // Reset static variables
+    sdcardOK = false;
+    logIndex = 0;
+    logFileCount = 1;
+    
+    // Validate cleanup
+    if (!validateCleanup()) {
+        ESP_LOGE(TAG, "Manual cleanup validation failed");
+    } else {
+        ESP_LOGD(TAG, "Manual cleanup completed successfully");
+    }
 }
 
 /**
@@ -1004,7 +1479,7 @@ void DisplayFK::startKeyboards(){
             if (keyboard) {
                 keyboard->setup();
             } else {
-                DEBUG_E("Failed to allocate memory for keyboard");
+                ESP_LOGE(TAG, "Failed to allocate memory for keyboard");
             }
         }
     #endif
@@ -1014,7 +1489,7 @@ void DisplayFK::startKeyboards(){
             if (numpad) {
                 numpad->setup();
             } else {
-                DEBUG_E("Failed to allocate memory for numpad");
+                ESP_LOGE(TAG, "Failed to allocate memory for numpad");
             }
         }
     #endif
@@ -1025,181 +1500,25 @@ void DisplayFK::startKeyboards(){
  */
 DisplayFK::~DisplayFK()
 {
-    // Clean up timer
-    if (m_timer != nullptr) {
-        xTimerDelete(m_timer, 0);
-        m_timer = nullptr;
-    }
-
-    // Clean up semaphore
-    if (m_loopSemaphore != nullptr) {
-        vSemaphoreDelete(m_loopSemaphore);
-        m_loopSemaphore = nullptr;
-    }
-
-    // Free all widget arrays (these are pointers to external arrays, not owned by this class)
-    // Note: The arrays themselves are managed by the user, we only store pointers
-#if defined(DFK_TOUCHAREA)
-    arrayTouchArea = nullptr;
-    qtdTouchArea = 0;
-    m_touchAreaConfigured = false;
-#endif
-
-#if defined(DFK_THERMOMETER)
-    arrayThermometer = nullptr;
-    qtdThermometer = 0;
-    m_thermometerConfigured = false;
-#endif
-
-#ifdef DFK_CHECKBOX
-    arrayCheckbox = nullptr;
-    qtdCheckbox = 0;
-    m_checkboxConfigured = false;
-#endif
-
-#ifdef DFK_CIRCLEBTN
-    arrayCircleBtn = nullptr;
-    qtdCircleBtn = 0;
-    m_circleButtonConfigured = false;
-#endif
-
-#ifdef DFK_GAUGE
-    arrayGauge = nullptr;
-    qtdGauge = 0;
-    m_gaugeConfigured = false;
-#endif
-
-#ifdef DFK_CIRCULARBAR
-    arrayCircularBar = nullptr;
-    qtdCircularBar = 0;
-    m_circularBarConfigured = false;
-#endif
-
-#ifdef DFK_HSLIDER
-    arrayHSlider = nullptr;
-    qtdHSlider = 0;
-    m_hSliderConfigured = false;
-#endif
-
-#ifdef DFK_LABEL
-    arrayLabel = nullptr;
-    qtdLabel = 0;
-    m_labelConfigured = false;
-#endif
-
-#ifdef DFK_LED
-    arrayLed = nullptr;
-    qtdLed = 0;
-    m_ledConfigured = false;
-#endif
-
-#ifdef DFK_LINECHART
-    arrayLineChart = nullptr;
-    qtdLineChart = 0;
-    m_lineChartConfigured = false;
-#endif
-
-#ifdef DFK_RADIO
-    arrayRadioGroup = nullptr;
-    qtdRadioGroup = 0;
-    m_radioGroupConfigured = false;
-#endif
-
-#ifdef DFK_RECTBTN
-    arrayRectBtn = nullptr;
-    qtdRectBtn = 0;
-    m_rectButtonConfigured = false;
-#endif
-
-#ifdef DFK_TOGGLE
-    arrayToggleBtn = nullptr;
-    qtdToggle = 0;
-    m_toggleConfigured = false;
-#endif
-
-#ifdef DFK_VBAR
-    arrayVBar = nullptr;
-    qtdVBar = 0;
-    m_vBarConfigured = false;
-#endif
-
-#ifdef DFK_VANALOG
-    arrayVAnalog = nullptr;
-    qtdVAnalog = 0;
-    m_vAnalogConfigured = false;
-#endif
-
-#ifdef DFK_TEXTBOX
-    arrayTextBox = nullptr;
-    qtdTextBox = 0;
-    m_textboxConfigured = false;
-    // Smart pointer will automatically clean up keyboard
-    keyboard.reset();
-#endif
-
-#ifdef DFK_NUMBERBOX
-    arrayNumberbox = nullptr;
-    qtdNumberBox = 0;
-    m_numberboxConfigured = false;
-    // Smart pointer will automatically clean up numpad
-    numpad.reset();
-#endif
-
-#ifdef DFK_IMAGE
-    arrayImage = nullptr;
-    qtdImage = 0;
-    m_imageConfigured = false;
-#endif
-
-#ifdef DFK_TEXTBUTTON
-    arrayTextButton = nullptr;
-    qtdTextButton = 0;
-    m_textButtonConfigured = false;
-#endif
-
-#ifdef DFK_SPINBOX
-    arraySpinbox = nullptr;
-    qtdSpinbox = 0;
-    m_spinboxConfigured = false;
-#endif
-
-#if defined(HAS_TOUCH)
-    // Smart pointer will automatically clean up touch screen
-    if(touchExterno){
-        touchExterno.reset();    
-    }
+    ESP_LOGD(TAG, "DisplayFK destructor started");
     
-#endif
-
-#ifdef DFK_SD
-    // Clean up log filename (owned by this class)
-    if (m_nameLogFile) {
-        delete[] m_nameLogFile;
-        m_nameLogFile = nullptr;
-    }
-#endif
-
-#ifdef DFK_EXTERNALINPUT
-    // Clean up external keyboard (owned by this class)
-    if (externalKeyboard) {
-        delete externalKeyboard;
-        externalKeyboard = nullptr;
-    }
-    arrayInputExternal = nullptr;
-    qtdExternalInput = 0;
-    m_inputExternalConfigured = false;
-#endif
-
-    // Free the log queue
-    if (xFilaLog) {
-        vQueueDelete(xFilaLog);
-        xFilaLog = nullptr;
-    }
-
+    // Clean up resources in proper order
+    cleanupFreeRTOSResources();
+    cleanupDynamicMemory();
+    cleanupWidgets();
+    cleanupStringPool();
+    
     // Reset static variables
     sdcardOK = false;
     logIndex = 0;
     logFileCount = 1;
+    
+    // Validate cleanup
+    if (!validateCleanup()) {
+        ESP_LOGE(TAG, "Cleanup validation failed");
+    }
+    
+    ESP_LOGD(TAG, "DisplayFK destructor completed");
 }
 
 
@@ -1212,15 +1531,15 @@ void DisplayFK::setup(){
     WidgetBase::xFilaCallback = xQueueCreate(5, sizeof(functionCB_t));
     if (DisplayFK::xFilaLog == NULL)
     {
-        DEBUG_E("Fail while creating log queue");
+        ESP_LOGE(TAG, "Fail while creating log queue");
     }else{
-        DEBUG_D("Log queue created");
+        ESP_LOGD(TAG, "Log queue created");
     }
     if (WidgetBase::xFilaCallback == NULL)
     {
-        DEBUG_E("Fail while creating callback queue");
+        ESP_LOGE(TAG, "Fail while creating callback queue");
     }else{
-        DEBUG_D("Callback queue created");
+        ESP_LOGD(TAG, "Callback queue created");
     }
 }
 
@@ -1229,7 +1548,7 @@ void DisplayFK::setup(){
  */
 void DisplayFK::startTransaction(){
     if(m_runningTransaction){
-        DEBUG_W("Transaction already running.");
+        ESP_LOGW(TAG, "Transaction already running.");
         return;
     }
 
@@ -1276,7 +1595,7 @@ void DisplayFK::setFontBold(const GFXfont *_font)
  */
 void DisplayFK::startTouch(uint16_t w, uint16_t h, uint8_t _rotation, SPIClass *_sharedSPI = nullptr)
 {
-    DEBUG_E("startTouch not implemented.");
+    ESP_LOGE(TAG, "startTouch not implemented.");
     /*touchExterno = new TouchScreen();
 
     if (touchExterno)
@@ -1306,6 +1625,37 @@ void DisplayFK::setSwapAxis(bool swap){
 
 #if defined(TOUCH_XPT2046)
 void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS){
+    // Robust input validation
+    if (!validateDimensions(w, h)) {
+        ESP_LOGE(TAG, "Invalid touch screen dimensions: %dx%d", w, h);
+        return;
+    }
+    
+    if (!validatePinNumber(pinCS)) {
+        ESP_LOGE(TAG, "Invalid CS pin: %d", pinCS);
+        return;
+    }
+    
+    if (!validateFrequency(touchFrequency)) {
+        ESP_LOGE(TAG, "Invalid touch frequency: %d Hz", touchFrequency);
+        return;
+    }
+    
+    if (!validateFrequency(displayFrequency)) {
+        ESP_LOGE(TAG, "Invalid display frequency: %d Hz", displayFrequency);
+        return;
+    }
+    
+    if (!_sharedSPI) {
+        ESP_LOGE(TAG, "SPI interface not provided");
+        return;
+    }
+    
+    if (!_objTFT) {
+        ESP_LOGE(TAG, "TFT object not provided");
+        return;
+    }
+    
     m_widthScreen = w;
     m_rotationScreen = _rotation;
     m_heightScreen = h;
@@ -1318,7 +1668,7 @@ void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsXPT2046(w, h, _rotation, -1, -1, -1, pinCS, _sharedSPI, _objTFT, touchFrequency, displayFrequency, displayPinCS);
         } else {
-            DEBUG_E("Failed to allocate memory for TouchScreen");
+            ESP_LOGE(TAG, "Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1335,7 +1685,7 @@ void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsXPT2046(w, h, _rotation, pinSclk, pinMosi, pinMiso, pinCS, nullptr, _objTFT, touchFrequency, displayFrequency, displayPinCS);
         } else {
-            DEBUG_E("Failed to allocate memory for TouchScreen");
+            ESP_LOGE(TAG, "Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1353,7 +1703,7 @@ void DisplayFK::startTouchFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, int
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsFT6236U(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
         } else {
-            DEBUG_E("Failed to allocate memory for TouchScreen");
+            ESP_LOGE(TAG, "Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1371,7 +1721,7 @@ void DisplayFK::startTouchFT6336(uint16_t w, uint16_t h, uint8_t _rotation, int8
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsFT6336(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
         } else {
-            DEBUG_E("Failed to allocate memory for TouchScreen");
+            ESP_LOGE(TAG, "Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1389,7 +1739,7 @@ void DisplayFK::startTouchCST816(uint16_t w, uint16_t h, uint8_t _rotation, int8
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsCST816(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
         } else {
-            DEBUG_E("Failed to allocate memory for TouchScreen");
+            ESP_LOGE(TAG, "Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1407,7 +1757,7 @@ void DisplayFK::startTouchGT911(uint16_t w, uint16_t h, uint8_t _rotation, int8_
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsGT911(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
         } else {
-            DEBUG_E("Failed to allocate memory for TouchScreen");
+            ESP_LOGE(TAG, "Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1425,7 +1775,7 @@ void DisplayFK::startTouchGSL3680(uint16_t w, uint16_t h, uint8_t _rotation, int
             touchExterno->setSwapAxis(m_swapAxis);
             touchExterno->startAsGSL3680(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
         } else {
-            DEBUG_E("Failed to allocate memory for TouchScreen");
+            ESP_LOGE(TAG, "Failed to allocate memory for TouchScreen");
         }
     }
 }
@@ -1455,7 +1805,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of TouchArea not configured");
+        ESP_LOGW(TAG, "Array of TouchArea not configured");
     }
 #endif
 
@@ -1470,7 +1820,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of Checkbox not configured");
+        ESP_LOGW(TAG, "Array of Checkbox not configured");
     }
 #endif
 #ifdef DFK_CIRCLEBTN
@@ -1484,7 +1834,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of CircleButton not configured");
+        ESP_LOGW(TAG, "Array of CircleButton not configured");
     }
 #endif
 #ifdef DFK_SPINBOX
@@ -1498,7 +1848,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of Spinbox not configured");
+        ESP_LOGW(TAG, "Array of Spinbox not configured");
     }
 #endif
 #ifdef DFK_GAUGE
@@ -1512,7 +1862,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of Gauge not configured");
+        ESP_LOGW(TAG, "Array of Gauge not configured");
     }
 
 #endif
@@ -1528,7 +1878,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of CircularBar not configured");
+        ESP_LOGW(TAG, "Array of CircularBar not configured");
     }
 #endif
 
@@ -1543,7 +1893,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of HSlider not configured");
+        ESP_LOGW(TAG, "Array of HSlider not configured");
     }
 #endif
 #ifdef DFK_LABEL
@@ -1557,7 +1907,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of Label not configured");
+        ESP_LOGW(TAG, "Array of Label not configured");
     }
 #endif
 #ifdef DFK_LED
@@ -1572,7 +1922,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of Led not configured");
+        ESP_LOGW(TAG, "Array of Led not configured");
     }
 #endif
 #ifdef DFK_LINECHART
@@ -1586,7 +1936,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of LineChart not configured");
+        ESP_LOGW(TAG, "Array of LineChart not configured");
     }
 #endif
 #ifdef DFK_RADIO
@@ -1600,7 +1950,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of RadioGroup not configured");
+        ESP_LOGW(TAG, "Array of RadioGroup not configured");
     }
 #endif
 #ifdef DFK_RECTBTN
@@ -1614,7 +1964,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of RectButton not configured");
+        ESP_LOGW(TAG, "Array of RectButton not configured");
     }
 #endif
 #ifdef DFK_TOGGLE
@@ -1628,7 +1978,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of Toggle not configured");
+        ESP_LOGW(TAG, "Array of Toggle not configured");
     }
 #endif
 
@@ -1642,7 +1992,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of TextButton not configured");
+        ESP_LOGW(TAG, "Array of TextButton not configured");
     }
 #endif
 
@@ -1657,7 +2007,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of VBar not configured");
+        ESP_LOGW(TAG, "Array of VBar not configured");
     }
 #endif
 
@@ -1672,7 +2022,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of Thermometer not configured");
+        ESP_LOGW(TAG, "Array of Thermometer not configured");
     }
 #endif
 
@@ -1688,7 +2038,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of VAnalog not configured");
+        ESP_LOGW(TAG, "Array of VAnalog not configured");
     }
 #endif
 #ifdef DFK_TEXTBOX
@@ -1702,7 +2052,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of Textbox not configured");
+        ESP_LOGW(TAG, "Array of Textbox not configured");
     }
 #endif
 #ifdef DFK_NUMBERBOX
@@ -1716,7 +2066,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of Numberbox not configured");
+        ESP_LOGW(TAG, "Array of Numberbox not configured");
     }
 #endif
 #ifdef DFK_IMAGE
@@ -1732,12 +2082,12 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     }
     else
     {
-        DEBUG_W("Array of Image not configured");
+        ESP_LOGW(TAG, "Array of Image not configured");
     }
 #endif
 
- uint32_t endMillis = millis();
- Serial.printf("drawWidgetsOnScreen: %i ms\n", endMillis - startMillis);
+ startMillis = millis() - startMillis;
+ Serial.printf("drawWidgetsOnScreen: %lu ms\n", startMillis);
 }
 
 /**
@@ -1805,10 +2155,10 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
         #if (ESP_ARDUINO_VERSION_MAJOR == 2) || (ESP_ARDUINO_VERSION_MAJOR == 3)
         m_watchdogInitialized = (iniciou == ESP_OK);
         if(iniciou == ESP_OK){
-            DEBUG_D("WDT initialized with %i seconds timeout", m_timeoutWTD);
+            ESP_LOGD(TAG, "WDT initialized with %i seconds timeout", m_timeoutWTD);
             esp_task_wdt_add(NULL);
         }else{
-            DEBUG_E("WDT initialization failed");
+            ESP_LOGE(TAG, "WDT initialization failed");
         }
         #endif
 		
@@ -1816,9 +2166,9 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
         esp_task_wdt_delete(NULL);
         esp_err_t deinit = esp_task_wdt_deinit();
         if(deinit == ESP_OK){
-            DEBUG_D("WDT deinitialized");
+            ESP_LOGD(TAG, "WDT deinitialized");
         }else{
-            DEBUG_E("WDT deinitialization failed");
+            ESP_LOGE(TAG, "WDT deinitialization failed");
         }
     }
 
@@ -1827,7 +2177,7 @@ void DisplayFK::createTask(bool enableWatchdog, uint16_t timeout_s)
     xRetorno = xTaskCreatePinnedToCore(DisplayFK::TaskEventoTouch, "TaskEventoTouch", configMINIMAL_STACK_SIZE + 3048, this, 1, &m_hndTaskEventoTouch, 0);
     if (xRetorno == pdFAIL)
     {
-        DEBUG_E("Cant create task to read touch or draw widgets");
+        ESP_LOGE(TAG, "Cant create task to read touch or draw widgets");
     }
 }
 
@@ -1890,7 +2240,7 @@ void DisplayFK::processLogQueue() {
         Serial.printf("ADD LOG FILE\t-->\t%i\t%s\n", messageInLog.line_length, messageInLog.line);
         
         if (logIndex >= LOG_LENGTH) {
-            DEBUG_E("Log buffer overflow");
+            ESP_LOGE(TAG, "Log buffer overflow");
             return;
         }
         
@@ -1910,7 +2260,7 @@ void DisplayFK::processLogBuffer() {
     Serial.printf("Write log file %i lines\n", logIndex);
     
     if (!sdcardOK) {
-        DEBUG_E("SD card not available for log writing");
+        ESP_LOGE(TAG, "SD card not available for log writing");
         return;
     }
     
@@ -1946,7 +2296,7 @@ void DisplayFK::processTouchEvent(uint16_t xTouch, uint16_t yTouch, int zPressur
     processTouchableWidgets(xTouch, yTouch);
 }
 
-void DisplayFK::processTouchStatus(bool hasTouch){
+void DisplayFK::processTouchStatus(bool hasTouch, uint16_t xTouch, uint16_t yTouch){
     if(hasTouch && m_lastTouchState == TouchEventType::NONE){
         m_lastTouchState = TouchEventType::TOUCH_DOWN;
     }else if(hasTouch && m_lastTouchState == TouchEventType::TOUCH_DOWN){
@@ -1959,9 +2309,37 @@ void DisplayFK::processTouchStatus(bool hasTouch){
 
     if(m_lastTouchState == TouchEventType::TOUCH_DOWN){
         Serial.println("---------------------- APERTEI");
+        pressPoint.x = xTouch;
+        pressPoint.y = yTouch;
+        releasePoint.x = xTouch;
+        releasePoint.y = yTouch;
+
     }else if(m_lastTouchState == TouchEventType::TOUCH_UP){
         Serial.println("---------------------- SOLTEI");
+        // calculate diff between pressPoint and releasePoint for two coords, calculate abs value for this diff, check if is greatter than offsetSwipe,f
+        int absX = abs((int)releasePoint.x - (int)pressPoint.x);
+        int absY = abs((int)releasePoint.y - (int)pressPoint.y);
+
+        if(absX > offsetSwipe){
+            if(releasePoint.x > pressPoint.x){
+                m_lastTouchSwipeDirection = TouchSwipeDirection::RIGHT;
+            }else{
+                m_lastTouchSwipeDirection = TouchSwipeDirection::LEFT;
+            }
+        }else if(absY > offsetSwipe){
+            if(releasePoint.y > pressPoint.y){
+                m_lastTouchSwipeDirection = TouchSwipeDirection::DOWN;
+            }else{
+                m_lastTouchSwipeDirection = TouchSwipeDirection::UP;
+            }
+        }else{
+            m_lastTouchSwipeDirection = TouchSwipeDirection::NONE;
+        }
+        Serial.printf("Swipe direction: %i\n", (int)m_lastTouchSwipeDirection);
+
     }else if(m_lastTouchState == TouchEventType::TOUCH_HOLD){
+        releasePoint.x = xTouch;
+        releasePoint.y = yTouch;
         //Serial.println("---------------------- APERTANDO");
     }
 }
@@ -1972,7 +2350,7 @@ void DisplayFK::processTouchStatus(bool hasTouch){
  * @param yTouch Touch Y position
  */
 void DisplayFK::processTouchableWidgets(uint16_t xTouch, uint16_t yTouch) {
-    DEBUG_D("Processing touchable widgets");
+    ESP_LOGD(TAG, "Processing touchable widgets");
     // Process each type of touchable widget
     processCheckboxTouch(xTouch, yTouch);
     processCircleButtonTouch(xTouch, yTouch);
@@ -2233,7 +2611,7 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
     }
         for (uint32_t indice = 0; indice < qtdTextBox; indice++) {
             if (arrayTextBox[indice] == nullptr) {
-                DEBUG_E("TextBox pointer is null");
+                ESP_LOGE(TAG, "TextBox pointer is null");
                 continue;
             }
 
@@ -2282,7 +2660,7 @@ void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
 
         for (uint32_t indice = 0; indice < qtdNumberBox; indice++) {
             if (arrayNumberbox[indice] == nullptr) {
-                DEBUG_E("NumberBox pointer is null");
+                ESP_LOGE(TAG, "NumberBox pointer is null");
                 continue;
             }
 
@@ -2423,7 +2801,7 @@ if(touchExterno){
         Serial.printf("Simulating click at (%i, %i)\n", xTouch, yTouch);
     }
 
-    processTouchStatus(hasTouch);
+    processTouchStatus(hasTouch, xTouch, yTouch);
 
     if (hasTouch) {
         
@@ -2443,7 +2821,7 @@ if(touchExterno){
     startTime = millis() - startTime;
     
     if(startTime > 20){
-        Serial.printf("Time to loopTask: %i ms\n", startTime);
+        Serial.printf("Time to loopTask: %lu ms\n", startTime);
     }
 
 
@@ -2460,7 +2838,7 @@ void DisplayFK::TaskEventoTouch(void *pvParameters)
     DisplayFK::instance->changeWTD();
 
     //vTaskDelay(pdMS_TO_TICKS(3000));
-    DEBUG_D("TaskEventoTouch created");
+    ESP_LOGD(TAG, "TaskEventoTouch created");
     // const TickType_t xDelay = 10 / portTICK_PERIOD_MS;
 
     for (;;)
@@ -2481,7 +2859,7 @@ void DisplayFK::TaskEventoTouch(void *pvParameters)
  * @brief Returns the touch event task handle
  * @return Task handle
  */
-TaskHandle_t DisplayFK::getTaskHandle()
+TaskHandle_t DisplayFK::getTaskHandle() const
 {
     return m_hndTaskEventoTouch;
 }
@@ -2512,7 +2890,7 @@ void DisplayFK::disableTouchLog(){
 /**
  * @brief Checks and performs touch calibration
  */
-void DisplayFK::checkCalibration()
+void DisplayFK::checkCalibration() const
 {
 #if defined(HAS_TOUCH)
     if (!WidgetBase::objTFT)
@@ -2629,14 +3007,14 @@ void DisplayFK::checkCalibration()
     WidgetBase::objTFT->fillScreen(CFK_BLACK);
     WidgetBase::objTFT->setRotation(touchExterno->getRotation());
 #else
-    DEBUG_W("TOUCH_CS wasnt defined on TFT_eSPI library.");
+    ESP_LOGW(TAG, "TOUCH_CS wasnt defined on TFT_eSPI library.");
 #endif
 }
 
 /**
  * @brief Forces a new touch calibration
  */
-void DisplayFK::recalibrate()
+void DisplayFK::recalibrate() const
 {
     m_configs.begin("iniciais", false);
     // bool jaCalibrado = configs.getBool("jaCalibrado", false);
@@ -2947,23 +3325,39 @@ void DisplayFK::updateNumberBox(){
 }
 
 void DisplayFK::setupAutoClick(uint32_t intervalMs, uint16_t x, uint16_t y) {
+    // Robust input validation
+    if (intervalMs == 0) {
+        ESP_LOGE(TAG, "Invalid interval: %d ms (must be > 0)", intervalMs);
+        return;
+    }
+    
+    if (intervalMs > 86400000) {  // 24 hours max
+        ESP_LOGW(TAG, "Interval too large: %d ms (max 24h), limiting to 24h", intervalMs);
+        intervalMs = 86400000;
+    }
+    
+    if (intervalMs < 10) {  // 10ms min for reasonable performance
+        ESP_LOGW(TAG, "Interval too small: %d ms (min 10ms), setting to 10ms", intervalMs);
+        intervalMs = 10;
+    }
+    
     m_intervalMs = intervalMs;
     m_xAutoClick = x;
     m_yAutoClick = y;
 
+    // Clean up existing timer
     if (m_timer != nullptr) {
         xTimerDelete(m_timer, 0);
         m_timer = nullptr;
     }
 
-    // Cria o timer, mas não inicia
-    m_timer = xTimerCreate(
-        "SimTimer", 
-        pdMS_TO_TICKS(m_intervalMs), 
-        pdTRUE,             // Recarregável (periódico)
-        this,               // Passa ponteiro da instância como ID
-        DisplayFK::timerCallback
-    );
+    // Create timer with exception safety
+    if (!createTimerSafe()) {
+        ESP_LOGE(TAG, "Failed to create auto-click timer safely");
+        return;
+    }
+    
+    ESP_LOGD(TAG, "Auto-click timer configured: %d ms at (%d, %d)", intervalMs, x, y);
 }
 
 void DisplayFK::startAutoClick() {
@@ -2987,7 +3381,7 @@ void DisplayFK::timerCallback(TimerHandle_t xTimer) {
     }
 }
 
-bool DisplayFK::isRunningAutoClick() {
+bool DisplayFK::isRunningAutoClick() const {
     if (m_timer == nullptr) return false;
     return (xTimerIsTimerActive(m_timer) == pdTRUE);
 }
@@ -3000,4 +3394,461 @@ void DisplayFK::freeStringFromPool(const char* str) {
     if (str) {
         stringPool.deallocate(const_cast<char*>(str));
     }
+}
+
+/**
+ * @brief Prints StringPool allocation statistics
+ */
+void DisplayFK::printStringPoolStats() const {
+    uint32_t activeAllocations, totalAllocations, totalDeallocations;
+    stringPool.getStats(activeAllocations, totalAllocations, totalDeallocations);
+    
+    ESP_LOGI(TAG, "StringPool Stats:");
+    ESP_LOGI(TAG, "  Active allocations: %u", activeAllocations);
+    ESP_LOGI(TAG, "  Total allocations: %u", totalAllocations);
+    ESP_LOGI(TAG, "  Total deallocations: %u", totalDeallocations);
+    
+    if (activeAllocations > 0) {
+        ESP_LOGW(TAG, "  WARNING: %u active allocations detected", activeAllocations);
+        
+        const StringAllocation_t* allocations = stringPool.getActiveAllocations();
+        uint8_t count = stringPool.getActiveCount();
+        
+        for (uint8_t i = 0; i < count; i++) {
+            const StringAllocation_t* alloc = &allocations[i];
+            ESP_LOGD(TAG, "    Allocation %u: ptr=%p, caller=%s, timestamp=%u", 
+                     i, alloc->ptr, alloc->caller ? alloc->caller : "unknown", alloc->timestamp);
+        }
+    }
+}
+
+/**
+ * @brief Cleans up all StringPool allocations
+ */
+void DisplayFK::cleanupStringPool() const {
+    ESP_LOGD(TAG, "Cleaning up StringPool allocations");
+    stringPool.cleanup();
+    
+    uint32_t activeAllocations, totalAllocations, totalDeallocations;
+    stringPool.getStats(activeAllocations, totalAllocations, totalDeallocations);
+    
+    if (activeAllocations == 0) {
+        ESP_LOGD(TAG, "StringPool cleanup successful");
+    } else {
+        ESP_LOGW(TAG, "StringPool cleanup incomplete: %u allocations remaining", activeAllocations);
+    }
+}
+
+/**
+ * @brief Safe keyboard initialization without exceptions
+ * @return true if successful, false otherwise
+ */
+bool DisplayFK::startKeyboardsSafe() {
+    bool success = true;
+    
+    #ifdef DFK_TEXTBOX
+    if (!keyboard) {
+        // Use nothrow allocation
+        keyboard = std::unique_ptr<WKeyboard>(new(std::nothrow) WKeyboard());
+        if (!keyboard) {
+            ESP_LOGE(TAG, "Memory allocation failed for keyboard");
+            success = false;
+        } else {
+            // Safe setup with validation
+            if (keyboard->setup()) {
+                ESP_LOGD(TAG, "Keyboard initialized safely");
+            } else {
+                ESP_LOGW(TAG, "Keyboard setup method not available");
+            }
+        }
+    }
+    #endif
+    
+    #ifdef DFK_NUMBERBOX
+    if (!numpad) {
+        // Use nothrow allocation
+        numpad = std::unique_ptr<Numpad>(new(std::nothrow) Numpad());
+        if (!numpad) {
+            ESP_LOGE(TAG, "Memory allocation failed for numpad");
+            success = false;
+        } else {
+            // Safe setup with validation
+            if (numpad->setup()) {
+                ESP_LOGD(TAG, "Numpad initialized safely");
+            } else {
+                ESP_LOGW(TAG, "Numpad setup method not available");
+            }
+        }
+    }
+    #endif
+    
+    // Rollback on failure
+    if (!success) {
+        ESP_LOGE(TAG, "Keyboard initialization failed, cleaning up");
+        keyboard.reset();
+        numpad.reset();
+    }
+    
+    return success;
+}
+
+/**
+ * @brief Safe timer creation without exceptions
+ * @return true if successful, false otherwise
+ */
+bool DisplayFK::createTimerSafe() {
+    // Validate parameters before creation
+    if (m_intervalMs == 0) {
+        ESP_LOGE(TAG, "Invalid timer interval: %d ms", m_intervalMs);
+        return false;
+    }
+    
+    if (m_intervalMs > 86400000) { // 24 hours max
+        ESP_LOGW(TAG, "Timer interval too large: %d ms, limiting to 24h", m_intervalMs);
+        m_intervalMs = 86400000;
+    }
+    
+    // Create timer with validation
+    m_timer = xTimerCreate("AutoClick", 
+                          pdMS_TO_TICKS(m_intervalMs),
+                          pdFALSE, 
+                          DisplayFK::instance, 
+                          DisplayFK::timerCallback);
+    
+    if (!m_timer) {
+        ESP_LOGE(TAG, "Failed to create timer - insufficient memory");
+        return false;
+    }
+    
+    ESP_LOGD(TAG, "Timer created safely with interval: %d ms", m_intervalMs);
+    return true;
+}
+
+/**
+ * @brief Safe semaphore creation without exceptions
+ * @return true if successful, false otherwise
+ */
+bool DisplayFK::createSemaphoreSafe() {
+    // Check if semaphore already exists
+    if (m_loopSemaphore != nullptr) {
+        ESP_LOGW(TAG, "Semaphore already exists, cleaning up first");
+        vSemaphoreDelete(m_loopSemaphore);
+        m_loopSemaphore = nullptr;
+    }
+    
+    // Create semaphore with validation
+    m_loopSemaphore = xSemaphoreCreateBinary();
+    if (!m_loopSemaphore) {
+        ESP_LOGE(TAG, "Failed to create semaphore - insufficient memory");
+        return false;
+    }
+    
+    ESP_LOGD(TAG, "Semaphore created safely");
+    return true;
+}
+
+/**
+ * @brief Safe checkbox configuration without exceptions
+ * @param array CheckBox array pointer
+ * @param amount Number of checkboxes
+ * @return true if successful, false otherwise
+ */
+bool DisplayFK::setCheckboxSafe(CheckBox *array[], uint8_t amount) {
+    if (m_checkboxConfigured) {
+        ESP_LOGW(TAG, "Checkbox already configured");
+        return false;
+    }
+    
+    // Validate input parameters
+    if (!validateArray(array, amount)) {
+        ESP_LOGE(TAG, "Invalid checkbox array configuration");
+        return false;
+    }
+    
+    // Store original state for rollback
+    bool originalConfigured = m_checkboxConfigured;
+    CheckBox** originalArray = arrayCheckbox;
+    uint8_t originalAmount = qtdCheckbox;
+    
+    // Configure with validation
+    m_checkboxConfigured = true;
+    arrayCheckbox = array;
+    qtdCheckbox = amount;
+    
+    // Validate configuration was successful
+    if (m_checkboxConfigured && arrayCheckbox == array && qtdCheckbox == amount) {
+        ESP_LOGD(TAG, "Checkbox array configured safely with %d elements", amount);
+        return true;
+    } else {
+        ESP_LOGE(TAG, "Checkbox configuration failed, rolling back");
+        // Rollback on failure
+        m_checkboxConfigured = originalConfigured;
+        arrayCheckbox = originalArray;
+        qtdCheckbox = originalAmount;
+        return false;
+    }
+}
+
+/**
+ * @brief Safe string allocation without exceptions
+ * @param caller Function name for logging
+ * @return Allocated string or nullptr
+ */
+char* DisplayFK::allocateStringSafe(const char* caller) {
+    // Validate caller parameter
+    if (!caller) {
+        ESP_LOGW(TAG, "Null caller parameter for string allocation");
+    }
+    
+    // Attempt allocation with validation
+    char* result = stringPool.allocate(caller);
+    if (!result) {
+        ESP_LOGW(TAG, "StringPool exhausted for %s", caller ? caller : "unknown");
+        return nullptr;
+    }
+    
+    // Validate allocated string
+    if (result && strlen(result) < STRING_POOL_SIZE) {
+        ESP_LOGD(TAG, "String allocated safely for %s", caller ? caller : "unknown");
+        return result;
+    } else {
+        ESP_LOGE(TAG, "Invalid string allocation result");
+        if (result) {
+            stringPool.deallocate(result);
+        }
+        return nullptr;
+    }
+}
+
+/**
+ * @brief Safe string deallocation without exceptions
+ * @param str String to deallocate
+ */
+void DisplayFK::deallocateStringSafe(char* str) {
+    if (!str) {
+        ESP_LOGW(TAG, "Attempting to deallocate null string");
+        return;
+    }
+    
+    // Validate string before deallocation
+    if (strlen(str) >= STRING_POOL_SIZE) {
+        ESP_LOGE(TAG, "Invalid string length for deallocation: %zu", strlen(str));
+        return;
+    }
+    
+    // Safe deallocation
+    stringPool.deallocate(str);
+    ESP_LOGD(TAG, "String deallocated safely");
+}
+
+/**
+ * @brief Safe SD card initialization without exceptions
+ * @param pinCS CS pin number
+ * @param spiShared SPI instance
+ * @param hz SPI frequency
+ * @return true if successful, false otherwise
+ */
+bool DisplayFK::startSDSafe(uint8_t pinCS, SPIClass *spiShared, int hz) {
+    // Validate input parameters
+    if (!validatePinNumber(pinCS)) {
+        ESP_LOGE(TAG, "Invalid CS pin: %d", pinCS);
+        return false;
+    }
+    
+    if (!validateFrequency(hz)) {
+        ESP_LOGW(TAG, "Invalid frequency: %d, using default", hz);
+        hz = 4000000;
+    }
+    
+    if (!spiShared) {
+        ESP_LOGE(TAG, "SPI for SD not configured");
+        return false;
+    }
+    
+    // Store original state for rollback
+    bool originalSdcardOK = sdcardOK;
+    
+    // Configure SPI with validation
+    spiShared->beginTransaction(SPISettings(hz, MSBFIRST, SPI_MODE0));
+    sdcardOK = SD.begin(pinCS, *spiShared);
+    spiShared->endTransaction();
+    
+    if (sdcardOK) {
+        ESP_LOGI(TAG, "SD card initialized safely");
+        return true;
+    } else {
+        ESP_LOGE(TAG, "SD card initialization failed");
+        // Rollback on failure
+        sdcardOK = originalSdcardOK;
+        return false;
+    }
+}
+
+/**
+ * @brief Validates input string for length and content
+ * @param input String to validate
+ * @param maxLength Maximum allowed length
+ * @return true if valid, false otherwise
+ */
+bool DisplayFK::validateInput(const char* input, size_t maxLength) const {
+    if (!input) {
+        ESP_LOGE(TAG, "Input string is null");
+        return false;
+    }
+    
+    size_t length = strlen(input);
+    if (length == 0) {
+        ESP_LOGE(TAG, "Input string is empty");
+        return false;
+    }
+    
+    if (length > maxLength) {
+        ESP_LOGE(TAG, "Input string too long: %d > %d", length, maxLength);
+        return false;
+    }
+    
+    // Check for null characters in the middle of the string
+    for (size_t i = 0; i < length; i++) {
+        if (input[i] == '\0' && i < length - 1) {
+            ESP_LOGE(TAG, "Null character found in middle of string at position %d", i);
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+/**
+ * @brief Validates pin number for ESP32
+ * @param pin Pin number to validate
+ * @return true if valid, false otherwise
+ */
+bool DisplayFK::validatePinNumber(int8_t pin) const {
+    if (pin < 0) {
+        ESP_LOGE(TAG, "Invalid pin number: %d (negative)", pin);
+        return false;
+    }
+    
+    if (pin > 39) {
+        ESP_LOGE(TAG, "Invalid pin number: %d (max 39 for ESP32)", pin);
+        return false;
+    }
+    
+    // Check for reserved pins on ESP32
+    if (pin == 6 || pin == 7 || pin == 8 || pin == 9 || pin == 10 || pin == 11) {
+        ESP_LOGW(TAG, "Pin %d is reserved for flash/PSRAM on ESP32", pin);
+        return false;
+    }
+    
+    return true;
+}
+
+/**
+ * @brief Validates frequency for SPI/I2C communication
+ * @param frequency Frequency in Hz
+ * @return true if valid, false otherwise
+ */
+bool DisplayFK::validateFrequency(int frequency) const {
+    if (frequency <= 0) {
+        ESP_LOGE(TAG, "Invalid frequency: %d Hz (must be positive)", frequency);
+        return false;
+    }
+    
+    if (frequency > 20000000) {  // 20MHz max for ESP32
+        ESP_LOGW(TAG, "Frequency too high: %d Hz (max 20MHz), limiting to 20MHz", frequency);
+        return false;
+    }
+    
+    if (frequency < 100000) {  // 100kHz min for reliable communication
+        ESP_LOGW(TAG, "Frequency too low: %d Hz (min 100kHz), setting to 100kHz", frequency);
+        return false;
+    }
+    
+    return true;
+}
+
+/**
+ * @brief Validates screen dimensions
+ * @param width Screen width
+ * @param height Screen height
+ * @return true if valid, false otherwise
+ */
+bool DisplayFK::validateDimensions(uint16_t width, uint16_t height) const {
+    if (width == 0 || height == 0) {
+        ESP_LOGE(TAG, "Invalid dimensions: %dx%d (zero dimension)", width, height);
+        return false;
+    }
+    
+    if (width > 4096 || height > 4096) {
+        ESP_LOGE(TAG, "Dimensions too large: %dx%d (max 4096x4096)", width, height);
+        return false;
+    }
+    
+    if (width < 32 || height < 32) {
+        ESP_LOGW(TAG, "Dimensions very small: %dx%d (min recommended 32x32)", width, height);
+    }
+    
+    return true;
+}
+
+/**
+ * @brief Validates array pointer and count
+ * @param array Pointer to array
+ * @param count Number of elements
+ * @return true if valid, false otherwise
+ */
+bool DisplayFK::validateArray(const void* array, uint8_t count) const {
+    if (!array) {
+        ESP_LOGE(TAG, "Array pointer is null");
+        return false;
+    }
+    
+    if (count == 0) {
+        ESP_LOGE(TAG, "Array count is zero");
+        return false;
+    }
+    
+    if (count > 255) {
+        ESP_LOGE(TAG, "Array count too large: %d (max 255)", count);
+        return false;
+    }
+
+    // Validate all pointers in the array
+    for (uint8_t i = 0; i < count; i++) {
+        if (!((const void**)array)[i]) {
+            ESP_LOGE(TAG, "Null pointer in array pointer at index %d", i);
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+/**
+ * @brief Validates string with specific length constraints
+ * @param str String to validate
+ * @param maxLength Maximum allowed length
+ * @return true if valid, false otherwise
+ */
+bool DisplayFK::validateString(const char* str, size_t maxLength) const {
+    if (!str) {
+        ESP_LOGE(TAG, "String pointer is null");
+        return false;
+    }
+    
+    size_t length = strlen(str);
+    if (length > maxLength) {
+        ESP_LOGE(TAG, "String too long: %d > %d", length, maxLength);
+        return false;
+    }
+    
+    // Check for valid characters (printable ASCII)
+    for (size_t i = 0; i < length; i++) {
+        if (str[i] < 32 || str[i] > 126) {
+            ESP_LOGE(TAG, "Invalid character at position %d: 0x%02X", i, str[i]);
+            return false;
+        }
+    }
+    
+    return true;
 }

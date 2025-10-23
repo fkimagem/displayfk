@@ -1,16 +1,6 @@
 #include "wtoggle.h"
 
-#define DEBUG_TOGGLE
-
-#if defined(DEBUG_TOGGLE)
-#define DEBUG_D(format, ...) log_d(format, ##__VA_ARGS__)
-#define DEBUG_E(format, ...) log_e(format, ##__VA_ARGS__)
-#define DEBUG_W(format, ...) log_w(format, ##__VA_ARGS__)
-#else
-#define DEBUG_D(format, ...)
-#define DEBUG_E(format, ...)
-#define DEBUG_W(format, ...)
-#endif
+const char* ToggleButton::TAG = "[ToggleButton]";
 
 /**
  * @brief Constructor for the ToggleButton class.
@@ -28,7 +18,7 @@ ToggleButton::ToggleButton(uint16_t _x, uint16_t _y, uint8_t _screen)
  *
  * Clears the callback function pointer.
  */
-ToggleButton::~ToggleButton() { cb = nullptr; }
+ToggleButton::~ToggleButton() { m_callback = nullptr; }
 
 /**
  * @brief Detects if the ToggleButton has been touched.
@@ -40,50 +30,31 @@ ToggleButton::~ToggleButton() { cb = nullptr; }
  */
 bool ToggleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
-  if (!visible)
-  {
-    return false;
-  }
-#if defined(HAS_TOUCH)
-  if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen || !loaded)
-  {
-    return false;
-  }
+  CHECK_VISIBLE_BOOL
+  CHECK_USINGKEYBOARD_BOOL
+  CHECK_CURRENTSCREEN_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_DEBOUNCE_CLICK_BOOL
+  CHECK_ENABLED_BOOL
+  CHECK_LOCKED_BOOL
+  CHECK_POINTER_TOUCH_NULL_BOOL
 
-  if (millis() - m_myTime < TIMEOUT_CLICK)
-  {
-    return false;
-  }
+  bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_width, m_height);
 
-  if (!m_enabled)
-  {
-    DEBUG_D("ToggleButton is disabled");
-    return false;
-  }
-
-  m_myTime = millis();
-  bool detectado = false;
-  // uint16_t xMax = xPos + m_width;
-  // uint16_t yMax = yPos + m_height;
-
-  if (POINT_IN_RECT(*_xTouch, *_yTouch, xPos, yPos, m_width, m_height))
-  {
-    // if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) &&(*_yTouch < yMax)) {
+  if(inBounds) {
+    m_myTime = millis();
     changeState();
     m_shouldRedraw = true;
-    detectado = true;
+    return true;
   }
-  return detectado;
-#else
   return false;
-#endif
 }
 
 /**
  * @brief Retrieves the callback function associated with the ToggleButton.
  * @return Pointer to the callback function.
  */
-functionCB_t ToggleButton::getCallbackFunc() { return cb; }
+functionCB_t ToggleButton::getCallbackFunc() { return m_callback; }
 
 /**
  * @brief Retrieves the current enabled state of the button.
@@ -104,7 +75,7 @@ void ToggleButton::setEnabled(bool newState) { m_enabled = newState; }
  */
 void ToggleButton::changeState()
 {
-  DEBUG_D("Changing state from %d to %d", m_status, !m_status);
+  ESP_LOGD(TAG, "Changing state from %d to %d", m_status, !m_status);
   m_status = !m_status;
 }
 
@@ -126,12 +97,12 @@ void ToggleButton::forceUpdate() { m_shouldRedraw = true; }
 void ToggleButton::redraw()
 {
   CHECK_TFT_VOID
-  if (!visible)
+  if (!m_visible)
   {
     return;
   }
 #if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw)
+  if (WidgetBase::currentScreen != m_screen || !m_loaded || !m_shouldRedraw)
   {
     return;
   }
@@ -141,29 +112,29 @@ void ToggleButton::redraw()
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
   uint16_t statusBall = m_status ? CFK_WHITE : CFK_GREY3;
 
-  WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, m_height / 2,
+  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_width, m_height, m_height / 2,
                                     m_status ? m_pressedColor
                                              : lightBg); // fundo
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, m_height / 2,
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_width, m_height, m_height / 2,
                                     baseBorder); // borda
 
   uint8_t offsetBorder = 5;
 
   uint8_t raioBall = (m_height - (2 * offsetBorder)) / 2;
-  uint16_t posBall = xPos;
+  uint16_t posBall = m_xPos;
 
   if (m_status)
   {
-    posBall = xPos + m_width - offsetBorder - raioBall;
+    posBall = m_xPos + m_width - offsetBorder - raioBall;
   }
   else
   {
-    posBall = xPos + offsetBorder + raioBall;
+    posBall = m_xPos + offsetBorder + raioBall;
   }
 
-  WidgetBase::objTFT->fillCircle(posBall, yPos + m_height / 2, raioBall,
+  WidgetBase::objTFT->fillCircle(posBall, m_yPos + m_height / 2, raioBall,
                                  statusBall); // circulo
-  WidgetBase::objTFT->drawCircle(posBall, yPos + m_height / 2, raioBall,
+  WidgetBase::objTFT->drawCircle(posBall, m_yPos + m_height / 2, raioBall,
                                  baseBorder); // circulo
   /*
   if(m_status){
@@ -222,19 +193,19 @@ void ToggleButton::setup(uint16_t _width, uint16_t _height,
 
   if (!WidgetBase::objTFT)
   {
-    DEBUG_E("TFT not defined on WidgetBase");
+    ESP_LOGE(TAG, "TFT not defined on WidgetBase");
     return;
   }
-  if (loaded)
+  if (m_loaded)
   {
-    DEBUG_E("Toggle widget already configured");
+    ESP_LOGD(TAG, "ToggleButton widget already configured");
     return;
   }
 
   m_width = _width;
   m_height = _height;
   m_pressedColor = _pressedColor;
-  cb = _cb;
+  m_callback = _cb;
   // m_canvas = new Arduino_Canvas(m_width, m_height, WidgetBase::objTFT, 50, 50);
   // m_canvas->begin();
   // m_canvas->fillRect(0, 0, m_width, m_height, CFK_AQUA);
@@ -243,7 +214,7 @@ void ToggleButton::setup(uint16_t _width, uint16_t _height,
 
   start();
 
-  loaded = true;
+  m_loaded = true;
 }
 
 /**
@@ -271,28 +242,28 @@ bool ToggleButton::getStatus() { return m_status; }
  */
 void ToggleButton::setStatus(bool status)
 {
-  if (!loaded)
+  if (!m_loaded)
   {
-    DEBUG_E("ToggleButton widget not loaded");
+    ESP_LOGE(TAG, "ToggleButton widget not loaded");
     return;
   }
-  DEBUG_D("Setting status to %d", status);
+  ESP_LOGD(TAG, "Setting status to %d", status);
   m_status = status;
   m_shouldRedraw = true;
-  if (cb != nullptr)
+  if (m_callback != nullptr)
   {
-    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
+    WidgetBase::addCallback(m_callback, WidgetBase::CallbackOrigin::SELF);
   }
 }
 
 void ToggleButton::show()
 {
-  visible = true;
+  m_visible = true;
   m_shouldRedraw = true;
 }
 
 void ToggleButton::hide()
 {
-  visible = false;
+  m_visible = false;
   m_shouldRedraw = true;
 }

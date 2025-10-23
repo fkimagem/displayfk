@@ -1,5 +1,7 @@
 #include "wnumberbox.h"
 
+const char* NumberBox::TAG = "NumberBox";
+
 /**
  * @brief Converts a float value to a string representation.
  * @param f Float value to convert.
@@ -20,19 +22,29 @@ String NumberBox::convertoToString(float f) {
  * @param _screen Screen identifier where the NumberBox will be displayed.
  */
 NumberBox::NumberBox(uint16_t _x, uint16_t _y, uint8_t _screen)
-    : WidgetBase(_x, _y, _screen), m_padding(3), m_shouldRedraw(true) {}
+    : WidgetBase(_x, _y, _screen), m_padding(3), m_shouldRedraw(true) {
+      m_config = {.width = 0, .height = 0, .letterColor = 0, .backgroundColor = 0, .startValue = 0, .font = nullptr, .funcPtr = nullptr, .callback = nullptr};
+    }
 
 /**
  * @brief Default constructor for NumberBox.
  *
  * Creates a NumberBox at position (0,0) on screen 0.
  */
-NumberBox::NumberBox() : WidgetBase(0, 0, 0) {}
+NumberBox::NumberBox() : WidgetBase(0, 0, 0), m_padding(3), m_shouldRedraw(true), m_config{} {}
 
 /**
  * @brief Destructor for the NumberBox class.
  */
-NumberBox::~NumberBox() {}
+NumberBox::~NumberBox() {
+    cleanupMemory();
+}
+
+void NumberBox::cleanupMemory() {
+    // NumberBox doesn't use dynamic memory allocation
+    // CharString handles its own memory management
+    ESP_LOGD(TAG, "NumberBox memory cleanup completed");
+}
 
 /**
  * @brief Detects if the NumberBox has been touched.
@@ -43,38 +55,32 @@ NumberBox::~NumberBox() {}
  * When touched, activates the virtual keyboard mode for value input.
  */
 bool NumberBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
-  if (!visible) {
-    return false;
-  }
-  if (WidgetBase::currentScreen != screen || !loaded) {
-    return false;
-  }
+  CHECK_VISIBLE_BOOL
+  CHECK_CURRENTSCREEN_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_DEBOUNCE_CLICK_BOOL
+  CHECK_USINGKEYBOARD_BOOL
 
-  if (millis() - m_myTime < TIMEOUT_CLICK) {
-    return false;
-  }
-  m_myTime = millis();
+  
+  
 
-  bool detectado = false;
-  uint16_t xMax = xPos + m_width;
-  uint16_t yMax = yPos + m_height;
+  bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_config.width, m_config.height);
 
-  if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) &&
-      (*_yTouch < yMax) && WidgetBase::usingKeyboard == false) {
+  if (inBounds) {
+    m_myTime = millis();
     WidgetBase::usingKeyboard = true;
-    log_d("Open keyboard");
-
-    detectado = true;
+    ESP_LOGD(TAG, "Open keyboard");
+    return true;
   }
 
-  return detectado;
+  return false;
 }
 
 /**
  * @brief Retrieves the callback function associated with the NumberBox.
  * @return Pointer to the callback function.
  */
-functionCB_t NumberBox::getCallbackFunc() { return cb; }
+functionCB_t NumberBox::getCallbackFunc() { return m_callback; }
 
 /**
  * @brief Redraws the NumberBox on the screen, updating its appearance.
@@ -84,15 +90,10 @@ functionCB_t NumberBox::getCallbackFunc() { return cb; }
  */
 void NumberBox::redraw() {
   CHECK_TFT_VOID
-  if (!visible) {
-    // draw rect with color background
-
-    return;
-  }
-#if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw) {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
 
   m_shouldRedraw = false;
 
@@ -106,26 +107,25 @@ void NumberBox::redraw() {
   // uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
   // uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
-  log_d("Redraw textbox with value %s", m_value.getString());
-  WidgetBase::objTFT->fillRect(xPos, yPos, m_width, m_height,
-                               m_backgroundColor);
-  WidgetBase::objTFT->drawRect(xPos, yPos, m_width, m_height, m_letterColor);
-  WidgetBase::objTFT->setTextColor(m_letterColor);
+  ESP_LOGD(TAG, "Redraw numberbox with value %s", m_value.getString());
+  WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_config.width, m_config.height,
+                               m_config.backgroundColor);
+  WidgetBase::objTFT->drawRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.letterColor);
+  WidgetBase::objTFT->setTextColor(m_config.letterColor);
 
   // TextBound_t area;
-  // WidgetBase::objTFT->getTextBounds("M", xPos, yPos, &area.x, &area.y,
+  // WidgetBase::objTFT->getTextBounds("M", m_xPos, m_yPos, &area.x, &area.y,
   // &area.width, &area.height); uint16_t qtdLetrasMax = m_width / area.width;
   // const char* conteudo = m_value.getFirstChars(qtdLetrasMax);
-  // printText(conteudo, xPos + m_padding, yPos + m_height/2, ML_DATUM);
+  // printText(conteudo, m_xPos + m_padding, m_yPos + m_height/2, ML_DATUM);
   const char *conteudo = getFirstLettersForSpace(m_value.getString(),
-                                                 m_width * 0.9, m_height * 0.9);
+                                                 m_config.width * 0.9, m_config.height * 0.9);
 
   // log_d("Draw %d letters from %s in space %d", qtdLetrasMax, conteudo,
   // m_width);
-  printText(conteudo, xPos + m_padding, yPos + m_height / 2, ML_DATUM);
+  printText(conteudo, m_xPos + m_padding, m_yPos + m_config.height / 2, ML_DATUM);
 
   updateFont(FontType::UNLOAD);
-#endif
 }
 
 /**
@@ -154,37 +154,34 @@ void NumberBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
                       uint16_t _backgroundColor, float _startValue,
                       const GFXfont *_font, functionLoadScreen_t _funcPtr,
                       functionCB_t _cb) {
-  if (!WidgetBase::objTFT) {
-    log_e("TFT not defined on WidgetBase");
-    return;
-  }
-  if (loaded) {
-    log_e("Numberbox already intialized");
+  CHECK_TFT_VOID
+  if (m_loaded) {
+    ESP_LOGE(TAG, "Numberbox already intialized");
     return;
   }
 
   parentScreen = _funcPtr;
-  cb = _cb;
+  m_callback = _cb;
 
-  m_width = _width;
-  m_height = _height;
-  m_font = _font;
+  m_config.width = _width;
+  m_config.height = _height;
+  m_config.font = _font;
 
 #if defined(DISP_DEFAULT)
   if (_font) {
     WidgetBase::objTFT->setFont(_font);
     TextBound_t area;
-    WidgetBase::objTFT->getTextBounds("Mp", xPos, yPos, &area.x, &area.y,
+    WidgetBase::objTFT->getTextBounds("Mp", m_xPos, m_yPos, &area.x, &area.y,
                                       &area.width, &area.height);
-    m_height = area.height + (m_padding * 2);
+    m_config.height = area.height + (m_padding * 2);
   }
 #endif
 
-  m_letterColor = _letterColor;
-  m_backgroundColor = _backgroundColor;
+  m_config.letterColor = _letterColor;
+  m_config.backgroundColor = _backgroundColor;
   m_value.setString(_startValue);
 
-  loaded = true;
+  m_loaded = true;
 }
 #endif
 /**
@@ -193,10 +190,39 @@ void NumberBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
  * @param config Structure containing the NumberBox configuration parameters.
  */
 void NumberBox::setup(const NumberBoxConfig &config) {
-#if defined(USING_GRAPHIC_LIB)
-  setup(config.width, config.height, config.letterColor, config.backgroundColor,
-        config.startValue, config.font, config.funcPtr, config.callback);
-#endif
+  CHECK_TFT_VOID
+  if (m_loaded) {
+    ESP_LOGW(TAG, "NumberBox already initialized");
+    return;
+  }
+
+  // Clean up any existing memory before setting new config
+  cleanupMemory();
+  
+  // Deep copy configuration
+  m_config = config;
+  
+  // Copy function pointers (no deep copy needed for function pointers)
+  parentScreen = config.funcPtr;
+  m_callback = config.callback;
+  
+  // Set member variables from config
+  m_config.width = config.width;
+  m_config.height = config.height;
+  m_config.letterColor = config.letterColor;
+  m_config.backgroundColor = config.backgroundColor;
+  
+  #if defined(USING_GRAPHIC_LIB)
+  m_config.font = config.font;
+  m_font = config.font;
+  #endif
+  
+  // Set initial value
+  m_value.setString(config.startValue);
+  
+  m_loaded = true;
+  ESP_LOGD(TAG, "NumberBox configured: %dx%d, value: %f", 
+           m_config.width, m_config.height, config.startValue);
 }
 
 /**
@@ -207,7 +233,7 @@ void NumberBox::setup(const NumberBoxConfig &config) {
  */
 void NumberBox::setValue(float str) {
   m_value.setString(str);
-  log_d("Set value for numberbox: %f", str);
+  ESP_LOGD(TAG, "Set value for numberbox: %s", m_value.getString());
   forceUpdate();
 }
 
@@ -224,11 +250,11 @@ float NumberBox::getValue() { return m_value.toFloat(); }
 const char *NumberBox::getValueChar() { return m_value.getString(); }
 
 void NumberBox::show() {
-  visible = true;
+  m_visible = true;
   m_shouldRedraw = true;
 }
 
 void NumberBox::hide() {
-  visible = false;
+  m_visible = false;
   m_shouldRedraw = true;
 }

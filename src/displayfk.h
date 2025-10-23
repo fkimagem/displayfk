@@ -58,9 +58,7 @@
 #include <SPI.h>
 #include <memory>
 
-//#if defined(HAS_TOUCH)
 #include "touch/touch.h"
-//#endif
 
 
 // #include "soc/timer_group_struct.h" //watchdog
@@ -116,47 +114,139 @@ typedef struct
 } logMessage_t;
 
 /**
- * @brief Simple string pool for temporary string allocations
+ * @brief Structure to track string allocations (C-style)
+ */
+typedef struct {
+    char* ptr;
+    bool isFromPool;
+    uint32_t timestamp;
+    const char* caller;
+} StringAllocation_t;
+
+/**
+ * @brief Simple string pool for temporary string allocations with C-style tracking
  */
 class StringPool
 {
 private:
     char pool[STRING_POOL_COUNT][STRING_POOL_SIZE];
     bool inUse[STRING_POOL_COUNT];
+    StringAllocation_t m_allocations[STRING_POOL_COUNT];
+    uint8_t m_activeCount;
+    uint32_t m_allocationCount;
+    uint32_t m_deallocationCount;
 
 public:
-    StringPool()
+    StringPool() : m_activeCount(0), m_allocationCount(0), m_deallocationCount(0)
     {
         for (int i = 0; i < STRING_POOL_COUNT; i++)
         {
             inUse[i] = false;
+            m_allocations[i].ptr = nullptr;
+            m_allocations[i].isFromPool = false;
+            m_allocations[i].timestamp = 0;
+            m_allocations[i].caller = nullptr;
         }
     }
 
-    char *allocate()
+    char* allocate(const char* caller = nullptr)
     {
         for (int i = 0; i < STRING_POOL_COUNT; i++)
         {
             if (!inUse[i])
             {
                 inUse[i] = true;
-                return pool[i];
+                char* ptr = pool[i];
+                
+                // Track allocation
+                if (m_activeCount < STRING_POOL_COUNT) {
+                    m_allocations[m_activeCount].ptr = ptr;
+                    m_allocations[m_activeCount].isFromPool = true;
+                    m_allocations[m_activeCount].timestamp = millis();
+                    m_allocations[m_activeCount].caller = caller;
+                    m_activeCount++;
+                }
+                m_allocationCount++;
+                
+                return ptr;
             }
         }
         return nullptr; // Pool exhausted
     }
 
-    void deallocate(char *ptr)
+    void deallocate(char* ptr)
     {
-        for (int i = 0; i < STRING_POOL_COUNT; i++)
+        if (ptr)
         {
-            if (pool[i] == ptr)
+            for (int i = 0; i < STRING_POOL_COUNT; i++)
             {
-                inUse[i] = false;
-                pool[i][0] = '\0'; // Clear the string
-                return;
+                if (pool[i] == ptr)
+                {
+                    inUse[i] = false;
+                    pool[i][0] = '\0'; // Clear the string
+                    
+                    // Track deallocation
+                    m_deallocationCount++;
+                    
+                    // Remove from tracking
+                    for (int j = 0; j < m_activeCount; j++)
+                    {
+                        if (m_allocations[j].ptr == ptr && m_allocations[j].isFromPool)
+                        {
+                            // Shift remaining elements left
+                            for (int k = j; k < m_activeCount - 1; k++)
+                            {
+                                m_allocations[k] = m_allocations[k + 1];
+                            }
+                            m_activeCount--;
+                            break;
+                        }
+                    }
+                    return;
+                }
             }
         }
+    }
+    
+    /**
+     * @brief Get allocation statistics
+     */
+    void getStats(uint32_t& activeAllocations, uint32_t& totalAllocations, uint32_t& totalDeallocations) const
+    {
+        activeAllocations = m_activeCount;
+        totalAllocations = m_allocationCount;
+        totalDeallocations = m_deallocationCount;
+    }
+    
+    /**
+     * @brief Get active allocations for debugging
+     */
+    const StringAllocation_t* getActiveAllocations() const
+    {
+        return m_allocations;
+    }
+    
+    /**
+     * @brief Get count of active allocations
+     */
+    uint8_t getActiveCount() const
+    {
+        return m_activeCount;
+    }
+    
+    /**
+     * @brief Cleanup all tracked allocations
+     */
+    void cleanup()
+    {
+        for (int i = 0; i < m_activeCount; i++)
+        {
+            if (m_allocations[i].isFromPool)
+            {
+                deallocate(m_allocations[i].ptr);
+            }
+        }
+        m_activeCount = 0;
     }
 };
 
@@ -168,11 +258,19 @@ enum class TouchEventType
     TOUCH_UP = 3
 };
 
+enum class TouchSwipeDirection
+{
+    NONE = 0,
+    UP = 1,
+    DOWN = 2,
+    LEFT = 3,
+    RIGHT = 4
+};
+
 /// @brief Represents the main display framework class, managing various widget types, SD card functionality, and touch input.
 class DisplayFK
 {
 public:
-    const char *TAG = "DisplayFK";
     // Variáveis públicas estáticas
     static DisplayFK *instance;
     static bool sdcardOK; ///< Indicates if the SD card is successfully initialized.
@@ -218,21 +316,53 @@ public:
     void disableTouchLog();
     void addLog(const char *data);
     void loopTask();
-    TaskHandle_t getTaskHandle();
+    TaskHandle_t getTaskHandle() const;
     void setupAutoClick(uint32_t intervalMs, uint16_t x, uint16_t y);
     void startAutoClick();
     void stopAutoClick();
-    bool isRunningAutoClick();
+    bool isRunningAutoClick() const;
     void blockLoopTask();
     void freeLoopTask();
 
     // Memory management utilities
     void freeStringFromPool(const char *str);
+    void cleanup();  // Manual cleanup function
+
+    // Input validation utilities
+    bool validateInput(const char* input, size_t maxLength) const;
+    bool validatePinNumber(int8_t pin) const;
+    bool validateFrequency(int frequency) const;
+    bool validateDimensions(uint16_t width, uint16_t height) const;
+    bool validateArray(const void* array, uint8_t count) const;
+    bool validateString(const char* str, size_t maxLength) const;
+    
+    // Initialization utilities
+    void initializeWidgetFlags();
+    bool validateInitialization() const;
+    
+    // Cleanup utilities
+    void cleanupFreeRTOSResources();
+    void cleanupDynamicMemory();
+    void cleanupWidgets();
+    bool validateCleanup() const;
+    
+    // StringPool tracking methods
+    void printStringPoolStats() const;
+    void cleanupStringPool() const;
+    
+    // Safe methods without exceptions (ESP32 compatible)
+    bool startKeyboardsSafe();
+    bool createTimerSafe();
+    bool createSemaphoreSafe();
+    bool setCheckboxSafe(CheckBox *array[], uint8_t amount);
+    char* allocateStringSafe(const char* caller);
+    void deallocateStringSafe(char* str);
+    bool startSDSafe(uint8_t pinCS, SPIClass *spiShared, int hz);
 
 #if defined(HAS_TOUCH)
 #if defined(TOUCH_XPT2046)
-    void checkCalibration();
-    void recalibrate();
+    void checkCalibration() const;
+    void recalibrate() const;
 #endif
 
     void startTouch(uint16_t w, uint16_t h, uint8_t _rotation, SPIClass *_sharedSPI);
@@ -351,17 +481,19 @@ public:
     void appendFile(fs::FS *fs, const char *path, const char *message);
     void appendLog(fs::FS *fs, const char *path, const logMessage_t *lines, uint8_t amount, bool createNewFile);
     void writeFile(fs::FS *fs, const char *path, const char *message);
-    const char *getLogFileName();
-    const char *generateNameFile();
+    const char *getLogFileName() const;
+    const char *generateNameFile() const;
 #endif
 
 private:
+    static const char *TAG;
     // Variáveis privadas estáticas
     static QueueHandle_t xFilaLog;             ///< Queue handle for log data.
     static logMessage_t bufferLog[LOG_LENGTH]; ///< Array of log messages.
     static uint8_t logIndex;                   ///< Index of the next log message to be written.
     static uint16_t logFileCount;              ///< Number of log files created
     static StringPool stringPool;              ///< Pool for temporary string allocations
+    static int offsetSwipe; /// offsetSwipe minutes for detect right/left swipe
 
 #ifdef DFK_EXTERNALINPUT
     static uint8_t qtdExternalInput;           ///< Number of ExternalInput widgets.
@@ -389,6 +521,9 @@ private:
     bool m_watchdogInitialized = false;
     SemaphoreHandle_t m_loopSemaphore;
     TouchEventType m_lastTouchState = TouchEventType::NONE;
+    TouchSwipeDirection m_lastTouchSwipeDirection = TouchSwipeDirection::NONE;
+    CoordPoint_t pressPoint = {x: 0, y: 0};
+    CoordPoint_t releasePoint = {x: 0, y: 0};
 
 #if defined(DFK_TOUCHAREA)
     uint8_t qtdTouchArea = 0;             ///< Number of TouchArea widgets.
@@ -536,7 +671,7 @@ private:
     void processLogQueue();
     void processLogBuffer();
     void processTouchEvent(uint16_t xTouch, uint16_t yTouch, int zPressure, uint8_t gesture);
-    void processTouchStatus(bool hasTouch);
+    void processTouchStatus(bool hasTouch, uint16_t xTouch, uint16_t yTouch);
     void processTouchableWidgets(uint16_t xTouch, uint16_t yTouch);
     void updateWidgets();
     void processCallback();

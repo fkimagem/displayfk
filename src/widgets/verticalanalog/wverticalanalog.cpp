@@ -1,5 +1,7 @@
 #include "wverticalanalog.h"
 
+const char* VAnalog::TAG = "[VAnalog]";
+
 /**
  * @brief Constructor for the VAnalog class.
  * @param _x X-coordinate for the VAnalog position.
@@ -34,7 +36,7 @@ bool VAnalog::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
  */
 functionCB_t VAnalog::getCallbackFunc()
 {
-  return cb;
+  return m_callback;
 }
 
 /**
@@ -64,33 +66,33 @@ void VAnalog::start()
 void VAnalog::drawBackground()
 {
   CHECK_TFT_VOID
-  CHECK_VISIBLE
+  CHECK_VISIBLE_VOID
   #if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
+  if (WidgetBase::currentScreen != m_screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !m_loaded)
   {
     return;
   }
-  log_d("Redraw background vanalog at %i,%i with %i x %i", xPos, yPos, m_width, m_height);
+  ESP_LOGD(TAG, "Redraw background vanalog at %i,%i with %i x %i", m_xPos, m_yPos, m_width, m_height);
 
   //uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;
   //uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
   //uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
-  // WidgetBase::objTFT->fillCircle(xPos, yPos, 10, CFK_RED);
-  WidgetBase::objTFT->fillRect(xPos, yPos, m_width, m_height, m_backgroundColor); // Area do grafico lightBg
-  WidgetBase::objTFT->drawRect(xPos, yPos, m_width, m_height, m_borderColor);                 // contorno darkBg
-  //WidgetBase::objTFT->fillRect(xPos + 1, yPos + 1, 38, height - padding, backgroundColor); // Area do grafico lightBg
+  // WidgetBase::objTFT->fillCircle(m_xPos, yPos, 10, CFK_RED);
+  WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_width, m_height, m_backgroundColor); // Area do grafico lightBg
+  WidgetBase::objTFT->drawRect(m_xPos, m_yPos, m_width, m_height, m_borderColor);                 // contorno darkBg
+  //WidgetBase::objTFT->fillRect(m_xPos + 1, yPos + 1, 38, height - padding, backgroundColor); // Area do grafico lightBg
 
   uint16_t intervaloMarca = round(m_drawArea / (m_steps));
   for (uint16_t i = 0; i < (m_steps + 1); i++)
   {
-    uint16_t yLinha = intervaloMarca * i + (yPos + m_paddingDraw);
+    uint16_t yLinha = intervaloMarca * i + (m_yPos + m_paddingDraw);
     uint16_t fimLinha = i % 5 == 0 ? 5 : 10;
-    WidgetBase::objTFT->drawLine(xPos + (m_width / 2), yLinha, (xPos + m_width) - fimLinha, yLinha, m_textColor);
+    WidgetBase::objTFT->drawLine(m_xPos + (m_width / 2), yLinha, (m_xPos + m_width) - fimLinha, yLinha, m_textColor);
   }
-  m_lastYArrow = yPos + m_paddingDraw + 4;
+  m_lastYArrow = m_yPos + m_paddingDraw + 4;
   redraw();
-  log_d("Finish draw vanalog");
+  ESP_LOGD(TAG, "Finish draw vanalog");
   #endif
 }
 
@@ -120,10 +122,10 @@ void VAnalog::setValue(int newValue, bool _viewValue)
 void VAnalog::redraw()
 {
   CHECK_TFT_VOID
-  if(!visible){return;}
+  if(!m_visible){return;}
   #if defined(DISP_DEFAULT)
   ////Serial.println(WidgetBase::usingKeyboard);
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
+  if (WidgetBase::currentScreen != m_screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !m_loaded)
   {
     return;
   }
@@ -137,28 +139,28 @@ void VAnalog::redraw()
   // uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
   m_lastValue = m_currentValue;
-  // WidgetBase::objTFT->fillRect(xPos + 1, lastYArrow - 4, 15, 8, CFK_GREY3);
-  WidgetBase::objTFT->fillTriangle(xPos + 2, m_lastYArrow - 3, xPos + 15, m_lastYArrow, xPos + 2, m_lastYArrow + 3, m_backgroundColor);
+  // WidgetBase::objTFT->fillRect(m_xPos + 1, lastYArrow - 4, 15, 8, CFK_GREY3);
+  WidgetBase::objTFT->fillTriangle(m_xPos + 2, m_lastYArrow - 3, m_xPos + 15, m_lastYArrow, m_xPos + 2, m_lastYArrow + 3, m_backgroundColor);
   uint32_t vatual = m_currentValue - m_vmin;
   float total = m_vmax - m_vmin;
   float porcentagem = (vatual / total) * m_drawArea;
-  uint32_t yMarca = yPos + m_paddingDraw + m_drawArea - porcentagem;
+  uint32_t yMarca = m_yPos + m_paddingDraw + m_drawArea - porcentagem;
   m_lastYArrow = yMarca;
 
-  WidgetBase::objTFT->fillTriangle(xPos + 2, yMarca - 3, xPos + 15, yMarca, xPos + 2, yMarca + 3, m_arrowColor);
+  WidgetBase::objTFT->fillTriangle(m_xPos + 2, yMarca - 3, m_xPos + 15, yMarca, m_xPos + 2, yMarca + 3, m_arrowColor);
 
-  // WidgetBase::objTFT->drawCentreString("0", xPos, yPos - 20, 2);
+  // WidgetBase::objTFT->drawCentreString("0", m_xPos, yPos - 20, 2);
   if (m_updateText)
   {
     WidgetBase::objTFT->setTextColor(m_textColor);
     WidgetBase::objTFT->setFont(&RobotoRegular5pt7b);
     TextBound_t textBg;
-    textBg.x = xPos + 2;
-    textBg.y = yPos + m_height - 2 - m_paddingDraw - m_padding;
+    textBg.x = m_xPos + 2;
+    textBg.y = m_yPos + m_height - 2 - m_paddingDraw - m_padding;
     textBg.width = m_width - 4;
     textBg.height = m_paddingDraw + m_padding;
     WidgetBase::objTFT->fillRect(textBg.x, textBg.y, textBg.width, textBg.height, m_backgroundColor);
-    printText(String(m_currentValue).c_str(), xPos + (m_width / 2), yPos + m_height - m_paddingDraw, BC_DATUM);
+    printText(String(m_currentValue).c_str(), m_xPos + (m_width / 2), m_yPos + m_height - m_paddingDraw, BC_DATUM);
   }
   m_shouldRedraw = false;
   #endif
@@ -190,12 +192,12 @@ void VAnalog::setup(uint16_t _width, uint16_t _height, int _vmin, int _vmax, uin
 {
   if (!WidgetBase::objTFT)
   {
-    log_e("TFT not defined on WidgetBase");
+    ESP_LOGE(TAG, "TFT not defined on WidgetBase");
     return;
   }
-  if (loaded)
+  if (m_loaded)
   {
-    log_d("VAnalog widget already configured");
+    ESP_LOGD(TAG, "VAnalog widget already configured");
     return;
   }
   m_width = _width;
@@ -212,7 +214,7 @@ void VAnalog::setup(uint16_t _width, uint16_t _height, int _vmin, int _vmax, uin
 
   start();
   m_shouldRedraw = true;
-  loaded = true;
+  m_loaded = true;
 }
 
 /**
@@ -227,12 +229,12 @@ void VAnalog::setup(const VerticalAnalogConfig& config)
 
 void VAnalog::show()
 {
-    visible = true;
+    m_visible = true;
     m_shouldRedraw = true;
 }
 
 void VAnalog::hide()
 {
-    visible = false;
+    m_visible = false;
     m_shouldRedraw = true;
 }

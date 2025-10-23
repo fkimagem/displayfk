@@ -42,57 +42,48 @@ struct LineChartConfig {
 class LineChart : public WidgetBase
 {
 private:
-  uint8_t m_dotRadius = 2;
-  uint8_t m_minSpaceToShowDot = 10;
-
-  uint32_t m_maxHeight; ///< Available height for plotting.
-  uint32_t m_maxWidth;  ///< Available width for plotting.
-  uint16_t m_maxAmountValues; ///< Maximum number of values to store in the chart.
-  uint16_t m_amountPoints;
-  float m_spaceBetweenPoints;
-
-  uint8_t m_amountSeries;
-  LineChartValue_t** m_values;
-  uint16_t* m_colorsSeries;
-
-  int16_t m_leftPadding; ///< Left padding for the plot area.
-  uint8_t m_topBottomPadding; ///< Top and bottom padding for the plot area.
-  int16_t m_aux; ///< Auxiliary variable for calculations.
-  unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
-  bool m_blocked; ///< Indicates if the chart is currently blocked from updates.
-
-  int m_vmin; ///< Minimum value for the chart range.
-  int m_vmax; ///< Maximum value for the chart range.
+  static const char* TAG;                          ///< Logging tag
+  static constexpr uint8_t MAX_SERIES = 10;        ///< Maximum number of series allowed
   
-  uint32_t m_width; ///< Width of the chart.
-  uint32_t m_height; ///< Height of the chart.
-  uint16_t m_borderSize = 2; ///< Border size for the chart.
-
-  uint16_t m_availableWidth; ///< Available width for the chart area.
-  uint16_t m_availableheight; ///< Available height for the chart area.
   
-  uint16_t m_yTovmin; ///< Mapping value for minimum Y.
-  uint16_t m_yTovmax; ///< Mapping value for maximum Y.
-  uint16_t m_verticalDivision; ///< Spacing between vertical grid lines.
-  bool m_workInBackground; ///< Flag for background drawing.
-  bool m_showZeroLine = true; ///< Flag to show the zero line on the chart.
-  bool m_shouldRedraw = false; ///< Flag to indicate if the chart should be redrawn.
+  
+  // Internal state (specific to this widget, not in config)
+  uint8_t m_dotRadius = 2;                         ///< Radius of dots on the line
+  uint8_t m_minSpaceToShowDot = 10;                ///< Minimum space between points to show dots
+  uint32_t m_maxHeight;                            ///< Available height for plotting
+  uint32_t m_maxWidth;                             ///< Available width for plotting
+  uint16_t m_maxAmountValues;                      ///< Maximum number of values to store in the chart
+  uint16_t m_amountPoints;                         ///< Current number of points in the chart
+  float m_spaceBetweenPoints;                      ///< Calculated spacing between points
+  int16_t m_leftPadding;                           ///< Left padding for the plot area
+  uint8_t m_topBottomPadding;                      ///< Top and bottom padding for the plot area
+  int16_t m_aux;                                   ///< Auxiliary variable for calculations
+  bool m_blocked;                                  ///< Indicates if the chart is currently blocked from updates
+  uint16_t m_borderSize = 2;                       ///< Border size for the chart
+  uint16_t m_availableWidth;                       ///< Available width for the chart area
+  uint16_t m_availableheight;                      ///< Available height for the chart area
+  uint16_t m_yTovmin;                              ///< Mapping value for minimum Y
+  uint16_t m_yTovmax;                              ///< Mapping value for maximum Y
+  bool m_shouldRedraw = false;                     ///< Flag to indicate if the chart should be redrawn
+  
+  // Memory management with tracking
+  bool m_valuesAllocated = false;                  ///< Track if values array was allocated
+  bool m_colorsSeriesAllocated = false;            ///< Track if colors array was allocated
+  LineChartValue_t** m_values = nullptr;           ///< 2D array of values for all series
+  uint16_t m_colorsSeries[MAX_SERIES];             ///< Internal storage for colors (deep copy)
+  Label* m_subtitles[MAX_SERIES] = {nullptr};      ///< Internal storage for subtitle pointers
+  
+  SemaphoreHandle_t m_mutex = nullptr;             ///< Mutex to protect data access
 
-  uint16_t m_mainLineColor; ///< Color of the primary line.
-  uint16_t m_secondLineColor; ///< Color of the secondary line.
-  uint16_t m_gridColor; ///< Color of the grid lines.
-  uint16_t m_borderColor; ///< Color of the chart border.
-  uint16_t m_backgroundColor; ///< Background color of the chart.
-  uint16_t m_textColor; ///< Color of text displayed on the chart.
-
-  bool m_boldLine = false; ///< Flag to make the line bold
-  bool m_showDots = false; ///< Flag to show the dots on the line
-  LineChartConfig m_config; ///< Pointer to the configuration structure
-
-    #if defined(USING_GRAPHIC_LIB)
-  const GFXfont *m_letra = nullptr; ///< Font used for text on the chart.
-  #endif
-  SemaphoreHandle_t m_mutex = nullptr; // Mutex para proteger acesso aos dados
+  // Configuration
+  LineChartConfig m_config;                        ///< Configuration for the LineChart widget
+  
+  // Helper methods
+  void cleanupMemory();                            ///< Centralized memory cleanup
+  void clearColorsSeries();
+  void clearSubtitles();
+  void clearValues();
+  bool validateConfig(const LineChartConfig& config); ///< Configuration validation
   void initMutex();
   void destroyMutex();
 
@@ -105,9 +96,6 @@ private:
   void drawSerie(uint8_t serieIndex);
   void drawAllSeries();
   void copyCurrentValuesToOldValues();
-    #if defined(USING_GRAPHIC_LIB)
-  void setup(uint16_t _width, uint16_t _height, int _vmin, int _vmax, uint8_t _amountSeries, uint16_t* _colorsSeries, uint16_t _gridColor, uint16_t _borderColor, uint16_t _backgroundColor, uint16_t _textColor,  uint16_t _verticalDivision, bool _workInBackground, bool _showZeroLine, bool _boldLine, bool _showDots, uint16_t _maxPointsAmount, const GFXfont* _font);
-#endif
 public:
   static constexpr uint16_t SHOW_ALL = 9999;//Considering the max amount of points is 9999
   LineChart(uint16_t _x, uint16_t _y, uint8_t _screen);
@@ -116,8 +104,8 @@ public:
   functionCB_t getCallbackFunc() override;
   void drawBackground();
   bool push(uint16_t serieIndex, int newValue);
-  void redraw();
-  void forceUpdate();
+  void redraw() override;
+  void forceUpdate() override;
   void setup(const LineChartConfig& config);
   void show() override;
   void hide() override;

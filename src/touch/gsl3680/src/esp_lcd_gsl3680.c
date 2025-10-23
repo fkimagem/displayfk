@@ -12,6 +12,7 @@
 #include "esp_lcd_touch.h"
 #include "esp_lcd_gsl3680.h"
 #include "gsl_point_id.h"
+#include <Arduino.h>
 
 #define TAG "gsl3680"
 

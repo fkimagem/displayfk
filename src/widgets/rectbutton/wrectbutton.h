@@ -15,16 +15,13 @@ struct RectButtonConfig {
 class RectButton : public WidgetBase
 {
 private:
-  unsigned long _myTime; ///< Timestamp for handling timing-related functions.
-  uint16_t width; ///< Width of the rectangular button.
-  uint16_t height; ///< Height of the rectangular button.
-  uint16_t pressedColor; ///< Color displayed when the button is pressed.
-  bool status; ///< Current on/off status of the button.
-  bool m_shouldRedraw = false; ///< Flag to indicate if the button should be redrawn.
+  static const char* TAG;
+  bool m_status; ///< Current on/off status of the button.
   bool m_enabled = true; ///< Indicates whether the button is enabled or disabled.
-
+  RectButtonConfig m_config;
+  
+  void cleanupMemory();
   void start();
-  void setup(uint16_t _width, uint16_t _height, uint16_t _pressedColor, functionCB_t _cb);
 
 public:
   RectButton(uint16_t _x, uint16_t _y, uint8_t _screen);
@@ -32,10 +29,10 @@ public:
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
   void changeState();
-  void redraw();
+  void redraw() override;
   void setup(const RectButtonConfig& config);
   bool getStatus();
-  void forceUpdate();
+  void forceUpdate() override;
   void setStatus(bool _status);
   bool getEnabled();
   void setEnabled(bool newState);

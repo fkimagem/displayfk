@@ -17,6 +17,7 @@
 class WKeyboard : public WidgetBase
 {
 private:
+    static const char* TAG; ///< Tag for logging
     uint32_t m_yStart = 0; ///< Y-coordinate for the starting position of the keyboard.
     uint32_t m_keyW, m_keyH; ///< Width and height of each key.
     unsigned long m_myTime; ///< Timestamp for timing-related functions.
@@ -74,12 +75,16 @@ public:
     functionCB_t getCallbackFunc() override;
     
     bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType *pressedKey);
+
+    void redraw() override;
     
-    void redraw(bool fullScreen, bool onlyContent);
+    void drawKeys(bool fullScreen, bool onlyContent);
+
+    void forceUpdate() override;
     
     void clear();
     
-    void setup();
+    bool setup();
     
     void open(TextBox *_field);
     

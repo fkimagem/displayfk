@@ -22,6 +22,7 @@ struct ThermometerConfig {
 class Thermometer : public WidgetBase
 {
 private:
+  static const char* TAG; ///< Tag for logging
   static constexpr uint8_t m_colorLightGradientSize = 5;
   // uint16_t m_filledColor; ///< Color used for the filled portion of the bar.
   // uint32_t m_vmin; ///< Minimum value of the bar range.
@@ -38,6 +39,7 @@ private:
   ThermometerConfig m_config;
   bool m_shouldRedraw = false; ///< Flag indicating if the Thermometer should be redrawn.
 
+  void cleanupMemory();
   void start();
   void setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax);
 
@@ -47,8 +49,8 @@ public:
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
   void setValue(float newValue);
-  void redraw();
-  void forceUpdate();
+  void redraw() override;
+  void forceUpdate() override;
   void drawBackground();
   void setup(const ThermometerConfig& config);
   void show() override;

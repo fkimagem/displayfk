@@ -14,7 +14,7 @@ struct TouchAreaConfig {
 class TouchArea : public WidgetBase
 {
 private:
-  unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
+  static const char* TAG; ///< Tag for logging
   uint16_t m_width; ///< Width of the TouchArea.
   uint16_t m_height; ///< Height of the TouchArea.
   bool m_status; ///< Current status of the TouchArea.
@@ -28,7 +28,8 @@ public:
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
   void changeState();
-  void redraw();
+  void redraw() override;
+  void forceUpdate() override;
   void setup(const TouchAreaConfig& config);
   bool getStatus();
   void onClick();

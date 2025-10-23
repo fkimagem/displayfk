@@ -1,5 +1,7 @@
 #include "wrectbutton.h"
 
+const char* RectButton::TAG = "RectButton";
+
 /**
  * @brief Constructor for the RectButton class.
  * @param _x X-coordinate for the RectButton position.
@@ -7,12 +9,22 @@
  * @param _screen Screen identifier where the RectButton will be displayed.
  */
 RectButton::RectButton(uint16_t _x, uint16_t _y, uint8_t _screen)
-    : WidgetBase(_x, _y, _screen), m_shouldRedraw(true) {}
+    : WidgetBase(_x, _y, _screen), m_status(false), m_enabled(true) {
+      m_config = {.width = 0, .height = 0, .pressedColor = 0, .callback = nullptr};
+      ESP_LOGD(TAG, "RectButton created at (%d, %d) on screen %d", _x, _y, _screen);
+    }
 
 /**
  * @brief Destructor for the RectButton class.
  */
-RectButton::~RectButton() {}
+RectButton::~RectButton() {
+    cleanupMemory();
+}
+
+void RectButton::cleanupMemory() {
+    // RectButton doesn't use dynamic memory allocation
+    ESP_LOGD(TAG, "RectButton memory cleanup completed");
+}
 
 /**
  * @brief Detects if the RectButton has been touched.
@@ -23,46 +35,34 @@ RectButton::~RectButton() {}
  * Changes the button state if touched and sets the redraw flag.
  */
 bool RectButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
-  if (!visible) {
-    return false;
-  }
-#if defined(HAS_TOUCH)
-  if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen ||
-      !loaded) {
-    return false;
-  }
-
-  if (millis() - _myTime < TIMEOUT_CLICK) {
-    return false;
-  }
+  CHECK_VISIBLE_BOOL
+  CHECK_USINGKEYBOARD_BOOL
+  CHECK_CURRENTSCREEN_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_DEBOUNCE_CLICK_BOOL
 
   if (!m_enabled) {
-    log_d("RectButton is disabled");
+    ESP_LOGD(TAG, "RectButton is disabled");
     return false;
   }
 
-  _myTime = millis();
-  bool detectado = false;
-  uint16_t xMax = xPos + width;
-  uint16_t yMax = yPos + height;
+  
 
-  if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) &&
-      (*_yTouch < yMax)) {
+  bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_config.width, m_config.height);
+  if(inBounds) {
+    m_myTime = millis();
     changeState();
     m_shouldRedraw = true;
-    detectado = true;
+    return true;
   }
-  return detectado;
-#else
   return false;
-#endif
 }
 
 /**
  * @brief Retrieves the callback function associated with the RectButton.
  * @return Pointer to the callback function.
  */
-functionCB_t RectButton::getCallbackFunc() { return cb; }
+functionCB_t RectButton::getCallbackFunc() { return m_callback; }
 
 /**
  * @brief Retrieves the current enabled state of the button.
@@ -81,7 +81,7 @@ void RectButton::setEnabled(bool newState) { m_enabled = newState; }
  *
  * Inverts the current state of the button.
  */
-void RectButton::changeState() { status = !status; }
+void RectButton::changeState() { m_status = !m_status; }
 
 /**
  * @brief Forces the button to redraw.
@@ -98,14 +98,11 @@ void RectButton::forceUpdate() { m_shouldRedraw = true; }
  */
 void RectButton::redraw() {
   CHECK_TFT_VOID
-  if (!visible) {
-    return;
-  }
-#if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard ||
-      !loaded || !m_shouldRedraw) {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
 
   m_shouldRedraw = false;
 
@@ -113,16 +110,15 @@ void RectButton::redraw() {
   uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
-  WidgetBase::objTFT->fillRoundRect(xPos + 1, yPos + 1, width - 2, height - 2,
+  WidgetBase::objTFT->fillRoundRect(m_xPos + 1, m_yPos + 1, m_config.width - 2, m_config.height - 2,
                                     5, lightBg); // Botao
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos, width, height, 5,
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, 5,
                                     baseBorder); // borda Botao
-  uint16_t bgColor = status ? pressedColor : lightBg;
-  WidgetBase::objTFT->fillRoundRect(xPos + 6, yPos + 6, width - 12, height - 12,
+  uint16_t bgColor = m_status ? m_config.pressedColor : lightBg;
+  WidgetBase::objTFT->fillRoundRect(m_xPos + 6, m_yPos + 6, m_config.width - 12, m_config.height - 12,
                                     5, bgColor); // top botao
-  WidgetBase::objTFT->drawRoundRect(xPos + 5, yPos + 5, width - 10, height - 10,
+  WidgetBase::objTFT->drawRoundRect(m_xPos + 5, m_yPos + 5, m_config.width - 10, m_config.height - 10,
                                     5, baseBorder); // borda top botao
-#endif
 }
 
 /**
@@ -133,39 +129,11 @@ void RectButton::redraw() {
  */
 void RectButton::start() {
 #if defined(DISP_DEFAULT)
-  width = constrain(width, 5, WidgetBase::objTFT->width());
-  height = constrain(height, 5, WidgetBase::objTFT->height());
+  m_config.width = constrain(m_config.width, 5, WidgetBase::objTFT->width());
+  m_config.height = constrain(m_config.height, 5, WidgetBase::objTFT->height());
 #endif
 
-  loaded = true;
-}
-
-/**
- * @brief Configures the RectButton with specific dimensions, color, and
- * callback function.
- * @param _width Width of the button.
- * @param _height Height of the button.
- * @param _pressedColor Color of the button when it is pressed.
- * @param _cb Callback function to execute when the button is interacted with.
- *
- * Initializes the button properties and marks it as loaded when complete.
- */
-void RectButton::setup(uint16_t _width, uint16_t _height,
-                       uint16_t _pressedColor, functionCB_t _cb) {
-  if (!WidgetBase::objTFT) {
-    log_e("TFT not defined on WidgetBase");
-    return;
-  }
-  if (loaded) {
-    log_d("RectButton widget already configured");
-    return;
-  }
-  width = _width;
-  height = _height;
-  pressedColor = _pressedColor;
-  cb = _cb;
-
-  loaded = true;
+  m_loaded = true;
 }
 
 /**
@@ -174,14 +142,32 @@ void RectButton::setup(uint16_t _width, uint16_t _height,
  * @param config Structure containing the button configuration parameters.
  */
 void RectButton::setup(const RectButtonConfig &config) {
-  setup(config.width, config.height, config.pressedColor, config.callback);
+  CHECK_TFT_VOID
+  if (m_loaded) {
+    ESP_LOGW(TAG, "RectButton already initialized");
+    return;
+  }
+
+  // Clean up any existing memory before setting new config
+  cleanupMemory();
+  
+  // Deep copy configuration
+  m_config = config;
+  
+  // Set member variables from config
+  m_callback = config.callback;
+  
+  m_loaded = true;
+  
+  ESP_LOGD(TAG, "RectButton configured: %dx%d, pressedColor=0x%04X", 
+           m_config.width, m_config.height, m_config.pressedColor);
 }
 
 /**
  * @brief Retrieves the current status of the button.
  * @return True if the button is pressed, otherwise false.
  */
-bool RectButton::getStatus() { return status; }
+bool RectButton::getStatus() { return m_status; }
 
 /**
  * @brief Sets the status of the button.
@@ -192,24 +178,24 @@ bool RectButton::getStatus() { return status; }
  * provided.
  */
 void RectButton::setStatus(bool _status) {
-  if (!loaded) {
-    log_e("RectButton widget not loaded");
+  if (!m_loaded) {
+    ESP_LOGE(TAG, "RectButton widget not loaded");
     return;
   }
 
-  status = _status;
+  m_status = _status;
   m_shouldRedraw = true;
-  if (cb != nullptr) {
-    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
+  if (m_callback != nullptr) {
+    WidgetBase::addCallback(m_callback, WidgetBase::CallbackOrigin::SELF);
   }
 }
 
 void RectButton::show() {
-  visible = true;
+  m_visible = true;
   m_shouldRedraw = true;
 }
 
 void RectButton::hide() {
-  visible = false;
+  m_visible = false;
   m_shouldRedraw = true;
 }

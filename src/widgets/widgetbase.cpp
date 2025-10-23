@@ -1,23 +1,15 @@
 #include "widgetbase.h"
+#include <esp_log.h>
 
-#define DEBUG_WIDGETBASE
 //#define DEBUG_TEXT_BOUND
 
-#ifdef DEBUG_WIDGETBASE
-#define DEBUG_D(fmt, ...) Serial.printf(fmt, ##__VA_ARGS__)
-#define DEBUG_E(fmt, ...) Serial.printf(fmt, ##__VA_ARGS__)
-#define DEBUG_W(fmt, ...) Serial.printf(fmt, ##__VA_ARGS__)
-#else
-#define DEBUG_D(fmt, ...)
-#define DEBUG_E(fmt, ...)
-#define DEBUG_W(fmt, ...)
-#endif
+const char* WidgetBase::TAG = "WidgetBase";
 
 bool WidgetBase::usingKeyboard = false;
 uint8_t WidgetBase::currentScreen = 0;
 bool WidgetBase::showingLog = false;
 bool WidgetBase::lightMode = true;
-uint16_t WidgetBase::backgroundColor = 0x0;
+uint16_t WidgetBase::backgroundColor = 0xffff;
 #if defined(USING_GRAPHIC_LIB)
 const GFXfont *WidgetBase::fontNormal = nullptr;
 const GFXfont *WidgetBase::fontBold = nullptr;
@@ -178,8 +170,10 @@ uint16_t WidgetBase::darkenColor565(unsigned short color, float factor)
  * @param _y Y position of the widget.
  * @param _screen Screen number.
  */
-WidgetBase::WidgetBase(uint16_t _x, uint16_t _y, uint8_t _screen) : xPos(_x), yPos(_y), screen(_screen), loaded(false), cb(nullptr)
+WidgetBase::WidgetBase(uint16_t _x, uint16_t _y, uint8_t _screen) 
+    : m_xPos(_x), m_yPos(_y), m_screen(_screen), m_loaded(false), m_myTime(0), m_callback(nullptr)
 {
+    ESP_LOGD(TAG, "WidgetBase created at (%d, %d) on screen %d", _x, _y, _screen);
 }
 
 /**
@@ -187,51 +181,25 @@ WidgetBase::WidgetBase(uint16_t _x, uint16_t _y, uint8_t _screen) : xPos(_x), yP
  */
 WidgetBase::~WidgetBase()
 {
+    ESP_LOGD(TAG, "WidgetBase destroyed at (%d, %d)", m_xPos, m_yPos);
+    
     // Limpa o callback se existir
-    if (cb != nullptr) {
-        cb = nullptr;
+    if (m_callback != nullptr) {
+        m_callback = nullptr;
     }
     
     // Reseta o estado do widget
-    loaded = false;
-    
-    // Não é necessário limpar xPos, yPos e screen pois são valores primitivos
-    // Não é necessário limpar fontNormal e fontBold pois são ponteiros estáticos compartilhados
+    m_loaded = false;
+    m_initialized = false;
+    m_shouldRedraw = false;
 }
 
-/**
- * @brief Detects a touch on the widget.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is detected, false otherwise.
- */
-bool WidgetBase::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
-{
-    return false;
-}
-
-/**
- * @brief Retrieves the callback function for the widget.
- * @return Pointer to the callback function.
- */
-functionCB_t WidgetBase::getCallbackFunc()
-{
-    return nullptr;
-}
-
-void WidgetBase::show()
-{
-    
-}
-
-void WidgetBase::hide()
-{
-    
-}
+// Pure virtual methods - must be implemented by derived classes
+// detectTouch, getCallbackFunc, show, hide, setup, forceUpdate, redraw
 
 bool WidgetBase::showingMyScreen()
 {
-    return WidgetBase::currentScreen == screen;
+    return WidgetBase::currentScreen == m_screen;
 }
 
 /**
@@ -243,21 +211,21 @@ void WidgetBase::addCallback(functionCB_t callback, CallbackOrigin origin){
     if(WidgetBase::xFilaCallback != NULL){
 
         if(callback == nullptr){
-            DEBUG_E("Callback is nullptr. Not adding to queue callback.\n");
+            ESP_LOGE(TAG, "Callback is nullptr. Not adding to queue callback.");
             return;
         }
         
         if(uxQueueSpacesAvailable(WidgetBase::xFilaCallback) > 0){
             if(xQueueSend(WidgetBase::xFilaCallback, &callback, pdMS_TO_TICKS(50)) == pdPASS){
-                DEBUG_D("Callback added to queue. Origin: %d\n", (int)origin);
+                ESP_LOGD(TAG, "Callback added to queue. Origin: %d", (int)origin);
             }else{
-                DEBUG_E("Can't add callback. Queue is full\n");
+                ESP_LOGE(TAG, "Can't add callback. Queue send failed");
             }
         }else{
-            DEBUG_E("Can't add callback. Queue is full\n");
+            ESP_LOGE(TAG, "Can't add callback. Queue is full");
         }
     }else{
-        DEBUG_E("Can't add callback. Queue is not created\n");
+        ESP_LOGE(TAG, "Can't add callback. Queue is not created");
     }
 }
 
@@ -669,9 +637,49 @@ void WidgetBase::drawRotatedImageOptimized(uint16_t *image, int16_t width, int16
 void WidgetBase::showOrigin(uint16_t color){
 #if defined(HELPERS)
     uint8_t tam = 5;
-    objTFT->drawFastVLine(xPos, yPos-tam, 2*tam, color);
-    objTFT->drawFastHLine(xPos-tam, yPos, 2*tam, color);
-    objTFT->fillCircle(xPos, yPos, 2, color);
+    objTFT->drawFastVLine(m_xPos, m_yPos-tam, 2*tam, color);
+    objTFT->drawFastHLine(m_xPos-tam, m_yPos, 2*tam, color);
+    objTFT->fillCircle(m_xPos, m_yPos, 2, color);
 #endif
 }
+
+// New state management methods
+bool WidgetBase::isInitialized() const {
+    return m_initialized;
+}
+
+bool WidgetBase::isEnabled() const {
+    return m_enabled;
+}
+
+void WidgetBase::setEnabled(bool enabled) {
+    m_enabled = enabled;
+    m_shouldRedraw = true;
+    ESP_LOGD(TAG, "Widget %s at (%d, %d)", enabled ? "enabled" : "disabled", m_xPos, m_yPos);
+}
+
+bool WidgetBase::isValidState() const {
+    return m_initialized && m_loaded && (objTFT != nullptr);
+}
+
+bool WidgetBase::validateParameters() const {
+    return (m_xPos < screenWidth) && (m_yPos < screenHeight) && (m_screen >= 0);
+}
+
+void WidgetBase::lock() {
+    m_locked = true;
+    ESP_LOGD(TAG, "Widget locked at (%d, %d)", m_xPos, m_yPos);
+}
+
+void WidgetBase::unlock() {
+    m_locked = false;
+    ESP_LOGD(TAG, "Widget unlocked at (%d, %d)", m_xPos, m_yPos);
+}
+
+bool WidgetBase::isLocked() const {
+    return m_locked;
+}
+
+// Pure virtual methods - must be implemented by derived classes
+// setup, forceUpdate, redraw
 #endif

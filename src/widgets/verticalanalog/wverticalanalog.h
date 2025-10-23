@@ -23,6 +23,7 @@ struct VerticalAnalogConfig {
 class VAnalog : public WidgetBase
 {
 private:
+  static const char* TAG; ///< Tag for logging
   uint16_t m_padding; ///< Padding around the display area.
   uint16_t m_paddingDraw; ///< Padding within the drawing area.
   uint16_t m_drawArea; ///< Area for drawing the analog scale.
@@ -60,9 +61,9 @@ public:
 
   void setValue(int newValue, bool _viewValue);
 
-  void redraw();
+  void redraw() override;
 
-  void forceUpdate();
+  void forceUpdate() override;
 
   void setup(const VerticalAnalogConfig& config);
   void show() override;

@@ -10,6 +10,7 @@
 #include "esp_lcd_touch.h"
 #include "esp_lcd_gsl3680.h"
 #include "gsl3680_touch.h"
+#include <Arduino.h>
 
 #define CONFIG_LCD_HRES 800
 #define CONFIG_LCD_VRES 1280
@@ -29,7 +30,8 @@ GSL3680_touch::GSL3680_touch(int8_t sda_pin, int8_t scl_pin, int8_t rst_pin, int
     _scl = scl_pin;
     _rst = rst_pin;
     _int = int_pin;
-    ESP_LOGI(TAG, "Constructor GSL3680_touch");
+    ESP_LOGD(TAG, "Constructor GSL3680_touch");
+    Serial.println("Constructor GSL3680_touch");
 }
 
 void GSL3680_touch::begin()
@@ -65,7 +67,7 @@ void GSL3680_touch::begin()
 
     esp_lcd_panel_io_i2c_config_t tp_io_config = ESP_LCD_TOUCH_IO_I2C_GSL3680_CONFIG();
     tp_io_config.scl_speed_hz = 400000;
-    ESP_LOGI(TAG, "Initialize touch IO (I2C)");
+    ESP_LOGD(TAG, "Initialize touch IO (I2C)");
     // esp_lcd_new_panel_io_i2c((esp_lcd_i2c_bus_handle_t)I2C_NUM_1, &tp_io_config, &tp_io_handle);
     esp_lcd_new_panel_io_i2c(i2c_bus_handle, &tp_io_config, &tp_io_handle);
 
@@ -85,7 +87,7 @@ void GSL3680_touch::begin()
         },
     };
 
-    ESP_LOGI(TAG, "Initialize touch controller gsl3680");
+    ESP_LOGD(TAG, "Initialize touch controller gsl3680");
     ESP_ERROR_CHECK(esp_lcd_touch_new_i2c_gsl3680(tp_io_handle, &tp_cfg, &tp));
 }
 

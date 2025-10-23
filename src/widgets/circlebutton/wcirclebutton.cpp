@@ -1,4 +1,7 @@
 #include "wcirclebutton.h"
+#include <esp_log.h>
+
+const char* CircleButton::TAG = "CircleButton";
 
 /**
  * @brief Constructor for the CircleButton class.
@@ -7,12 +10,19 @@
  * @param _screen Screen number.
  */
 CircleButton::CircleButton(uint16_t _x, uint16_t _y, uint8_t _screen)
-    : WidgetBase(_x, _y, _screen), m_shouldRedraw(true) {}
+    : WidgetBase(_x, _y, _screen), m_status(false)
+{
+    m_config = {.radius = 0, .pressedColor = 0, .callback = nullptr};
+    ESP_LOGD(TAG, "CircleButton created at (%d, %d) on screen %d", _x, _y, _screen);
+}
 
 /**
  * @brief Destructor for the CircleButton class.
  */
-CircleButton::~CircleButton() {}
+CircleButton::~CircleButton() {
+    ESP_LOGD(TAG, "CircleButton destroyed at (%d, %d)", m_xPos, m_yPos);
+    if (m_config.callback != nullptr) { m_config.callback = nullptr; }
+}
 
 /**
  * @brief Detects a touch on the button.
@@ -21,36 +31,30 @@ CircleButton::~CircleButton() {}
  * @return True if the touch is detected, false otherwise.
  */
 bool CircleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
-  if (!visible) {
-    return false;
-  }
+  // Early validation checks using macros
+  CHECK_VISIBLE_BOOL
+  CHECK_INITIALIZED_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_USINGKEYBOARD_BOOL
+  CHECK_CURRENTSCREEN_BOOL
+  CHECK_DEBOUNCE_CLICK_BOOL
+  CHECK_ENABLED_BOOL
+  CHECK_LOCKED_BOOL
+  CHECK_POINTER_TOUCH_NULL_BOOL
+
 #if defined(HAS_TOUCH)
-  if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen ||
-      !loaded) {
-    return false;
-  }
+  
+  bool inBounds = POINT_IN_CIRCLE(*_xTouch, *_yTouch, m_xPos, m_yPos, m_config.radius);
 
-  if (millis() - m_myTime < TIMEOUT_CLICK) {
-    return false;
-  }
-
-  if (!m_enabled) {
-    log_d("CircleButton is disabled");
-    return false;
-  }
-
-  m_myTime = millis();
-  bool detected = false;
-  int32_t deltaX = (*_xTouch - xPos) * (*_xTouch - xPos);
-  int32_t deltaY = (*_yTouch - yPos) * (*_yTouch - yPos);
-  int32_t radiusQ = m_radius * m_radius;
-
-  if ((deltaX < radiusQ) && (deltaY < radiusQ)) {
+  if (inBounds) {
+    m_myTime = millis();
     changeState();
     m_shouldRedraw = true;
-    detected = true;
+    ESP_LOGD(TAG, "CircleButton touched at (%d, %d), new status: %s", 
+                  *_xTouch, *_yTouch, m_status ? "pressed" : "released");
+    return true;
   }
-  return detected;
+  return false;
 #else
   return false;
 #endif
@@ -60,26 +64,18 @@ bool CircleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
  * @brief Gets the callback function for the button.
  * @return Pointer to the callback function.
  */
-functionCB_t CircleButton::getCallbackFunc() { return cb; }
+functionCB_t CircleButton::getCallbackFunc() { return m_config.callback; }
 
 /**
  * @brief Forces an immediate update of the CircleButton.
  *
  * Sets the flag to redraw the button on the next redraw cycle.
  */
-void CircleButton::forceUpdate() { m_shouldRedraw = true; }
+void CircleButton::forceUpdate() { 
+  m_shouldRedraw = true; 
+  ESP_LOGD(TAG, "CircleButton force update requested");
+}
 
-/**
- * @brief Retrieves the current enabled state of the button.
- * @return True if the button is enabled, otherwise false.
- */
-bool CircleButton::getEnabled() { return m_enabled; }
-
-/**
- * @brief Sets the enabled state of the button.
- * @param newState True to enable the button, false to disable it.
- */
-void CircleButton::setEnabled(bool newState) { m_enabled = newState; }
 
 /**
  * @brief Changes the current state of the CircleButton (pressed or not
@@ -99,27 +95,30 @@ void CircleButton::changeState() { m_status = !m_status; }
  */
 void CircleButton::redraw() {
   CHECK_TFT_VOID
-  if (!visible) {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_INITIALIZED_VOID
+  CHECK_LOADED_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_SHOULDREDRAW_VOID
+
 #if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw) {
-    return;
-  }
   m_shouldRedraw = false;
+
   uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
-  log_d("Redrawing circlebutton");
+  ESP_LOGD(TAG, "Redrawing circlebutton at (%d,%d) radius %d, status: %s", 
+                m_xPos, m_yPos, m_config.radius, m_status ? "pressed" : "released");
 
-  WidgetBase::objTFT->fillCircle(xPos, yPos, m_radius,
+  WidgetBase::objTFT->fillCircle(m_xPos, m_yPos, m_config.radius,
                                  lightBg); // Button background
-  WidgetBase::objTFT->drawCircle(xPos, yPos, m_radius,
+  WidgetBase::objTFT->drawCircle(m_xPos, m_yPos, m_config.radius,
                                  baseBorder); // Button border
-  uint16_t bgColor = m_status ? m_pressedColor : lightBg;
-  WidgetBase::objTFT->fillCircle(xPos, yPos, m_radius * 0.75,
+  uint16_t bgColor = m_status ? m_config.pressedColor : lightBg;
+  WidgetBase::objTFT->fillCircle(m_xPos, m_yPos, m_config.radius * 0.75,
                                  bgColor); // Inner background
-  WidgetBase::objTFT->drawCircle(xPos, yPos, m_radius * 0.75,
+  WidgetBase::objTFT->drawCircle(m_xPos, m_yPos, m_config.radius * 0.75,
                                  baseBorder); // Inner border
 #endif
 }
@@ -130,37 +129,10 @@ void CircleButton::redraw() {
  * Constrains the button radius between 5 and 200 pixels.
  */
 void CircleButton::start() {
-  m_radius =
-      constrain(m_radius, 5, 200); // Limits the button radius between 5 and 200
+  m_config.radius =
+      constrain(m_config.radius, 5, 200); // Limits the button radius between 5 and 200
 }
 
-/**
- * @brief Configures the CircleButton widget with specific radius, color, and
- * callback function.
- * @param _radius Radius of the circular button.
- * @param _pressedColor Color displayed when the button is pressed.
- * @param _cb Callback function to execute when the button state changes.
- *
- * Initializes the button properties and marks it as loaded when complete.
- */
-void CircleButton::setup(uint16_t _radius, uint16_t _pressedColor,
-                         functionCB_t _cb) {
-  if (!WidgetBase::objTFT) {
-    log_e("TFT not defined on WidgetBase");
-    return;
-  }
-  if (loaded) {
-    log_d("CircleButton widget already configured");
-    return;
-  }
-  m_radius = _radius;
-  m_pressedColor = _pressedColor;
-  cb = _cb;
-  start();
-  // redraw();
-
-  loaded = true;
-}
 
 /**
  * @brief Configures the CircleButton with parameters defined in a configuration
@@ -168,14 +140,24 @@ void CircleButton::setup(uint16_t _radius, uint16_t _pressedColor,
  * @param config Structure containing the button configuration parameters.
  */
 void CircleButton::setup(const CircleButtonConfig &config) {
-  setup(config.radius, config.pressedColor, config.callback);
+  // Validate TFT object
+  CHECK_TFT_VOID
+  
+  m_config = config;
+  start();
+  // redraw();
+
+  m_loaded = true;
+  m_initialized = true;
+  ESP_LOGD(TAG, "CircleButton setup completed at (%d, %d) with radius %d", 
+                m_xPos, m_yPos, m_config.radius);
 }
 
 /**
  * @brief Retrieves the current status of the CircleButton.
  * @return True if the button is pressed, otherwise false.
  */
-bool CircleButton::getStatus() { return m_status; }
+bool CircleButton::getStatus() const { return m_status; }
 
 /**
  * @brief Sets the current state of the CircleButton.
@@ -185,29 +167,30 @@ bool CircleButton::getStatus() { return m_status; }
  * provided.
  */
 void CircleButton::setStatus(bool _status) {
-  if (!loaded) {
-    log_e("CircleButton widget not loaded");
-    return;
-  }
+  CHECK_LOADED_VOID
+  
   if (m_status == _status) {
-    log_d("CircleButton widget already set to this status");
+    ESP_LOGD(TAG, "CircleButton widget already set to this status");
     return;
   }
 
   m_status = _status;
   m_shouldRedraw = true;
 
-  if (cb != nullptr) {
-    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
+  if (m_config.callback != nullptr) {
+    WidgetBase::addCallback(m_config.callback, WidgetBase::CallbackOrigin::SELF);
   }
+  ESP_LOGD(TAG, "CircleButton status changed to %s", _status ? "pressed" : "released");
 }
 
 void CircleButton::show() {
-  visible = true;
+  m_visible = true;
   m_shouldRedraw = true;
+  ESP_LOGD(TAG, "CircleButton shown at (%d, %d)", m_xPos, m_yPos);
 }
 
 void CircleButton::hide() {
-  visible = false;
+  m_visible = false;
   m_shouldRedraw = true;
+  ESP_LOGD(TAG, "CircleButton hidden at (%d, %d)", m_xPos, m_yPos);
 }

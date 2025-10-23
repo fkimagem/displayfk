@@ -18,17 +18,14 @@ struct TextButtonConfig {
 class TextButton : public WidgetBase
 {
 private:
+  static const char* TAG; ///< Tag for logging
   unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
-  uint16_t m_width; ///< Width of the TextButton.
-  uint16_t m_height; ///< Height of the TextButton.
-  uint16_t m_pressedColor; ///< Color displayed when the button is pressed.
-  uint16_t m_textColor; ///< Color of the text displayed on the button.
-  uint16_t m_radius; ///< Radius for the button's rounded corners.
   uint8_t m_offsetMargin = 5; ///< Margin offset for positioning the text within the button.
   const char* m_text; ///< Text displayed on the button.
   bool m_enabled = true; ///< Indicates whether the button is enabled or disabled.
-  bool m_shouldRedraw = false; ///< Flag indicating if the TextButton should be redrawn.
+  TextButtonConfig m_config; ///< Configuration structure for the TextButton.
 
+  void cleanupMemory();
   void start();
   void setup(uint16_t _width, uint16_t _height, uint16_t _radius, uint16_t _pressedColor, uint16_t _textColor, const char* _text, functionCB_t _cb);
 
@@ -37,7 +34,8 @@ public:
   ~TextButton();
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
-  void redraw();
+  void redraw() override;
+  void forceUpdate() override;
   void onClick();
   void setup(const TextButtonConfig& config);
   bool getEnabled();

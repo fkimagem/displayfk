@@ -20,22 +20,18 @@ struct SpinBoxConfig {
 class SpinBox : public WidgetBase
 {
 private:
-  unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
-  uint16_t m_width; ///< Width of the SpinBox.
-  uint16_t m_height; ///< Height of the SpinBox.
+  static const char* TAG;
   uint16_t m_pressedColor; ///< Color displayed when the SpinBox is pressed.
   bool m_status; ///< Current status of the SpinBox (pressed or not).
-  int m_vmin; ///< Minimum value allowed for the SpinBox.
-  int m_vmax; ///< Maximum value allowed for the SpinBox.
   int m_currentValue; ///< Current numeric value of the SpinBox.
-  uint16_t m_step; ///< Step value for increment and decrement.
   uint8_t m_radius = 10; ///< Radius for the circular buttons in the SpinBox.
   uint8_t m_offset = 5; ///< Offset for positioning elements within the SpinBox.
-  uint16_t m_colorBase = 0x8410; ///< Base color for the SpinBox display elements.
-  uint16_t m_textColor = 0x00; ///< Text Color
   TextBound_t m_lastArea = {0,0,0,0}; ///< Last area of the SpinBox.
-  bool m_shouldRedraw = false; ///< Flag indicating if the SpinBox should be redrawn.
 
+
+  SpinBoxConfig m_config; ///< Configuration structure for the SpinBox.
+
+  void cleanupMemory();
   void start();
   void increaseValue();
   void decreaseValue();
@@ -46,7 +42,8 @@ public:
   ~SpinBox();
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
-  void redraw();
+  void redraw() override;
+  void forceUpdate() override;
   void drawBackground();
   void setup(const SpinBoxConfig& config);
   int getValue();

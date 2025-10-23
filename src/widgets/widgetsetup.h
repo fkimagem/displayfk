@@ -10,7 +10,7 @@
 #endif
 
 #define POINT_IN_RECT(px, py, rx, ry, rw, rh) \
-    ((px) >= (rx) && (px) <= (rx) + (rw) && (py) >= (ry) && (py) <= (ry) + (rh))
+    ((px) >= (rx) && (px) <= ((rx) + (rw)) && (py) >= (ry) && (py) <= ((ry) + (rh)))
 
 #define POINT_IN_CIRCLE(px, py, cx, cy, r) \
     (((px) - (cx)) * ((px) - (cx)) + ((py) - (cy)) * ((py) - (cy)) <= (r) * (r))
@@ -222,6 +222,8 @@ constexpr uint16_t CFK_GREY14    = process_color(0xEF7D);
 #define FONT_SCREENMATRIX
 #define FONT_URBAN
 #define FONT_VACATION
+
+
 
 #endif
 

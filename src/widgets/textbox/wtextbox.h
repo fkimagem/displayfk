@@ -22,6 +22,7 @@ struct TextBoxConfig {
 class TextBox : public WidgetBase
 {
 private:
+    static const char* TAG; ///< Tag for logging
     unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
     uint16_t m_width; ///< Width of the TextBox.
     uint16_t m_height; ///< Height of the TextBox.
@@ -46,8 +47,8 @@ public:
     ~TextBox();
     bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
     functionCB_t getCallbackFunc() override;
-    void redraw();
-    void forceUpdate();
+    void redraw() override;
+    void forceUpdate() override;
     void setup(const TextBoxConfig& config);
     void setValue(const char* str);
     const char* getValue();

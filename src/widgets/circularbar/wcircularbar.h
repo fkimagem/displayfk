@@ -27,40 +27,26 @@ struct CircularBarConfig {
 class CircularBar : public WidgetBase
 {
 private:
-  unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
-  bool m_shouldRedraw = false; ///< Flag indicating if the circular bar should be redrawn.
-  int m_vmin; ///< Minimum value of the bar range.
-  int m_vmax; ///< Maximum value of the bar range.
-  uint16_t m_startAngle; ///< Starting angle of the circular bar.
-  uint16_t m_endAngle; ///< Ending angle of the circular bar.
-  uint32_t m_radius; ///< Radius of the CircularBar.
+  static const char* TAG; ///< Tag for logging identification
   int m_lastValue; ///< Last value represented by the bar.
   int m_value; ///< Current value to show on the bar.
-  uint16_t m_lineColor; ///< Color of the circular bar's edge.
-  uint16_t m_textColor; ///< Color of the text displaying the value.
-  uint16_t m_bkColor; ///< Background color of the CircularBar.
-  uint8_t m_lineWeight; ///< Weight/thickness of the circular bar line.
-  //uint16_t m_middleColor; ///< Optional color for the middle of the bar.
-  //bool m_invertedFill = false; ///< Flag to indicate if the fill direction is inverted.
   int m_rotation = 0; ///< Rotation angle of the gauge, where 0 is at the middle right.
-  bool m_showValue = true; ///< Flag to show/hide the value text.
   TextBound_t m_lastArea = {0, 0, 0, 0}; ///< Last calculated area for the label.
-  uint16_t m_backgroundText = 0;
+  CircularBarConfig m_config; ///< Configuration for the CircularBar.
 
   void start();
-  void setup(uint16_t radius, int vmin, int vmax, uint16_t startAngle, uint16_t endAngle, uint8_t weight, uint16_t color, uint16_t bkColor, uint16_t textColor, uint16_t backgroundText, bool showLabel, bool inverted);
 
 public:
   CircularBar(uint16_t _x, uint16_t _y, uint8_t _screen);
-  ~CircularBar();
+  virtual ~CircularBar();
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
-  void drawBackground();
-  void setValue(int newValue);
-  void redraw();
-  void forceUpdate();
-  void setup(const CircularBarConfig& config);
+  void redraw() override;
+  void forceUpdate() override;
   void show() override;
   void hide() override;
+  void setup(const CircularBarConfig& config);
+  void drawBackground();
+  void setValue(int newValue);
 };
 #endif

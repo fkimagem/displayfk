@@ -14,31 +14,25 @@ struct CircleButtonConfig {
 class CircleButton : public WidgetBase
 {
 private:
-  unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
-  uint16_t m_radius;       ///< Radius of the circular button.
-  uint16_t m_pressedColor; ///< Color displayed when the button is pressed.
+  static const char* TAG; ///< Tag for logging identification
   bool m_status;           ///< Current status of the button (pressed or not).
-  bool m_shouldRedraw = false;     ///< Flag to indicate if the button should be redrawn.
-  bool m_enabled = true;   ///< Indicates whether the button is enabled or disabled.
+  CircleButtonConfig m_config; ///< Configuration for the CircleButton.
   
   void start();
   void changeState();
-  void setup(uint16_t _radius, uint16_t _pressedColor, functionCB_t _cb);
 
 public:
   CircleButton(uint16_t _x, uint16_t _y, uint8_t _screen);
-  ~CircleButton();
-  void forceUpdate();
+  virtual ~CircleButton();
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
-  void redraw();
-  void setup(const CircleButtonConfig& config);
-  bool getStatus();
-  void setStatus(bool _status);
-  bool getEnabled();
-  void setEnabled(bool newState);
+  void redraw() override;
+  void forceUpdate() override;
   void show() override;
   void hide() override;
+  void setup(const CircleButtonConfig& config);
+  bool getStatus() const;
+  void setStatus(bool _status);
 };
 
 //#endif

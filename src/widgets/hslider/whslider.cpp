@@ -1,4 +1,8 @@
 #include "whslider.h"
+#include <Arduino.h>
+#include <esp_log.h>
+
+const char* HSlider::TAG = "HSlider";
 
 // if defined detect touch only when on handler circle, else, detect on rect total area and calculate handler position
 // #define DETECT_ON_HANDLER
@@ -10,12 +14,27 @@
  * @param _screen Screen identifier where the HSlider will be displayed.
  */
 HSlider::HSlider(uint16_t _x, uint16_t _y, uint8_t _screen)
-    : WidgetBase(_x, _y, _screen), m_shouldRedraw(true) {}
+    : WidgetBase(_x, _y, _screen), m_currentPos(0), m_lastPos(0),
+      m_height(0), m_contentRadius(0), m_centerV(0), m_minX(0), m_maxX(0),
+      m_value(0)
+{
+  // Initialize with default config
+  m_config = {.width = 0, .pressedColor = 0, .backgroundColor = 0, .minValue = 0, .maxValue = 0, .radius = 0, .callback = nullptr};
+  
+  ESP_LOGD(TAG, "HSlider created at (%d, %d) on screen %d", _x, _y, _screen);
+}
 
 /**
  * @brief Destructor for the HSlider class.
  */
-HSlider::~HSlider() {}
+HSlider::~HSlider() {
+  ESP_LOGD(TAG, "HSlider destroyed at (%d, %d)", m_xPos, m_yPos);
+  
+  // Clear callback
+  if (m_callback != nullptr) {
+    m_callback = nullptr;
+  }
+}
 
 /**
  * @brief Detects if the slider has been touched and processes the touch input.
@@ -26,86 +45,111 @@ HSlider::~HSlider() {}
  * Updates the slider position and value based on the touch position.
  */
 bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
-  if (!visible) {
-    return false;
-  }
-#if defined(HAS_TOUCH)
-  if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen ||
-      !loaded) {
-    return false;
-  }
-  /*if (millis() - m_myTime < 10)
-  {
-    return false;
-  }*/
-
-  if (!m_enabled) {
-    log_d("HSlider is disabled");
-    return false;
-  }
-
-  m_myTime = millis();
+  // Early validation checks using macros
+  CHECK_VISIBLE_BOOL
+  CHECK_INITIALIZED_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_USINGKEYBOARD_BOOL
+  CHECK_CURRENTSCREEN_BOOL
+  CHECK_ENABLED_BOOL
+  CHECK_LOCKED_BOOL
+  CHECK_POINTER_TOUCH_NULL_BOOL
 
   bool detected = false;
 
   #if defined(DETECT_ON_HANDLER)
   int32_t offsetRadius = 10; // Offset to account for the radius of the slider handle
-  int32_t radiusToDetect =
-      m_radius + offsetRadius; // Add a small margin for touch detection
+  int32_t radiusToDetect = m_config.radius + offsetRadius; // Add a small margin for touch detection
   int32_t deltaX = (*_xTouch - m_currentPos) * (*_xTouch - m_currentPos);
-  int32_t deltaY = (*_yTouch - (yPos + radiusToDetect)) *
-                   (*_yTouch - (yPos + radiusToDetect));
+  int32_t deltaY = (*_yTouch - (m_yPos + radiusToDetect)) *
+                   (*_yTouch - (m_yPos + radiusToDetect));
   int32_t radiusQ = radiusToDetect * radiusToDetect;
 
   if ((deltaX < radiusQ) && (deltaY < radiusQ)) {
     detected = true;
-
     m_currentPos = (*_xTouch);
     m_currentPos = constrain(m_currentPos, m_minX, m_maxX);
-
-    m_value = map(m_currentPos, m_minX, m_maxX, m_vmin, m_vmax);
+    updateValue();
     m_shouldRedraw = true;
   }
-#else
+  #else
+  if(POINT_IN_RECT(*_xTouch, *_yTouch, m_minX, m_yPos, (m_config.width), m_height)) {
+    m_myTime = millis();
+    detected = true;
+    m_currentPos = (*_xTouch);
+    m_currentPos = constrain(m_currentPos, m_minX, m_maxX);
+    updateValue();
+    m_shouldRedraw = true;
+  }
+  #endif
 
-if(POINT_IN_RECT(*_xTouch, *_yTouch, m_minX, yPos, (m_width - 2 * m_radius), m_height))
-{
-  detected = true;
-  m_currentPos = (*_xTouch);
-  m_currentPos = constrain(m_currentPos, m_minX, m_maxX);
-
-  m_value = map(m_currentPos, m_minX, m_maxX, m_vmin, m_vmax);
-  m_shouldRedraw = true;
-}
-#endif
-
+  if (detected) {
+    ESP_LOGD(TAG, "HSlider touched at (%d, %d), value: %d", *_xTouch, *_yTouch, m_value);
+  }
 
   return detected;
-
-
-
-#else
-  return false;
-#endif
 }
 
 /**
  * @brief Retrieves the callback function associated with the slider.
  * @return Pointer to the callback function.
  */
-functionCB_t HSlider::getCallbackFunc() { return cb; }
+functionCB_t HSlider::getCallbackFunc() { return m_callback; }
+
 
 /**
- * @brief Retrieves the current enabled state of the slider.
- * @return True if the slider is enabled, otherwise false.
+ * @brief Validates the configuration structure.
+ * @param config Configuration to validate.
+ * @return True if valid, false otherwise.
  */
-bool HSlider::getEnabled() { return m_enabled; }
+bool HSlider::validateConfig(const HSliderConfig& config) {
+  // Validate basic parameters
+  if (config.width <= 0) {
+    ESP_LOGE(TAG, "Invalid width: %d", config.width);
+    return false;
+  }
+  
+  if (config.minValue >= config.maxValue) {
+    ESP_LOGE(TAG, "Invalid range: min=%d, max=%d", config.minValue, config.maxValue);
+    return false;
+  }
+  
+  if (config.radius <= 0) {
+    ESP_LOGE(TAG, "Invalid radius: %d", config.radius);
+    return false;
+  }
+  
+  return true;
+}
 
 /**
- * @brief Sets the enabled state of the slider.
- * @param newState True to enable the slider, false to disable it.
+ * @brief Updates the slider value based on current position.
  */
-void HSlider::setEnabled(bool newState) { m_enabled = newState; }
+void HSlider::updateValue() {
+  m_value = map(m_currentPos, m_minX, m_maxX, m_config.minValue, m_config.maxValue);
+}
+
+/**
+ * @brief Updates the slider dimensions and constraints.
+ */
+void HSlider::updateDimensions() {
+  m_height = m_config.radius * 2;
+  m_centerV = m_yPos + m_config.radius;
+  m_minX = m_xPos + m_config.radius;
+  m_maxX = m_xPos + m_config.width - m_config.radius;
+  m_contentRadius = m_config.radius - 4; // Inner radius for content
+}
+
+/**
+ * @brief Initializes the HSlider widget with default calculations.
+ */
+void HSlider::start() {
+  updateDimensions();
+  m_shouldRedraw = true;
+  ESP_LOGD(TAG, "HSlider initialized at (%d, %d)", m_xPos, m_yPos);
+}
+
+// setEnabled method removed - use inherited methods from WidgetBase
 
 /**
  * @brief Redraws the slider handle and filled portion on the screen.
@@ -115,55 +159,47 @@ void HSlider::setEnabled(bool newState) { m_enabled = newState; }
  */
 void HSlider::redraw() {
   CHECK_TFT_VOID
-  if (!visible) {
-    return;
-  }
-#if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw) {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_INITIALIZED_VOID
+  CHECK_LOADED_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_DEBOUNCE_FAST_REDRAW_VOID
+  CHECK_SHOULDREDRAW_VOID
+
 
   m_shouldRedraw = false;
 
   uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
 
-  // uint16_t lastPosCircleX = map(lastPos, xPos + radius, xPos + width -
-  // radius, radius, width - radius);
+  // Clear previous position
   WidgetBase::objTFT->fillCircle(m_lastPos, m_centerV, m_contentRadius,
-                                 CFK_WHITE); // slider background
+                                 m_config.backgroundColor); // slider background
 
-  // uint16_t posCircleX = map(currentPos, xPos + radius, xPos + width - radius,
-  // radius, width - radius);
-
-  log_d("Redraw ballslider with value %i at %i", m_value, m_currentPos);
+  ESP_LOGD(TAG, "Redraw HSlider with value %i at %i", m_value, m_currentPos);
 
   uint8_t fillRadius = 2;
 
-  
+  // Draw progress bar
+  if(m_lastPos > m_currentPos){
 
-    if(m_lastPos > m_currentPos){
-      uint16_t bkColor = WidgetBase::lightMode ? CFK_WHITE : CFK_BLACK;
-      WidgetBase::objTFT->fillRoundRect(m_currentPos, m_centerV - (fillRadius),
-                                    m_lastPos - (m_currentPos), fillRadius * 2,
-                                    fillRadius, bkColor);
-    }else{
-      WidgetBase::objTFT->fillRoundRect(m_minX, m_centerV - (fillRadius),
-                                    m_currentPos - (m_minX), fillRadius * 2,
-                                    fillRadius, m_pressedColor);
-    }
-    
+    WidgetBase::objTFT->fillRoundRect(m_currentPos, m_centerV - (fillRadius),
+                                  m_lastPos - (m_currentPos), fillRadius * 2,
+                                  fillRadius, m_config.backgroundColor);
+  }else{
+    WidgetBase::objTFT->fillRoundRect(m_minX, m_centerV - (fillRadius),
+                                  m_currentPos - (m_minX), fillRadius * 2,
+                                  fillRadius, m_config.pressedColor);
+  }
+  
+  // Draw slider handle
   WidgetBase::objTFT->fillCircle(m_currentPos, m_centerV, m_contentRadius,
                                  lightBg); // slider handle
   WidgetBase::objTFT->fillCircle(m_currentPos, m_centerV,
                                  m_contentRadius * 0.75,
-                                 m_pressedColor); // slider center
-
-  // WidgetBase::objTFT->drawCircle(posCircleX, radius, radius, baseBorder); //
-  // large outline WidgetBase::objTFT->drawCircle(posCircleX, radius, radius *
-  // 0.75, baseBorder); // slider center
+                                 m_config.pressedColor); // slider center
 
   m_lastPos = m_currentPos;
-#endif
 }
 
 /**
@@ -174,60 +210,18 @@ void HSlider::redraw() {
  */
 void HSlider::drawBackground() {
   CHECK_TFT_VOID
-  if (!visible) {
-    return;
-  }
-#if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || !loaded) {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_LOADED_VOID
 
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
-  WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, m_radius,
-                                    WidgetBase::lightMode ? CFK_WHITE
-                                                          : CFK_BLACK);
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, m_radius,
+  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_config.width, m_height, m_config.radius,
+                                    m_config.backgroundColor);
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_height, m_config.radius,
                                     baseBorder);
 
   redraw();
-#endif
-}
-
-/**
- * @brief Configures the slider with specific parameters.
- * @param _width Width of the slider track.
- * @param _pressedColor Color when the slider handle is pressed.
- * @param _vmin Minimum value of the slider range.
- * @param _vmax Maximum value of the slider range.
- * @param _radius Radius of the slider handle.
- * @param _cb Callback function to execute on slider value change.
- *
- * Initializes the slider dimensions, value range, and appearance.
- */
-void HSlider::setup(uint16_t _width, uint16_t _pressedColor, int _vmin,
-                    int _vmax, uint32_t _radius, functionCB_t _cb) {
-  if (loaded) {
-    log_d("HSlider widget already configured");
-    return;
-  }
-  m_width = _width;
-  m_height = _radius * 2;
-  m_pressedColor = _pressedColor;
-  m_vmin = _vmin;
-  m_vmax = _vmax;
-  m_value = m_vmin;
-  m_radius = _radius;
-  m_contentRadius = m_radius - 4;
-  cb = _cb;
-  m_minX = xPos + m_radius;
-  m_maxX = xPos + m_width - m_radius;
-
-  m_currentPos = m_minX;
-  m_lastPos = m_currentPos;
-  m_centerV = yPos + (m_height / 2);
-  loaded = true;
-  drawBackground();
 }
 
 /**
@@ -236,48 +230,79 @@ void HSlider::setup(uint16_t _width, uint16_t _pressedColor, int _vmin,
  * @param config Structure containing the slider configuration parameters.
  */
 void HSlider::setup(const HSliderConfig &config) {
-  setup(config.width, config.pressedColor, config.minValue, config.maxValue,
-        config.radius, config.callback);
+  // Validate TFT object
+  CHECK_TFT_VOID
+
+  // Validate configuration first
+  if (!validateConfig(config)) {
+    ESP_LOGE(TAG, "Invalid configuration provided");
+    return;
+  }
+
+  // Assign the configuration structure
+  m_config = config;
+
+  start();
+
+  m_currentPos = m_minX;
+  m_lastPos = m_currentPos;
+
+  updateValue();
+
+  m_loaded = true;
+  m_initialized = true;
+
+  ESP_LOGD(TAG, "HSlider setup completed at (%d, %d)", m_xPos, m_yPos);
 }
 
 /**
  * @brief Retrieves the current value of the slider.
  * @return Current value of the slider.
  */
-int HSlider::getValue() { return m_value; }
+int HSlider::getValue() const { return m_value; }
 
 /**
  * @brief Sets the value of the slider.
- * @param _value New value for the slider.
+ * @param newValue New value for the slider.
  *
  * Updates the slider position based on the provided value and triggers the
  * callback.
  */
-void HSlider::setValue(int _value) {
-  if (!loaded) {
-    log_e("HSlider widget not loaded");
-    return;
-  }
-
-  m_value = constrain(_value, m_vmin, m_vmax);
+void HSlider::setValue(int newValue) {
+  CHECK_LOADED_VOID
+  CHECK_INITIALIZED_VOID
+  
+  m_value = constrain(newValue, m_config.minValue, m_config.maxValue);
+  
+  // Update position based on value
+  m_currentPos = map(m_value, m_config.minValue, m_config.maxValue, m_minX, m_maxX);
+  
   m_shouldRedraw = true;
-  if (cb != nullptr) {
-    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
+  
+  if (m_callback != nullptr) {
+    WidgetBase::addCallback(m_callback, WidgetBase::CallbackOrigin::SELF);
   }
+  
+  ESP_LOGD(TAG, "HSlider value set to %d", m_value);
 }
 
 /**
  * @brief Forces the slider to update, refreshing its visual state on next
  * redraw.
  */
-void HSlider::forceUpdate() { m_shouldRedraw = true; }
+void HSlider::forceUpdate() { 
+  m_shouldRedraw = true; 
+  ESP_LOGD(TAG, "HSlider force update requested");
+}
 
 void HSlider::show() {
-  visible = true;
+  m_visible = true;
   m_shouldRedraw = true;
+  ESP_LOGD(TAG, "HSlider shown at (%d, %d)", m_xPos, m_yPos);
 }
 
 void HSlider::hide() {
-  visible = false;
+  m_visible = false;
   m_shouldRedraw = true;
+  ESP_LOGD(TAG, "HSlider hidden at (%d, %d)", m_xPos, m_yPos);
 }

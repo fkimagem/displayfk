@@ -1,5 +1,7 @@
 #include "wtextbox.h"
 
+const char* TextBox::TAG = "[TextBox]";
+
 /**
  * @brief Constructor for the TextBox class.
  * @param _x X-coordinate for the TextBox position.
@@ -29,7 +31,7 @@ TextBox::~TextBox() {
   m_font = nullptr;
 #endif
   parentScreen = nullptr;
-  cb = nullptr;
+  m_callback = nullptr;
 }
 
 /**
@@ -41,42 +43,40 @@ TextBox::~TextBox() {
  * When touched, activates the virtual keyboard mode for text input.
  */
 bool TextBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
-  if (!visible) {
-    return false;
-  }
-#if defined(HAS_TOUCH)
-  if (WidgetBase::currentScreen != screen || !loaded) {
-    return false;
-  }
+  CHECK_VISIBLE_BOOL
+  CHECK_USINGKEYBOARD_BOOL
+  CHECK_CURRENTSCREEN_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_DEBOUNCE_CLICK_BOOL
+  CHECK_ENABLED_BOOL
+  CHECK_LOCKED_BOOL
+  CHECK_POINTER_TOUCH_NULL_BOOL
 
-  if (millis() - m_myTime < TIMEOUT_CLICK) {
-    return false;
+  bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_width, m_height);
+  if(inBounds) {
+    m_myTime = millis();
   }
-  m_myTime = millis();
 
   // bool detectado = false;
-  uint16_t xMax = xPos + m_width;
-  uint16_t yMax = yPos + m_height;
+  uint16_t xMax = m_xPos + m_width;
+  uint16_t yMax = m_yPos + m_height;
 
-  if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) &&
+  if ((*_xTouch > m_xPos) && (*_xTouch < xMax) && (*_yTouch > m_yPos) &&
       (*_yTouch < yMax) && WidgetBase::usingKeyboard == false) {
     WidgetBase::usingKeyboard = true;
-    log_d("Open keyboard");
+    ESP_LOGD(TAG, "Open keyboard");
 
     return true;
   }
 
   return false;
-#else
-  return false;
-#endif
 }
 
 /**
  * @brief Retrieves the callback function associated with the TextBox.
  * @return Pointer to the callback function.
  */
-functionCB_t TextBox::getCallbackFunc() { return cb; }
+functionCB_t TextBox::getCallbackFunc() { return m_callback; }
 
 /**
  * @brief Redraws the TextBox on the screen, updating its appearance.
@@ -86,11 +86,11 @@ functionCB_t TextBox::getCallbackFunc() { return cb; }
  */
 void TextBox::redraw() {
   CHECK_TFT_VOID
-  if (!visible) {
+  if (!m_visible) {
     return;
   }
 #if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || !loaded || !m_shouldRedraw) {
+  if (WidgetBase::currentScreen != m_screen || !m_loaded || !m_shouldRedraw) {
     return;
   }
 
@@ -102,15 +102,15 @@ void TextBox::redraw() {
     updateFont(FontType::NORMAL);
   }
 
-  log_d("Redraw textbox with value %s", m_value.getString());
+  ESP_LOGD(TAG, "Redraw textbox with value %s", m_value.getString());
 
   // TextBound_t area;
-  // WidgetBase::objTFT->getTextBounds("M", xPos, yPos, &area.x, &area.y,
+  // WidgetBase::objTFT->getTextBounds("M", m_xPos, m_yPos, &area.x, &area.y,
   // &area.width, &area.height);
 
-  WidgetBase::objTFT->fillRect(xPos, yPos, m_width, m_height,
+  WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_width, m_height,
                                m_backgroundColor);
-  WidgetBase::objTFT->drawRect(xPos, yPos, m_width, m_height, m_letterColor);
+  WidgetBase::objTFT->drawRect(m_xPos, m_yPos, m_width, m_height, m_letterColor);
   WidgetBase::objTFT->setTextColor(m_letterColor);
 
   // uint16_t qtdLetrasMax = m_width / area.width;
@@ -120,7 +120,7 @@ void TextBox::redraw() {
 
   // log_d("Draw %d letters from %s in space %d", qtdLetrasMax, conteudo,
   // m_width);
-  printText(conteudo, xPos + m_padding, yPos + m_height / 2, ML_DATUM);
+  printText(conteudo, m_xPos + m_padding, m_yPos + m_height / 2, ML_DATUM);
 
   updateFont(FontType::UNLOAD);
 #endif
@@ -160,7 +160,7 @@ void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
                     const GFXfont *_font, functionLoadScreen_t _funcPtr,
                     functionCB_t _cb) {
   if (!WidgetBase::objTFT) {
-    log_e("TFT not defined on WidgetBase");
+    ESP_LOGE(TAG, "TFT not defined on WidgetBase");
     return;
   }
   parentScreen = _funcPtr;
@@ -171,7 +171,7 @@ void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
   if (_font) {
     WidgetBase::objTFT->setFont(_font);
     TextBound_t area;
-    WidgetBase::objTFT->getTextBounds("Mp", xPos, yPos, &area.x, &area.y,
+    WidgetBase::objTFT->getTextBounds("Mp", m_xPos, m_yPos, &area.x, &area.y,
                                       &area.width, &area.height);
     m_height = area.height + (m_padding * 2);
   }
@@ -181,9 +181,9 @@ void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
   m_backgroundColor = _backgroundColor;
   m_value = _startValue;
   m_font = _font;
-  cb = _cb;
+  m_callback = _cb;
 
-  loaded = true;
+  m_loaded = true;
 }
 #endif
 
@@ -195,7 +195,7 @@ void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
  */
 void TextBox::setValue(const char *str) {
   m_value.setString(str, true);
-  log_d("Set value for textbox: %s", str);
+  ESP_LOGD(TAG, "Set value for textbox: %s", str);
   forceUpdate();
 }
 
@@ -213,11 +213,11 @@ void TextBox::forceUpdate() { m_shouldRedraw = true; }
 const char *TextBox::getValue() { return m_value.getString(); }
 
 void TextBox::show() {
-  visible = true;
+  m_visible = true;
   m_shouldRedraw = true;
 }
 
 void TextBox::hide() {
-  visible = false;
+  m_visible = false;
   m_shouldRedraw = true;
 }

@@ -1,16 +1,7 @@
 #include "wgaugesuper.h"
+#include <esp_log.h>
 
-//#define DEBUG_GAUGE
-
-#if defined(DEBUG_GAUGE)
-#define DEBUG_D(format, ...) log_d(format, ##__VA_ARGS__)
-#define DEBUG_E(format, ...) log_e(format, ##__VA_ARGS__)
-#define DEBUG_W(format, ...) log_w(format, ##__VA_ARGS__)
-#else
-#define DEBUG_D(format, ...) 
-#define DEBUG_E(format, ...) 
-#define DEBUG_W(format, ...) 
-#endif
+const char* GaugeSuper::TAG = "GaugeSuper";
 
 /**
  * @brief Constructor for the GaugeSuper class.
@@ -18,11 +9,34 @@
  * @param _y Y position of the gauge.
  * @param _screen Screen number.
  */
-GaugeSuper::GaugeSuper(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen)
+GaugeSuper::GaugeSuper(uint16_t _x, uint16_t _y, uint8_t _screen) 
+    : WidgetBase(_x, _y, _screen), 
+      // Internal state (in order of declaration)
+      m_ltx(0), m_lastPointNeedle(), m_stripColor(CFK_WHITE), m_indexCurrentStrip(0), 
+      m_divisor(1), m_isFirstDraw(true),
+      // Dynamic arrays
+      m_intervals(nullptr), m_colors(nullptr), m_title(nullptr),
+      // Memory management flags
+      m_intervalsAllocated(false), m_colorsAllocated(false), m_titleAllocated(false),
+      // Calculated dimensions
+      m_height(0), m_radius(0), m_currentValue(0), m_lastValue(0),
+      // Drawing parameters
+      m_stripWeight(16), m_maxAngle(40), m_offsetYAgulha(40), m_rotation(90), 
+      m_distanceAgulhaArco(2), m_borderSize(5), m_availableWidth(0), m_availableHeight(0)
 {
-  m_textColor = CFK_BLACK;
-  m_bkColor = CFK_WHITE;
-  m_titleColor = CFK_NAVY;
+  // Initialize m_config with default values
+  m_config = {.width = 0, .title = nullptr, .intervals = nullptr, .colors = nullptr, 
+              .amountIntervals = 0, .minValue = 0, .maxValue = 100, .borderColor = CFK_BLACK,
+              .textColor = CFK_BLACK, .backgroundColor = CFK_WHITE, .titleColor = CFK_NAVY,
+              .needleColor = CFK_RED, .markersColor = CFK_BLACK, .showLabels = false
+              #if defined(USING_GRAPHIC_LIB)
+              , .fontFamily = nullptr
+              #endif
+              };
+  
+  // Dynamic arrays already initialized in member initializer list
+  
+  ESP_LOGD(TAG, "GaugeSuper created at (%d, %d) on screen %d", _x, _y, _screen);
 }
 
 /**
@@ -30,14 +44,15 @@ GaugeSuper::GaugeSuper(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_
  */
 GaugeSuper::~GaugeSuper()
 {
-  delete[] m_intervals;
-  m_intervals = nullptr;
-
-  delete[] m_colors;
-  m_colors = nullptr;
-
-  delete[] m_title;
-  m_title = nullptr;
+  ESP_LOGD(TAG, "GaugeSuper destroyed at (%d, %d)", m_xPos, m_yPos);
+  
+  // Use centralized cleanup method
+  cleanupMemory();
+  
+  // Clear callback
+  if (m_callback != nullptr) {
+    m_callback = nullptr;
+  }
 }
 
 /**
@@ -48,6 +63,7 @@ GaugeSuper::~GaugeSuper()
  */
 bool GaugeSuper::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
+  // GaugeSuper doesn't handle touch events, it's a display-only widget
   UNUSED(_xTouch);
   UNUSED(_yTouch);
   return false;
@@ -59,7 +75,7 @@ bool GaugeSuper::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
  */
 functionCB_t GaugeSuper::getCallbackFunc()
 {
-  return cb;
+  return m_callback;
 }
 
 /**
@@ -72,26 +88,28 @@ void GaugeSuper::start()
 {
   CHECK_TFT_VOID
   #if defined(DISP_DEFAULT)
-  if (m_vmax < m_vmin)
+  if (m_config.maxValue < m_config.minValue)
   {
-    std::swap(m_vmin, m_vmax);
+    int temp = m_config.minValue;
+    m_config.minValue = m_config.maxValue;
+    m_config.maxValue = temp;
   }
 
   WidgetBase::objTFT->setFont(m_usedFont);
 
   // Calculate text dimensions for values
   char strMin[12], strMax[12];// Maximum of 12 characters for values
-  sprintf(strMin, "%d", m_vmin * 10);// Multiply by 10 to have one more digit and serve as text offset
-  sprintf(strMax, "%d", m_vmax * 10);// Multiply by 10 to have one more digit and serve as text offset
-  TextBound_t dimensionMin = getTextBounds(strMin, xPos, yPos);// Get text dimensions
-  TextBound_t dimensionMax = getTextBounds(strMax, xPos, yPos);// Get text dimensions
+  sprintf(strMin, "%d", m_config.minValue * 10);// Multiply by 10 to have one more digit and serve as text offset
+  sprintf(strMax, "%d", m_config.maxValue * 10);// Multiply by 10 to have one more digit and serve as text offset
+  TextBound_t dimensionMin = getTextBounds(strMin, m_xPos, m_yPos);// Get text dimensions
+  TextBound_t dimensionMax = getTextBounds(strMax, m_xPos, m_yPos);// Get text dimensions
   m_textBoundForValue = dimensionMax.width > dimensionMin.width ? dimensionMax : dimensionMin;// Get the larger value between the two
 
   // Configure the title
-  m_showTitle = (m_title != nullptr && strlen(m_title) > 0);// Check if title exists and has characters
+  // Title visibility is determined by m_config.title != nullptr
   
-  m_value = m_vmin;// Define initial value
-  m_lastValue = m_vmax;// Define initial value
+  m_currentValue = m_config.minValue;// Define initial value
+  m_lastValue = m_config.maxValue;// Define initial value
 
   
   //TextBound_t t;
@@ -100,31 +118,31 @@ void GaugeSuper::start()
 
   // https://pt.wikipedia.org/wiki/Segmento_circular
 
-  if(!m_showLabels){
+  if(!m_config.showLabels){
     m_textBoundForValue.width = 5;
     m_textBoundForValue.height = 5;
   }
   
 
   // Calculate gauge radius and angle
-  int corda = (m_width - 2 * m_textBoundForValue.width) * 0.9;// Gauge width minus value text multiplied by 0.9 to have space for text
+  int corda = (m_config.width - 2 * m_textBoundForValue.width) * 0.9;// Gauge width minus value text multiplied by 0.9 to have space for text
   int aberturaArcoTotal = 2 * m_maxAngle;// Calculate total arc angle
   int raioSugerido = corda / (2.0 * fastSin(aberturaArcoTotal / 2.0));// Calculate suggested radius
   int altura = raioSugerido * (1 - fastCos(aberturaArcoTotal / 2.0));
   m_radius = raioSugerido;
-  DEBUG_D("Gauge radius %i\tsegment %i", m_radius, altura);
+  ESP_LOGD(TAG, "Gauge radius %i\tsegment %i", m_radius, altura);
   UNUSED(altura);
 
   //m_offsetYAgulha = (40 + m_textBoundForValue.height + m_borderSize);
   int seno = fastSin((90 - m_maxAngle)) * m_radius;
   m_offsetYAgulha = seno - (m_borderSize + m_textBoundForValue.height * 2);
-  DEBUG_D("Needle offset: %i\n", m_offsetYAgulha);
+  ESP_LOGD(TAG, "Needle offset: %i", m_offsetYAgulha);
   m_rotation = (-(m_maxAngle + m_rotation));
   m_divisor = 1;
 
   // Configure gauge origin
-  m_origem.x = xPos;
-  m_origem.y = yPos + m_offsetYAgulha;
+  m_origem.x = m_xPos;
+  m_origem.y = m_yPos + m_offsetYAgulha;
 
   // The 3 in borderSize is to have space for labels and top border
   m_height = (m_radius - m_offsetYAgulha) + (3 * m_borderSize) + (m_textBoundForValue.height * 3);
@@ -141,10 +159,12 @@ void GaugeSuper::start()
   m_textBoundForValue.height = 0;
 
   // Calculate available dimensions
-  m_availableWidth = m_width - (2 * m_borderSize);
+  m_availableWidth = m_config.width - (2 * m_borderSize);
   m_availableHeight = m_height - (2 * m_borderSize);
 
   m_shouldRedraw = true;
+  
+  // Configuration is now directly accessible through m_config
   #endif
 }
 
@@ -157,11 +177,18 @@ void GaugeSuper::start()
 void GaugeSuper::drawBackground()
 {
   CHECK_TFT_VOID
-  if(!visible){return;}
+  CHECK_VISIBLE_VOID
   #if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !loaded)
-  {
-    return;
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
+  
+  // Validate arrays before drawing
+  if (m_config.amountIntervals > 0) {
+    if (m_intervals == nullptr || m_colors == nullptr) {
+      ESP_LOGE(TAG, "Cannot draw background: intervals or colors arrays are null");
+      return;
+    }
   }
 
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
@@ -169,7 +196,7 @@ void GaugeSuper::drawBackground()
   // updateFont(FontType::NORMAL);
   WidgetBase::objTFT->setFont(m_usedFont);
 
-  DEBUG_D("Draw background GaugeSuper");
+  ESP_LOGD(TAG, "Draw background GaugeSuper");
 
   m_indexCurrentStrip = 0;  // Index of first color to paint the strip background
   m_stripColor = CFK_WHITE; // the beginning of the strip is white
@@ -179,11 +206,11 @@ void GaugeSuper::drawBackground()
 
   for (auto i = 0; i < m_borderSize; ++i)
   {
-    WidgetBase::objTFT->drawRect((xPos - (m_width / 2)) + i, (yPos - (m_height)) + i, m_width - (2 * i), m_height - (2 * i), m_borderColor);
+    WidgetBase::objTFT->drawRect((m_xPos - (m_config.width / 2)) + i, (m_yPos - (m_height)) + i, m_config.width - (2 * i), m_height - (2 * i), m_config.borderColor);
   }
 
-  WidgetBase::objTFT->fillRect(xPos - (m_availableWidth / 2), yPos - (m_availableHeight + m_borderSize), m_availableWidth, m_availableHeight, m_bkColor);
-  WidgetBase::objTFT->drawRect(xPos - (m_availableWidth / 2), yPos - (m_availableHeight + m_borderSize), m_availableWidth, m_availableHeight, baseBorder);
+  WidgetBase::objTFT->fillRect(m_xPos - (m_availableWidth / 2), m_yPos - (m_availableHeight + m_borderSize), m_availableWidth, m_availableHeight, m_config.backgroundColor);
+  WidgetBase::objTFT->drawRect(m_xPos - (m_availableWidth / 2), m_yPos - (m_availableHeight + m_borderSize), m_availableWidth, m_availableHeight, baseBorder);
 
   // Draw colored strip with intervals less than 5 to be more precise
   for (int i = 0; i <= (2 * m_maxAngle); i += 1)
@@ -211,8 +238,8 @@ void GaugeSuper::drawBackground()
     int x3 = sx2 * m_radius + m_origem.x;
     int y3 = sy2 * m_radius + m_origem.y;
 
-    int vFaixa = map(i, 0, (2 * m_maxAngle), m_vmin, m_vmax); // Transform the for loop from -50 to 50 into value between min and max to paint
-    if (vFaixa >= m_intervals[m_indexCurrentStrip] && m_indexCurrentStrip < m_amountInterval)
+    int vFaixa = map(i, 0, (2 * m_maxAngle), m_config.minValue, m_config.maxValue); // Transform the for loop from -50 to 50 into value between min and max to paint
+    if (vFaixa >= m_intervals[m_indexCurrentStrip] && m_indexCurrentStrip < m_config.amountIntervals)
     {
       m_stripColor = m_colors[m_indexCurrentStrip];
       m_indexCurrentStrip++;
@@ -226,10 +253,10 @@ void GaugeSuper::drawBackground()
   // End of colored arc drawing
 
   // Calculate and draw the multiplier
-  WidgetBase::objTFT->setTextColor(m_textColor); // Text color
+  WidgetBase::objTFT->setTextColor(m_config.textColor); // Text color
 
   uint32_t absMin = 0;
-  int auxmin = abs(m_vmin);
+  int auxmin = abs(m_config.minValue);
   while (auxmin > 1)
   {
     absMin++;
@@ -237,7 +264,7 @@ void GaugeSuper::drawBackground()
   }
 
   uint32_t absMax = 0;
-  int auxmax = abs(m_vmax);
+  int auxmax = abs(m_config.maxValue);
   while (auxmax > 1)
   {
     absMax++;
@@ -252,7 +279,7 @@ void GaugeSuper::drawBackground()
     sprintf(char_arr, "x%d", m_divisor);
   }
 
-  if (m_showLabels)
+  if (isLabelsVisible())
   {
 
     // Reset values to draw texts
@@ -272,8 +299,8 @@ void GaugeSuper::drawBackground()
       uint16_t x0 = sx * (m_radius + tl) + m_origem.x;
       uint16_t y0 = sy * (m_radius + tl) + m_origem.y;
 
-      int vFaixa = map(i, 0, 2 * m_maxAngle, m_vmin, m_vmax);
-      if (vFaixa >= m_intervals[m_indexCurrentStrip] && m_indexCurrentStrip < m_amountInterval)
+      int vFaixa = map(i, 0, 2 * m_maxAngle, m_config.minValue, m_config.maxValue);
+      if (vFaixa >= m_intervals[m_indexCurrentStrip] && m_indexCurrentStrip < m_config.amountIntervals)
       {
         int aX = sx * (m_radius + tl + 2) + m_origem.x;
         int aY = sy * (m_radius + tl + 2) + m_origem.y;
@@ -295,14 +322,14 @@ void GaugeSuper::drawBackground()
         sprintf(char_arr, "%d", m_intervals[m_indexCurrentStrip] / m_divisor);
         printText(char_arr, aX, aY, alinhamento);
         //printText(String(m_intervals[m_indexCurrentStrip] / m_divisor).c_str(), aX, aY, alinhamento);
-        DEBUG_D("Writing \"%d\" at %d, %d", m_intervals[m_indexCurrentStrip] / m_divisor, aX, aY);
+        ESP_LOGD(TAG, "Writing \"%d\" at %d, %d", m_intervals[m_indexCurrentStrip] / m_divisor, aX, aY);
         m_indexCurrentStrip++;
       }
       if (i == 2 * m_maxAngle)
       {
-        printText(String(m_vmax / m_divisor).c_str(), x0, y0, BL_DATUM);
+        printText(String(m_config.maxValue / m_divisor).c_str(), x0, y0, BL_DATUM);
 
-        DEBUG_D("Writing %d at %d, %d", m_vmax / m_divisor, x0, y0);
+        ESP_LOGD(TAG, "Writing %d at %d, %d", m_config.maxValue / m_divisor, x0, y0);
       }
     }
   }
@@ -333,7 +360,7 @@ void GaugeSuper::drawBackground()
     y1 = sy * m_radius + m_origem.y;
 
     // Draw the tick
-    WidgetBase::objTFT->drawLine(x0, y0, x1, y1, m_marcadoresColor);
+    WidgetBase::objTFT->drawLine(x0, y0, x1, y1, m_config.markersColor);
 
     // Calculate positions to draw base arc
     sx = fastCos(angulo + 5);
@@ -343,7 +370,7 @@ void GaugeSuper::drawBackground()
 
     // Draw the arc, don't draw the last part
     if (i < 2 * m_maxAngle)
-      WidgetBase::objTFT->drawLine(x0, y0, x1, y1, m_marcadoresColor);
+      WidgetBase::objTFT->drawLine(x0, y0, x1, y1, m_config.markersColor);
   }
 
   m_isFirstDraw = true;
@@ -362,20 +389,21 @@ void GaugeSuper::drawBackground()
  */
 void GaugeSuper::setValue(int newValue)
 {
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !loaded)
-  {
-    return;
-  }
-  m_value = constrain(newValue, m_vmin, m_vmax);
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
+  CHECK_INITIALIZED_VOID
+  
+  m_currentValue = constrain(newValue, m_config.minValue, m_config.maxValue);
 
-  if (m_lastValue != m_value)
+  if (m_lastValue != m_currentValue)
   {
     m_shouldRedraw = true;
-    DEBUG_D("Set GaugeSuper value to %d", m_value);
+    ESP_LOGD(TAG, "Set GaugeSuper value to %d", m_currentValue);
   }
   else
   {
-    DEBUG_D("Set GaugeSuper value to %d but not updated", m_value);
+    ESP_LOGD(TAG, "Set GaugeSuper value to %d but not updated", m_currentValue);
   }
 
   // redraw();
@@ -390,34 +418,29 @@ void GaugeSuper::setValue(int newValue)
 void GaugeSuper::redraw()
 {
   CHECK_TFT_VOID
-  if(!visible){return;}
+  CHECK_VISIBLE_VOID
   #if defined(DISP_DEFAULT)
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
+  CHECK_DEBOUNCE_REDRAW_VOID
 
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
-  {
-    return;
-  }
-
-  if (millis() - m_myTime < 50)
-  {
-    return;
-  }
-
-  DEBUG_D("Redrawing GaugeSuper");
+  ESP_LOGD(TAG, "Redrawing GaugeSuper");
   // updateFont(FontType::NORMAL);
   WidgetBase::objTFT->setFont(m_usedFont);
 
   m_myTime = millis();
-  m_lastValue = m_value;
+  m_lastValue = m_currentValue;
 
   // Draw here
   char buf[8];
-  sprintf(buf, "%d", m_value);
+  sprintf(buf, "%d", m_currentValue);
 
   // Since the drawing is rotated -90 and drawing angles are -50 and 50.
   // int diff10 = (maxAngle + 10) - 90;
 
-  int sdeg = map(m_value, m_vmin, m_vmax, 0, 2 * m_maxAngle); // Map input values min and max with extrapolation of 10 to angle with extrapolation of 10
+  int sdeg = map(m_currentValue, m_config.minValue, m_config.maxValue, 0, 2 * m_maxAngle); // Map input values min and max with extrapolation of 10 to angle with extrapolation of 10
   int angulo = sdeg + m_rotation;
 
   // Calculate needle components according to angle
@@ -432,29 +455,29 @@ void GaugeSuper::redraw()
   // Erase old needle
   if (!m_isFirstDraw)
   {
-    WidgetBase::objTFT->drawLine(m_origem.x - 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x - 1, m_lastPointNeedle.y, m_bkColor); // -1 is to not draw on top of thin border line
-    WidgetBase::objTFT->drawLine(m_origem.x + 0 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 0, m_lastPointNeedle.y, m_bkColor); // -1 is to not draw on top of thin border line
-    WidgetBase::objTFT->drawLine(m_origem.x + 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 1, m_lastPointNeedle.y, m_bkColor); // -1 is to not draw on top of thin border line
+    WidgetBase::objTFT->drawLine(m_origem.x - 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x - 1, m_lastPointNeedle.y, m_config.backgroundColor); // -1 is to not draw on top of thin border line
+    WidgetBase::objTFT->drawLine(m_origem.x + 0 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 0, m_lastPointNeedle.y, m_config.backgroundColor); // -1 is to not draw on top of thin border line
+    WidgetBase::objTFT->drawLine(m_origem.x + 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 1, m_lastPointNeedle.y, m_config.backgroundColor); // -1 is to not draw on top of thin border line
   }
 
-  WidgetBase::objTFT->setTextColor(m_textColor);
-  if (m_showLabels)
+  WidgetBase::objTFT->setTextColor(m_config.textColor);
+  if (isLabelsVisible())
   {
     // WidgetBase::printText()
-    //uint16_t auxX = xPos - (m_availableWidth / 2) + 1;
-    //uint16_t auxY = yPos - m_borderSize;
+    //uint16_t auxX = m_xPos - (m_availableWidth / 2) + 1;
+    //uint16_t auxY = m_yPos - m_borderSize;
     //TextBound_t tb_value = getTextBounds(buf, auxX, auxY);
     //printText(buf, auxX, auxY, BL_DATUM, m_textBoundForValue, m_bkColor); //Mostrar valor do gauge
   }
-  if (m_showTitle)
+  if (isTitleVisible())
   {
     // Redraw texts
     // updateFont(FontType::BOLD);
-    WidgetBase::objTFT->setTextColor(m_titleColor);
+    WidgetBase::objTFT->setTextColor(m_config.titleColor);
     WidgetBase::objTFT->setFont(m_usedFont);
 
-    //TextBound_t tb_title = getTextBounds(m_title, xPos, yPos - (m_borderSize * 2));
-    printText(m_title, xPos, yPos - (m_borderSize * 2), BC_DATUM);
+    //TextBound_t tb_title = getTextBounds(m_title, m_xPos, m_yPos - (m_borderSize * 2));
+    printText(m_title, m_xPos, m_yPos - (m_borderSize * 2), BC_DATUM);
     updateFont(FontType::UNLOAD);
   }
   // store line values to erase later
@@ -465,9 +488,9 @@ void GaugeSuper::redraw()
   // Draw new line
   // Draw 3 lines to increase thickness
 
-  WidgetBase::objTFT->drawLine(m_origem.x - 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x - 1, m_lastPointNeedle.y, m_agulhaColor);     // -1 is to not draw on top of thin border line
-  WidgetBase::objTFT->drawLine(m_origem.x + 0 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 0, m_lastPointNeedle.y, m_agulhaColor); // -1 is to not draw on top of thin border line
-  WidgetBase::objTFT->drawLine(m_origem.x + 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 1, m_lastPointNeedle.y, m_agulhaColor);     // -1 is to not draw on top of thin border line
+  WidgetBase::objTFT->drawLine(m_origem.x - 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x - 1, m_lastPointNeedle.y, m_config.needleColor);     // -1 is to not draw on top of thin border line
+  WidgetBase::objTFT->drawLine(m_origem.x + 0 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 0, m_lastPointNeedle.y, m_config.needleColor); // -1 is to not draw on top of thin border line
+  WidgetBase::objTFT->drawLine(m_origem.x + 1 + round(m_ltx * m_offsetYAgulha), m_origem.y - m_offsetYAgulha - m_borderSize - 2, m_lastPointNeedle.x + 1, m_lastPointNeedle.y, m_config.needleColor);     // -1 is to not draw on top of thin border line
 
   m_shouldRedraw = false;
   m_isFirstDraw = false;
@@ -483,124 +506,9 @@ void GaugeSuper::redraw()
 void GaugeSuper::forceUpdate()
 {
   m_shouldRedraw = true;
+  ESP_LOGD(TAG, "GaugeSuper force update requested");
 }
 
-/**
- * @brief Configures the GaugeSuper widget with specific parameters.
- * @param width Width of the gauge.
- * @param title Title displayed on the gauge.
- * @param intervals Array of interval values.
- * @param colors Array of colors corresponding to intervals.
- * @param amountIntervals Number of intervals and colors.
- * @param vmin Minimum value of the gauge range.
- * @param vmax Maximum value of the gauge range.
- * @param borderColor Color of the gauge border.
- * @param textColor Color for text and value display.
- * @param backgroundColor Background color of the gauge.
- * @param titleColor Color of the title text.
- * @param agulhaColor Color of the needle.
- * @param marcadoresColor Color of the markers.
- * @param showLabels True if text labels should be displayed for intervals, false otherwise.
- * @param _fontFamily Font used for text rendering.
- * 
- * Initializes the gauge properties and marks it as loaded when complete.
- */
-  #if defined(USING_GRAPHIC_LIB)
-void GaugeSuper::setup(uint16_t width, const char *title, const int *intervals, const uint16_t *colors, uint8_t amountIntervals, int vmin, int vmax, uint16_t borderColor, uint16_t textColor, uint16_t backgroundColor, uint16_t titleColor, uint16_t agulhaColor, uint16_t marcadoresColor, bool showLabels, const GFXfont *_fontFamily)
-{
-  if (!WidgetBase::objTFT)
-  {
-    DEBUG_E("TFT not defined on WidgetBase");
-    return;
-  }
-  if (loaded)
-  {
-    DEBUG_E("GaugeSuper widget already configured");
-    return;
-  }
-
-  // Free previous memory if it exists
-  if (m_intervals)
-  {
-    delete[] m_intervals;
-    m_intervals = nullptr;
-  }
-  if (m_colors)
-  {
-    delete[] m_colors;
-    m_colors = nullptr;
-  }
-  if (m_title)
-  {
-    delete[] m_title;
-    m_title = nullptr;
-  }
-
-  // Configure dimensions and colors
-  m_width = width;
-  // m_height = height;
-  m_vmin = vmin;
-  m_vmax = vmax;
-  m_borderColor = borderColor;
-  m_textColor = textColor;
-  m_bkColor = backgroundColor;
-  m_titleColor = titleColor;
-  m_showLabels = showLabels;
-  m_amountInterval = amountIntervals;
-  m_usedFont = _fontFamily;
-  m_agulhaColor = agulhaColor;
-  m_marcadoresColor = marcadoresColor;
-
-  // Allocate and copy arrays
-  m_intervals = new int[amountIntervals];
-  m_colors = new uint16_t[amountIntervals];
-
-  if (m_intervals == nullptr || m_colors == nullptr)
-  {
-    DEBUG_E("Failed to allocate memory for GaugeSuper arrays");
-    if (m_intervals)
-    {
-      delete[] m_intervals;
-      m_intervals = nullptr;
-    }
-    if (m_colors)
-    {
-      delete[] m_colors;
-      m_colors = nullptr;
-    }
-    return;
-  }
-
-  // Copy data
-  for (uint8_t i = 0; i < amountIntervals; i++)
-  {
-    m_intervals[i] = intervals[i];
-    m_colors[i] = colors[i];
-  }
-
-  // Allocate and copy title
-  if (title != nullptr)
-  {
-    size_t titleLen = strlen(title) + 1;
-    m_title = new char[titleLen];
-    if (m_title == nullptr)
-    {
-      DEBUG_E("Failed to allocate memory for GaugeSuper title");
-      m_title = nullptr;
-      return;
-    }
-    else
-    {
-      strcpy(m_title, title);
-    }
-  }
-
-  // Initialize gauge
-  start();
-
-  loaded = true;
-}
-#endif
 
 /**
  * @brief Configures the GaugeSuper with parameters defined in a configuration structure.
@@ -608,21 +516,204 @@ void GaugeSuper::setup(uint16_t width, const char *title, const int *intervals, 
  */
 void GaugeSuper::setup(const GaugeConfig& config)
 {
-    #if defined(USING_GRAPHIC_LIB)
-  setup(config.width, config.title, config.intervals, config.colors, config.amountIntervals, 
-        config.minValue, config.maxValue, config.borderColor, config.textColor, config.backgroundColor, 
-        config.titleColor, config.needleColor, config.markersColor, config.showLabels, config.fontFamily);
-    #endif
+  #if defined(USING_GRAPHIC_LIB)
+  // Validate TFT object
+  CHECK_TFT_VOID
+
+  // Validate configuration first
+  if (!validateConfig(config)) {
+    ESP_LOGE(TAG, "Invalid configuration provided");
+    return;
+  }
+
+  // Clean up any existing memory
+  cleanupMemory();
+
+  // Assign the configuration structure
+  m_config = config;
+  m_usedFont = config.fontFamily;
+  
+  // Copy title to internal buffer if provided
+  if (config.title != nullptr) {
+    size_t titleLen = strlen(config.title);
+    
+    // Validate title length (max 20 characters)
+    if (titleLen > MAX_TITLE_LENGTH) {
+      ESP_LOGW(TAG, "Title length (%d) exceeds maximum limit (%d). Truncating to %d characters", 
+               titleLen, MAX_TITLE_LENGTH, MAX_TITLE_LENGTH);
+      titleLen = MAX_TITLE_LENGTH;
+    }
+    
+    // Clean up existing title before allocating new one
+    if (m_titleAllocated && m_title != nullptr) {
+      delete[] m_title;
+      m_title = nullptr;
+      m_titleAllocated = false;
+    }
+    
+    m_title = new char[titleLen + 1];
+    if (m_title != nullptr) {
+      strncpy(m_title, config.title, titleLen);
+      m_title[titleLen] = '\0'; // Ensure null termination
+      m_titleAllocated = true;
+    } else {
+      ESP_LOGE(TAG, "Failed to allocate memory for title");
+      return;
+    }
+  }
+  
+  // Copy intervals and colors to internal arrays if provided
+  if (config.intervals != nullptr && config.colors != nullptr && config.amountIntervals > 0) {
+    // Clamp amountIntervals to MAX_SERIES limit
+    uint8_t clampedAmount = (config.amountIntervals > MAX_SERIES) ? MAX_SERIES : config.amountIntervals;
+    
+    // Clean up existing arrays before allocating new ones
+    if (m_intervalsAllocated && m_intervals != nullptr) {
+      delete[] m_intervals;
+      m_intervals = nullptr;
+      m_intervalsAllocated = false;
+    }
+    if (m_colorsAllocated && m_colors != nullptr) {
+      delete[] m_colors;
+      m_colors = nullptr;
+      m_colorsAllocated = false;
+    }
+    
+    // Allocate new memory
+    m_intervals = new int[clampedAmount];
+    m_colors = new uint16_t[clampedAmount];
+    
+    if (m_intervals != nullptr && m_colors != nullptr) {
+      // Copy data
+      for (uint8_t i = 0; i < clampedAmount; i++) {
+        m_intervals[i] = config.intervals[i];
+        m_colors[i] = config.colors[i];
+      }
+      m_intervalsAllocated = true;
+      m_colorsAllocated = true;
+    } else {
+      ESP_LOGE(TAG, "Failed to allocate memory for intervals/colors");
+      // Clean up partial allocations
+      if (m_intervals != nullptr) {
+        delete[] m_intervals;
+        m_intervals = nullptr;
+      }
+      if (m_colors != nullptr) {
+        delete[] m_colors;
+        m_colors = nullptr;
+      }
+      cleanupMemory();
+      return;
+    }
+  }
+  // Initialize gauge
+  start();
+
+  m_loaded = true;
+  m_initialized = true;
+  
+  ESP_LOGD(TAG, "GaugeSuper setup completed at (%d, %d)", m_xPos, m_yPos);
+  #endif
 }
 
 void GaugeSuper::show()
 {
-    visible = true;
+    m_visible = true;
     m_shouldRedraw = true;
+    ESP_LOGD(TAG, "GaugeSuper shown at (%d, %d)", m_xPos, m_yPos);
 }
 
 void GaugeSuper::hide()
 {
-    visible = false;
+    m_visible = false;
     m_shouldRedraw = true;
+    ESP_LOGD(TAG, "GaugeSuper hidden at (%d, %d)", m_xPos, m_yPos);
+}
+
+/**
+ * @brief Checks if the title should be visible.
+ * @return True if title is visible, false otherwise.
+ */
+bool GaugeSuper::isTitleVisible() const
+{
+  return (m_title != nullptr && strlen(m_title) > 0);
+}
+
+/**
+ * @brief Checks if labels should be visible.
+ * @return True if labels are visible, false otherwise.
+ */
+bool GaugeSuper::isLabelsVisible() const
+{
+  return m_config.showLabels;
+}
+
+/**
+ * @brief Centralized memory cleanup method.
+ * 
+ * Safely deallocates all dynamic memory and resets allocation flags.
+ */
+void GaugeSuper::cleanupMemory()
+{
+  // Clean up intervals array
+  if (m_intervalsAllocated && m_intervals != nullptr) {
+    delete[] m_intervals;
+    m_intervals = nullptr;
+    m_intervalsAllocated = false;
+  }
+
+  // Clean up colors array
+  if (m_colorsAllocated && m_colors != nullptr) {
+    delete[] m_colors;
+    m_colors = nullptr;
+    m_colorsAllocated = false;
+  }
+
+  // Clean up title string
+  if (m_titleAllocated && m_title != nullptr) {
+    delete[] m_title;
+    m_title = nullptr;
+    m_titleAllocated = false;
+  }
+  
+  // Reset all pointers to nullptr for safety
+  m_intervals = nullptr;
+  m_colors = nullptr;
+  m_title = nullptr;
+}
+
+// Color and value access methods removed - now using m_config directly
+
+/**
+ * @brief Validates the configuration structure.
+ * @param config Configuration to validate.
+ * @return True if valid, false otherwise.
+ */
+bool GaugeSuper::validateConfig(const GaugeConfig& config)
+{
+  // Validate basic parameters
+  if (config.width <= 0) {
+    ESP_LOGE(TAG, "Invalid width: %d", config.width);
+    return false;
+  }
+  
+  if (config.minValue >= config.maxValue) {
+    ESP_LOGE(TAG, "Invalid range: min=%d, max=%d", config.minValue, config.maxValue);
+    return false;
+  }
+  
+  if (config.amountIntervals > MAX_SERIES) {
+    ESP_LOGW(TAG, "Too many intervals: %d (max: %d)", config.amountIntervals, MAX_SERIES);
+    return false;
+  }
+  
+  // Validate intervals and colors arrays
+  if (config.amountIntervals > 0) {
+    if (config.intervals == nullptr || config.colors == nullptr) {
+      ESP_LOGE(TAG, "Intervals or colors array is null");
+      return false;
+    }
+  }
+  
+  return true;
 }

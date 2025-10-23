@@ -1,16 +1,8 @@
 #include "wspinbox.h"
 
-#define SPINBOX_DEBUG
+const char* SpinBox::TAG = "SpinBox";
 
-#if defined(SPINBOX_DEBUG)
-#define DEBUG_D(format, ...) log_d(format, ##__VA_ARGS__)
-#define DEBUG_E(format, ...) log_e(format, ##__VA_ARGS__)
-#define DEBUG_W(format, ...) log_w(format, ##__VA_ARGS__)
-#else
-#define DEBUG_D(format, ...)
-#define DEBUG_E(format, ...)
-#define DEBUG_W(format, ...)
-#endif
+
 
 /**
  * @brief Decreases the current value by the step amount.
@@ -19,8 +11,8 @@
  * range.
  */
 void SpinBox::decreaseValue() {
-  m_currentValue -= m_step;
-  m_currentValue = constrain(m_currentValue, m_vmin, m_vmax);
+  int temp = m_currentValue - m_config.step;
+  m_currentValue = constrain(temp, m_config.minValue, m_config.maxValue);
 }
 
 /**
@@ -30,8 +22,8 @@ void SpinBox::decreaseValue() {
  * range.
  */
 void SpinBox::increaseValue() {
-  m_currentValue += m_step;
-  m_currentValue = constrain(m_currentValue, m_vmin, m_vmax);
+  int temp = m_currentValue + m_config.step;
+  m_currentValue = constrain(temp, m_config.minValue, m_config.maxValue);
 }
 
 /**
@@ -41,12 +33,23 @@ void SpinBox::increaseValue() {
  * @param _screen Screen identifier where the SpinBox will be displayed.
  */
 SpinBox::SpinBox(uint16_t _x, uint16_t _y, uint8_t _screen)
-    : WidgetBase(_x, _y, _screen), m_shouldRedraw(true) {}
+    : WidgetBase(_x, _y, _screen){
+
+      m_config = {.width = 0, .height = 0, .step = 0, .minValue = 0, .maxValue = 0, .startValue = 0, .color = 0, .textColor = 0, .callback = nullptr};
+      ESP_LOGD(TAG, "SpinBox created at (%d, %d) on screen %d", _x, _y, _screen);
+    }
 
 /**
  * @brief Destructor for the SpinBox class.
  */
-SpinBox::~SpinBox() {}
+SpinBox::~SpinBox() {
+    cleanupMemory();
+}
+
+void SpinBox::cleanupMemory() {
+    // SpinBox doesn't use dynamic memory allocation
+    ESP_LOGD(TAG, "SpinBox memory cleanup completed");
+}
 
 /**
  * @brief Detects if the SpinBox has been touched and handles
@@ -59,35 +62,28 @@ SpinBox::~SpinBox() {}
  * areas, and processes the value change accordingly.
  */
 bool SpinBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
-  if (!visible) {
-    return false;
-  }
-  if (WidgetBase::usingKeyboard || WidgetBase::currentScreen != screen ||
-      !loaded) {
-    return false;
-  }
-
-  if (millis() - m_myTime < TIMEOUT_CLICK) {
-    return false;
-  }
-  m_myTime = millis();
+  CHECK_VISIBLE_BOOL
+  CHECK_USINGKEYBOARD_BOOL
+  CHECK_CURRENTSCREEN_BOOL
+  CHECK_LOADED_BOOL
+  CHECK_DEBOUNCE_CLICK_BOOL
   bool detectado = false;
 
-  uint16_t topY = yPos;
-  // uint16_t bottomY = yPos + m_height;
+  uint16_t topY = m_yPos;
+  // uint16_t bottomY = m_yPos + m_height;
 
-  Rect_t boundsAreaDecrement = {.x = xPos, .y = topY, .width = (uint16_t)(m_width / 2), .height = m_height};
-  Rect_t boundsAreaIncrement = {.x = (uint16_t)(xPos + (m_width / 2)), .y = topY, .width = (uint16_t)(m_width / 2),
-                                .height = m_height};
+  Rect_t boundsAreaDecrement = {.x = m_xPos, .y = topY, .width = (uint16_t)(m_config.width / 2), .height = m_config.height};
+  Rect_t boundsAreaIncrement = {.x = (uint16_t)(m_xPos + (m_config.width / 2)), .y = topY, .width = (uint16_t)(m_config.width / 2),
+                                .height = m_config.height};
 
-  /*uint16_t d_x = xPos;
-  uint16_t d_x_max = xPos + m_width;
+  /*uint16_t d_x = m_xPos;
+  uint16_t d_x_max = m_xPos + m_width;
 
-  uint16_t y_min = yPos;
-  uint16_t y_max = yPos + m_height;*/
+  uint16_t y_min = m_yPos;
+  uint16_t y_max = m_yPos + m_height;*/
 
-  // uint16_t i_x = xPos + m_width - m_height;
-  // uint16_t i_x_max = xPos + m_width;
+  // uint16_t i_x = m_xPos + m_width - m_height;
+  // uint16_t i_x_max = m_xPos + m_width;
 
   // Detect decrement
   if ((*_xTouch > boundsAreaDecrement.x) &&
@@ -96,6 +92,7 @@ bool SpinBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
       (*_yTouch < boundsAreaDecrement.y + boundsAreaDecrement.height)) {
     decreaseValue();
     m_shouldRedraw = true;
+    m_myTime = millis();
     detectado = true;
   }
 
@@ -110,6 +107,7 @@ bool SpinBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
       (*_yTouch < boundsAreaIncrement.y + boundsAreaIncrement.height)) {
     increaseValue();
     m_shouldRedraw = true;
+    m_myTime = millis();
     detectado = true;
   }
 
@@ -120,7 +118,7 @@ bool SpinBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
  * @brief Retrieves the callback function associated with the SpinBox.
  * @return Pointer to the callback function.
  */
-functionCB_t SpinBox::getCallbackFunc() { return cb; }
+functionCB_t SpinBox::getCallbackFunc() { return m_callback; }
 
 /**
  * @brief Redraws the SpinBox on the screen, updating its appearance.
@@ -130,34 +128,31 @@ functionCB_t SpinBox::getCallbackFunc() { return cb; }
  */
 void SpinBox::redraw() {
   CHECK_TFT_VOID
-  if (!visible) {
-    return;
-  }
-#if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard ||
-      !loaded || !m_shouldRedraw) {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
 
   m_shouldRedraw = false;
 
-  uint16_t btnW = m_height - (2 * m_offset);
-  uint16_t btnH = m_height - (2 * m_offset);
+  uint16_t btnW = m_config.height - (2 * m_offset);
+  uint16_t btnH = m_config.height - (2 * m_offset);
 
-  uint16_t availableW = m_width - (2 * m_offset);
-  uint16_t availableH = m_height - (2 * m_offset);
+  uint16_t availableW = m_config.width - (2 * m_offset);
+  uint16_t availableH = m_config.height - (2 * m_offset);
 
-  WidgetBase::objTFT->setTextColor(m_textColor);
+  WidgetBase::objTFT->setTextColor(m_config.textColor);
 
   WidgetBase::objTFT->fillRoundRect(
-      xPos + (2 * m_offset) + btnW, yPos + m_offset,
-      m_width - (4 * m_offset + 2 * btnW), btnH, m_radius, m_colorBase);
+      m_xPos + (2 * m_offset) + btnW, m_yPos + m_offset,
+      m_config.width - (4 * m_offset + 2 * btnW), btnH, m_radius, m_config.color);
   WidgetBase::objTFT->setFont(getBestRobotoBold(
       availableW, availableH, String(m_currentValue).c_str()));
-  printText(String(m_currentValue).c_str(), xPos + m_width / 2,
-            yPos + (m_height / 2) - 3, MC_DATUM, m_lastArea, m_colorBase);
+  printText(String(m_currentValue).c_str(), m_xPos + m_config.width / 2,
+            m_yPos + (m_config.height / 2) - 3, MC_DATUM, m_lastArea, m_config.color);
   updateFont(FontType::UNLOAD);
-#endif
+
 }
 
 /**
@@ -168,43 +163,39 @@ void SpinBox::redraw() {
  */
 void SpinBox::drawBackground() {
   CHECK_TFT_VOID
-  if (!visible) {
-    return;
-  }
-#if defined(DISP_DEFAULT)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard ||
-      !loaded) {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
 
-  uint16_t btnW = m_height - (2 * m_offset);
-  uint16_t btnH = m_height - (2 * m_offset);
+  uint16_t btnW = m_config.height - (2 * m_offset);
+  uint16_t btnH = m_config.height - (2 * m_offset);
 
   // uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
 
-  WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, m_radius,
-                                    m_colorBase);
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, m_radius,
+  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_radius,
+                                    m_config.color);
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_radius,
                                     CFK_BLACK);
 
   WidgetBase::objTFT->fillRoundRect(
-      xPos + m_offset, yPos + m_offset, btnW, btnH, m_radius,
-      WidgetBase::lightenColor565(m_colorBase, 4));
+      m_xPos + m_offset, m_yPos + m_offset, btnW, btnH, m_radius,
+      WidgetBase::lightenColor565(m_config.color, 4));
   WidgetBase::objTFT->fillRoundRect(
-      xPos + m_width - m_offset - btnW, yPos + m_offset, btnW, btnH, m_radius,
-      WidgetBase::lightenColor565(m_colorBase, 4));
+      m_xPos + m_config.width - m_offset - btnW, m_yPos + m_offset, btnW, btnH, m_radius,
+      WidgetBase::lightenColor565(m_config.color, 4));
 
-  WidgetBase::objTFT->drawRoundRect(xPos + m_offset, yPos + m_offset, btnW,
+  WidgetBase::objTFT->drawRoundRect(m_xPos + m_offset, m_yPos + m_offset, btnW,
                                     btnH, m_radius, CFK_BLACK);
-  WidgetBase::objTFT->drawRoundRect(xPos + m_width - m_offset - btnW,
-                                    yPos + m_offset, btnW, btnH, m_radius,
+  WidgetBase::objTFT->drawRoundRect(m_xPos + m_config.width - m_offset - btnW,
+                                    m_yPos + m_offset, btnW, btnH, m_radius,
                                     CFK_BLACK);
 
-  CoordPoint_t btnLeft = {static_cast<uint16_t>(xPos + m_offset + (btnW / 2)),
-                          static_cast<uint16_t>(yPos + m_offset + (btnH / 2))};
+  CoordPoint_t btnLeft = {static_cast<uint16_t>(m_xPos + m_offset + (btnW / 2)),
+                          static_cast<uint16_t>(m_yPos + m_offset + (btnH / 2))};
   CoordPoint_t btnRight = {
-      static_cast<uint16_t>(xPos + m_width - (m_offset + (btnW / 2))),
-      static_cast<uint16_t>(yPos + m_offset + (btnH / 2))};
+      static_cast<uint16_t>(m_xPos + m_config.width - (m_offset + (btnW / 2))),
+      static_cast<uint16_t>(m_yPos + m_offset + (btnH / 2))};
 
   // WidgetBase::objTFT->fillCircle(btnLeft.x, btnLeft.y, 4, CFK_BLUE);
   const uint8_t sinalW = btnW / 2;
@@ -212,63 +203,22 @@ void SpinBox::drawBackground() {
   // Sinal menos
   WidgetBase::objTFT->fillRect(btnLeft.x - (sinalW / 2),
                                btnLeft.y - (sinalH / 2), sinalW, sinalH,
-                               m_textColor);
+                               m_config.textColor);
 
   // Sinal mais
   WidgetBase::objTFT->fillRect(btnRight.x - (sinalW / 2),
                                btnRight.y - (sinalH / 2), sinalW, sinalH,
-                               m_textColor);
+                               m_config.textColor);
   WidgetBase::objTFT->fillRect(btnRight.x - (sinalH / 2),
                                btnRight.y - (sinalW / 2), sinalH, sinalW,
-                               m_textColor);
+                               m_config.textColor);
 
   m_shouldRedraw = true;
-#endif
+
 
   // WidgetBase::objTFT->fillCircle(btnRight.x, btnRight.y, 4, CFK_YELLOW);
 }
 
-/**
- * @brief Configures the SpinBox widget with specific dimensions, range, step,
- * and color.
- * @param _width Width of the SpinBox.
- * @param _height Height of the SpinBox.
- * @param _step Step value for the spin box increments and decrements.
- * @param _min Minimum value of the SpinBox range.
- * @param _max Maximum value of the SpinBox range.
- * @param _startValue Current value of the SpinBox.
- * @param _cor Color for the display elements.
- * @param _textCor Text color.
- * @param _cb Callback function to execute when the value changes.
- *
- * Initializes the SpinBox properties and marks it as loaded when complete.
- */
-void SpinBox::setup(uint16_t _width, uint16_t _height, uint16_t _step, int _min,
-                    int _max, int _startValue, uint16_t _cor, uint16_t _textCor,
-                    functionCB_t _cb) {
-  if (!WidgetBase::objTFT) {
-    log_e("TFT not defined on WidgetBase");
-    return;
-  }
-  if (loaded) {
-    log_d("Spinbox widget already configured");
-    return;
-  }
-  m_width = _width;
-  m_height = _height;
-  m_step = _step;
-  m_vmin = _min;
-  m_vmax = _max;
-  if (m_vmin > m_vmax) {
-    std::swap(m_vmin, m_vmax);
-  }
-  m_currentValue = constrain(_startValue, m_vmin, m_vmax);
-  m_colorBase = _cor;
-  m_textColor = _textCor;
-  cb = _cb;
-
-  loaded = true;
-}
 
 /**
  * @brief Configures the SpinBox with parameters defined in a configuration
@@ -276,9 +226,28 @@ void SpinBox::setup(uint16_t _width, uint16_t _height, uint16_t _step, int _min,
  * @param config Structure containing the SpinBox configuration parameters.
  */
 void SpinBox::setup(const SpinBoxConfig &config) {
-  setup(config.width, config.height, config.step, config.minValue,
-        config.maxValue, config.startValue, config.color, config.textColor,
-        config.callback);
+  CHECK_TFT_VOID
+  if (m_loaded) {
+    ESP_LOGW(TAG, "SpinBox already initialized");
+    return;
+  }
+
+  // Clean up any existing memory before setting new config
+  cleanupMemory();
+  
+  // Deep copy configuration
+  m_config = config;
+  
+  // Set member variables from config
+  if (m_config.minValue > m_config.maxValue) {
+    int temp = m_config.minValue;
+    m_config.minValue = m_config.maxValue;
+    m_config.maxValue = temp;
+  }
+
+  m_currentValue = constrain(m_config.startValue, m_config.minValue, m_config.maxValue);
+  m_callback = config.callback;
+  m_loaded = true;
 }
 
 /**
@@ -295,25 +264,27 @@ int SpinBox::getValue() { return m_currentValue; }
  * and marks the widget for redraw. Triggers the callback if provided.
  */
 void SpinBox::setValue(int _value) {
-  if (!loaded) {
-    log_e("Spinbox widget not loaded");
+  if (!m_loaded) {
+    ESP_LOGE(TAG, "Spinbox widget not loaded");
     return;
   }
 
-  m_currentValue = constrain(_value, m_vmin, m_vmax);
+  m_currentValue = constrain(_value, m_config.minValue, m_config.maxValue);
   m_shouldRedraw = true;
 
-  if (cb != nullptr) {
-    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::SELF);
+  if (m_callback != nullptr) {
+    WidgetBase::addCallback(m_callback, WidgetBase::CallbackOrigin::SELF);
   }
 }
 
 void SpinBox::show() {
-  visible = true;
+  m_visible = true;
   m_shouldRedraw = true;
 }
 
 void SpinBox::hide() {
-  visible = false;
+  m_visible = false;
   m_shouldRedraw = true;
 }
+
+void SpinBox::forceUpdate() { m_shouldRedraw = true; }

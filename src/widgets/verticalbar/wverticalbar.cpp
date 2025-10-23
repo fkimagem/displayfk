@@ -1,5 +1,7 @@
 #include "wverticalbar.h"
 
+const char* VBar::TAG = "[VBar]";
+
 /**
  * @brief Constructor for the VBar class.
  * @param _x X position of the widget.
@@ -34,7 +36,7 @@ bool VBar::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
  */
 functionCB_t VBar::getCallbackFunc()
 {
-  return cb;
+  return m_callback;
 }
 
 /**
@@ -55,15 +57,15 @@ void VBar::setValue(uint32_t newValue)
 void VBar::redraw()
 {
   CHECK_TFT_VOID
-  if(!visible){return;}
+  if(!m_visible){return;}
   #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
+  if (WidgetBase::currentScreen != m_screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !m_loaded)
   {
     return;
   }
   
-  int innerX = xPos + 1;
-  int innerY = yPos + 1;
+  int innerX = m_xPos + 1;
+  int innerY = m_yPos + 1;
   int innerHeight = m_height - 2;
   int innerWidth = m_width - 2;
   int minHeight = m_round;
@@ -133,14 +135,14 @@ void VBar::forceUpdate()
 void VBar::drawBackground()
 {
   CHECK_TFT_VOID
-  if(!visible){return;}
+  if(!m_visible){return;}
   #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !loaded)
+  if (WidgetBase::currentScreen != m_screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !m_loaded)
   {
     return;
   }
-  WidgetBase::objTFT->fillRoundRect(xPos, yPos, m_width, m_height, m_round, CFK_GREY11); // fundo total
-  WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, m_round, CFK_BLACK);     // borda total
+  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_width, m_height, m_round, CFK_GREY11); // fundo total
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_width, m_height, m_round, CFK_BLACK);     // borda total
   #endif
 }
 
@@ -157,12 +159,12 @@ void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _
 {
   if (!WidgetBase::objTFT)
   {
-    log_e("TFT not defined on WidgetBase");
+    ESP_LOGE(TAG, "TFT not defined on WidgetBase");
     return;
   }
-  if (loaded)
+  if (m_loaded)
   {
-    log_d("VBar widget already configured");
+    ESP_LOGD(TAG, "VBar widget already configured");
     return;
   }
   m_width = _width;
@@ -175,7 +177,7 @@ void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _
   m_shouldRedraw = true;
   m_round = _round;
   start();
-  loaded = true;
+  m_loaded = true;
 }
 
 /**
@@ -189,12 +191,12 @@ void VBar::setup(const VerticalBarConfig& config)
 
 void VBar::show()
 {
-    visible = true;
+    m_visible = true;
     m_shouldRedraw = true;
 }
 
 void VBar::hide()
 {
-    visible = false;
+    m_visible = false;
     m_shouldRedraw = true;
 }

@@ -20,27 +20,19 @@ struct LabelConfig {
 class Label : public WidgetBase
 {
 private:
+  static const char* TAG;
   char *m_text = nullptr; ///< Pointer to the current text displayed by the label.
   char* m_previousText = nullptr; ///< Pointer to the previously displayed text for comparison.
   char* m_prefix = nullptr; ///< Pointer to the prefix text displayed by the label.
   char* m_suffix = nullptr; ///< Pointer to the suffix text displayed by the label.
-
+  
   bool m_shouldRedraw = false; ///< Flag indicating if the label should be redrawn.
-
-  uint16_t m_datum; ///< Text alignment setting for the label.
-  uint16_t m_letterColor; ///< Color of the text.
-  uint16_t m_backgroundColor; ///< Background color of the label.
-  #if defined(USING_GRAPHIC_LIB)
-  GFXfont *m_fontFamily = nullptr; ///< Pointer to the font used by the label.
-  #endif
   TextBound_t m_lastArea = {0, 0, 0, 0}; ///< Last calculated area for the label.
   uint8_t m_fontSize;///< Font size
   uint8_t m_decimalPlaces;///< Number of decimal places to display
+  LabelConfig m_config; ///< Configuration structure for the label
 
-  #if defined(USING_GRAPHIC_LIB)
-  void setup(const char *_text, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor, const char* _prefix, const char* _suffix);
-  void setup(const float _value, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor, const char* _prefix, const char* _suffix);
-  #endif
+  void cleanupMemory(); ///< Cleans up allocated memory before new assignment
 public:
   Label(uint16_t _x, uint16_t _y, uint8_t _screen);
   ~Label();
@@ -52,8 +44,8 @@ public:
   void setSuffix(const char* str);
   void setTextFloat(float value, uint8_t decimalPlaces = 2);
   void setTextInt(int value);
-  void redraw();
-  void forceUpdate();
+  void redraw() override;
+  void forceUpdate() override;
   void setDecimalPlaces(uint8_t places);
   void setFontSize(uint8_t newSize);
   void setup(const LabelConfig& config);

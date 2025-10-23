@@ -1,4 +1,6 @@
 #include "wkeyboard.h"
+
+const char* WKeyboard::TAG = "[WKeyboard]";
 /**
  * @brief Lowercase alphabet layout for the keyboard.
  * 
@@ -125,7 +127,7 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
  */
 functionCB_t WKeyboard::getCallbackFunc()
 {
-    return cb;
+    return m_callback;
 }
 
 /**
@@ -143,8 +145,8 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
 {
     #if defined(HAS_TOUCH)
     bool retorno = false;
-    uint16_t xMax = xPos + m_availableWidth;
-    uint16_t yMax = yPos + m_availableHeight;
+    uint16_t xMax = m_xPos + m_availableWidth;
+    uint16_t yMax = m_yPos + m_availableHeight;
     (*pressedKey) = PressedKeyType::NONE;
 
     if (millis() - m_myTime < TIMEOUT_CLICK)
@@ -153,12 +155,12 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
     }
     m_myTime = millis();
 
-    if ((*_xTouch > xPos) && (*_xTouch < xMax) && (*_yTouch > yPos) && (*_yTouch < yMax))
+    if ((*_xTouch > m_xPos) && (*_xTouch < xMax) && (*_yTouch > m_yPos) && (*_yTouch < yMax))
     {
         (*pressedKey) = PressedKeyType::LETTER;
 
-        int16_t aux_xIndexClick = ((*_xTouch) - xPos) / (m_keyW + 2);
-        int16_t aux_yIndexClick = ((*_yTouch) - yPos) / (m_keyH + 2);
+        int16_t aux_xIndexClick = ((*_xTouch) - m_xPos) / (m_keyW + 2);
+        int16_t aux_yIndexClick = ((*_yTouch) - m_yPos) / (m_keyH + 2);
 
         uint16_t xIndexClick = constrain(aux_xIndexClick, 0, WKeyboard::aCols-1);
         uint16_t yIndexClick = constrain(aux_yIndexClick, 0, WKeyboard::aRows-1);
@@ -169,7 +171,7 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
         if (letter.type == PressedKeyType::CAPS)
         {
             m_capsLock = !m_capsLock;
-            redraw(false, false);
+            drawKeys(false, false);
             (*pressedKey) = PressedKeyType::CAPS;
             return true;
         }
@@ -178,12 +180,12 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
         
         if (letter.type == PressedKeyType::EMPTY)
         {
-            log_d("Empty key. Changing to previous one.");
+            ESP_LOGD(TAG, "Empty key. Changing to previous one.");
             xIndexClick--;
             letter = m_capsLock ? (m_alphabetCap[yIndexClick][xIndexClick]) : (m_alphabet[yIndexClick][xIndexClick]);
         }
 
-        log_d("Index clicked: %d, %d = %s", xIndexClick, yIndexClick, letter.label);
+        ESP_LOGD(TAG, "Index clicked: %d, %d = %s", xIndexClick, yIndexClick, letter.label);
 
         switch (letter.type)
         {
@@ -205,7 +207,7 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
             break;
         case PressedKeyType::CAPS:
             m_capsLock = !m_capsLock;
-            redraw(false, false);
+            drawKeys(false, false);
             break;
         case PressedKeyType::DEL:
             removeLetter();
@@ -244,11 +246,11 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
  * This method handles drawing the keyboard layout including keys, content display area,
  * and handling the different states (caps lock on/off).
  */
-void WKeyboard::redraw(bool fullScreen, bool onlyContent)
+void WKeyboard::drawKeys(bool fullScreen, bool onlyContent)
 {
     #if defined(DISP_DEFAULT)
-    if(!loaded){
-        Serial.println("Keyboard not loaded");
+    if(!m_loaded){
+        ESP_LOGW(TAG, "Keyboard not loaded");
         return;
     }
     uint32_t startMillis = millis();
@@ -272,7 +274,7 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
     WidgetBase::objTFT->setTextColor(WKeyboard::m_letterColor);
     if (!onlyContent)
     {
-        WidgetBase::objTFT->fillRect(xPos, yPos, m_availableWidth, m_availableHeight, WKeyboard::m_backgroundColor);
+        WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_availableWidth, m_availableHeight, WKeyboard::m_backgroundColor);
         //const float percentUtilArea = 0.9;
 
         for (auto row = 0; row < WKeyboard::aRows; ++row)
@@ -294,8 +296,8 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
                     }
                     const int key_width = m_keyW * keyScale + (2 * (keyScale - 1));
                     const int key_height = m_keyH;
-                    const int key_x = xPos + ((m_keyW + 2) * col);
-                    const int key_y = yPos + ((m_keyH + 2) * row);
+                    const int key_x = m_xPos + ((m_keyW + 2) * col);
+                    const int key_y = m_yPos + ((m_keyH + 2) * row);
                     const int key_round = 4;
                     uint16_t xCenter = key_x + key_width / 2;
                     uint16_t yCenter = key_y + key_height / 2;
@@ -312,7 +314,7 @@ void WKeyboard::redraw(bool fullScreen, bool onlyContent)
     // WidgetBase::objTFT->drawCircle(210, 160, 10, CFK_FUCHSIA);
     #endif
     uint32_t endMillis = millis();
-    Serial.printf("WKeyboard::redraw: %i ms\n", endMillis - startMillis);
+    ESP_LOGD(TAG, "WKeyboard::redraw: %i ms", endMillis - startMillis);
 }
 
 /**
@@ -326,11 +328,11 @@ void WKeyboard::addLetter(char c)
 
     if (m_content.addChar(c))
     {
-        redraw(false, true);
+        drawKeys(false, true);
     }
     else
     {
-        log_e("textbox has reached maximum lenght. The max lenght is %d", MAX_LENGTH_CSTR);
+        ESP_LOGE(TAG, "textbox has reached maximum lenght. The max lenght is %d", MAX_LENGTH_CSTR);
     }
 }
 
@@ -344,7 +346,7 @@ void WKeyboard::removeLetter()
 {
     // content.remove(content.length() - 1);
     m_content.removeLastChar();
-    redraw(false, true);
+    drawKeys(false, true);
 }
 
 /**
@@ -353,19 +355,19 @@ void WKeyboard::removeLetter()
  * Initializes the keyboard layout, calculates key dimensions, and sets up
  * the display area based on screen dimensions.
  */
-void WKeyboard::setup()
+bool WKeyboard::setup()
 {
-    CHECK_TFT_VOID
+    CHECK_TFT_BOOL
 #if defined(DISP_DEFAULT)
     if (!WidgetBase::objTFT)
     {
-        log_e("TFT not defined on WidgetBase");
-        return;
+        ESP_LOGE(TAG, "TFT not defined on WidgetBase");
+        return false;
     }
-    if (loaded)
+    if (m_loaded)
     {
-        log_w("Keyboard already configured");
-        return;
+        ESP_LOGW(TAG, "Keyboard already configured");
+        return false;
     }
 
 #if defined(DISP_DEFAULT)
@@ -388,15 +390,15 @@ void WKeyboard::setup()
     // log_d("Key width: %d", _keyW);
     // log_d("Key height: %d", _keyH);
 
-    log_d("Keys: %i, %i", m_keyW, m_keyH);
+    ESP_LOGD(TAG, "Keys: %i, %i", m_keyW, m_keyH);
 
     m_pontoPreview.x = m_screenW / 4;
     m_pontoPreview.y = 1;
     m_pontoPreview.height = (m_screenH * 0.2);
     m_pontoPreview.width = m_screenW/2;
 
-    xPos = (m_screenW - m_availableWidth) / 2;
-    yPos = m_screenH -m_availableHeight;
+    m_xPos = (m_screenW - m_availableWidth) / 2;
+    m_yPos = m_screenH -m_availableHeight;
 
     float percentUtilArea = 0.9;
     #if defined(USING_GRAPHIC_LIB)
@@ -404,8 +406,9 @@ void WKeyboard::setup()
         m_fontPreview = m_fontKeys;// const_cast<GFXfont*>(getBestRobotoBold(m_pontoPreview.width * percentUtilArea, m_pontoPreview.height * percentUtilArea, "M"));
     #endif
     m_capsLock = false;
-    loaded = true;
+    m_loaded = true;
     #endif
+    return true;
 }
 
 /**
@@ -416,7 +419,7 @@ void WKeyboard::setup()
 void WKeyboard::clear()
 {
     m_content.setString("", true);
-    redraw(false, true);
+    drawKeys(false, true);
 }
 
 /**
@@ -442,7 +445,7 @@ void WKeyboard::open(TextBox *_field)
     
 #endif
 
-    redraw(true, false);
+    drawKeys(true, false);
 }
 
 /**
@@ -473,18 +476,25 @@ void WKeyboard::insertChar(char c)
     if(WidgetBase::usingKeyboard){
         addLetter(c);
     }else{
-        log_e("Cant add char. Keyboard is not open");
+        ESP_LOGE(TAG, "Cant add char. Keyboard is not open");
     }
 }
 
 void WKeyboard::show()
 {
-    visible = true;
+    m_visible = true;
     m_shouldRedraw = true;
 }
 
 void WKeyboard::hide()
 {
-    visible = false;
+    m_visible = false;
     m_shouldRedraw = true;
 }
+
+void WKeyboard::redraw()
+{
+    drawKeys(false, false);
+}       
+
+void WKeyboard::forceUpdate() { m_shouldRedraw = true; }
