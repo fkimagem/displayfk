@@ -3,33 +3,41 @@
 const char* Thermometer::TAG = "Thermometer";
 
 /**
- * @brief Constructor for the Thermometer class.
- * @param _x X position of the widget.
- * @param _y Y position of the widget.
- * @param _screen Screen number.
+ * @brief Construtor para a classe Thermometer.
+ * @param _x Posição X do widget.
+ * @param _y Posição Y do widget.
+ * @param _screen Número da tela.
+ * @details Inicializa o widget com configuração vazia.
+ *          O termômetro não será funcional até que setup() seja chamado.
  */
 Thermometer::Thermometer(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen), m_config{} {
+  m_border = 5;
   ESP_LOGD(TAG, "Thermometer created at (%d, %d) on screen %d", _x, _y, _screen);
 }
 
 /**
- * @brief Destructor for the Thermometer class.
+ * @brief Destrutor da classe Thermometer.
+ * @details Limpa quaisquer recursos usados pelo Thermometer.
  */
 Thermometer::~Thermometer() {
     cleanupMemory();
 }
 
+/**
+ * @brief Limpa memória usada pelo Thermometer.
+ * @details Thermometer não usa alocação dinâmica de memória.
+ *          m_config.subtitle é um ponteiro para objeto Label externo.
+ */
 void Thermometer::cleanupMemory() {
-    // Thermometer doesn't use dynamic memory allocation
-    // m_config.subtitle is a pointer to external Label object
     ESP_LOGD(TAG, "Thermometer memory cleanup completed");
 }
 
 /**
- * @brief Detects a touch on the Thermometer widget.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is detected, false otherwise.
+ * @brief Detecta um toque no widget Thermometer.
+ * @param _xTouch Ponteiro para a coordenada X do toque.
+ * @param _yTouch Ponteiro para a coordenada Y do toque.
+ * @return True se o toque é detectado, False caso contrário.
+ * @details Método override que sempre retorna false. O Thermometer não tem detecção de toque ativa.
  */
 bool Thermometer::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
@@ -37,8 +45,9 @@ bool Thermometer::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 }
 
 /**
- * @brief Retrieves the callback function for the Thermometer widget.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback para o widget Thermometer.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o Thermometer for utilizado.
  */
 functionCB_t Thermometer::getCallbackFunc()
 {
@@ -46,8 +55,11 @@ functionCB_t Thermometer::getCallbackFunc()
 }
 
 /**
- * @brief Sets the value of the Thermometer widget.
- * @param newValue New value to set.
+ * @brief Define o valor do widget Thermometer.
+ * @param newValue Novo valor para definir.
+ * @details Atualiza o valor do termômetro:
+ *          - Restringe valor usando constrain() dentro da faixa min/max
+ *          - Marca para redesenho
  */
 void Thermometer::setValue(float newValue)
 {
@@ -58,7 +70,13 @@ void Thermometer::setValue(float newValue)
 }
 
 /**
- * @brief Redraws the Thermometer widget.
+ * @brief Redesenha o widget Thermometer.
+ * @details Atualiza a exibição do termômetro:
+ *          - Valida visibilidade, TFT, tela atual, uso de teclado, carregamento e flag de redesenho
+ *          - Calcula altura do preenchimento usando map() baseado no valor atual
+ *          - Atualiza área preenchida (limpando se valor diminuiu, preenchendo se aumentou)
+ *          - Atualiza Label com valor formatado se subtitle estiver configurado
+ *          - Armazena último valor e reseta flag de redesenho
  */
 void Thermometer::redraw()
 {
@@ -91,7 +109,9 @@ void Thermometer::redraw()
 }
 
 /**
- * @brief Starts the Thermometer widget.
+ * @brief Inicia o widget Thermometer.
+ * @details Garante que a altura do termômetro esteja dentro de intervalos válidos:
+ *          - Restringe altura dentro de bounds válidos (20 até altura da tela)
  */
 void Thermometer::start()
 {
@@ -101,7 +121,8 @@ void Thermometer::start()
 }
 
 /**
- * @brief Forces the Thermometer widget to update.
+ * @brief Força o widget Thermometer a atualizar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
  */
 void Thermometer::forceUpdate()
 {
@@ -109,7 +130,14 @@ void Thermometer::forceUpdate()
 }
 
 /**
- * @brief Draws the background of the Thermometer widget.
+ * @brief Desenha o fundo do widget Thermometer.
+ * @details Desenha o termômetro completo incluindo fundo, bordas, bulbo e marcações:
+ *          - Valida TFT, visibilidade, tela atual, uso de teclado, carregamento e flag de redesenho
+ *          - Calcula posições e dimensões do bulbo, área de vidro e área de preenchimento
+ *          - Desenha retângulo de fundo com bordas arredondadas
+ *          - Desenha tubo de vidro com bordas e fundo
+ *          - Desenha bulbo com gradiente de cor para efeito de luz
+ *          - Desenha marcações na área de preenchimento
  */
 void Thermometer::drawBackground()
 {
@@ -169,12 +197,18 @@ void Thermometer::drawBackground()
 }
 
 /**
- * @brief Sets up the Thermometer widget.
- * @param _width Width of the widget.
- * @param _height Height of the widget.
- * @param _filledColor Color for the filled portion of the bar.
- * @param _vmin Minimum value of the range.
- * @param _vmax Maximum value of the range.
+ * @brief Configura o widget Thermometer.
+ * @param _width Largura do widget.
+ * @param _height Altura do widget.
+ * @param _filledColor Cor para a porção preenchida do termômetro.
+ * @param _vmin Valor mínimo da faixa.
+ * @param _vmax Valor máximo da faixa.
+ * @details Configura o termômetro com parâmetros básicos:
+ *          - Valida se widget já está carregado
+ *          - Calcula gradiente de cor para efeito de luz no bulbo
+ *          - Define valor inicial como minValue
+ *          - Marca para redesenho e chama start() para validar dimensões
+ *          - Marca como carregado
  */
 void Thermometer::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax)
 {
@@ -200,8 +234,15 @@ void Thermometer::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor
 }
 
 /**
- * @brief Configures the Thermometer with parameters defined in a configuration structure.
- * @param config Structure containing the Thermometer configuration parameters.
+ * @brief Configura o Thermometer com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref ThermometerConfig contendo os parâmetros de configuração.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Limpa memória existente usando cleanupMemory()
+ *          - Copia configuração
+ *          - Configura subtitle com unit se fornecido
+ *          - Chama método setup() com parâmetros individuais
+ *          - Marca o widget como carregado e inicializado
+ *          O termômetro não será exibido corretamente até que este método seja chamado.
  */
 void Thermometer::setup(const ThermometerConfig& config)
 {
@@ -229,12 +270,20 @@ void Thermometer::setup(const ThermometerConfig& config)
            config.width, config.height, config.minValue, config.maxValue, config.unit);
 }
 
+/**
+ * @brief Torna o Thermometer visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void Thermometer::show()
 {
     m_visible = true;
     m_shouldRedraw = true;
 }
 
+/**
+ * @brief Oculta o Thermometer da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void Thermometer::hide()
 {
     m_visible = false;

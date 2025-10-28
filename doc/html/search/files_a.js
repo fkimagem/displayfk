@@ -1,5 +1,22 @@
 var searchData=
 [
-  ['xpt2046_2ecpp_0',['XPT2046.cpp',['../_x_p_t2046_8cpp.html',1,'']]],
-  ['xpt2046_2eh_1',['XPT2046.h',['../_x_p_t2046_8h.html',1,'']]]
+  ['pixel3d10pt7b_2eh_0',['Pixel3D10pt7b.h',['../_pixel3_d10pt7b_8h.html',1,'']]],
+  ['pixel3d11pt7b_2eh_1',['Pixel3D11pt7b.h',['../_pixel3_d11pt7b_8h.html',1,'']]],
+  ['pixel3d12pt7b_2eh_2',['Pixel3D12pt7b.h',['../_pixel3_d12pt7b_8h.html',1,'']]],
+  ['pixel3d13pt7b_2eh_3',['Pixel3D13pt7b.h',['../_pixel3_d13pt7b_8h.html',1,'']]],
+  ['pixel3d14pt7b_2eh_4',['Pixel3D14pt7b.h',['../_pixel3_d14pt7b_8h.html',1,'']]],
+  ['pixel3d15pt7b_2eh_5',['Pixel3D15pt7b.h',['../_pixel3_d15pt7b_8h.html',1,'']]],
+  ['pixel3d20pt7b_2eh_6',['Pixel3D20pt7b.h',['../_pixel3_d20pt7b_8h.html',1,'']]],
+  ['pixel3d25pt7b_2eh_7',['Pixel3D25pt7b.h',['../_pixel3_d25pt7b_8h.html',1,'']]],
+  ['pixel3d2pt7b_2eh_8',['Pixel3D2pt7b.h',['../_pixel3_d2pt7b_8h.html',1,'']]],
+  ['pixel3d30pt7b_2eh_9',['Pixel3D30pt7b.h',['../_pixel3_d30pt7b_8h.html',1,'']]],
+  ['pixel3d3pt7b_2eh_10',['Pixel3D3pt7b.h',['../_pixel3_d3pt7b_8h.html',1,'']]],
+  ['pixel3d40pt7b_2eh_11',['Pixel3D40pt7b.h',['../_pixel3_d40pt7b_8h.html',1,'']]],
+  ['pixel3d4pt7b_2eh_12',['Pixel3D4pt7b.h',['../_pixel3_d4pt7b_8h.html',1,'']]],
+  ['pixel3d50pt7b_2eh_13',['Pixel3D50pt7b.h',['../_pixel3_d50pt7b_8h.html',1,'']]],
+  ['pixel3d5pt7b_2eh_14',['Pixel3D5pt7b.h',['../_pixel3_d5pt7b_8h.html',1,'']]],
+  ['pixel3d6pt7b_2eh_15',['Pixel3D6pt7b.h',['../_pixel3_d6pt7b_8h.html',1,'']]],
+  ['pixel3d7pt7b_2eh_16',['Pixel3D7pt7b.h',['../_pixel3_d7pt7b_8h.html',1,'']]],
+  ['pixel3d8pt7b_2eh_17',['Pixel3D8pt7b.h',['../_pixel3_d8pt7b_8h.html',1,'']]],
+  ['pixel3d9pt7b_2eh_18',['Pixel3D9pt7b.h',['../_pixel3_d9pt7b_8h.html',1,'']]]
 ];

@@ -4,10 +4,12 @@
 const char* CircleButton::TAG = "CircleButton";
 
 /**
- * @brief Constructor for the CircleButton class.
- * @param _x X position of the button.
- * @param _y Y position of the button.
- * @param _screen Screen number.
+ * @brief Construtor da classe CircleButton.
+ * @param _x Coordenada X da posição central do botão na tela.
+ * @param _y Coordenada Y da posição central do botão na tela.
+ * @param _screen Identificador da tela onde o botão será exibido.
+ * @details Inicializa o botão circular com valores padrão: status não pressionado, raio 0,
+ *          callback nullptr. O botão deve ser configurado com setup() antes de ser exibido.
  */
 CircleButton::CircleButton(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_status(false)
@@ -17,7 +19,9 @@ CircleButton::CircleButton(uint16_t _x, uint16_t _y, uint8_t _screen)
 }
 
 /**
- * @brief Destructor for the CircleButton class.
+ * @brief Destrutor da classe CircleButton.
+ * @details Registra o evento no log do ESP32 e limpa o ponteiro da função callback.
+ *          Todos os recursos são liberados automaticamente pela herança de @ref WidgetBase.
  */
 CircleButton::~CircleButton() {
     ESP_LOGD(TAG, "CircleButton destroyed at (%d, %d)", m_xPos, m_yPos);
@@ -25,10 +29,19 @@ CircleButton::~CircleButton() {
 }
 
 /**
- * @brief Detects a touch on the button.
- * @param _xTouch X position of the touch.
- * @param _yTouch Y position of the touch.
- * @return True if the touch is detected, false otherwise.
+ * @brief Detecta se o CircleButton foi tocado pelo usuário.
+ * @param _xTouch Ponteiro para a coordenada X do toque na tela.
+ * @param _yTouch Ponteiro para a coordenada Y do toque na tela.
+ * @return True se o toque está dentro da área circular do botão, False caso contrário.
+ * @details Este método realiza múltiplas validações antes de processar o toque:
+ *          - Verifica se o widget está visível, inicializado, carregado e habilitado
+ *          - Valida que o teclado virtual não está ativo
+ *          - Verifica que o botão está na tela atual
+ *          - Aplica debounce para evitar múltiplos cliques
+ *          - Verifica se o widget não está bloqueado
+ *          - Usa detecção de ponto dentro de círculo para validar o toque
+ *          Se todas as validações passarem e o toque estiver dentro da área circular,
+ *          o estado é alternado e o botão é marcado para redesenho.
  */
 bool CircleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   // Early validation checks using macros
@@ -61,15 +74,18 @@ bool CircleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 }
 
 /**
- * @brief Gets the callback function for the button.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao CircleButton.
+ * @return Ponteiro para a função callback, ou nullptr se nenhuma foi definida.
+ * @details A função callback é executada quando o estado do botão muda.
+ *          Para mais informações sobre callbacks, consulte @ref WidgetBase.
  */
 functionCB_t CircleButton::getCallbackFunc() { return m_config.callback; }
 
 /**
- * @brief Forces an immediate update of the CircleButton.
- *
- * Sets the flag to redraw the button on the next redraw cycle.
+ * @brief Força uma atualização imediata do CircleButton.
+ * @details Define a flag m_shouldRedraw para true, forçando o redesenho do botão
+ *          no próximo ciclo de atualização da tela. Útil para garantir que mudanças
+ *          no estado ou configuração sejam visíveis imediatamente.
  */
 void CircleButton::forceUpdate() { 
   m_shouldRedraw = true; 
@@ -78,20 +94,22 @@ void CircleButton::forceUpdate() {
 
 
 /**
- * @brief Changes the current state of the CircleButton (pressed or not
- * pressed).
- *
- * Inverts the current state of the button.
+ * @brief Alterna o estado atual do CircleButton entre pressionado e não pressionado.
+ * @details Inverte o valor do atributo m_status. Este método é chamado internamente
+ *          por detectTouch() quando o botão é tocado pelo usuário.
  */
 void CircleButton::changeState() { m_status = !m_status; }
 
 /**
- * @brief Redraws the CircleButton on the screen, updating its appearance based
- * on its state.
- *
- * Displays the circular button with different appearance depending on whether
- * it's pressed or not. Only redraws if the button is on the current screen and
- * needs updating.
+ * @brief Redesenha o CircleButton na tela, atualizando sua aparência baseada em seu estado.
+ * @details Este método é responsável por renderizar o botão circular na tela:
+ *          - Verifica todas as condições necessárias para o redesenho
+ *          - Desenha círculo externo com fundo e borda
+ *          - Desenha círculo interno com cor diferente quando pressionado
+ *          - Usa a biblioteca @ref Arduino_GFX_Library para o desenho
+ *          - Cores são ajustadas automaticamente baseadas no modo claro/escuro
+ *          Apenas redesenha se o botão está visível, inicializado, carregado, na tela atual
+ *          e a flag m_shouldRedraw está configurada como true.
  */
 void CircleButton::redraw() {
   CHECK_TFT_VOID
@@ -124,9 +142,10 @@ void CircleButton::redraw() {
 }
 
 /**
- * @brief Initializes the CircleButton with default constraints.
- *
- * Constrains the button radius between 5 and 200 pixels.
+ * @brief Inicializa o CircleButton com restrições de tamanho padrão.
+ * @details Limita o raio do botão entre 5 e 200 pixels usando a função constrain().
+ *          Valores abaixo de 5 são ajustados para 5, valores acima de 200 para 200.
+ *          Este método é chamado internamente por setup() após a configuração.
  */
 void CircleButton::start() {
   m_config.radius =
@@ -135,9 +154,13 @@ void CircleButton::start() {
 
 
 /**
- * @brief Configures the CircleButton with parameters defined in a configuration
- * structure.
- * @param config Structure containing the button configuration parameters.
+ * @brief Configura o CircleButton com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref CircleButtonConfig contendo os parâmetros de configuração do botão.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Copia todas as configurações para m_config
+ *          - Chama start() para aplicar restrições de tamanho
+ *          - Marca o widget como inicializado e carregado
+ *          - O botão não será exibido corretamente até que este método seja chamado
  */
 void CircleButton::setup(const CircleButtonConfig &config) {
   // Validate TFT object
@@ -154,17 +177,22 @@ void CircleButton::setup(const CircleButtonConfig &config) {
 }
 
 /**
- * @brief Retrieves the current status of the CircleButton.
- * @return True if the button is pressed, otherwise false.
+ * @brief Recupera o status atual do CircleButton.
+ * @return True se o botão está pressionado, False se está não pressionado.
  */
 bool CircleButton::getStatus() const { return m_status; }
 
 /**
- * @brief Sets the current state of the CircleButton.
- * @param _status True for pressed, false for not pressed.
- *
- * Updates the button state, marks it for redraw, and triggers the callback if
- * provided.
+ * @brief Define o estado atual do CircleButton.
+ * @param _status True para pressionar o botão, False para liberar.
+ * @details Este método permite mudar programaticamente o estado do botão:
+ *          - Verifica se o widget está carregado antes de fazer alterações
+ *          - Evita atualizações desnecessárias se o estado já é o solicitado
+ *          - Atualiza o atributo m_status
+ *          - Marca o widget para redesenho
+ *          - Adiciona o callback na fila de execução se uma função foi definida
+ *          - Registra o evento no log do ESP32
+ *          Útil para sincronizar o estado visual com valores de variáveis ou configurações.
  */
 void CircleButton::setStatus(bool _status) {
   CHECK_LOADED_VOID
@@ -183,12 +211,22 @@ void CircleButton::setStatus(bool _status) {
   ESP_LOGD(TAG, "CircleButton status changed to %s", _status ? "pressed" : "released");
 }
 
+/**
+ * @brief Torna o botão circular visível na tela.
+ * @details Define m_visible como true e marca para redesenho. O botão será
+ *          desenhado na próxima chamada de redraw() se estiver na tela atual.
+ */
 void CircleButton::show() {
   m_visible = true;
   m_shouldRedraw = true;
   ESP_LOGD(TAG, "CircleButton shown at (%d, %d)", m_xPos, m_yPos);
 }
 
+/**
+ * @brief Oculta o botão circular da tela.
+ * @details Define m_visible como false e marca para redesenho. O botão não será
+ *          mais desenhado até que show() seja chamado novamente.
+ */
 void CircleButton::hide() {
   m_visible = false;
   m_shouldRedraw = true;

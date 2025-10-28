@@ -3,23 +3,23 @@
 const char* NumberBox::TAG = "NumberBox";
 
 /**
- * @brief Converts a float value to a string representation.
- * @param f Float value to convert.
- * @return Pointer to the string representation of the float.
- *
- * Note: This function uses a static buffer, so its return value is only valid
- * until the next call.
+ * @brief Converte um valor float para uma representação em string.
+ * @param f Valor float para converter.
+ * @return Representação em string do valor float.
+ * @details Nota: Esta função usa um buffer estático, então seu valor de retorno é válido
+ *          apenas até a próxima chamada.
  */
 String NumberBox::convertoToString(float f) {
   return String(f);
 }
 
 /**
- * @brief Constructs a NumberBox widget at a specified position on a specified
- * screen.
- * @param _x X-coordinate for the NumberBox position.
- * @param _y Y-coordinate for the NumberBox position.
- * @param _screen Screen identifier where the NumberBox will be displayed.
+ * @brief Constrói um widget NumberBox em uma posição especificada em uma tela especificada.
+ * @param _x Coordenada X para a posição do NumberBox.
+ * @param _y Coordenada Y para a posição do NumberBox.
+ * @param _screen Identificador da tela onde o NumberBox será exibido.
+ * @details Inicializa o widget com valores padrão (padding 3) e configuração vazia.
+ *          O NumberBox não será funcional até que setup() seja chamado.
  */
 NumberBox::NumberBox(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_padding(3), m_shouldRedraw(true) {
@@ -27,32 +27,35 @@ NumberBox::NumberBox(uint16_t _x, uint16_t _y, uint8_t _screen)
     }
 
 /**
- * @brief Default constructor for NumberBox.
- *
- * Creates a NumberBox at position (0,0) on screen 0.
+ * @brief Construtor padrão para o NumberBox.
+ * @details Cria um NumberBox na posição (0,0) na tela 0.
  */
 NumberBox::NumberBox() : WidgetBase(0, 0, 0), m_padding(3), m_shouldRedraw(true), m_config{} {}
 
 /**
- * @brief Destructor for the NumberBox class.
+ * @brief Destrutor da classe NumberBox.
+ * @details Limpa quaisquer recursos usados pelo NumberBox.
  */
 NumberBox::~NumberBox() {
     cleanupMemory();
 }
 
+/**
+ * @brief Limpa memória usada pelo NumberBox.
+ * @details NumberBox não usa alocação dinâmica de memória.
+ *          CharString gerencia sua própria memória.
+ */
 void NumberBox::cleanupMemory() {
-    // NumberBox doesn't use dynamic memory allocation
-    // CharString handles its own memory management
     ESP_LOGD(TAG, "NumberBox memory cleanup completed");
 }
 
 /**
- * @brief Detects if the NumberBox has been touched.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is within the NumberBox area, otherwise false.
- *
- * When touched, activates the virtual keyboard mode for value input.
+ * @brief Detecta se o NumberBox foi tocado.
+ * @param _xTouch Ponteiro para a coordenada X do toque.
+ * @param _yTouch Ponteiro para a coordenada Y do toque.
+ * @return True se o toque está dentro da área do NumberBox, False caso contrário.
+ * @details Quando tocado, ativa o modo de teclado virtual para entrada de valor.
+ *          Valida visibilidade, tela atual, carregamento, debounce e uso de teclado.
  */
 bool NumberBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   CHECK_VISIBLE_BOOL
@@ -77,16 +80,21 @@ bool NumberBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 }
 
 /**
- * @brief Retrieves the callback function associated with the NumberBox.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao NumberBox.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o NumberBox for utilizado.
  */
 functionCB_t NumberBox::getCallbackFunc() { return m_callback; }
 
 /**
- * @brief Redraws the NumberBox on the screen, updating its appearance.
- *
- * Displays the current numeric value with appropriate formatting and styling.
- * Only redraws if the NumberBox is on the current screen and needs updating.
+ * @brief Redesenha o NumberBox na tela, atualizando sua aparência.
+ * @details Exibe o valor numérico atual com formatação e estilo apropriados.
+ *          Apenas redesenha se o NumberBox estiver na tela atual e precisar atualização:
+ *          - Valida TFT, visibilidade, tela atual, carregamento e flag de redesenho
+ *          - Configura fonte (usando fonte configurada ou padrão)
+ *          - Desenha retângulo de fundo com cor de fundo
+ *          - Desenha borda com cor de letra
+ *          - Exibe texto do valor com formatação para caber no espaço disponível
  */
 void NumberBox::redraw() {
   CHECK_TFT_VOID
@@ -129,27 +137,29 @@ void NumberBox::redraw() {
 }
 
 /**
- * @brief Forces the NumberBox to redraw.
- *
- * Sets the flag to redraw the NumberBox on the next redraw cycle.
+ * @brief Força o NumberBox a atualizar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
  */
 void NumberBox::forceUpdate() { m_shouldRedraw = true; }
 
-/**
- * @brief Configures the NumberBox widget with specific dimensions, colors, and
- * initial value.
- * @param _width Width of the NumberBox.
- * @param _height Height of the NumberBox.
- * @param _letterColor Color for the text displaying the value.
- * @param _backgroundColor Background color of the NumberBox.
- * @param _startValue Initial numeric value to display.
- * @param _font Font to use for the text.
- * @param _funcPtr Function pointer to the parent screen's load function.
- * @param _cb Callback function to execute on interaction.
- *
- * Initializes the NumberBox properties and marks it as loaded when complete.
- */
 #if defined(USING_GRAPHIC_LIB)
+/**
+ * @brief Configura o widget NumberBox com dimensões, cores e valor inicial específicos.
+ * @param _width Largura da caixa de número.
+ * @param _height Altura da caixa de número.
+ * @param _letterColor Cor para o texto exibindo o valor.
+ * @param _backgroundColor Cor de fundo da caixa de número.
+ * @param _startValue Valor numérico inicial para exibir.
+ * @param _font Fonte para usar no texto.
+ * @param _funcPtr Ponteiro de função para a função de carregamento da tela pai.
+ * @param _cb Função callback para executar na interação.
+ * @details Inicializa as propriedades do NumberBox e o marca como carregado quando completo:
+ *          - Define função pai e callback
+ *          - Configura largura, altura e fonte
+ *          - Calcula altura automaticamente baseado na fonte se necessário
+ *          - Define cores e valor inicial
+ *          - Marca como carregado
+ */
 void NumberBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
                       uint16_t _backgroundColor, float _startValue,
                       const GFXfont *_font, functionLoadScreen_t _funcPtr,
@@ -184,10 +194,18 @@ void NumberBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
   m_loaded = true;
 }
 #endif
+
 /**
- * @brief Configures the NumberBox with parameters defined in a configuration
- * structure.
- * @param config Structure containing the NumberBox configuration parameters.
+ * @brief Configura o NumberBox com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref NumberBoxConfig contendo os parâmetros de configuração.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Limpa memória existente usando cleanupMemory()
+ *          - Copia profundamente a configuração
+ *          - Copia ponteiros de função (parentScreen e callback)
+ *          - Define membros de configuração (largura, altura, cores, fonte)
+ *          - Define valor inicial usando setString()
+ *          - Marca o widget como carregado e inicializado
+ *          O NumberBox não será exibido corretamente até que este método seja chamado.
  */
 void NumberBox::setup(const NumberBoxConfig &config) {
   CHECK_TFT_VOID
@@ -226,10 +244,11 @@ void NumberBox::setup(const NumberBoxConfig &config) {
 }
 
 /**
- * @brief Sets the numeric value displayed by the NumberBox.
- * @param str Numeric value to set.
- *
- * Updates the displayed value and marks the NumberBox for redraw.
+ * @brief Define o valor numérico exibido pelo NumberBox.
+ * @param str Valor numérico para definir.
+ * @details Atualiza o valor exibido e marca o NumberBox para redesenho:
+ *          - Converte float para string usando setString()
+ *          - Marca para redesenho usando forceUpdate()
  */
 void NumberBox::setValue(float str) {
   m_value.setString(str);
@@ -238,22 +257,32 @@ void NumberBox::setValue(float str) {
 }
 
 /**
- * @brief Retrieves the current numeric value of the NumberBox.
- * @return Current numeric value as a float.
+ * @brief Recupera o valor numérico atual do NumberBox.
+ * @return Valor numérico atual como float.
+ * @details Converte a string interna para valor float usando toFloat().
  */
 float NumberBox::getValue() { return m_value.toFloat(); }
 
 /**
- * @brief Retrieves the current numeric value as a string.
- * @return Pointer to the string representation of the current value.
+ * @brief Recupera o valor numérico atual como string.
+ * @return Ponteiro para a representação em string do valor atual.
+ * @details Retorna ponteiro para a string interna que representa o valor.
  */
 const char *NumberBox::getValueChar() { return m_value.getString(); }
 
+/**
+ * @brief Torna o NumberBox visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void NumberBox::show() {
   m_visible = true;
   m_shouldRedraw = true;
 }
 
+/**
+ * @brief Oculta o NumberBox da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void NumberBox::hide() {
   m_visible = false;
   m_shouldRedraw = true;

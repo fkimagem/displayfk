@@ -3,10 +3,11 @@
 const char* RadioGroup::TAG = "RadioGroup";
 
 /**
- * @brief Constructor for the RadioGroup class.
- * @param _screen Screen identifier where the RadioGroup will be displayed.
- *
- * Creates a RadioGroup with position (0,0) on the specified screen.
+ * @brief Construtor para a classe RadioGroup.
+ * @param _screen Identificador da tela onde o RadioGroup será exibido.
+ * @details Cria um RadioGroup na posição (0,0) na tela especificada.
+ *          Inicializa com configuração vazia e valores padrão.
+ *          O RadioGroup não será funcional até que setup() seja chamado.
  */
 RadioGroup::RadioGroup(uint8_t _screen)
     : WidgetBase(0, 0, _screen), m_shouldRedraw(true), m_config{} {
@@ -21,12 +22,19 @@ RadioGroup::RadioGroup(uint8_t _screen)
     }
 
 /**
- * @brief Destructor for the RadioGroup class.
+ * @brief Destrutor da classe RadioGroup.
+ * @details Limpa quaisquer recursos usados pelo RadioGroup.
  */
 RadioGroup::~RadioGroup() {
     cleanupMemory();
 }
 
+/**
+ * @brief Limpa memória usada pelo RadioGroup.
+ * @details Desaloca arrays dinâmicos de botões e limpa referências:
+ *          - Libera m_config.buttons se alocado
+ *          - Libera m_buttons se alocado
+ */
 void RadioGroup::cleanupMemory() {
   if (m_config.buttons) {
     delete[] m_config.buttons;
@@ -40,20 +48,21 @@ void RadioGroup::cleanupMemory() {
 }
 
 /**
- * @brief Forces the RadioGroup to redraw.
- *
- * Sets the flag to redraw the RadioGroup on the next redraw cycle.
+ * @brief Força o RadioGroup a atualizar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
  */
 void RadioGroup::forceUpdate() { m_shouldRedraw = true; }
 
 /**
- * @brief Detects if any radio button within the group has been touched.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if a radio button was touched, otherwise false.
- *
- * Checks if the touch event occurred within any of the radio buttons
- * and updates the selected state if a button is touched.
+ * @brief Detecta se algum botão de rádio dentro do grupo foi tocado.
+ * @param _xTouch Ponteiro para a coordenada X do toque.
+ * @param _yTouch Ponteiro para a coordenada Y do toque.
+ * @return True se um botão de rádio foi tocado, False caso contrário.
+ * @details Verifica se o evento de toque ocorreu dentro de algum dos botões de rádio
+ *          e atualiza o estado selecionado se um botão for tocado:
+ *          - Valida visibilidade, uso de teclado, tela atual, carregamento e debounce
+ *          - Itera sobre todos os botões e verifica se o toque está dentro do raio de cada um
+ *          - Atualiza ID selecionado e marca para redesenho se toque for detectado
  */
 bool RadioGroup::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   CHECK_VISIBLE_BOOL
@@ -77,17 +86,19 @@ bool RadioGroup::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 }
 
 /**
- * @brief Retrieves the callback function associated with the RadioGroup.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao RadioGroup.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o RadioGroup for utilizado.
  */
 functionCB_t RadioGroup::getCallbackFunc() { return m_callback; }
 
 /**
- * @brief Redraws the radio buttons on the screen, updating their appearance.
- *
- * Draws all radio buttons in the group, highlighting the currently selected
- * one. Only redraws if the RadioGroup is on the current screen and needs
- * updating.
+ * @brief Redesenha os botões de rádio na tela, atualizando sua aparência.
+ * @details Desenha todos os botões de rádio no grupo, destacando o atualmente selecionado.
+ *          Apenas redesenha se o RadioGroup estiver na tela atual e precisar atualização:
+ *          - Valida TFT, visibilidade, tela atual, carregamento e flag de redesenho
+ *          - Para cada botão: desenha círculo de fundo, borda e círculo interno se selecionado
+ *          - Usa cores adaptadas ao modo claro/escuro
  */
 void RadioGroup::redraw() {
   CHECK_TFT_VOID
@@ -119,12 +130,14 @@ void RadioGroup::redraw() {
 }
 
 /**
- * @brief Sets the selected radio button by its ID.
- * @param clickedId ID of the radio button to select.
- *
- * Updates the currently selected radio button and triggers the callback if
- * provided. No effect if the specified ID is already selected or doesn't exist
- * in the group.
+ * @brief Define o botão de rádio selecionado por seu ID.
+ * @param clickedId ID do botão de rádio para selecionar.
+ * @details Atualiza o botão de rádio atualmente selecionado e dispara o callback se fornecido.
+ *          Sem efeito se o ID especificado já estiver selecionado ou não existir no grupo:
+ *          - Valida se widget está carregado
+ *          - Verifica se ID já é o selecionado atual
+ *          - Itera sobre botões para encontrar ID especificado
+ *          - Atualiza ID selecionado, marca para redesenho e dispara callback se configurado
  */
 void RadioGroup::setSelected(uint16_t clickedId) {
   if (!m_loaded) {
@@ -149,9 +162,16 @@ void RadioGroup::setSelected(uint16_t clickedId) {
 
 
 /**
- * @brief Configures the RadioGroup with parameters defined in a configuration
- * structure.
- * @param config Structure containing the radio group configuration parameters.
+ * @brief Configura o RadioGroup com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref RadioGroupConfig contendo os parâmetros de configuração.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Valida parâmetros de configuração (amount não pode ser 0)
+ *          - Limpa memória existente usando cleanupMemory()
+ *          - Copia membros não-ponteiro da configuração
+ *          - Faz cópia profunda do array de botões (m_buttons)
+ *          - Define ID selecionado padrão e callback
+ *          - Marca o widget como carregado
+ *          O RadioGroup não será exibido corretamente até que este método seja chamado.
  */
 void RadioGroup::setup(const RadioGroupConfig &config) {
   CHECK_TFT_VOID
@@ -205,22 +225,32 @@ void RadioGroup::setup(const RadioGroupConfig &config) {
 }
 
 /**
- * @brief Retrieves the ID of the currently selected radio button.
- * @return ID of the selected radio button.
+ * @brief Recupera o ID do botão de rádio atualmente selecionado.
+ * @return ID do botão de rádio selecionado.
+ * @details Retorna o ID armazenado em m_clickedId.
  */
 uint16_t RadioGroup::getSelected() { return m_clickedId; }
 
 /**
- * @brief Retrieves the group ID of the RadioGroup.
- * @return Group identifier for the RadioGroup.
+ * @brief Recupera o ID do grupo do RadioGroup.
+ * @return Identificador do grupo para o RadioGroup.
+ * @details Retorna o ID do grupo armazenado em m_config.group.
  */
 uint16_t RadioGroup::getGroupId() { return m_config.group; }
 
+/**
+ * @brief Torna o RadioGroup visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void RadioGroup::show() {
   m_visible = true;
   m_shouldRedraw = true;
 }
 
+/**
+ * @brief Oculta o RadioGroup da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void RadioGroup::hide() {
   m_visible = false;
   m_shouldRedraw = true;

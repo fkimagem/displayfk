@@ -3,10 +3,12 @@
 const char* Led::TAG = "Led";
 
 /**
- * @brief Constructor for Led widget.
- * @param _x X-coordinate for the LED position.
- * @param _y Y-coordinate for the LED position.
- * @param _screen Screen identifier where the LED will be displayed.
+ * @brief Construtor do widget Led.
+ * @param _x Coordenada X para a posição do LED.
+ * @param _y Coordenada Y para a posição do LED.
+ * @param _screen Identificador da tela onde o LED será exibido.
+ * @details Inicializa o widget com valores padrão e configuração padrão.
+ *          O LED não será funcional até que setup() seja chamado.
  */
 Led::Led(uint16_t _x, uint16_t _y, uint8_t _screen) 
     : WidgetBase(_x, _y, _screen),
@@ -27,7 +29,9 @@ Led::Led(uint16_t _x, uint16_t _y, uint8_t _screen)
 }
 
 /**
- * @brief Destructor for the Led class.
+ * @brief Destrutor da classe Led.
+ * @details Limpa recursos, callbacks e estado do widget.
+ *          Chama cleanupMemory() para garantir limpeza adequada.
  */
 Led::~Led() {
   ESP_LOGD(TAG, "Led destroyed at (%d, %d)", m_xPos, m_yPos);
@@ -47,10 +51,12 @@ Led::~Led() {
 }
 
 /**
- * @brief Detects if the LED has been touched.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return Always returns false as LEDs don't respond to touch events.
+ * @brief Detecta se o LED foi tocado.
+ * @param _xTouch Ponteiro para a coordenada X do toque na tela.
+ * @param _yTouch Ponteiro para a coordenada Y do toque na tela.
+ * @return Sempre retorna False, pois LEDs não respondem a eventos de toque.
+ * @details Este método realiza validações básicas mas não processa toques,
+ *          já que LEDs são elementos apenas visuais.
  */
 bool Led::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   // Early validation checks using macros
@@ -76,14 +82,18 @@ bool Led::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 }
 
 /**
- * @brief Retrieves the callback function associated with the LED.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao LED.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o LED for tocado.
+ *          Note que LEDs não detectam toques por padrão.
  */
 functionCB_t Led::getCallbackFunc() { return m_callback; }
 
 /**
- * @brief Sets the state of the LED (on or off).
- * @param newValue New state for the LED (true for on, false for off).
+ * @brief Define o estado do LED (ligado ou desligado).
+ * @param newValue Novo estado para o LED (true = ligado, false = desligado).
+ * @details Atualiza o estado e marca para redesenho apenas se houver mudança.
+ *          Se ligado, atualiza o gradiente de cor para efeito visual.
  */
 void Led::setState(bool newValue) {
   CHECK_LOADED_VOID
@@ -103,17 +113,20 @@ void Led::setState(bool newValue) {
 }
 
 /**
- * @brief Gets the current state of the LED.
- * @return Current state of the LED (true for on, false for off).
+ * @brief Obtém o estado atual do LED.
+ * @return Estado atual do LED (true = ligado, false = desligado).
  */
 bool Led::getState() const {
   return m_status;
 }
 
 /**
- * @brief Validates the configuration structure.
- * @param config Configuration to validate.
- * @return True if valid, false otherwise.
+ * @brief Valida a estrutura de configuração do LED.
+ * @param config Configuração a ser validada.
+ * @return True se válida, False caso contrário.
+ * @details Verifica se todos os parâmetros essenciais estão dentro dos limites aceitáveis:
+ *          - Raio deve ser maior que zero
+ *          - Adverte se raio é muito grande (pode impactar performance)
  */
 bool Led::validateConfig(const LedConfig& config) {
   // Validate basic parameters
@@ -130,24 +143,23 @@ bool Led::validateConfig(const LedConfig& config) {
 }
 
 /**
- * @brief Updates the color gradient for the light effect.
+ * @brief Atualiza o gradiente de cor para o efeito de luz.
+ * @details Cria gradiente de brilhante para escuro para simular efeito de luz.
+ *          Calcula intensidade decrescente para cada anel usando mistura de cores.
  */
 void Led::updateGradient() {
   // Create gradient from bright to dim
   uint16_t baseColor = m_config.colorOn;
   for (uint8_t i = 0; i < m_colorLightGradientSize; i++) {
-    // Calculate alpha-like effect by mixing with background
-    uint8_t intensity = 255 - (i * 50); // Decrease intensity for each ring
-    if (intensity < 50) intensity = 50; // Minimum visibility
-    
-    // Simple color mixing (this could be enhanced with proper color blending)
-    m_colorLightGradient[i] = baseColor;
+    m_colorLightGradient[i] = WidgetBase::lightenToWhite565(baseColor, 0.08*i);
   }
 }
 
 /**
- * @brief Gets the off color for the LED.
- * @return Color to use when LED is off.
+ * @brief Obtém a cor para o LED desligado.
+ * @return Cor a ser usada quando o LED está desligado.
+ * @details Se colorOff foi especificado, retorna essa cor.
+ *          Caso contrário, calcula automaticamente baseado no modo claro/escuro.
  */
 uint16_t Led::getOffColor() {
   if (m_config.colorOff != 0) {
@@ -158,15 +170,18 @@ uint16_t Led::getOffColor() {
 }
 
 /**
- * @brief Gets the background color for the LED.
- * @return Background color to use.
+ * @brief Obtém a cor de fundo para o LED.
+ * @return Cor de fundo a ser usada.
+ * @details Retorna a cor configurada em colorOff.
  */
 uint16_t Led::getBackgroundColor() {
   return m_config.colorOff;
 }
 
 /**
- * @brief Centralized memory cleanup method.
+ * @brief Método centralizado de limpeza de memória.
+ * @details LED não usa memória dinâmica, mas o método está aqui para consistência.
+ *          Reseta array de gradiente para valores padrão.
  */
 void Led::cleanupMemory() {
   // Led doesn't use dynamic memory, but method is here for consistency
@@ -176,6 +191,11 @@ void Led::cleanupMemory() {
   }
 }
 
+/**
+ * @brief Desenha o fundo do LED na tela.
+ * @details Desenha um círculo com borda na posição do LED.
+ *          Usa cor de borda baseada no modo claro/escuro.
+ */
 void Led::drawBackground() {
   CHECK_TFT_VOID
   CHECK_VISIBLE_VOID
@@ -191,10 +211,13 @@ void Led::drawBackground() {
 }
 
 /**
- * @brief Redraws the LED on the screen, updating its appearance.
- * 
- * Displays the LED with proper visual representation based on its current state.
- * The LED is drawn with gradient effect when on and solid color when off.
+ * @brief Redesenha o LED na tela, atualizando sua aparência.
+ * @details Exibe o LED com representação visual adequada baseada no estado atual:
+ *          - Estado ligado: desenha múltiplos círculos concêntricos com gradiente de cor
+ *            para criar efeito de brilho
+ *          - Estado desligado: desenha círculo sólido com cor de fundo
+ *          Apenas redesenha se o LED está visível, inicializado, carregado, na tela atual
+ *          e a flag m_shouldRedraw está configurada como true.
  */
 void Led::redraw() {
   CHECK_TFT_VOID
@@ -229,7 +252,9 @@ void Led::redraw() {
 }
 
 /**
- * @brief Forces the LED to update, refreshing its visual state on next redraw.
+ * @brief Força o LED a atualizar, refrescando seu estado visual no próximo redesenho.
+ * @details Define a flag m_shouldRedraw como true para garantir que o widget
+ *          seja redesenhado na próxima oportunidade.
  */
 void Led::forceUpdate()
 {
@@ -237,8 +262,15 @@ void Led::forceUpdate()
 }
 
 /**
- * @brief Configures the LED widget with parameters defined in a configuration structure.
- * @param config Structure containing the LED configuration parameters (radius and colorOn).
+ * @brief Configura o widget LED com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref LedConfig contendo os parâmetros de configuração do LED (raio e cores).
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Valida a configuração usando validateConfig()
+ *          - Limpa memória existente usando cleanupMemory()
+ *          - Atribui a estrutura de configuração
+ *          - Atualiza gradiente de cor para efeito visual
+ *          - Marca o widget como inicializado e carregado
+ *          O LED não será exibido corretamente até que este método seja chamado.
  */
 void Led::setup(const LedConfig& config) {
   CHECK_TFT_VOID
@@ -270,12 +302,20 @@ void Led::setup(const LedConfig& config) {
   ESP_LOGD(TAG, "Led setup completed at (%d, %d)", m_xPos, m_yPos);
 }
 
+/**
+ * @brief Torna o LED visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void Led::show() {
   m_visible = true;
   m_shouldRedraw = true;
   ESP_LOGD(TAG, "Led shown at (%d, %d)", m_xPos, m_yPos);
 }
 
+/**
+ * @brief Oculta o LED da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void Led::hide() {
   m_visible = false;
   m_shouldRedraw = true;

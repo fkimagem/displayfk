@@ -5,10 +5,10 @@ const char* SpinBox::TAG = "SpinBox";
 
 
 /**
- * @brief Decreases the current value by the step amount.
- *
- * Decrements the current value while ensuring it remains within the defined
- * range.
+ * @brief Diminui o valor atual pelo valor do passo.
+ * @details Decrementa o valor atual garantindo que permaneça dentro da faixa definida:
+ *          - Calcula novo valor (atual - passo)
+ *          - Restringe valor usando constrain() entre minValue e maxValue
  */
 void SpinBox::decreaseValue() {
   int temp = m_currentValue - m_config.step;
@@ -16,10 +16,10 @@ void SpinBox::decreaseValue() {
 }
 
 /**
- * @brief Increases the current value by the step amount.
- *
- * Increments the current value while ensuring it remains within the defined
- * range.
+ * @brief Aumenta o valor atual pelo valor do passo.
+ * @details Incrementa o valor atual garantindo que permaneça dentro da faixa definida:
+ *          - Calcula novo valor (atual + passo)
+ *          - Restringe valor usando constrain() entre minValue e maxValue
  */
 void SpinBox::increaseValue() {
   int temp = m_currentValue + m_config.step;
@@ -27,10 +27,12 @@ void SpinBox::increaseValue() {
 }
 
 /**
- * @brief Constructor for the SpinBox class.
- * @param _x X-coordinate for the SpinBox position.
- * @param _y Y-coordinate for the SpinBox position.
- * @param _screen Screen identifier where the SpinBox will be displayed.
+ * @brief Construtor para a classe SpinBox.
+ * @param _x Coordenada X para a posição do SpinBox.
+ * @param _y Coordenada Y para a posição do SpinBox.
+ * @param _screen Identificador da tela onde o SpinBox será exibido.
+ * @details Inicializa o widget com valores padrão e configuração vazia.
+ *          A caixa de spin não será funcional até que setup() seja chamado.
  */
 SpinBox::SpinBox(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen){
@@ -40,26 +42,32 @@ SpinBox::SpinBox(uint16_t _x, uint16_t _y, uint8_t _screen)
     }
 
 /**
- * @brief Destructor for the SpinBox class.
+ * @brief Destrutor da classe SpinBox.
+ * @details Limpa quaisquer recursos usados pelo SpinBox.
  */
 SpinBox::~SpinBox() {
     cleanupMemory();
 }
 
+/**
+ * @brief Limpa memória usada pelo SpinBox.
+ * @details SpinBox não usa alocação dinâmica de memória.
+ */
 void SpinBox::cleanupMemory() {
-    // SpinBox doesn't use dynamic memory allocation
     ESP_LOGD(TAG, "SpinBox memory cleanup completed");
 }
 
 /**
- * @brief Detects if the SpinBox has been touched and handles
- * increment/decrement actions.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is within the SpinBox area, otherwise false.
- *
- * Detects touches in either the decrement (left) or increment (right) button
- * areas, and processes the value change accordingly.
+ * @brief Detecta se o SpinBox foi tocado e manipula ações de incremento/decremento.
+ * @param _xTouch Ponteiro para a coordenada X do toque.
+ * @param _yTouch Ponteiro para a coordenada Y do toque.
+ * @return True se o toque está dentro da área do SpinBox, False caso contrário.
+ * @details Detecta toques nas áreas dos botões de decremento (esquerda) ou incremento (direita),
+ *          e processa a mudança de valor conforme apropriado:
+ *          - Valida visibilidade, uso de teclado, tela atual, carregamento e debounce
+ *          - Define áreas de detecção para botão esquerdo (decremento) e direito (incremento)
+ *          - Detecta toque na área de decremento: chama decreaseValue() e marca para redesenho
+ *          - Detecta toque na área de incremento: chama increaseValue() e marca para redesenho
  */
 bool SpinBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   CHECK_VISIBLE_BOOL
@@ -115,16 +123,21 @@ bool SpinBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 }
 
 /**
- * @brief Retrieves the callback function associated with the SpinBox.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao SpinBox.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o SpinBox for utilizado.
  */
 functionCB_t SpinBox::getCallbackFunc() { return m_callback; }
 
 /**
- * @brief Redraws the SpinBox on the screen, updating its appearance.
- *
- * Updates the display of the current value in the SpinBox,
- * only redrawing if the SpinBox is on the current screen and needs updating.
+ * @brief Redesenha o SpinBox na tela, atualizando sua aparência.
+ * @details Atualiza a exibição do valor atual na caixa de spin,
+ *          apenas redesenha se o SpinBox estiver na tela atual e precisar atualização:
+ *          - Valida TFT, visibilidade, tela atual, uso de teclado, carregamento e flag de redesenho
+ *          - Calcula dimensões dos botões e área disponível para texto
+ *          - Define cor do texto e desenha retângulo de fundo para valor
+ *          - Seleciona melhor fonte RobotoBold para o texto
+ *          - Exibe valor atual centralizado na área de texto
  */
 void SpinBox::redraw() {
   CHECK_TFT_VOID
@@ -147,8 +160,10 @@ void SpinBox::redraw() {
   WidgetBase::objTFT->fillRoundRect(
       m_xPos + (2 * m_offset) + btnW, m_yPos + m_offset,
       m_config.width - (4 * m_offset + 2 * btnW), btnH, m_radius, m_config.color);
-  WidgetBase::objTFT->setFont(getBestRobotoBold(
-      availableW, availableH, String(m_currentValue).c_str()));
+
+
+  uint16_t offsetFont = 10;
+  WidgetBase::objTFT->setFont(getBestRobotoBold( availableW - offsetFont, availableH - offsetFont, String(m_currentValue).c_str()));
   printText(String(m_currentValue).c_str(), m_xPos + m_config.width / 2,
             m_yPos + (m_config.height / 2) - 3, MC_DATUM, m_lastArea, m_config.color);
   updateFont(FontType::UNLOAD);
@@ -156,10 +171,14 @@ void SpinBox::redraw() {
 }
 
 /**
- * @brief Draws the background of the SpinBox, including static elements.
- *
- * Creates the visual container, plus and minus buttons for the SpinBox.
- * This is typically called once during setup rather than on every redraw.
+ * @brief Desenha o fundo do SpinBox, incluindo elementos estáticos.
+ * @details Cria o container visual, botões de mais e menos para o SpinBox.
+ *          Este método é tipicamente chamado uma vez durante setup ao invés de em cada redesenho:
+ *          - Desenha retângulo principal com bordas arredondadas
+ *          - Desenha borda do container
+ *          - Desenha dois botões com cores clarificadas (lados esquerdo e direito)
+ *          - Desenha bordas dos botões
+ *          - Desenha sinais de menos (-) no botão esquerdo e mais (+) no botão direito
  */
 void SpinBox::drawBackground() {
   CHECK_TFT_VOID
@@ -221,9 +240,16 @@ void SpinBox::drawBackground() {
 
 
 /**
- * @brief Configures the SpinBox with parameters defined in a configuration
- * structure.
- * @param config Structure containing the SpinBox configuration parameters.
+ * @brief Configura o SpinBox com периметров definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref SpinBoxConfig contendo os parâmetros de configuração.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Limpa memória existente usando cleanupMemory()
+ *          - Copia profundamente a configuração
+ *          - Valida e corrige se minValue > maxValue (troca valores)
+ *          - Restringe startValue dentro da faixa válida
+ *          - Define callback
+ *          - Marca o widget como carregado
+ *          A caixa de spin não será exibida corretamente até que este método seja chamado.
  */
 void SpinBox::setup(const SpinBoxConfig &config) {
   CHECK_TFT_VOID
@@ -251,17 +277,21 @@ void SpinBox::setup(const SpinBoxConfig &config) {
 }
 
 /**
- * @brief Retrieves the current value of the SpinBox.
- * @return Current numeric value.
+ * @brief Recupera o valor atual do SpinBox.
+ * @return Valor numérico atual.
+ * @details Retorna o valor armazenado em m_currentValue.
  */
 int SpinBox::getValue() { return m_currentValue; }
 
 /**
- * @brief Sets the current value of the SpinBox.
- * @param _value New numeric value to set.
- *
- * Updates the SpinBox's value, ensures it's within the defined range,
- * and marks the widget for redraw. Triggers the callback if provided.
+ * @brief Define o valor atual do SpinBox.
+ * @param _value Novo valor numérico para definir.
+ * @details Atualiza o valor do SpinBox, garante que está dentro da faixa definida,
+ *          e marca o widget para redesenho. Dispara o callback se fornecido:
+ *          - Valida se widget está carregado
+ *          - Restringe valor usando constrain() dentro da faixa min/max
+ *          - Marca para redesenho
+ *          - Dispara callback se configurado
  */
 void SpinBox::setValue(int _value) {
   if (!m_loaded) {
@@ -277,14 +307,26 @@ void SpinBox::setValue(int _value) {
   }
 }
 
+/**
+ * @brief Torna o SpinBox visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void SpinBox::show() {
   m_visible = true;
   m_shouldRedraw = true;
 }
 
+/**
+ * @brief Oculta o SpinBox da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void SpinBox::hide() {
   m_visible = false;
   m_shouldRedraw = true;
 }
 
+/**
+ * @brief Força o SpinBox a atualizar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
+ */
 void SpinBox::forceUpdate() { m_shouldRedraw = true; }

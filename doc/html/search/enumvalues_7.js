@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['none_0',['NONE',['../class_numpad.html#a9f3f5c04ce834507996fac1b95cd3caeab50339a10e1de285ac99d4c3990b8693',1,'Numpad::NONE()'],['../class_w_keyboard.html#a9d8c6bf65a4678c43a934c3b903c5ee8ab50339a10e1de285ac99d4c3990b8693',1,'WKeyboard::NONE()'],['../class_w_keyboard.html#a2b9465cea20ffecc439ce856842f7950ab50339a10e1de285ac99d4c3990b8693',1,'WKeyboard::NONE()']]],
-  ['normal_1',['NORMAL',['../base_types_8h.html#a72082b59a51886b2606c8c0be2f84684a1e23852820b9154316c7c06e2b7ba051',1,'baseTypes.h']]],
-  ['number_2',['NUMBER',['../class_numpad.html#a9f3f5c04ce834507996fac1b95cd3caea34f55eca38e0605a84f169ff61a2a396',1,'Numpad::NUMBER()'],['../class_w_keyboard.html#a2b9465cea20ffecc439ce856842f7950a34f55eca38e0605a84f169ff61a2a396',1,'WKeyboard::NUMBER()']]]
+  ['increment_0',['INCREMENT',['../charstring_8h.html#a90b4e9a78bfd03f7cb83302ad52410c7a90cf1f5206b348a822cc1a453a587534',1,'charstring.h']]],
+  ['integer_1',['INTEGER',['../class_w_keyboard.html#a9d8c6bf65a4678c43a934c3b903c5ee8a5d5cd46919fa987731fb2edefe0f2a0c',1,'WKeyboard']]],
+  ['invert_5fvalue_2',['INVERT_VALUE',['../charstring_8h.html#a90b4e9a78bfd03f7cb83302ad52410c7acab3eb195ce183b260291727986103c4',1,'charstring.h']]]
 ];

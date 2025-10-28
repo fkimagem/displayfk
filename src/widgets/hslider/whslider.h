@@ -5,47 +5,32 @@
 #include <Arduino.h>
 #include <esp_log.h>
 
-/// @brief Configuration structure for HSlider
+/// @brief Estrutura de configuração para o HSlider.
+/// @details Esta estrutura contém todos os parâmetros necessários para configurar um slider horizontal.
+///          Deve ser preenchida e passada para o método setup().
 struct HSliderConfig {
-  uint16_t width;         ///< Width of the slider track
-  uint16_t pressedColor;  ///< Color when the slider handle is pressed
-  uint16_t backgroundColor; ///< Background color of the slider
-  int minValue;           ///< Minimum value of the slider range
-  int maxValue;           ///< Maximum value of the slider range
-  uint32_t radius;        ///< Radius of the slider handle
-  functionCB_t callback;  ///< Callback function to execute on slider value change
+  uint16_t width;         ///< Largura da trilha do slider em pixels.
+  uint16_t pressedColor;  ///< Cor RGB565 exibida quando o slider está pressionado.
+  uint16_t backgroundColor; ///< Cor RGB565 de fundo do slider.
+  int minValue;           ///< Valor mínimo da faixa do slider.
+  int maxValue;           ///< Valor máximo da faixa do slider.
+  uint32_t radius;        ///< Raio do controle deslizante em pixels.
+  functionCB_t callback;  ///< Função callback para executar quando o valor do slider muda.
 };
 
-/// @brief Represents a horizontal slider widget.
+/// @brief Widget de slider horizontal interativo que permite controle de valores através de deslizamento.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar 
+///          sliders horizontais interativos na tela. O HSlider desenha uma trilha horizontal com um controle
+///          deslizante que pode ser movido pelo usuário para ajustar valores dentro de uma faixa especificada.
+///          O widget pode ser configurado com diferentes larguras, cores, faixas de valores e callbacks.
+///          O slider é totalmente funcional com suporte a toque em displays capacitivos e touchscreen,
+///          detectando toques na área da trilha e movendo o controle proporcionalmente.
 class HSlider : public WidgetBase
 {
-private:
-  static const char* TAG; ///< Tag for logging identification
-  
-  // Configuration
-  HSliderConfig m_config; ///< Configuration for the HSlider
-  
-  // Internal state
-  uint16_t m_currentPos; ///< Current position of the slider handle
-  uint16_t m_lastPos; ///< Last recorded position of the slider handle
-  uint32_t m_height; ///< Height of the slider track
-  uint8_t m_contentRadius; ///< Radius of the content area within the handle
-  uint16_t m_centerV; ///< Center vertical position of the slider track
-  uint16_t m_minX; ///< Minimum X-coordinate for the slider handle position
-  uint16_t m_maxX; ///< Maximum X-coordinate for the slider handle position
-  int m_value; ///< Current value of the slider
-  
-  // Helper methods
-  void start();
-  bool validateConfig(const HSliderConfig& config);
-  void updateDimensions();
-  void updateValue();
-
 public:
   HSlider(uint16_t _x, uint16_t _y, uint8_t _screen);
   virtual ~HSlider();
   
-  // Required overrides
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
   void redraw() override;
@@ -53,12 +38,27 @@ public:
   void show() override;
   void hide() override;
   
-  // Configuration
   void setup(const HSliderConfig& config);
-  
-  // Widget-specific methods
   int getValue() const;
   void setValue(int newValue);
   void drawBackground();
+
+private:
+  static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
+  
+  HSliderConfig m_config; ///< Estrutura contendo configuração completa do slider (largura, cores, faixa, callback).
+  uint16_t m_currentPos; ///< Posição atual do controle deslizante em pixels.
+  uint16_t m_lastPos; ///< Última posição registrada do controle deslizante em pixels.
+  uint32_t m_height; ///< Altura da trilha do slider em pixels.
+  uint8_t m_contentRadius; ///< Raio da área de conteúdo dentro do controle deslizante.
+  uint16_t m_centerV; ///< Posição vertical central da trilha do slider.
+  uint16_t m_minX; ///< Coordenada X mínima para a posição do controle deslizante.
+  uint16_t m_maxX; ///< Coordenada X máxima para a posição do controle deslizante.
+  int m_value; ///< Valor atual do slider dentro da faixa configurada.
+  
+  void start();
+  bool validateConfig(const HSliderConfig& config);
+  void updateDimensions();
+  void updateValue();
 };
 #endif

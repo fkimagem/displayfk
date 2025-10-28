@@ -3,27 +3,39 @@
 const char* VBar::TAG = "[VBar]";
 
 /**
- * @brief Constructor for the VBar class.
- * @param _x X position of the widget.
- * @param _y Y position of the widget.
- * @param _screen Screen number.
+ * @brief Construtor do widget VBar.
+ * @param _x Coordenada X para a posição do VBar.
+ * @param _y Coordenada Y para a posição do VBar.
+ * @param _screen Identificador da tela onde o VBar será exibido.
+ * @details Inicializa o widget VBar com posição e tela especificadas.
  */
 VBar::VBar(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen)
 {
 }
 
 /**
- * @brief Destructor for the VBar class.
+ * @brief Limpa recursos alocados pelo VBar.
+ * @details Desaloca memória dinâmica e remove referências a objetos.
  */
-VBar::~VBar()
-{
+void VBar::cleanupMemory() {
+  // VBar não aloca memória dinâmica no momento
 }
 
 /**
- * @brief Detects a touch on the VBar widget.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is detected, false otherwise.
+ * @brief Destrutor do widget VBar.
+ * @details Limpa recursos alocados.
+ */
+VBar::~VBar()
+{
+  cleanupMemory();
+}
+
+/**
+ * @brief Detecta um toque no widget VBar.
+ * @param _xTouch Ponteiro para a coordenada X do toque.
+ * @param _yTouch Ponteiro para a coordenada Y do toque.
+ * @return True se o toque é detectado, False caso contrário.
+ * @details Método override que sempre retorna false. O VBar não tem detecção de toque ativa.
  */
 bool VBar::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
@@ -31,8 +43,9 @@ bool VBar::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 }
 
 /**
- * @brief Retrieves the callback function for the VBar widget.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback para o widget VBar.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o VBar for utilizado.
  */
 functionCB_t VBar::getCallbackFunc()
 {
@@ -40,64 +53,73 @@ functionCB_t VBar::getCallbackFunc()
 }
 
 /**
- * @brief Sets the value of the VBar widget.
- * @param newValue New value to set.
+ * @brief Define o valor do widget VBar.
+ * @param newValue Novo valor para definir.
+ * @details Atualiza o valor da barra:
+ *          - Restringe valor usando constrain() dentro da faixa min/max
+ *          - Marca para redesenho
  */
 void VBar::setValue(uint32_t newValue)
 {
-  m_currentValue = constrain(newValue, m_vmin, m_vmax);
+  m_currentValue = constrain(newValue, m_config.minValue, m_config.maxValue);
   // Serial.println("ajusta currentValue: " + String(currentValue));
   m_shouldRedraw = true;
   // redraw();
 }
 
 /**
- * @brief Redraws the VBar widget.
+ * @brief Redesenha o widget VBar.
+ * @details Atualiza a exibição da barra:
+ *          - Valida TFT, visibilidade, tela atual, uso de teclado, carregamento e flag de redesenho
+ *          - Calcula altura/largura proporcional usando map() baseado no valor atual
+ *          - Atualiza área preenchida (limpando se valor diminuiu, preenchendo se aumentou)
+ *          - Suporta orientação vertical e horizontal
+ *          - Usa cantos arredondados conforme configurado
+ *          - Armazena último valor e reseta flag de redesenho
  */
 void VBar::redraw()
 {
   CHECK_TFT_VOID
-  if(!m_visible){return;}
-  #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != m_screen || m_lastValue == m_currentValue || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !m_loaded)
-  {
-    return;
-  }
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
   
   int innerX = m_xPos + 1;
   int innerY = m_yPos + 1;
-  int innerHeight = m_height - 2;
-  int innerWidth = m_width - 2;
-  int minHeight = m_round;
-  int minWidth = m_round;
-  int innerRound = m_round > 0 ? m_round - 1 : m_round;
+  int innerHeight = m_config.height - 2;
+  int innerWidth = m_config.width - 2;
+  int minHeight = m_config.round;
+  int minWidth = m_config.round;
+  int innerRound = m_config.round > 0 ? m_config.round - 1 : m_config.round;
 
-  if(m_orientation == Orientation::VERTICAL){
+  if(m_config.orientation == Orientation::VERTICAL){
 	
-	uint32_t proportionalHeight = map(m_currentValue, m_vmin, m_vmax, minHeight, innerHeight);
+	uint32_t proportionalHeight = map(m_currentValue, m_config.minValue, m_config.maxValue, minHeight, innerHeight);
 	
 	if(m_currentValue < m_lastValue){
-		uint32_t clearArea = map(m_vmax - m_currentValue, m_vmin, m_vmax, minHeight, innerHeight);
+		uint32_t clearArea = map(m_config.maxValue - m_currentValue, m_config.minValue, m_config.maxValue, minHeight, innerHeight);
 		WidgetBase::objTFT->fillRoundRect(innerX, innerY, innerWidth, clearArea, innerRound, CFK_GREY11); // fundo total
 		
 	}
 
     
-    WidgetBase::objTFT->fillRoundRect(innerX, innerY + (innerHeight - proportionalHeight), innerWidth, proportionalHeight, innerRound, m_filledColor); // cor fill
+    WidgetBase::objTFT->fillRoundRect(innerX, innerY + (innerHeight - proportionalHeight), innerWidth, proportionalHeight, innerRound, m_config.filledColor); // cor fill
     //WidgetBase::objTFT->drawRoundRect(innerX, innerY + (innerHeight - proportionalHeight), innerWidth, proportionalHeight, innerRound, CFK_BLACK);   // borda fill
 
-  }else if(m_orientation == Orientation::HORIZONTAL){
+  }else if(m_config.orientation == Orientation::HORIZONTAL){
 	  
 	  if(m_currentValue < m_lastValue){
-		uint32_t clearArea = map(m_vmax - m_currentValue, m_vmin, m_vmax, minWidth, innerWidth);
-		uint32_t xValue = map(m_currentValue, m_vmin, m_vmax, innerX, innerX + innerWidth);
+		uint32_t clearArea = map(m_config.maxValue - m_currentValue, m_config.minValue, m_config.maxValue, minWidth, innerWidth);
+		uint32_t xValue = map(m_currentValue, m_config.minValue, m_config.maxValue, innerX, innerX + innerWidth);
 		
 		WidgetBase::objTFT->fillRoundRect(xValue, innerY, clearArea, innerHeight, innerRound, CFK_GREY11); // fundo total
 		
 	}
 
-    uint32_t proportionalWidth = map(m_currentValue, m_vmin, m_vmax, minWidth, innerWidth); // O +1 é para tirar a borda da contagem
-    WidgetBase::objTFT->fillRoundRect(innerX, innerY, proportionalWidth, innerHeight, innerRound, m_filledColor); // cor fill
+    uint32_t proportionalWidth = map(m_currentValue, m_config.minValue, m_config.maxValue, minWidth, innerWidth); // O +1 é para tirar a borda da contagem
+    WidgetBase::objTFT->fillRoundRect(innerX, innerY, proportionalWidth, innerHeight, innerRound, m_config.filledColor); // cor fill
 	
     //WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, m_round,CFK_BLACK);   // borda fill
 
@@ -106,23 +128,24 @@ void VBar::redraw()
   
   m_lastValue = m_currentValue;
   m_shouldRedraw = false;
-
-  #endif
 }
 
 /**
- * @brief Starts the VBar widget.
+ * @brief Inicia o widget VBar.
+ * @details Garante que a largura e altura da barra estejam dentro de intervalos válidos:
+ *          - Restringe altura e largura dentro de bounds válidos (20 até dimensão da tela)
  */
 void VBar::start()
 {
 #if defined(USING_GRAPHIC_LIB)
-  m_height = constrain(m_height, 20, WidgetBase::objTFT->height());
-  m_width = constrain(m_width, 20, WidgetBase::objTFT->width());
+  m_config.height = constrain(m_config.height, 20, WidgetBase::objTFT->height());
+  m_config.width = constrain(m_config.width, 20, WidgetBase::objTFT->width());
 #endif
 }
 
 /**
- * @brief Forces the VBar widget to update.
+ * @brief Força o widget VBar a atualizar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
  */
 void VBar::forceUpdate()
 {
@@ -130,32 +153,31 @@ void VBar::forceUpdate()
 }
 
 /**
- * @brief Draws the background of the VBar widget.
+ * @brief Desenha o fundo do widget VBar.
+ * @details Desenha o container visual da barra incluindo fundo e borda:
+ *          - Valida TFT e visibilidade
+ *          - Desenha fundo com cantos arredondados
+ *          - Desenha borda ao redor da barra
  */
 void VBar::drawBackground()
 {
   CHECK_TFT_VOID
-  if(!m_visible){return;}
-  #if defined(USING_GRAPHIC_LIB)
-  if (WidgetBase::currentScreen != m_screen || WidgetBase::usingKeyboard == true || !m_shouldRedraw || !m_loaded)
-  {
-    return;
-  }
-  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_width, m_height, m_round, CFK_GREY11); // fundo total
-  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_width, m_height, m_round, CFK_BLACK);     // borda total
-  #endif
+  CHECK_VISIBLE_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
+  CHECK_LOADED_VOID
+  CHECK_SHOULDREDRAW_VOID
+  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.round, CFK_GREY11); // fundo total
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.round, CFK_BLACK);     // borda total
 }
 
+
 /**
- * @brief Sets up the VBar widget.
- * @param _width Width of the widget.
- * @param _height Height of the widget.
- * @param _filledColor Color for the filled portion of the bar.
- * @param _vmin Minimum value of the range.
- * @param _vmax Maximum value of the range.
- * @param _orientation Orientation of the bar (vertical or horizontal).
+ * @brief Configura o VBar com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref VerticalBarConfig contendo os parâmetros de configuração.
+ * @details Chama método setup() com parâmetros individuais da configuração.
  */
-void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax, int _round, Orientation _orientation)
+void VBar::setup(const VerticalBarConfig& config)
 {
   if (!WidgetBase::objTFT)
   {
@@ -167,34 +189,26 @@ void VBar::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _
     ESP_LOGD(TAG, "VBar widget already configured");
     return;
   }
-  m_width = _width;
-  m_height = _height;
-  m_filledColor = _filledColor;
-  m_vmin = _vmin;
-  m_vmax = _vmax;
-  m_currentValue = m_vmin;
-  m_orientation = _orientation;
-  m_shouldRedraw = true;
-  m_round = _round;
+  m_config = config;
   start();
   m_loaded = true;
+  m_initialized = true;
 }
 
 /**
- * @brief Configures the VBar with parameters defined in a configuration structure.
- * @param config Structure containing the VBar configuration parameters.
+ * @brief Torna o VBar visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
  */
-void VBar::setup(const VerticalBarConfig& config)
-{
-  setup(config.width, config.height, config.filledColor, config.minValue, config.maxValue, config.round,config.orientation);
-}
-
 void VBar::show()
 {
     m_visible = true;
     m_shouldRedraw = true;
 }
 
+/**
+ * @brief Oculta o VBar da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void VBar::hide()
 {
     m_visible = false;

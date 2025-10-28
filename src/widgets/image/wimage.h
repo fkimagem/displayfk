@@ -5,14 +5,22 @@
 #if defined(DFK_SD)
 #include "SD.h"
 #endif
+
+#if defined(USE_SPIFFS)
 #include "SPIFFS.h"
+#endif
+#if defined(USE_FATFS)
+#include "FFat.h"
+#endif
+
 #include <FS.h>
 
 /// @brief Enum for specifying the source file location of the image.
 enum class SourceFile {
   SD = 0,     ///< Image source from SD card.
   SPIFFS = 1, ///< Image source from SPIFFS filesystem.
-  EMBED = 2   ///< Image source embedded within the code.
+  EMBED = 2,   ///< Image source embedded within the code.
+  FATFS = 3 ///< Image source from FAT filesystem
 };
 
 #if defined(DISP_DEFAULT)
@@ -120,7 +128,12 @@ typedef struct  {
   }
 } PerformanceMetrics_t;
 
-/// @brief Represents an image widget that can load images from various sources.
+/// @brief Widget de imagem que pode carregar imagens de várias fontes.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar 
+///          imagens interativas na tela. O Image pode carregar imagens de arquivos (SD, SPIFFS, FATFS) ou
+///          de dados de pixels embutidos no código. Suporta rotação, máscaras de transparência, callbacks
+///          de toque e métricas de desempenho para otimização. O widget é totalmente funcional com suporte
+///          a diferentes formatos de display (RGB565, monocromático) e gerenciamento inteligente de memória.
 class Image : public WidgetBase {
 public:
   Image(uint16_t _x, uint16_t _y, uint8_t _screen);
@@ -151,25 +164,15 @@ public:
   void printMetrics() const;
 
 private:
-  static const char* TAG; ///< Tag for logging identification
-  
-  // Unified configuration - single source of truth
-  ImageFromPixelsConfig m_config;
-  bool m_ownsMemory = false; ///< Flag to control memory ownership (true = we allocated, false = external reference)
-  
-  // Performance metrics
-  
-  
-  // Legacy variables (kept for readFileFromDisk compatibility)
-  pixel_t *m_pixels = nullptr; ///< Pointer to the pixel map data (legacy)
-  uint8_t *m_maskAlpha = nullptr; ///< Pointer to the alpha mask data for transparency (legacy)
-  SourceFile m_source = SourceFile::EMBED; ///< Source of the image file (legacy)
-  fs::FS *m_fs = nullptr; ///< File system pointer (legacy)
-  const char *m_path = nullptr; ///< Path to the image file (legacy)
-  
-  // Display state managed by WidgetBase::m_visible
-
-  PerformanceMetrics_t m_metrics;
+  static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
+  ImageFromPixelsConfig m_config; ///< Configuração unificada da imagem (fonte única de verdade).
+  bool m_ownsMemory; ///< Flag para controlar propriedade da memória (true = alocamos, false = referência externa).
+  pixel_t *m_pixels; ///< Ponteiro para dados de pixels (legacy para compatibilidade).
+  uint8_t *m_maskAlpha; ///< Ponteiro para máscara de transparência (legacy para compatibilidade).
+  SourceFile m_source; ///< Fonte do arquivo de imagem (legacy para compatibilidade).
+  fs::FS *m_fs; ///< Ponteiro para sistema de arquivos (legacy para compatibilidade).
+  const char *m_path; ///< Caminho para o arquivo de imagem (legacy para compatibilidade).
+  PerformanceMetrics_t m_metrics; ///< Métricas de desempenho para otimização.
   
   bool readFileFromDisk();
   void defineFileSystem(SourceFile source);

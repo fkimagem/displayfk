@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['fonttype_0',['FontType',['../base_types_8h.html#a72082b59a51886b2606c8c0be2f84684',1,'baseTypes.h']]]
+  ['device_5fmode_5fenum_0',['DEVICE_MODE_Enum',['../_f_t6336_u_8h.html#ae4e41e417a05be19511b9d06833968ca',1,'FT6336U.h']]]
 ];

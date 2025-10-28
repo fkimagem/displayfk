@@ -1054,6 +1054,7 @@ DisplayFK::DisplayFK()
     , m_enableWTD(false)
     , m_watchdogInitialized(false)
     , m_loopSemaphore(nullptr)
+    , m_transactionSemaphore(nullptr)
     , m_lastTouchState(TouchEventType::NONE)
     , m_lastTouchSwipeDirection(TouchSwipeDirection::NONE)
 {
@@ -1266,6 +1267,13 @@ void DisplayFK::cleanupFreeRTOSResources()
         vSemaphoreDelete(m_loopSemaphore);
         m_loopSemaphore = nullptr;
         ESP_LOGD(TAG, "Loop semaphore deleted");
+    }
+    
+    // Delete transaction semaphore
+    if (m_transactionSemaphore != nullptr) {
+        vSemaphoreDelete(m_transactionSemaphore);
+        m_transactionSemaphore = nullptr;
+        ESP_LOGD(TAG, "Transaction semaphore deleted");
     }
     
     // Remove task from watchdog if initialized
@@ -1546,21 +1554,39 @@ void DisplayFK::setup(){
 /**
  * @brief Starts a drawing transaction
  */
-void DisplayFK::startTransaction(){
-    if(m_runningTransaction){
-        ESP_LOGW(TAG, "Transaction already running.");
+void DisplayFK::startCustomDraw(){
+    if (!m_transactionSemaphore) {
+        ESP_LOGE(TAG, "Transaction semaphore not initialized");
         return;
     }
-
-    m_runningTransaction = true;
+    
+    // Wait until semaphore is available (may take time if loopTask is using it)
+    if (xSemaphoreTake(m_transactionSemaphore, portMAX_DELAY) == pdTRUE) {
+        m_runningTransaction = true;
+        // Release semaphore immediately - we only needed it to safely set the flag
+        xSemaphoreGive(m_transactionSemaphore);
+    } else {
+        ESP_LOGE(TAG, "Failed to acquire transaction semaphore");
+    }
 }
 
 /**
  * @brief Finishes a drawing transaction
  */
-void DisplayFK::finishTransaction(){
-
-    m_runningTransaction = false;
+void DisplayFK::finishCustomDraw(){
+    if (!m_transactionSemaphore) {
+        ESP_LOGE(TAG, "Transaction semaphore not initialized");
+        return;
+    }
+    
+    // Wait until semaphore is available (may take time if loopTask is using it)
+    if (xSemaphoreTake(m_transactionSemaphore, portMAX_DELAY) == pdTRUE) {
+        m_runningTransaction = false;
+        // Release semaphore immediately - we only needed it to safely set the flag
+        xSemaphoreGive(m_transactionSemaphore);
+    } else {
+        ESP_LOGE(TAG, "Failed to acquire transaction semaphore");
+    }
 }
 
 
@@ -1793,7 +1819,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     uint32_t startMillis = millis();
 
     WidgetBase::currentScreen = currentScreenIndex;
-    Serial.printf("Drawing widgets of screen:%i\n", WidgetBase::currentScreen);
+    ESP_LOGD(TAG, "Drawing widgets of screen:%i", WidgetBase::currentScreen);
 
 #if defined(DFK_TOUCHAREA)
     if (m_touchAreaConfigured)
@@ -2759,6 +2785,33 @@ void DisplayFK::setDrawObject(U8G2 *objTFT){
 void DisplayFK::loopTask() {
 
     uint32_t startTime = millis();
+    bool semaphoreAcquired = false;
+
+    // Try to acquire the transaction semaphore with 10ms timeout
+    if (!m_transactionSemaphore) {
+        ESP_LOGE(TAG, "Transaction semaphore not initialized in loopTask");
+        vTaskDelay(pdMS_TO_TICKS(1));
+        return;
+    }
+    
+    if (xSemaphoreTake(m_transactionSemaphore, pdMS_TO_TICKS(1)) != pdTRUE) {
+        // Could not acquire semaphore within 10ms, return early
+        ESP_LOGE(TAG, "Could not acquire semaphore within 10ms, return early");
+        return;
+    }
+    
+    semaphoreAcquired = true;
+
+    if(m_runningTransaction){
+        xSemaphoreGive(m_transactionSemaphore);
+        vTaskDelay(pdMS_TO_TICKS(1));
+        return;
+    }
+    
+    // Release the semaphore after checking - don't hold it during screen loading
+    xSemaphoreGive(m_transactionSemaphore);
+    semaphoreAcquired = false;
+    
     
     // Process screen loading
     if (WidgetBase::loadScreen) {
@@ -2824,8 +2877,7 @@ if(touchExterno){
         Serial.printf("Time to loopTask: %lu ms\n", startTime);
     }
 
-
-    vTaskDelay(pdMS_TO_TICKS(1));
+    //vTaskDelay(pdMS_TO_TICKS(1));
 }
 
 /**
@@ -3536,14 +3588,30 @@ bool DisplayFK::createSemaphoreSafe() {
         m_loopSemaphore = nullptr;
     }
     
-    // Create semaphore with validation
+    // Create loop semaphore with validation
     m_loopSemaphore = xSemaphoreCreateBinary();
     if (!m_loopSemaphore) {
-        ESP_LOGE(TAG, "Failed to create semaphore - insufficient memory");
+        ESP_LOGE(TAG, "Failed to create loop semaphore - insufficient memory");
         return false;
     }
     
-    ESP_LOGD(TAG, "Semaphore created safely");
+    // Check if transaction semaphore already exists
+    if (m_transactionSemaphore != nullptr) {
+        ESP_LOGW(TAG, "Transaction semaphore already exists, cleaning up first");
+        vSemaphoreDelete(m_transactionSemaphore);
+        m_transactionSemaphore = nullptr;
+    }
+    
+    // Create transaction mutex with validation (using mutex for shared resource protection)
+    m_transactionSemaphore = xSemaphoreCreateMutex();
+    if (!m_transactionSemaphore) {
+        ESP_LOGE(TAG, "Failed to create transaction semaphore - insufficient memory");
+        vSemaphoreDelete(m_loopSemaphore);
+        m_loopSemaphore = nullptr;
+        return false;
+    }
+    
+    ESP_LOGD(TAG, "Semaphores created safely");
     return true;
 }
 

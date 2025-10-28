@@ -40,56 +40,66 @@ const Key_t Numpad::m_pad[NCOLS][NROWS] = {
      {"OK", PressedKeyType::RETURN}}};
 
 /**
- * @brief Constructs a Numpad widget at a specified position on a specified
- * screen
- * @param _x X-coordinate for the Numpad position
- * @param _y Y-coordinate for the Numpad position
- * @param _screen Screen identifier where the Numpad will be displayed
+ * @brief Constrói um widget Numpad em uma posição especificada em uma tela especificada.
+ * @param _x Coordenada X para a posição do Numpad.
+ * @param _y Coordenada Y para a posição do Numpad.
+ * @param _screen Identificador da tela onde o Numpad será exibido.
+ * @details Inicializa o widget com valores padrão e configuração vazia.
+ *          O teclado não será funcional até que setup() seja chamado.
  */
 Numpad::Numpad(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_config{} {}
 
 /**
- * @brief Default constructor for the Numpad class
- * Initializes a Numpad at position (0,0) on screen 0
+ * @brief Construtor padrão para a classe Numpad.
+ * @details Inicializa um Numpad na posição (0,0) na tela 0.
  */
 Numpad::Numpad() : WidgetBase(0, 0, 0), m_config{} {}
 
 /**
- * @brief Destructor for the Numpad class
- * Cleans up any resources used by the Numpad
+ * @brief Destrutor da classe Numpad.
+ * @details Limpa quaisquer recursos usados pelo Numpad.
  */
 Numpad::~Numpad() {
     cleanupMemory();
 }
 
+/**
+ * @brief Limpa memória usada pelo Numpad.
+ * @details Numpad não usa alocação dinâmica de memória.
+ *          CharString gerencia sua própria memória.
+ */
 void Numpad::cleanupMemory() {
-    // Numpad doesn't use dynamic memory allocation
-    // CharString handles its own memory management
     ESP_LOGD(TAG, "Numpad memory cleanup completed");
 }
 
 /**
- * @brief Detects if the Numpad has been touched
- * @param _xTouch Pointer to the X-coordinate of the touch
- * @param _yTouch Pointer to the Y-coordinate of the touch
- * @return True if the touch is within the Numpad area, otherwise false
+ * @brief Detecta se o Numpad foi tocado.
+ * @param _xTouch Ponteiro para a coordenada X do toque.
+ * @param _yTouch Ponteiro para a coordenada Y do toque.
+ * @return True se o toque está dentro da área do Numpad, False caso contrário.
+ * @details Método override que sempre retorna false. Use detectTouch() com pressedKey para detecção real.
  */
 bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) { return false; }
 
 /**
- * @brief Retrieves the callback function associated with the Numpad
- * @return Pointer to the callback function
+ * @brief Recupera a função callback associada ao Numpad.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o teclado for utilizado.
  */
 functionCB_t Numpad::getCallbackFunc() { return m_callback; }
 
 /**
- * @brief Detects if a specific key on the Numpad has been touched, and returns
- * the type of key
- * @param _xTouch Pointer to the X-coordinate of the touch
- * @param _yTouch Pointer to the Y-coordinate of the touch
- * @param pressedKey Pointer to store the type of key that was pressed
- * @return True if a key is detected, otherwise false
+ * @brief Detecta se uma tecla específica do Numpad foi tocada e retorna o tipo de tecla.
+ * @param _xTouch Ponteiro para a coordenada X do toque.
+ * @param _yTouch Ponteiro para a coordenada Y do toque.
+ * @param pressedKey Ponteiro para armazenar o tipo de tecla pressionada.
+ * @return True se uma tecla é detectada, False caso contrário.
+ * @details Este método realiza múltiplas validações e detecta qual tecla foi pressionada:
+ *          - Valida visibilidade, inicialização, carregamento e habilitado
+ *          - Calcula índice da tecla baseado na posição do toque
+ *          - Processa diferentes tipos de teclas (NUMBER, POINT, RETURN, DEL, INCREMENT, DECREMENT, INVERT_VALUE)
+ *          - Atualiza conteúdo e redesenha preview quando necessário
  */
 bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
                          PressedKeyType *pressedKey) {
@@ -195,9 +205,15 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
 }
 
 /**
- * @brief Redraws the Numpad on the screen, updating its appearance
- * @param fullScreen If true, redraws the entire screen
- * @param onlyContent If true, redraws only the content area
+ * @brief Redesenha o Numpad na tela, atualizando sua aparência.
+ * @param fullScreen Se true, redesenha toda a tela.
+ * @param onlyContent Se true, redesenha apenas a área de conteúdo.
+ * @details Desenha o teclado numérico completo:
+ *          - Preenche fundo se fullScreen for true
+ *          - Desenha área de preview com valor atual
+ *          - Desenha todas as teclas se onlyContent for false
+ *          - Usa fontes e cores configuradas
+ *          - Registra tempo de execução para debug
  */
 void Numpad::drawKeys(bool fullScreen, bool onlyContent) {
   CHECK_TFT_VOID
@@ -266,8 +282,12 @@ void Numpad::drawKeys(bool fullScreen, bool onlyContent) {
 }
 
 /**
- * @brief Adds a character to the current Numpad input
- * @param c Character to add
+ * @brief Adiciona um caractere à entrada atual do Numpad.
+ * @param c Caractere para adicionar.
+ * @details Adiciona caractere ao conteúdo e redesenha preview:
+ *          - Previne múltiplos pontos decimais
+ *          - Verifica comprimento máximo
+ *          - Redesenha área de preview após adicionar
  */
 void Numpad::addLetter(char c) {
   if (c == '.' && m_content.containsChar('.')) {
@@ -284,7 +304,8 @@ void Numpad::addLetter(char c) {
 }
 
 /**
- * @brief Removes the last character from the current Numpad input
+ * @brief Remove o último caractere da entrada atual do Numpad.
+ * @details Remove caractere do conteúdo e redesenha preview.
  */
 void Numpad::removeLetter() {
   if (!m_content.removeLastChar()) {
@@ -294,8 +315,14 @@ void Numpad::removeLetter() {
 }
 
 /**
- * @brief Configures the Numpad settings
- * Initializes the Numpad layout and appearance
+ * @brief Configura as configurações do Numpad.
+ * @return True se a configuração foi bem-sucedida, False caso contrário.
+ * @details Inicializa o layout e aparência do Numpad:
+ *          - Calcula dimensões baseadas na tela
+ *          - Calcula tamanho de teclas baseado em linhas/colunas
+ *          - Define posição e tamanho da área de preview
+ *          - Seleciona melhor fonte para teclas
+ *          - Marca widget como carregado e inicializado
  */
 bool Numpad::setup() {
   CHECK_TFT_BOOL
@@ -335,6 +362,17 @@ bool Numpad::setup() {
   return true;
 }
 
+/**
+ * @brief Configura o Numpad com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref NumpadConfig contendo os parâmetros de configuração.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Limpa memória existente
+ *          - Atribui configuração e cores estáticas
+ *          - Configura fontes
+ *          - Inicializa layout e dimensões
+ *          - Marca o widget como carregado e inicializado
+ *          O teclado não será exibido corretamente até que este método seja chamado.
+ */
 void Numpad::setup(const NumpadConfig& config) {
   CHECK_TFT_VOID
   if (m_loaded) {
@@ -384,8 +422,14 @@ void Numpad::setup(const NumpadConfig& config) {
 }
 
 /**
- * @brief Opens the Numpad associated with a specific NumberBox
- * @param _field Pointer to the NumberBox that will receive the Numpad input
+ * @brief Abre o Numpad associado a um NumberBox específico.
+ * @param _field Ponteiro para o NumberBox que receberá a entrada do Numpad.
+ * @details Abre o teclado e inicializa entrada:
+ *          - Define timeout para evitar detecção imediata de tecla
+ *          - Associa NumberBox ao teclado
+ *          - Carrega valor atual do NumberBox
+ *          - Habilita flag de teclado ativo
+ *          - Desenha teclado completo na tela
  */
 void Numpad::open(NumberBox *_field) {
   m_myTime = millis() + (TIMEOUT_CLICK *
@@ -402,7 +446,11 @@ void Numpad::open(NumberBox *_field) {
 }
 
 /**
- * @brief Closes the Numpad and clears the input
+ * @brief Fecha o Numpad e aplica o valor digitado.
+ * @details Fecha o teclado e atualiza o NumberBox:
+ *          - Desabilita flag de teclado ativo
+ *          - Aplica valor digitado ao NumberBox usando setValue()
+ *          - Limpa fonte da tela
  */
 void Numpad::close() {
 #if defined(DISP_DEFAULT)
@@ -417,8 +465,12 @@ void Numpad::close() {
 }
 
 /**
- * @brief Inserts a character into the current input content
- * @param c Character to insert
+ * @brief Insere um caractere no conteúdo de entrada atual.
+ * @param c Caractere para inserir.
+ * @details Insere caractere se o teclado estiver aberto:
+ *          - Verifica se usingKeyboard está ativo
+ *          - Chama addLetter() para adicionar o caractere
+ *          - Retorna erro se teclado não estiver aberto
  */
 void Numpad::insertChar(char c) {
   if (WidgetBase::usingKeyboard) {
@@ -428,18 +480,34 @@ void Numpad::insertChar(char c) {
   }
 }
 
+/**
+ * @brief Torna o Numpad visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void Numpad::show() {
   m_visible = true;
   m_shouldRedraw = true;
 }
 
+/**
+ * @brief Oculta o Numpad da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void Numpad::hide() {
   m_visible = false;
   m_shouldRedraw = true;
 }
 
+/**
+ * @brief Força o Numpad a atualizar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
+ */
 void Numpad::forceUpdate() { m_shouldRedraw = true; }
 
+/**
+ * @brief Redesenha o Numpad na tela.
+ * @details Chama drawKeys() para redesenhar o teclado completo.
+ */
 void Numpad::redraw() {
   drawKeys(false, false);
 }

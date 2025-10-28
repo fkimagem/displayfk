@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['touch_0',['TOUCH',['../class_widget_base.html#afc5d8840ee8c89fdaf98d6901ee2ee05a2b40a1ea27beb450618885ec87f0ee15',1,'WidgetBase']]]
+  ['medium_0',['MEDIUM',['../wcheckbox_8h.html#a21888f056835b90a6afa438050b447cdac87f3be66ffc3c0d4249f1c2cc5f3cce',1,'wcheckbox.h']]]
 ];

@@ -1,11 +1,17 @@
 var searchData=
 [
-  ['m_5ffield_0',['m_field',['../class_numpad.html#a0c1095871ee6f48fb93ef3a8dff57e23',1,'Numpad::m_field()'],['../class_w_keyboard.html#a0cbda92d9e0160bd57ac7039a8795110',1,'WKeyboard::m_field()']]],
-  ['m_5fgesture_1',['m_gesture',['../class_touch_screen.html#a1e4679bb74735937165763bf8df725b4',1,'TouchScreen']]],
-  ['m_5frunningtransaction_2',['m_runningTransaction',['../class_display_f_k.html#a414c759656c0f8a4b0b78ae5e886a936',1,'DisplayFK']]],
-  ['markerscolor_3',['markersColor',['../struct_gauge_config.html#ae5147e566dd9d241e526ff8383cf1435',1,'GaugeConfig']]],
-  ['maskalpha_4',['maskAlpha',['../struct_image_from_pixels_config.html#a53c4ccc214f9305aec52f92c54f98125',1,'ImageFromPixelsConfig']]],
-  ['maxvalue_5',['maxValue',['../struct_circular_bar_config.html#aa91b7ef04722370e0c1b8f321a1bf56e',1,'CircularBarConfig::maxValue()'],['../struct_gauge_config.html#a576ccefa838fda4e9c3351154cf39eb2',1,'GaugeConfig::maxValue()'],['../struct_h_slider_config.html#aad965eae4fee35e3d2c91979aab05ec9',1,'HSliderConfig::maxValue()'],['../struct_line_chart_config.html#a4a60348f8ca729d85565f4c18d26d1b8',1,'LineChartConfig::maxValue()'],['../struct_spin_box_config.html#ae187f05033566f5cd4a928b142b631df',1,'SpinBoxConfig::maxValue()'],['../struct_vertical_analog_config.html#aef0149ba272efc888a200f3a3b7da64d',1,'VerticalAnalogConfig::maxValue()'],['../struct_vertical_bar_config.html#af4348ee900ac4b22fc28476e3c9f0a67',1,'VerticalBarConfig::maxValue()']]],
-  ['minvalue_6',['minValue',['../struct_circular_bar_config.html#a8662936682062ec14acaa2b8273e3dcd',1,'CircularBarConfig::minValue()'],['../struct_gauge_config.html#a40a5fad875dacc61a96732fa9c8d31dd',1,'GaugeConfig::minValue()'],['../struct_h_slider_config.html#ad79c58470e2ab50a55ac36b23e312736',1,'HSliderConfig::minValue()'],['../struct_line_chart_config.html#a1660207fe40af09108b73127d7820e93',1,'LineChartConfig::minValue()'],['../struct_spin_box_config.html#afea86a3f3081c94ea9e4d4cbc474c9e6',1,'SpinBoxConfig::minValue()'],['../struct_vertical_analog_config.html#a630e67f22dbdc61ab181c9cd8a513c19',1,'VerticalAnalogConfig::minValue()'],['../struct_vertical_bar_config.html#a71646d0291be28b1d406beec05a85bf8',1,'VerticalBarConfig::minValue()']]],
-  ['mysd_7',['mySD',['../class_widget_base.html#a9ad7b9d1a401189da5c1c609e429946c',1,'WidgetBase']]]
+  ['label_0',['label',['../struct_key__t.html#afa8f0906ec3ced61b8b6b848e1e47dc0',1,'Key_t']]],
+  ['lastdrawtime_1',['lastDrawTime',['../struct_performance_metrics__t.html#ae1f8e98cd994b46973560009e44f7b69',1,'PerformanceMetrics_t']]],
+  ['lastfileloadtime_2',['lastFileLoadTime',['../struct_performance_metrics__t.html#a7faa04d05c83597a0e20d89772832dcc',1,'PerformanceMetrics_t']]],
+  ['lastrotationtime_3',['lastRotationTime',['../struct_performance_metrics__t.html#ad612550d44d98fb53fdf4c2ae24f14ef',1,'PerformanceMetrics_t']]],
+  ['left_4',['left',['../struct_margin__t.html#af7325b9aae2fc3f0ba603fa12423d62e',1,'Margin_t']]],
+  ['lettercolor_5',['letterColor',['../struct_numpad_config.html#a0728ff3629994f94d04c0938631753cb',1,'NumpadConfig::letterColor'],['../struct_number_box_config.html#a2e77727894002ba3ca75246885f637d2',1,'NumberBoxConfig::letterColor'],['../struct_text_box_config.html#ab216134e0cf2cde7ea01bf6f78bd42e1',1,'TextBoxConfig::letterColor']]],
+  ['levels_6',['levels',['../structesp__lcd__touch__config__t.html#aaa73eab1946d0423c43e3bcf56f5a8f5',1,'esp_lcd_touch_config_t']]],
+  ['lightmode_7',['lightMode',['../class_widget_base.html#aa38d59e3529155c30c580552d4d21fef',1,'WidgetBase']]],
+  ['line_8',['line',['../structlog_message__t.html#a4f32499be564731862781ed58597441c',1,'logMessage_t::line'],['../uniongsl___f_l_a_g___t_y_p_e.html#a2fb19b832ca2d6d6f768b90072e0493d',1,'gsl_FLAG_TYPE::line']]],
+  ['line_5fhalf_9',['line_half',['../uniongsl___f_l_a_g___t_y_p_e.html#a9fd0f651d307c8265d8f3e61136e2114',1,'gsl_FLAG_TYPE']]],
+  ['line_5flength_10',['line_length',['../structlog_message__t.html#acc3588d4fdd8b718a2d96ded401db754',1,'logMessage_t']]],
+  ['line_5fneg_11',['line_neg',['../uniongsl___f_l_a_g___t_y_p_e.html#a1a0c66d1135887b9b24ab5f0085bb2df',1,'gsl_FLAG_TYPE']]],
+  ['loadscreen_12',['loadScreen',['../class_widget_base.html#a2221912a74a9725474724a506c37de5f',1,'WidgetBase']]],
+  ['lock_13',['lock',['../structesp__lcd__touch__data__t.html#aa42c51797d808854294d539325a4e2a9',1,'esp_lcd_touch_data_t']]]
 ];

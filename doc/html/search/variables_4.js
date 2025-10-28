@@ -1,6 +1,21 @@
 var searchData=
 [
-  ['datum_0',['datum',['../struct_label_config.html#aff8f9f0c0ec295dffc185469ad49ac1e',1,'LabelConfig']]],
-  ['default_5fspispeed_1',['DEFAULT_SPISPEED',['../class_x_p_t2046.html#a9076a6a1a23cf935b7d89fae0801a399',1,'XPT2046']]],
-  ['defaultclickedid_2',['defaultClickedId',['../struct_radio_group_config.html#a42950cd421e58447bf4792ab9d9f0fea',1,'RadioGroupConfig']]]
+  ['d_0',['d',['../structgsl___d_i_s_t_a_n_c_e___t_y_p_e.html#a18bf606390b77a445d63ff495853000a',1,'gsl_DISTANCE_TYPE']]],
+  ['data_1',['data',['../structesp__lcd__touch__s.html#a8babb50e3aa9b6c99c3442a8ec20b603',1,'esp_lcd_touch_s']]],
+  ['datum_2',['datum',['../struct_label_config.html#aff8f9f0c0ec295dffc185469ad49ac1e',1,'LabelConfig']]],
+  ['decimalplaces_3',['decimalPlaces',['../struct_thermometer_config.html#a7011d0b7c709d42123421fd196680941',1,'ThermometerConfig']]],
+  ['default_5fspispeed_4',['DEFAULT_SPISPEED',['../class_x_p_t2046.html#a9076a6a1a23cf935b7d89fae0801a399',1,'XPT2046']]],
+  ['defaultclickedid_5',['defaultClickedId',['../struct_radio_group_config.html#a42950cd421e58447bf4792ab9d9f0fea',1,'RadioGroupConfig']]],
+  ['del_6',['del',['../structesp__lcd__touch__s.html#a02d5fc190299ecf3564d584909e83814',1,'esp_lcd_touch_s']]],
+  ['delay_7',['delay',['../uniongsl___d_e_l_a_y___t_y_p_e.html#acf3f25120a5e11277ab6c2381a5f37ef',1,'gsl_DELAY_TYPE']]],
+  ['delay_5fkey_8',['delay_key',['../gsl__point__id_8c.html#a025806607347a24f7cd511948d72ab3f',1,'gsl_point_id.c']]],
+  ['dele_9',['dele',['../uniongsl___d_e_l_a_y___t_y_p_e.html#ab553e69c3938a05ca290fec609e8829c',1,'gsl_DELAY_TYPE']]],
+  ['dev_5faddr_10',['dev_addr',['../structesp__lcd__touch__io__gsl3680__config__t.html#ab5ba53d9961a7cae3b796930ddb0d6c5',1,'esp_lcd_touch_io_gsl3680_config_t']]],
+  ['diagonal_11',['diagonal',['../gsl__point__id_8c.html#a9d1ada1377a672e93d576f65379a6304',1,'gsl_point_id.c']]],
+  ['dis_12',['dis',['../uniongsl___p_o_i_n_t___t_y_p_e.html#a59c77b18f6f2ee23fef8ff9a713b42e0',1,'gsl_POINT_TYPE::dis'],['../structgsl___e_d_g_e___t_y_p_e.html#a43260dd16f0771eaceb715b055be4127',1,'gsl_EDGE_TYPE::dis']]],
+  ['distance_5fflag_13',['distance_flag',['../esp__lcd__gsl3680_8c.html#a6d2a43fdd57bedf162555f8e9c9e04f4',1,'esp_lcd_gsl3680.c']]],
+  ['drawcount_14',['drawCount',['../struct_performance_metrics__t.html#ac151cf25f8e90c1798743bb9e5edd441',1,'PerformanceMetrics_t']]],
+  ['drv_5fnum_15',['drv_num',['../gsl__point__id_8c.html#a4f38ac6b124ef78667c8d450211b1325',1,'gsl_point_id.c']]],
+  ['drv_5fnum_5fnokey_16',['drv_num_nokey',['../gsl__point__id_8c.html#a08a5e9518915d2c5291528a7cad9fef9',1,'gsl_point_id.c']]],
+  ['drv_5forder_5fex_17',['drv_order_ex',['../uniongsl___f_l_a_g___t_y_p_e.html#ab6fbf3e3d8c9dcfb3c711e3f5fdfc8ef',1,'gsl_FLAG_TYPE']]]
 ];

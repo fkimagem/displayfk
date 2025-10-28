@@ -5,10 +5,13 @@
 const char *CheckBox::TAG = "CheckBox";
 
 /**
- * @brief Constructor for the CheckBox class.
- * @param _x X-coordinate for the CheckBox position.
- * @param _y Y-coordinate for the CheckBox position.
- * @param _screen Screen identifier where the CheckBox will be displayed.
+ * @brief Construtor da classe CheckBox.
+ * @param _x Coordenada X da posição do checkbox na tela.
+ * @param _y Coordenada Y da posição do checkbox na tela.
+ * @param _screen Identificador da tela onde o checkbox será exibido.
+ * @details Inicializa o checkbox com valores padrão: status desmarcado, borda de 2 pixels,
+ *          cantos arredondados com raio de 5 pixels. O checkbox deve ser configurado com setup()
+ *          antes de ser exibido.
  */
 CheckBox::CheckBox(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_status(false), m_borderWidth(2), m_borderRadius(5){
@@ -24,9 +27,9 @@ CheckBox::CheckBox(uint16_t _x, uint16_t _y, uint8_t _screen)
 }
 
 /**
- * @brief Destructor for the CheckBox class.
- *
- * Clears the callback function pointer and resets state.
+ * @brief Destrutor da classe CheckBox.
+ * @details Limpa o ponteiro da função callback e registra o evento no log do ESP32.
+ *          Todos os recursos são liberados automaticamente pela herança de @ref WidgetBase.
  */
 CheckBox::~CheckBox() { 
   m_callback = nullptr; 
@@ -34,9 +37,10 @@ CheckBox::~CheckBox() {
 }
 
 /**
- * @brief Forces an immediate update of the CheckBox.
- *
- * Sets the flag to redraw the checkbox on the next redraw cycle.
+ * @brief Força uma atualização imediata do CheckBox.
+ * @details Define a flag m_shouldRedraw para true, forçando o redesenho do checkbox
+ *          no próximo ciclo de atualização da tela. Útil para garantir que mudanças
+ *          no estado ou configuração sejam visíveis imediatamente.
  */
 void CheckBox::forceUpdate() { 
   m_shouldRedraw = true; 
@@ -44,12 +48,19 @@ void CheckBox::forceUpdate() {
 }
 
 /**
- * @brief Detects if the CheckBox has been touched.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is within the CheckBox area, otherwise false.
- *
- * Changes the checkbox state if touched and sets the redraw flag.
+ * @brief Detecta se o CheckBox foi tocado pelo usuário.
+ * @param _xTouch Ponteiro para a coordenada X do toque na tela.
+ * @param _yTouch Ponteiro para a coordenada Y do toque na tela.
+ * @return True se o toque está dentro da área do CheckBox, False caso contrário.
+ * @details Este método realiza múltiplas validações antes de processar o toque:
+ *          - Verifica se o widget está visível, inicializado, carregado e habilitado
+ *          - Valida que o teclado virtual não está ativo
+ *          - Verifica que o checkbox está na tela atual
+ *          - Aplica debounce para evitar múltiplos cliques
+ *          - Verifica se o widget não está bloqueado
+ *          - Usa tolerância de 2 pixels para melhorar a experiência do usuário
+ *          Se todas as validações passarem e o toque estiver dentro da área do checkbox,
+ *          o estado é alternado e o widget é marcado para redesenho.
  */
 bool CheckBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   // Early validation checks using macros
@@ -85,27 +96,32 @@ bool CheckBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 }
 
 /**
- * @brief Retrieves the callback function associated with the CheckBox.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao CheckBox.
+ * @return Ponteiro para a função callback, ou nullptr se nenhuma foi definida.
+ * @details A função callback é executada quando o estado do checkbox muda.
+ *          Para mais informações sobre callbacks, consulte @ref WidgetBase.
  */
 functionCB_t CheckBox::getCallbackFunc() { return m_callback; }
 
 // getEnabled() and setEnabled() are inherited from WidgetBase
 
 /**
- * @brief Changes the current state of the CheckBox (checked or unchecked).
- *
- * Inverts the current state of the checkbox.
+ * @brief Alterna o estado atual do CheckBox entre marcado e desmarcado.
+ * @details Inverte o valor do atributo m_status. Este método é chamado internamente
+ *          por detectTouch() quando o checkbox é tocado pelo usuário.
  */
 void CheckBox::changeState() { m_status = !m_status; }
 
 /**
- * @brief Redraws the CheckBox on the screen, updating its appearance based on
- * its state.
- *
- * Displays the checkbox with a different appearance depending on whether it's
- * checked or unchecked. Only redraws if the checkbox is on the current screen
- * and needs updating.
+ * @brief Redesenha o CheckBox na tela, atualizando sua aparência baseada em seu estado.
+ * @details Este método é responsável por renderizar o checkbox na tela:
+ *          - Verifica todas as condições necessárias para o redesenho
+ *          - Desenha um retângulo arredondado com a cor apropriada (marcado ou desmarcado)
+ *          - Desenha a borda do checkbox se m_borderWidth > 0
+ *          - Desenha a marca de verificação (checkmark) se o checkbox está marcado
+ *          - Usa a biblioteca @ref Arduino_GFX_Library para o desenho
+ *          Apenas redesenha se o checkbox está visível, inicializado, carregado, na tela atual
+ *          e a flag m_shouldRedraw está configurada como true.
  */
 void CheckBox::redraw() {
   CHECK_TFT_VOID
@@ -143,9 +159,14 @@ void CheckBox::redraw() {
 
 
 /**
- * @brief Configures the CheckBox with parameters defined in a configuration
- * structure.
- * @param config Structure containing the checkbox configuration parameters.
+ * @brief Configura o CheckBox com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref CheckBoxConfig contendo os parâmetros de configuração do checkbox.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Valida o tamanho (10-100 pixels) e ajusta valores fora da faixa recomendada
+ *          - Copia todas as configurações para m_config
+ *          - Calcula as coordenadas dos pontos para desenho da marca de verificação
+ *          - Define a função callback e marca o widget como inicializado e carregado
+ *          - O checkbox não será exibido corretamente até que este método seja chamado
  */
 void CheckBox::setup(const CheckBoxConfig &config) {
   // Validate TFT object
@@ -182,17 +203,20 @@ void CheckBox::setup(const CheckBoxConfig &config) {
 }
 
 /**
- * @brief Retrieves the current status of the CheckBox.
- * @return True if the CheckBox is checked, otherwise false.
+ * @brief Recupera o status atual do CheckBox.
+ * @return True se o checkbox está marcado, False se está desmarcado.
  */
 bool CheckBox::getStatus() const { return m_status; }
 
 /**
- * @brief Sets the current state of the checkbox.
- * @param status True for checked, false for unchecked.
- *
- * Updates the checkbox state, marks it for redraw, and triggers the callback if
- * provided.
+ * @brief Define o estado atual do checkbox.
+ * @param status True para marcar o checkbox, False para desmarcar.
+ * @details Este método permite mudar programaticamente o estado do checkbox:
+ *          - Atualiza o atributo m_status
+ *          - Marca o widget para redesenho
+ *          - Adiciona o callback na fila de execução se uma função foi definida
+ *          - Registra o evento no log do ESP32
+ *          Útil para sincronizar o estado visual com valores de variáveis ou configurações.
  */
 void CheckBox::setStatus(bool status) {
   CHECK_LOADED_VOID
@@ -207,12 +231,22 @@ void CheckBox::setStatus(bool status) {
   ESP_LOGD(TAG, "CheckBox status set to: %s", status ? "checked" : "unchecked");
 }
 
+/**
+ * @brief Torna o checkbox visível na tela.
+ * @details Define m_visible como true e marca para redesenho. O checkbox será
+ *          desenhado na próxima chamada de redraw() se estiver na tela atual.
+ */
 void CheckBox::show() {
   m_visible = true;
   m_shouldRedraw = true;
   ESP_LOGD(TAG, "CheckBox shown at (%d, %d)", m_xPos, m_yPos);
 }
 
+/**
+ * @brief Oculta o checkbox da tela.
+ * @details Define m_visible como false e marca para redesenho. O checkbox não será
+ *          mais desenhado até que show() seja chamado novamente.
+ */
 void CheckBox::hide() {
   m_visible = false;
   m_shouldRedraw = true;
@@ -221,8 +255,12 @@ void CheckBox::hide() {
 
 
 /**
- * @brief Gets the unchecked color, using auto-calculated value if not set.
- * @return The unchecked color.
+ * @brief Obtém a cor para o estado desmarcado do checkbox.
+ * @return A cor em formato RGB565.
+ * @details Se uncheckedColor foi configurado como 0 (automático), retorna uma cor baseada no modo:
+ *          - Modo claro (lightMode): retorna CFK_GREY11 (cinza claro)
+ *          - Modo escuro (!lightMode): retorna CFK_GREY3 (cinza escuro)
+ *          Caso contrário, retorna o valor configurado em m_config.uncheckedColor.
  */
 uint16_t CheckBox::getUncheckedColor() {
   if (m_config.uncheckedColor != 0) {
@@ -233,15 +271,23 @@ uint16_t CheckBox::getUncheckedColor() {
 }
 
 /**
- * @brief Gets the border color, using auto-calculated value if not set.
- * @return The border color.
+ * @brief Obtém a cor da borda do checkbox.
+ * @return A cor da borda em formato RGB565.
+ * @details Retorna a mesma cor do estado marcado (m_config.checkedColor).
+ *          A borda usa a cor do checkbox marcado para manter a consistência visual.
  */
 uint16_t CheckBox::getBorderColor() {
   return m_config.checkedColor;
 }
 
 /**
- * @brief Draws the checkmark symbol.
+ * @brief Desenha o símbolo de marca de verificação (checkmark).
+ * @details Desenha uma marca em formato de "V" usando linhas brancas. A espessura
+ *          da marca varia conforme o peso configurado (LIGHT, MEDIUM, HEAVY):
+ *          - LIGHT: uma linha simples
+ *          - MEDIUM: três linhas (linha central + 1 pixel acima e abaixo)
+ *          - HEAVY: cinco linhas (linha central + 2 pixels acima e abaixo)
+ *          Usa os pontos calculados em setup() para criar o desenho.
  */
 void CheckBox::drawCheckmark() {
 
@@ -264,7 +310,10 @@ void CheckBox::drawCheckmark() {
 }
 
 /**
- * @brief Draws the checkbox border.
+ * @brief Desenha a borda do checkbox.
+ * @details Desenha múltiplas bordas concêntricas ao redor do checkbox para criar
+ *          a aparência de uma borda mais larga. O número de bordas é controlado por
+ *          m_borderWidth. Usa a cor retornada por getBorderColor().
  */
 void CheckBox::drawBorder() {
   
@@ -281,8 +330,11 @@ void CheckBox::drawBorder() {
 // isInitialized() is inherited from WidgetBase
 
 /**
- * @brief Sets a new size for the checkbox.
- * @param newSize The new size (width and height).
+ * @brief Define um novo tamanho para o checkbox.
+ * @param newSize O novo tamanho em pixels (largura e altura serão iguais).
+ * @details Valida que o tamanho está na faixa recomendada (10-100 pixels).
+ *          Se estiver fora da faixa, gera um aviso no log mas aceita o valor.
+ *          Marca o widget para redesenho após a alteração.
  */
 void CheckBox::setSize(uint16_t newSize) {
   CHECK_LOADED_VOID
@@ -299,17 +351,19 @@ void CheckBox::setSize(uint16_t newSize) {
 }
 
 /**
- * @brief Gets the current size of the checkbox.
- * @return The current size.
+ * @brief Obtém o tamanho atual do checkbox.
+ * @return O tamanho atual em pixels.
  */
 uint16_t CheckBox::getSize() const {
   return m_config.size;
 }
 
 /**
- * @brief Sets the colors for the checkbox.
- * @param checkedColor Color when checked.
- * @param uncheckedColor Color when unchecked (0 = auto).
+ * @brief Define as cores do checkbox.
+ * @param checkedColor Cor RGB565 exibida quando o checkbox está marcado.
+ * @param uncheckedColor Cor RGB565 exibida quando o checkbox está desmarcado. Use 0 para automático.
+ * @details Atualiza as cores do checkbox e marca para redesenho. Se uncheckedColor for 0,
+ *          a cor será calculada automaticamente baseada no modo claro/escuro em tempo de execução.
  */
 void CheckBox::setColors(uint16_t checkedColor, uint16_t uncheckedColor) {
   CHECK_LOADED_VOID

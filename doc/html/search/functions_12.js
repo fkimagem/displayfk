@@ -1,6 +1,25 @@
 var searchData=
 [
-  ['widgetbase_0',['WidgetBase',['../class_widget_base.html#acb6b8202a24c922a6a7392ed86ef74d0',1,'WidgetBase']]],
-  ['wkeyboard_1',['WKeyboard',['../class_w_keyboard.html#a8c498779b6abc79081d3262b18de5c52',1,'WKeyboard::WKeyboard(uint16_t _x, uint16_t _y, uint8_t _screen)'],['../class_w_keyboard.html#a04b9578066f6d3607e5aef96df5a68ee',1,'WKeyboard::WKeyboard()']]],
-  ['writefile_2',['writeFile',['../class_display_f_k.html#aee1ab84561d721ece98fd5188c15fb33',1,'DisplayFK']]]
+  ['tamc_5fgt911_0',['TAMC_GT911',['../class_t_a_m_c___g_t911.html#a7cf6de3a6c5ccee732983899d20aad6d',1,'TAMC_GT911']]],
+  ['taskeventotouch_1',['TaskEventoTouch',['../class_display_f_k.html#a2e418d9092a5ee97dbcc750db22ecc33',1,'DisplayFK']]],
+  ['taskprocessbutton_2',['TaskProcessButton',['../esp32__tasks_8ino.html#a650d7115b2718031f63a864f92412256',1,'esp32_tasks.ino']]],
+  ['taskprocesstouch_3',['TaskProcessTouch',['../esp32__tasks_8ino.html#a1a055c6aefc9a083f4c8d0e907b9e204',1,'esp32_tasks.ino']]],
+  ['textbox_4',['TextBox',['../class_text_box.html#a215ebe6e6c6add97aea63d67566a7431',1,'TextBox::TextBox(uint16_t _x, uint16_t _y, uint8_t _screen)'],['../class_text_box.html#a25b67e5ff6788c60b8aef3f3540879d0',1,'TextBox::TextBox()']]],
+  ['textbutton_5',['TextButton',['../class_text_button.html#ac1d8d1c7e72f1627504a996513b8d69b',1,'TextButton']]],
+  ['thermometer_6',['Thermometer',['../class_thermometer.html#a656beef53f3cd7f9dc4269977dab4c7d',1,'Thermometer']]],
+  ['tofloat_7',['toFloat',['../class_char_string.html#a147b294fcfc6e6a3152590d9f4ece9aa',1,'CharString']]],
+  ['togglebutton_8',['ToggleButton',['../class_toggle_button.html#a8fc3788fe5e4403652b61a2df87bc2a5',1,'ToggleButton']]],
+  ['toint_9',['toInt',['../class_char_string.html#a13fdb6e6ffc108514de6ab2ead9fb1af',1,'CharString']]],
+  ['tostring_10',['toString',['../struct_image_from_file_config.html#af3da34eb396e18f41df8ed3019f25757',1,'ImageFromFileConfig']]],
+  ['touch_11',['touch',['../esp32__tasks_8ino.html#a966bdf19b0c81dbf4caaea587018b5e7',1,'touch(TPoint p, TEvent e):&#160;esp32_tasks.ino'],['../general_8ino.html#a966bdf19b0c81dbf4caaea587018b5e7',1,'touch(TPoint p, TEvent e):&#160;general.ino'],['../_basic_test_8ino.html#a6bedd1530d4d511dfd542e3297cb0e11',1,'touch(TP_I2C_SDA, TP_I2C_SCL, TP_RST, TP_INT):&#160;BasicTest.ino']]],
+  ['touch_5fgsl3680_5fi2c_5fread_12',['touch_gsl3680_i2c_read',['../esp__lcd__gsl3680_8c.html#a5a76ca51e70e1862fd848c408902b6f2',1,'esp_lcd_gsl3680.c']]],
+  ['touch_5fgsl3680_5fi2c_5fwrite_13',['touch_gsl3680_i2c_write',['../esp__lcd__gsl3680_8c.html#a1e885ae8d1802985315aee8e9db6df29',1,'esp_lcd_gsl3680.c']]],
+  ['touch_5fgsl3680_5fread_5fcfg_14',['touch_gsl3680_read_cfg',['../esp__lcd__gsl3680_8c.html#a41aa0fb11e091a532228c6369eb00bdd',1,'esp_lcd_gsl3680.c']]],
+  ['touch_5fgsl3680_5freset_15',['touch_gsl3680_reset',['../esp__lcd__gsl3680_8c.html#a720293f09bbf0c5ba9688cbe139db9c8',1,'esp_lcd_gsl3680.c']]],
+  ['touch_5finit_16',['touch_init',['../class_touch_screen.html#a5e0cd4a6f38e2bfb20207cabc692fb3b',1,'TouchScreen']]],
+  ['toucharea_17',['TouchArea',['../class_touch_area.html#aa8ccf42d090530298b6f5152de5341ab',1,'TouchArea']]],
+  ['touched_18',['touched',['../class_f_t6236.html#a469b067c8bd4597435c5a42078ca9893',1,'FT6236::touched()'],['../class_f_t6_x36.html#a9907a798091fcc2fbfeee81a4fea0029',1,'FT6X36::touched()']]],
+  ['touchscreen_19',['TouchScreen',['../class_touch_screen.html#a2f53dd6e5a0faf003bcf333ec37975ed',1,'TouchScreen']]],
+  ['tp_5fpoint_20',['TP_Point',['../class_t_p___point.html#aa424e95087bce549237b3d453be44068',1,'TP_Point::TP_Point(void)'],['../class_t_p___point.html#ab4d0a1b21b705e5a2f0901cc60c14886',1,'TP_Point::TP_Point(uint8_t id, uint16_t x, uint16_t y, uint16_t size)']]],
+  ['ts_5fpoint_21',['TS_Point',['../class_t_s___point.html#a6a3f33f1b9b5933f97c70891098043af',1,'TS_Point::TS_Point(void)'],['../class_t_s___point.html#abc507821e30633436cd186c87f7531ad',1,'TS_Point::TS_Point(int16_t x, int16_t y, int16_t z)']]]
 ];

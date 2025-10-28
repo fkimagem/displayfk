@@ -3,31 +3,25 @@
 
 #include "../widgetbase.h"
 
-/// @brief Configuration structure for ToggleButton
+/// @brief Estrutura de configuração para o ToggleButton.
+/// @details Esta estrutura contém todos os parâmetros necessários para configurar um botão toggle.
+///          Deve ser preenchida e passada para o método setup().
 struct ToggleButtonConfig {
-  uint16_t width;         ///< Width of the button
-  uint16_t height;        ///< Height of the button
-  uint16_t pressedColor;  ///< Color displayed when the button is toggled on
-  functionCB_t callback;  ///< Callback function to execute when the button is toggled
+  uint16_t width;         ///< Largura do botão.
+  uint16_t height;        ///< Altura do botão.
+  uint16_t pressedColor;  ///< Cor exibida quando o botão está ligado.
+  functionCB_t callback;  ///< Função callback para executar quando o botão é alternado.
 };
 
-/// @brief Represents a toggle button widget with customizable size and color, which switches state on each press.
+/// @brief Representa um widget de botão toggle que alterna entre estado ligado e desligado a cada toque.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar
+///          botões toggle interativos na tela. O ToggleButton desenha um botão com uma bola deslizante
+///          que move da esquerda para direita quando ligado e da direita para esquerda quando desligado.
+///          O widget pode ser configurado com diferentes tamanhos, cores e callbacks.
+///          O botão toggle é totalmente funcional com suporte a toque em displays capacitivos e touchscreen,
+///          alternando o estado visual e disparando callbacks.
 class ToggleButton : public WidgetBase
 {
-private:
-  static const char* TAG; ///< Tag for logging
-  unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
-  uint16_t m_width; ///< Width of the ToggleButton.
-  uint16_t m_height; ///< Height of the ToggleButton.
-  uint16_t m_pressedColor; ///< Color displayed when the button is toggled on.
-  bool m_status; ///< Current on/off status of the button.
-  bool m_shouldRedraw = false; ///< Flag to indicate if the button should be redrawn.
-  bool m_enabled;
-
-  void start();
-  void setup(uint16_t _width, uint16_t _height, uint16_t _pressedColor, functionCB_t _cb);
-  Arduino_Canvas *m_canvas = nullptr;
-  void blitRowFromCanvas(int x, int y, int w);
 public:
   ToggleButton(uint16_t _x, uint16_t _y, uint8_t _screen);
   ~ToggleButton();
@@ -43,5 +37,15 @@ public:
   void setStatus(bool status);
   void show() override;
   void hide() override;
+
+private:
+  static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
+  bool m_status; ///< Status atual ligado/desligado do botão.
+  ToggleButtonConfig m_config; ///< Estrutura de configuração para o ToggleButton.
+
+  void cleanupMemory();
+  void start();
+  void setup(uint16_t _width, uint16_t _height, uint16_t _pressedColor, functionCB_t _cb);
+  void blitRowFromCanvas(int x, int y, int w);
 };
 #endif

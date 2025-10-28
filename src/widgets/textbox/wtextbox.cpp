@@ -3,26 +3,26 @@
 const char* TextBox::TAG = "[TextBox]";
 
 /**
- * @brief Constructor for the TextBox class.
- * @param _x X-coordinate for the TextBox position.
- * @param _y Y-coordinate for the TextBox position.
- * @param _screen Screen identifier where the TextBox will be displayed.
+ * @brief Construtor para a classe TextBox.
+ * @param _x Coordenada X para a posição do TextBox.
+ * @param _y Coordenada Y para a posição do TextBox.
+ * @param _screen Identificador da tela onde o TextBox será exibido.
+ * @details Inicializa o widget com valores padrão (padding 3) e configuração vazia.
+ *          A caixa de texto não será funcional até que setup() seja chamado.
  */
 TextBox::TextBox(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_padding(3), m_shouldRedraw(true) {}
 
 /**
- * @brief Default constructor for TextBox.
- *
- * Creates a TextBox at position (0,0) on screen 0.
+ * @brief Construtor padrão para o TextBox.
+ * @details Cria um TextBox na posição (0,0) na tela 0.
  */
 TextBox::TextBox() : WidgetBase(0, 0, 0) {}
 
 /**
- * @brief Destructor for the TextBox class.
- *
- * Clears pointers to font, parent screen function, and callback function.
- * The CharString object manages its own memory cleanup.
+ * @brief Destrutor da classe TextBox.
+ * @details Limpa ponteiros para fonte, função de tela pai e função callback.
+ *          O objeto CharString gerencia sua própria limpeza de memória.
  */
 TextBox::~TextBox() {
 // A classe CharString cuida de sua própria memória
@@ -35,12 +35,12 @@ TextBox::~TextBox() {
 }
 
 /**
- * @brief Detects if the TextBox has been touched.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is within the TextBox area, otherwise false.
- *
- * When touched, activates the virtual keyboard mode for text input.
+ * @brief Detecta se o TextBox foi tocado.
+ * @param _xTouch Ponteiro para a coordenada X do toque.
+ * @param _yTouch Ponteiro para a coordenada Y do toque.
+ * @return True se o toque está dentro da área do TextBox, False caso contrário.
+ * @details Quando tocado, ativa o modo de teclado virtual para entrada de texto.
+ *          Valida visibilidade, uso de teclado, tela atual, carregamento, debounce, habilitado e bloqueado.
  */
 bool TextBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   CHECK_VISIBLE_BOOL
@@ -73,16 +73,21 @@ bool TextBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 }
 
 /**
- * @brief Retrieves the callback function associated with the TextBox.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao TextBox.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o TextBox for utilizado.
  */
 functionCB_t TextBox::getCallbackFunc() { return m_callback; }
 
 /**
- * @brief Redraws the TextBox on the screen, updating its appearance.
- *
- * Displays the current text value with appropriate font and styling.
- * Only redraws if the TextBox is on the current screen and needs updating.
+ * @brief Redesenha o TextBox na tela, atualizando sua aparência.
+ * @details Exibe o valor de texto atual com fonte e estilo apropriados.
+ *          Apenas redesenha se o TextBox estiver na tela atual e precisar atualização:
+ *          - Valida visibilidade, TFT, tela atual, carregamento e flag de redesenho
+ *          - Configura fonte (usando fonte configurada ou padrão)
+ *          - Desenha retângulo de fundo com cor de fundo
+ *          - Desenha borda com cor de letra
+ *          - Exibe texto com formatação para caber no espaço disponível
  */
 void TextBox::redraw() {
   CHECK_TFT_VOID
@@ -127,9 +132,9 @@ void TextBox::redraw() {
 }
 
 /**
- * @brief Configures the TextBox widget with specific parameters from a
- * configuration struct.
- * @param config The configuration struct containing all setup parameters.
+ * @brief Configura o widget TextBox com parâmetros específicos de uma estrutura de configuração.
+ * @param config A estrutura de configuração contendo todos os parâmetros de setup.
+ * @details Este método delega para o método setup() com parâmetros individuais.
  */
 void TextBox::setup(const TextBoxConfig &config) {
   CHECK_TFT_VOID
@@ -140,19 +145,17 @@ void TextBox::setup(const TextBoxConfig &config) {
 }
 
 /**
- * @brief Configures the TextBox widget with specific dimensions, colors, and
- * initial value.
- * @param _width Width of the TextBox.
- * @param _height Height of the TextBox.
- * @param _letterColor Color for the text displaying the value.
- * @param _backgroundColor Background color of the TextBox.
- * @param _startValue Initial text value to display.
- * @param _font Font to use for the text.
- * @param _funcPtr Function pointer to the parent screen's load function.
- * @param _cb Callback function to execute on interaction.
- *
- * Initializes the TextBox properties and marks it as loaded when complete.
- * Adjusts height based on font metrics if a font is specified.
+ * @brief Configura o widget TextBox com dimensões, cores e valor inicial específicos.
+ * @param _width Largura da caixa de texto.
+ * @param _height Altura da caixa de texto.
+ * @param _letterColor Cor para o texto exibindo o valor.
+ * @param _backgroundColor Cor de fundo da caixa de texto.
+ * @param _startValue Valor de texto inicial para exibir.
+ * @param _font Fonte para usar no texto.
+ * @param _funcPtr Ponteiro de função para a função de carregamento da tela pai.
+ * @param _cb Função callback para executar na interação.
+ * @details Inicializa as propriedades do TextBox e o marca como carregado quando completo.
+ *          Ajusta altura baseado em métricas de fonte se uma fonte for especificada.
  */
 #if defined(USING_GRAPHIC_LIB)
 void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
@@ -188,10 +191,11 @@ void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
 #endif
 
 /**
- * @brief Sets the text value displayed by the TextBox.
- * @param str Text value to set.
- *
- * Updates the displayed text and marks the TextBox for redraw.
+ * @brief Define o valor de texto exibido pelo TextBox.
+ * @param str Valor de texto para definir.
+ * @details Atualiza o texto exibido e marca o TextBox para redesenho:
+ *          - Define string de valor usando setString()
+ *          - Marca para redesenho usando forceUpdate()
  */
 void TextBox::setValue(const char *str) {
   m_value.setString(str, true);
@@ -200,23 +204,31 @@ void TextBox::setValue(const char *str) {
 }
 
 /**
- * @brief Forces the TextBox to redraw.
- *
- * Sets the flag to redraw the TextBox on the next redraw cycle.
+ * @brief Força o TextBox a atualizar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
  */
 void TextBox::forceUpdate() { m_shouldRedraw = true; }
 
 /**
- * @brief Retrieves the current text value of the TextBox.
- * @return Pointer to the string representation of the current value.
+ * @brief Recupera o valor de texto atual do TextBox.
+ * @return Ponteiro para a representação em string do valor atual.
+ * @details Retorna ponteiro para a string interna que representa o valor.
  */
 const char *TextBox::getValue() { return m_value.getString(); }
 
+/**
+ * @brief Torna o TextBox visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void TextBox::show() {
   m_visible = true;
   m_shouldRedraw = true;
 }
 
+/**
+ * @brief Oculta o TextBox da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void TextBox::hide() {
   m_visible = false;
   m_shouldRedraw = true;

@@ -3,25 +3,24 @@
 
 #include "../widgetbase.h"
 
-/// @brief Configuration structure for TouchArea
+/// @brief Estrutura de configuração para o TouchArea.
+/// @details Esta estrutura contém todos os parâmetros necessários para configurar uma área de toque.
+///          Deve ser preenchida e passada para o método setup().
 struct TouchAreaConfig {
-  uint16_t width;         ///< Width of the TouchArea
-  uint16_t height;        ///< Height of the TouchArea
-  functionCB_t callback;  ///< Callback function to execute when the area is touched
+  uint16_t width;         ///< Largura da área de toque.
+  uint16_t height;        ///< Altura da área de toque.
+  functionCB_t callback;  ///< Função callback para executar quando a área é tocada.
 };
 
-/// @brief Represents a touch-sensitive area widget with customizable size and status tracking.
+/// @brief Representa um widget de área sensível ao toque com tamanho customizável e rastreamento de status.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar
+///          áreas sensíveis ao toque invisíveis na tela. O TouchArea define uma região retangular que
+///          detecta toques e executa callbacks, mas não renderiza nenhuma aparência visual.
+///          O widget pode ser configurado com diferentes tamanhos e callbacks.
+///          O TouchArea é totalmente funcional com suporte a toque em displays capacitivos e touchscreen,
+///          detectando toques dentro de sua área e disparando callbacks.
 class TouchArea : public WidgetBase
 {
-private:
-  static const char* TAG; ///< Tag for logging
-  uint16_t m_width; ///< Width of the TouchArea.
-  uint16_t m_height; ///< Height of the TouchArea.
-  bool m_status; ///< Current status of the TouchArea.
-  bool m_shouldRedraw = false; ///< Flag indicating if the TouchArea should be redrawn.
-
-  void setup(uint16_t _width, uint16_t _height, functionCB_t _cb);
-
 public:
   TouchArea(uint16_t _x, uint16_t _y, uint8_t _screen);
   ~TouchArea();
@@ -35,6 +34,14 @@ public:
   void onClick();
   void hide() override;
   void show() override;
+
+private:
+  static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
+  bool m_status; ///< Status atual do TouchArea.
+  TouchAreaConfig m_config; ///< Estrutura de configuração para o TouchArea.
+
+  void cleanupMemory();
+  void setup(uint16_t _width, uint16_t _height, functionCB_t _cb);
 };
 
 #endif

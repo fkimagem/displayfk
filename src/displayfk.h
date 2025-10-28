@@ -52,7 +52,12 @@
 #include "check_touch.h"
 
 #include <Arduino.h>
+#if defined(USE_SPIFFS)
 #include "SPIFFS.h"
+#endif
+#if defined(USE_FATFS)
+#include "FFat.h"
+#endif
 #include <FS.h>
 #include <Preferences.h>
 #include <SPI.h>
@@ -302,8 +307,8 @@ public:
 #error "Choose a display model on user_setup.h"
 #endif
 
-    void startTransaction();
-    void finishTransaction();
+    void startCustomDraw();
+    void finishCustomDraw();
     void drawWidgetsOnScreen(const uint8_t currentScreenIndex);
 #if defined(USING_GRAPHIC_LIB)
     void setFontNormal(const GFXfont *_font);
@@ -520,6 +525,7 @@ private:
     bool m_enableWTD = false;
     bool m_watchdogInitialized = false;
     SemaphoreHandle_t m_loopSemaphore;
+    SemaphoreHandle_t m_transactionSemaphore;
     TouchEventType m_lastTouchState = TouchEventType::NONE;
     TouchSwipeDirection m_lastTouchSwipeDirection = TouchSwipeDirection::NONE;
     CoordPoint_t pressPoint = {x: 0, y: 0};

@@ -1,0 +1,6 @@
+var searchData=
+[
+  ['keyboard_0',['Keyboard',['../md__c_1_2arduino__edgewx_2portable_2sketchbook_2libraries_2displayfk_2src_2widgets_2textbox_2doc__textbox.html#autotoc_md850',1,'🏗️ Passo 2: Configurar Cores Globais do Keyboard'],['../md__c_1_2arduino__edgewx_2portable_2sketchbook_2libraries_2displayfk_2src_2widgets_2textbox_2doc__textbox.html#autotoc_md863',1,'🔔 Integração com Keyboard'],['../md__c_1_2arduino__edgewx_2portable_2sketchbook_2libraries_2displayfk_2src_2widgets_2textbox_2doc__keyboard.html#autotoc_md801',1,'🔧 Passo 5: Configurar o Keyboard'],['../md__c_1_2arduino__edgewx_2portable_2sketchbook_2libraries_2displayfk_2src_2widgets_2textbox_2doc__keyboard.html',1,'Documentação da Classe Keyboard']]],
+  ['keyboard_20não_20abre_1',['Keyboard não abre',['../md__c_1_2arduino__edgewx_2portable_2sketchbook_2libraries_2displayfk_2src_2widgets_2textbox_2doc__keyboard.html#autotoc_md823',1,'Keyboard não abre'],['../md__c_1_2arduino__edgewx_2portable_2sketchbook_2libraries_2displayfk_2src_2widgets_2textbox_2doc__textbox.html#autotoc_md877',1,'Keyboard não abre']]],
+  ['keyboardtype_20enum_2',['KeyboardType Enum',['../md__c_1_2arduino__edgewx_2portable_2sketchbook_2libraries_2displayfk_2src_2widgets_2textbox_2doc__keyboard.html#autotoc_md780',1,'']]]
+];

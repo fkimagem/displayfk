@@ -3,26 +3,41 @@
 const char* TouchArea::TAG = "[TouchArea]";
 
 /**
- * @brief Constructor for the TouchArea class.
- * @param _x X-coordinate for the TouchArea position.
- * @param _y Y-coordinate for the TouchArea position.
- * @param _screen Screen identifier where the TouchArea will be displayed.
+ * @brief Construtor do widget TouchArea.
+ * @param _x Coordenada X para a posição do TouchArea.
+ * @param _y Coordenada Y para a posição do TouchArea.
+ * @param _screen Identificador da tela onde o TouchArea será exibido.
+ * @details Inicializa o widget TouchArea com posição e tela especificadas.
  */
 TouchArea::TouchArea(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen) {}
 
 /**
- * @brief Destructor for the TouchArea class.
+ * @brief Limpa recursos alocados pelo TouchArea.
+ * @details Desaloca memória dinâmica e remove referências a objetos.
  */
-TouchArea::~TouchArea() {}
+void TouchArea::cleanupMemory() {
+  // TouchArea não aloca memória dinâmica no momento
+}
 
 /**
- * @brief Detects if the TouchArea has been touched.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is within the TouchArea, otherwise false.
- *
- * Determines if a touch event occurred within the defined area's boundaries.
+ * @brief Destrutor do widget TouchArea.
+ * @details Limpa recursos alocados.
+ */
+TouchArea::~TouchArea() {
+  cleanupMemory();
+}
+
+/**
+ * @brief Detecta se o TouchArea foi tocado.
+ * @param _xTouch Ponteiro para a coordenada X do toque.
+ * @param _yTouch Ponteiro para a coordenada Y do toque.
+ * @return True se o toque está dentro do TouchArea, False caso contrário.
+ * @details Quando tocado, registra o tempo do evento:
+ *          - Valida visibilidade, uso de teclado, tela atual, carregamento, debounce, habilitado, bloqueado e ponteiro de toque
+ *          - Detecta se toque está dentro dos bounds do TouchArea
+ *          - Registra timestamp se toque detectado
+ *          - Retorna resultado da detecção
  */
 bool TouchArea::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   CHECK_VISIBLE_BOOL
@@ -34,7 +49,7 @@ bool TouchArea::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   CHECK_LOCKED_BOOL
   CHECK_POINTER_TOUCH_NULL_BOOL
 
-  bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_width, m_height);
+  bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_config.width, m_config.height);
   if(inBounds) {
     m_myTime = millis();
   }
@@ -43,15 +58,17 @@ bool TouchArea::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 }
 
 /**
- * @brief Retrieves the callback function associated with the TouchArea.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao TouchArea.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o TouchArea for tocado.
  */
 functionCB_t TouchArea::getCallbackFunc() { return m_callback; }
 
 /**
- * @brief Redraws the TouchArea on the screen.
- *
- * Empty implementation since TouchArea is invisible by default.
+ * @brief Redesenha o TouchArea na tela.
+ * @details Implementação vazia pois o TouchArea é invisível por padrão:
+ *          - Valida se o widget está visível
+ *          - Não desenha nada na tela
  */
 void TouchArea::redraw() {
   if (!m_visible) {
@@ -60,10 +77,11 @@ void TouchArea::redraw() {
 }
 
 /**
- * @brief Simulates a click on the TouchArea.
- *
- * Triggers the callback function as if the area was touched.
- * Useful for programmatically activating the touch area.
+ * @brief Simula um clique no TouchArea.
+ * @details Dispara a função callback como se a área fosse tocada:
+ *          - Valida se widget está carregado
+ *          - Adiciona callback à fila se não for nullptr
+ *          - Útil para ativar a área de toque programaticamente
  */
 void TouchArea::onClick() {
 #if defined(DFK_TOUCHAREA)
@@ -77,37 +95,17 @@ void TouchArea::onClick() {
 #endif
 }
 
-/**
- * @brief Configures the TouchArea with specific dimensions and a callback
- * function.
- * @param _width Width of the TouchArea.
- * @param _height Height of the TouchArea.
- * @param _cb Callback function to execute when the area is touched.
- *
- * Initializes the TouchArea properties and marks it as loaded when complete.
- */
-void TouchArea::setup(uint16_t _width, uint16_t _height, functionCB_t _cb) {
-  if (!WidgetBase::objTFT) {
-    ESP_LOGE(TAG, "TFT not defined on WidgetBase");
-    return;
-  }
-  if (m_loaded) {
-    ESP_LOGD(TAG, "TouchArea widget already configured");
-    return;
-  }
-  m_width = _width;
-  m_height = _height;
-  m_callback = _cb;
-  m_loaded = true;
-}
 
 /**
- * @brief Configures the TouchArea with parameters defined in a configuration
- * structure.
- * @param config Structure containing the touch area configuration parameters.
+ * @brief Configura o TouchArea com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref TouchAreaConfig contendo os parâmetros de configuração da área de toque.
+ * @details Chama método setup() com parâmetros individuais da configuração.
  */
 void TouchArea::setup(const TouchAreaConfig &config) {
-  setup(config.width, config.height, config.callback);
+  m_config = config;
+  m_callback = config.callback;
+  m_loaded = true;
+  m_initialized = true;
 }
 
 /**
@@ -120,19 +118,32 @@ void TouchArea::changeState() {
 }
 
 /**
- * @brief Retrieves the current status of the TouchArea.
- * @return Current status of the touch area.
+ * @brief Recupera o status atual do TouchArea.
+ * @return Status atual da área de toque.
+ * @details Consulta o status interno da área de toque.
  */
 bool TouchArea::getStatus() { return m_status; }
 
+/**
+ * @brief Torna o TouchArea visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void TouchArea::show() {
   m_visible = true;
   m_shouldRedraw = true;
 }
 
+/**
+ * @brief Oculta o TouchArea da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void TouchArea::hide() {
   m_visible = false;
   m_shouldRedraw = true;
 }
 
+/**
+ * @brief Força o TouchArea a atualizar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
+ */
 void TouchArea::forceUpdate() { m_shouldRedraw = true; }

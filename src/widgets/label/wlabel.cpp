@@ -4,10 +4,12 @@
 const char* Label::TAG = "Label";
 
 /**
- * @brief Constructor for the Label class.
- * @param _x X-coordinate for the Label position.
- * @param _y Y-coordinate for the Label position.
- * @param _screen Screen identifier where the Label will be displayed.
+ * @brief Construtor da classe Label.
+ * @param _x Coordenada X para a posição do Label.
+ * @param _y Coordenada Y para a posição do Label.
+ * @param _screen Identificador da tela onde o Label será exibido.
+ * @details Inicializa o widget com valores padrão e configuração vazia.
+ *          O rótulo não será funcional até que setup() seja chamado.
  */
 Label::Label(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen),
 m_text(nullptr),
@@ -24,9 +26,9 @@ m_decimalPlaces(1)
 }
 
 /**
- * @brief Cleans up allocated memory before new assignment.
- * 
- * Frees all dynamically allocated memory for text, prefix, and suffix.
+ * @brief Limpa memória alocada antes de nova atribuição.
+ * @details Libera toda memória alocada dinamicamente para texto, prefixo e sufixo.
+ *          Este método é chamado automaticamente por setup() e pelo destrutor.
  */
 void Label::cleanupMemory()
 {
@@ -56,9 +58,9 @@ void Label::cleanupMemory()
 }
 
 /**
- * @brief Destructor for the Label class.
- * 
- * Frees allocated memory for text, previous text, and clears font pointer.
+ * @brief Destrutor da classe Label.
+ * @details Libera memória alocada para texto, texto anterior e limpa ponteiro de fonte.
+ *          Chama cleanupMemory() para garantir que toda memória seja liberada corretamente.
  */
 Label::~Label()
 {
@@ -72,10 +74,12 @@ Label::~Label()
 }
 
 /**
- * @brief Detects if the Label has been touched.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return Always returns false as labels don't respond to touch events.
+ * @brief Detecta se o Label foi tocado.
+ * @param _xTouch Ponteiro para a coordenada X do toque na tela.
+ * @param _yTouch Ponteiro para a coordenada Y do toque na tela.
+ * @return Sempre retorna False, pois labels não respondem a eventos de toque.
+ * @details Este método é implementado para conformidade com a interface de WidgetBase
+ *          mas não processa toques, já que labels são elementos apenas visuais.
  */
 bool Label::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
@@ -83,15 +87,23 @@ bool Label::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 }
 
 /**
- * @brief Retrieves the callback function associated with the Label.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao Label.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o rótulo for tocado.
+ *          Note que labels não detectam toques por padrão.
  */
 functionCB_t Label::getCallbackFunc()
 {
     return m_callback;
 }
 
-void Label::setPrefix(const char* str){ 
+/**
+ * @brief Define o texto de prefixo do rótulo.
+ * @param str Texto do prefixo (nullptr para remover o prefixo).
+ * @details Define o prefixo que será exibido antes do texto principal.
+ *          Libera memória anterior do prefixo se existir e aloca nova memória para o novo prefixo.
+ */
+void Label::setPrefix(const char* str){   
   if(m_prefix){
     delete[] m_prefix;
     m_prefix = nullptr;
@@ -108,6 +120,12 @@ void Label::setPrefix(const char* str){
   }
 }
 
+/**
+ * @brief Define o texto de sufixo do rótulo.
+ * @param str Texto do sufixo (nullptr para remover o sufixo).
+ * @details Define o sufixo que será exibido após o texto principal.
+ *          Libera memória anterior do sufixo se existir e aloca nova memória para o novo sufixo.
+ */
 void Label::setSuffix(const char* str){
   if(m_suffix){
     delete[] m_suffix;
@@ -126,10 +144,14 @@ void Label::setSuffix(const char* str){
 }
 
 /**
- * @brief Sets the text for the label.
- * @param str String to set as the label text.
- * 
- * Applies prefix and suffix to the provided string and updates the label.
+ * @brief Define o texto do rótulo.
+ * @param str String a ser definida como texto do rótulo.
+ * @details Aplica prefixo e sufixo à string fornecida e atualiza o rótulo:
+ *          - Libera memória anterior do texto
+ *          - Calcula tamanho total necessário (texto + prefixo + sufixo)
+ *          - Aloca nova memória e concatena prefixo, texto e sufixo
+ *          - Marca para redesenho se bem-sucedido
+ *          Se a alocação falhar, limpa prefixo e sufixo para prevenir memória órfã.
  */
 void Label::setText(const char* str)
 {
@@ -177,10 +199,9 @@ void Label::setText(const char* str)
 }
 
 /**
- * @brief Sets the text for the label.
- * @param str String object to set as the label text.
- * 
- * Converts String object to C-string and calls the char* version of setText.
+ * @brief Define o texto do rótulo.
+ * @param str Objeto String a ser definido como texto do rótulo.
+ * @details Converte o objeto String para C-string e chama a versão char* de setText.
  */
 void Label::setText(const String &str)
 {
@@ -188,11 +209,13 @@ void Label::setText(const String &str)
 }
 
 /**
- * @brief Sets the text for the label as a formatted float value.
- * @param value Float value to set as the label text.
- * @param decimalPlaces Amount of decimal places to show.
- * 
- * Converts the float to a string with specified decimal places and updates the label.
+ * @brief Define o texto do rótulo como um valor float formatado.
+ * @param value Valor float a ser definido como texto do rótulo.
+ * @param decimalPlaces Quantidade de casas decimais a mostrar.
+ * @details Converte o float para string com casas decimais especificadas e atualiza o rótulo:
+ *          - Atualiza o número de casas decimais usando setDecimalPlaces()
+ *          - Usa dtostrf() para converter float para string com formatação
+ *          - Chama setText() para atualizar o texto do rótulo
  */
 void Label::setTextFloat(float value, uint8_t decimalPlaces)
 {
@@ -214,10 +237,11 @@ void Label::setTextFloat(float value, uint8_t decimalPlaces)
 }
 
 /**
- * @brief Sets the text for the label as an integer value.
- * @param value Integer value to set as the label text.
- * 
- * Converts the integer to a string and updates the label.
+ * @brief Define o texto do rótulo como um valor inteiro.
+ * @param value Valor inteiro a ser definido como texto do rótulo.
+ * @details Converte o inteiro para string e atualiza o rótulo:
+ *          - Usa sprintf() para converter inteiro para string
+ *          - Chama setText() para atualizar o texto do rótulo
  */
 void Label::setTextInt(int value)
 {
@@ -228,10 +252,14 @@ void Label::setTextInt(int value)
 }
 
 /**
- * @brief Redraws the label on the screen, updating its appearance.
- * 
- * Renders the current text with specified font and colors.
- * Updates display based on the current screen mode.
+ * @brief Redesenha o rótulo na tela, atualizando sua aparência.
+ * @details Renderiza o texto atual com fonte e cores especificadas:
+ *          - Verifica todas as condições necessárias para o redesenho
+ *          - Define cor do texto, fonte e tamanho
+ *          - Usa printText() para renderizar com alinhamento e fundo apropriados
+ *          - Restaura configurações de fonte e tamanho
+ *          Apenas redesenha se o rótulo está visível, na tela atual,
+ *          carregado e a flag m_shouldRedraw está configurada como true.
  */
 void Label::redraw()
 {
@@ -259,7 +287,9 @@ void Label::redraw()
 }
 
 /**
- * @brief Forces the label to update, refreshing its visual state on next redraw.
+ * @brief Força o rótulo a atualizar, refrescando seu estado visual no próximo redesenho.
+ * @details Define a flag m_shouldRedraw como true para garantir que o widget
+ *          seja redesenhado na próxima oportunidade.
  */
 void Label::forceUpdate()
 {
@@ -267,8 +297,10 @@ void Label::forceUpdate()
 }
 
 /**
- * @brief Defines how many decimal places the string will show.
- * @param places Amount (Must be between 0 and 5).
+ * @brief Define quantas casas decimais a string vai mostrar.
+ * @param places Quantidade (deve estar entre 0 e 5).
+ * @details Restringe o valor para a faixa válida (0-5) usando constrain().
+ *          Se o valor mudou, atualiza a variável m_decimalPlaces e registra no log.
  */
 void Label::setDecimalPlaces(uint8_t places)
 {
@@ -280,8 +312,9 @@ void Label::setDecimalPlaces(uint8_t places)
 }
 
 /**
- * @brief Defines the font size.
- * @param newSize Size to set for the font.
+ * @brief Define o tamanho da fonte.
+ * @param newSize Tamanho a ser definido para a fonte.
+ * @details Define diretamente o tamanho da fonte que será usado na renderização do texto.
  */
 void Label::setFontSize(uint8_t newSize)
 {
@@ -289,8 +322,16 @@ void Label::setFontSize(uint8_t newSize)
 }
 
 /**
- * @brief Configures the Label widget with parameters defined in a configuration structure.
- * @param config Structure containing the label configuration parameters.
+ * @brief Configura o widget Label com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref LabelConfig contendo os parâmetros de configuração do rótulo.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Verifica se TFT está definido e se widget já está carregado
+ *          - Limpa memória existente usando cleanupMemory()
+ *          - Copia texto, prefixo e sufixo para buffers internos com validação de tamanho
+ *          - Atribui configuração de fonte, alinhamento e cores
+ *          - Inicializa área do último texto desenhado
+ *          - Marca o widget como inicializado e carregado
+ *          O rótulo não será exibido corretamente até que este método seja chamado.
  */
 void Label::setup(const LabelConfig& config)
 {
@@ -364,12 +405,20 @@ void Label::setup(const LabelConfig& config)
     m_loaded = true;
 }
 
+/**
+ * @brief Torna o rótulo visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void Label::show()
 {
     m_visible = true;
     m_shouldRedraw = true;
 }
 
+/**
+ * @brief Oculta o rótulo da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void Label::hide()
 {
     m_visible = false;

@@ -3,36 +3,29 @@
 
 #include "../widgetbase.h"
 
-/// @brief Configuration structure for Label
+/// @brief Estrutura de configuração para o Label.
+/// @details Esta estrutura contém todos os parâmetros necessários para configurar um rótulo de texto.
+///          Deve ser preenchida e passada para o método setup().
 struct LabelConfig {
-  const char* text;          ///< Initial text to display
+  const char* text;          ///< Texto inicial a ser exibido.
   #if defined(USING_GRAPHIC_LIB)
-  const GFXfont* fontFamily; ///< Pointer to the font used for the text
+  const GFXfont* fontFamily; ///< Ponteiro para a fonte usada para o texto.
   #endif
-  uint16_t datum;            ///< Text alignment setting
-  uint16_t fontColor;            ///< Color of the text
-  uint16_t backgroundColor;          ///< Background color of the label
-  const char* prefix;        ///< Prefix text to display
-  const char* suffix;        ///< Suffix text to display
+  uint16_t datum;            ///< Configuração de alinhamento do texto.
+  uint16_t fontColor;        ///< Cor do texto.
+  uint16_t backgroundColor;  ///< Cor de fundo do rótulo.
+  const char* prefix;        ///< Texto de prefixo a ser exibido.
+  const char* suffix;        ///< Texto de sufixo a ser exibido.
 };
 
-/// @brief Represents a text label widget with customizable font and colors.
+/// @brief Widget de rótulo de texto com fonte e cores personalizáveis.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar 
+///          rótulos de texto interativos na tela. O Label pode exibir texto simples, inteiros, floats
+///          com casas decimais configuráveis, prefixos e sufixos. Suporta diferentes fontes, cores de
+///          texto e fundo, alinhamento e tamanhos de fonte. O widget é totalmente funcional com
+///          gerenciamento inteligente de memória para strings dinâmicas.
 class Label : public WidgetBase
 {
-private:
-  static const char* TAG;
-  char *m_text = nullptr; ///< Pointer to the current text displayed by the label.
-  char* m_previousText = nullptr; ///< Pointer to the previously displayed text for comparison.
-  char* m_prefix = nullptr; ///< Pointer to the prefix text displayed by the label.
-  char* m_suffix = nullptr; ///< Pointer to the suffix text displayed by the label.
-  
-  bool m_shouldRedraw = false; ///< Flag indicating if the label should be redrawn.
-  TextBound_t m_lastArea = {0, 0, 0, 0}; ///< Last calculated area for the label.
-  uint8_t m_fontSize;///< Font size
-  uint8_t m_decimalPlaces;///< Number of decimal places to display
-  LabelConfig m_config; ///< Configuration structure for the label
-
-  void cleanupMemory(); ///< Cleans up allocated memory before new assignment
 public:
   Label(uint16_t _x, uint16_t _y, uint8_t _screen);
   ~Label();
@@ -51,8 +44,20 @@ public:
   void setup(const LabelConfig& config);
   void show() override;
   void hide() override;
+
+private:
+  static const char* TAG;
+  char *m_text = nullptr; ///< Ponteiro para o texto atual exibido pelo rótulo.
+  char* m_previousText = nullptr; ///< Ponteiro para o texto anteriormente exibido para comparação.
+  char* m_prefix = nullptr; ///< Ponteiro para o texto de prefixo exibido pelo rótulo.
+  char* m_suffix = nullptr; ///< Ponteiro para o texto de sufixo exibido pelo rótulo.
+  bool m_shouldRedraw = false; ///< Flag indicando se o rótulo deve ser redesenhado.
+  TextBound_t m_lastArea = {0, 0, 0, 0}; ///< Última área calculada para o rótulo.
+  uint8_t m_fontSize; ///< Tamanho da fonte.
+  uint8_t m_decimalPlaces; ///< Número de casas decimais para exibir.
+  LabelConfig m_config; ///< Estrutura contendo configuração completa do rótulo.
   
-  //void setup(const int _value, const GFXfont *_fontFamily, uint16_t _datum, uint16_t _color, uint16_t _bkColor);
+  void cleanupMemory();
 };
 
 #endif

@@ -52,7 +52,7 @@ void homepng_cb();
 
 Arduino_ESP32DSIPanel *bus = nullptr;
 Arduino_DSI_Display *tft = nullptr;
-uint8_t rotationScreen = 2; // This value can be changed depending of orientation of your screen
+uint8_t rotationScreen = 0; // This value can be changed depending of orientation of your screen
 DisplayFK myDisplay;
 // Create global objects. Constructor is: xPos, yPos and indexScreen
 // Create global objects. Constructor is: xPos, yPos and indexScreen
@@ -152,16 +152,16 @@ void setup(){
     myDisplay.enableTouchLog();
     //myDisplay.setupAutoClick(2000, 100, 100); // Setup auto click
     //myDisplay.startAutoClick(); // Start auto click
-    loadWidgets(); // This function is used to setup with widget individualy
+    //loadWidgets(); // This function is used to setup with widget individualy
     //WidgetBase::loadScreen = screen0; // Use this line to change between screens
     myDisplay.loadScreen(screen0);
     myDisplay.createTask(false, 3); // Initialize the task to read touch and draw
 }
 
 void loop(){
-    /*int r = random(0,100);
+    int r = random(0,100);
     int j = random(0,100);
-    myDisplay.startTransaction();
+    myDisplay.startCustomDraw();
     widget.setValue(r); //Use this command to change widget value.
     text.setTextInt(r); //Use this command to change widget value.
     led.setState(r > j);
@@ -171,8 +171,83 @@ void loop(){
     vertbar.setValue(r); //Use this command to change widget value.
     circload.setValue(r); //Use this command to change widget value.
     thermometer.setValue(r); //Use this command to change widget value.
-    myDisplay.finishTransaction();*/
+    myDisplay.finishCustomDraw();
     delay(2000);
+}
+
+// Conversão HSV → RGB565 (versão otimizada)
+uint16_t hsvToRgb565Fast(float h, float s, float v) {
+  float r, g, b;
+  int i = int(h * 6.0f);
+  float f = h * 6.0f - i;
+  float p = v * (1.0f - s);
+  float q = v * (1.0f - f * s);
+  float t = v * (1.0f - (1.0f - f) * s);
+
+  switch (i % 6) {
+    case 0: r = v; g = t; b = p; break;
+    case 1: r = q; g = v; b = p; break;
+    case 2: r = p; g = v; b = t; break;
+    case 3: r = p; g = q; b = v; break;
+    case 4: r = t; g = p; b = v; break;
+    default: r = v; g = p; b = q; break;
+  }
+
+  uint16_t R = (uint16_t)(r * 31.0f);
+  uint16_t G = (uint16_t)(g * 63.0f);
+  uint16_t B = (uint16_t)(b * 31.0f);
+  return (R << 11) | (G << 5) | B;
+}
+
+void drawHueCircleDarkCenter(int16_t cx, int16_t cy, uint16_t radius) {
+  const int32_t r2 = radius * radius;
+
+  tft->startWrite();
+
+  for (int16_t dy = -radius; dy <= radius; dy++) {
+    int32_t y2 = dy * dy;
+    for (int16_t dx = -radius; dx <= radius; dx++) {
+      int32_t d2 = dx * dx + y2;
+      if (d2 > r2) continue; // fora do círculo
+
+      // Distância normalizada do centro (0.0 no centro, 1.0 na borda)
+      float dist = sqrtf((float)d2) / radius;
+
+      // Matiz (ângulo)
+      float hue = (atan2f(dy, dx) + PI) / (2.0f * PI);
+
+      // Saturação sempre máxima (1.0), brilho (v) depende da distância
+      float s = 1.0f;
+      float v = dist; // 0 no centro (preto), 1 na borda
+
+      uint16_t color = hsvToRgb565Fast(hue, s, v);
+      tft->writePixel(cx + dx, cy + dy, color);
+    }
+  }
+
+  tft->endWrite();
+}
+
+void drawHueCircle(int16_t cx, int16_t cy, uint16_t radius) {
+  const int32_t r2 = radius * radius;
+
+  tft->startWrite();
+
+  for (int16_t dy = -radius; dy <= radius; dy++) {
+    int32_t y2 = dy * dy;
+    for (int16_t dx = -radius; dx <= radius; dx++) {
+      int32_t d2 = dx * dx + y2;
+      if (d2 > r2) continue;
+
+      float s = sqrtf((float)d2 / (float)r2);           // saturação (0–1)
+      float hue = (atan2f(dy, dx) + PI) / (2.0f * PI);  // matiz (0–1)
+
+      uint16_t color = hsvToRgb565Fast(hue, s, 1.0f);
+      tft->writePixel(cx + dx, cy + dy, color);
+    }
+  }
+
+  tft->endWrite();
 }
 
 
@@ -192,6 +267,10 @@ void screen0(){
     tft->fillCircle(23, 59, 9, CFK_COLOR28);
     tft->drawCircle(23, 59, 9, CFK_BLACK);
     myDisplay.printText("Custom text", 60, 12, TL_DATUM, CFK_BLACK, CFK_WHITE, &RobotoRegular10pt7b);
+
+
+    drawHueCircleDarkCenter(400, 300, 255);
+    drawHueCircle(400, 1000, 255);
     
     myDisplay.drawWidgetsOnScreen(0);
 }
@@ -234,7 +313,7 @@ void loadWidgets(){
             .amountIntervals = qtdIntervalG0,
             .minValue = 0,
             .maxValue = 100,
-            .borderColor = CFK_WHITE,
+            .borderColor = CFK_COLOR03,
             .textColor = CFK_BLACK,
             .backgroundColor = CFK_WHITE,
             .titleColor = CFK_BLACK,
@@ -292,7 +371,7 @@ void loadWidgets(){
 
     LedConfig configLed0 = {
             .radius = 16,
-            .colorOn = CFK_COLOR11,
+            .colorOn = CFK_COLOR01,
             .colorOff = CFK_BLACK
         };
     led.setup(configLed0);

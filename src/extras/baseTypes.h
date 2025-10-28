@@ -56,6 +56,15 @@ typedef struct
 } TextBound_t;
 
 
+/// @brief Struct to save margin data.
+typedef struct{
+  uint8_t top;    ///< Top margin.
+  uint8_t bottom; ///< Bottom margin.
+  uint8_t left;   ///< Left margin.
+  uint8_t right;  ///< Right margin.
+}Margin_t;
+
+
 /// @brief Enumeration for different font types.
 enum class FontType
 {

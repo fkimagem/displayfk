@@ -75,6 +75,9 @@ constexpr uint16_t process_color(uint16_t val) {
 #define DFK_THERMOMETER 1
 //#define DFK_EXTERNALINPUT 1
 
+#define USE_SPIFFS 1
+#define USE_FATFS 1
+
 #if defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
 #undef DFK_TOUCHAREA
 #undef DFK_CIRCLEBTN

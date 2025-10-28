@@ -3,30 +3,45 @@
 const char* ToggleButton::TAG = "[ToggleButton]";
 
 /**
- * @brief Constructor for the ToggleButton class.
- * @param _x X-coordinate for the ToggleButton position.
- * @param _y Y-coordinate for the ToggleButton position.
- * @param _screen Screen identifier where the ToggleButton will be displayed.
+ * @brief Construtor do widget ToggleButton.
+ * @param _x Coordenada X para a posição do ToggleButton.
+ * @param _y Coordenada Y para a posição do ToggleButton.
+ * @param _screen Identificador da tela onde o ToggleButton será exibido.
+ * @details Inicializa o widget ToggleButton com posição e tela especificadas.
  */
 ToggleButton::ToggleButton(uint16_t _x, uint16_t _y, uint8_t _screen)
-    : WidgetBase(_x, _y, _screen), m_shouldRedraw(true), m_enabled(true)
+    : WidgetBase(_x, _y, _screen)
 {
 }
 
 /**
- * @brief Destructor for the ToggleButton class.
- *
- * Clears the callback function pointer.
+ * @brief Limpa recursos alocados pelo ToggleButton.
+ * @details Desaloca memória dinâmica e remove referências a objetos.
  */
-ToggleButton::~ToggleButton() { m_callback = nullptr; }
+void ToggleButton::cleanupMemory() {
+  
+}
 
 /**
- * @brief Detects if the ToggleButton has been touched.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is within the ToggleButton area, otherwise false.
- *
- * Changes the button state if touched and sets the redraw flag.
+ * @brief Destrutor do widget ToggleButton.
+ * @details Limpa o ponteiro da função callback e libera recursos alocados.
+ */
+ToggleButton::~ToggleButton()
+{
+  cleanupMemory();
+  m_callback = nullptr;
+}
+
+/**
+ * @brief Detecta se o ToggleButton foi tocado.
+ * @param _xTouch Ponteiro para a coordenada X do toque.
+ * @param _yTouch Ponteiro para a coordenada Y do toque.
+ * @return True se o toque está dentro da área do ToggleButton, False caso contrário.
+ * @details Quando tocado, alterna o estado do botão e marca para redesenho:
+ *          - Valida visibilidade, uso de teclado, tela atual, carregamento, debounce, habilitado, bloqueado e ponteiro de toque
+ *          - Detecta se toque está dentro dos bounds do ToggleButton
+ *          - Altera estado usando changeState() se toque detectado
+ *          - Marca para redesenho e retorna true
  */
 bool ToggleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
@@ -39,7 +54,7 @@ bool ToggleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
   CHECK_LOCKED_BOOL
   CHECK_POINTER_TOUCH_NULL_BOOL
 
-  bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_width, m_height);
+  bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_config.width, m_config.height);
 
   if(inBounds) {
     m_myTime = millis();
@@ -51,27 +66,31 @@ bool ToggleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 }
 
 /**
- * @brief Retrieves the callback function associated with the ToggleButton.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao ToggleButton.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o ToggleButton for alternado.
  */
 functionCB_t ToggleButton::getCallbackFunc() { return m_callback; }
 
 /**
- * @brief Retrieves the current enabled state of the button.
- * @return True if the button is enabled, otherwise false.
+ * @brief Recupera o estado atual de habilitado do botão.
+ * @return True se o botão está habilitado, False caso contrário.
+ * @details Consulta se o botão pode ser interagido ou não.
  */
 bool ToggleButton::getEnabled() { return m_enabled; }
 
 /**
- * @brief Sets the enabled state of the button.
- * @param newState True to enable the button, false to disable it.
+ * @brief Define o estado de habilitado do botão.
+ * @param newState True para habilitar o botão, False para desabilitá-lo.
+ * @details Altera a capacidade do botão de responder a toques.
  */
 void ToggleButton::setEnabled(bool newState) { m_enabled = newState; }
 
 /**
- * @brief Changes the current state of the button (toggled on or off).
- *
- * Inverts the current state of the toggle button.
+ * @brief Altera o estado atual do botão (ligado ou desligado).
+ * @details Inverte o estado atual do botão toggle:
+ *          - Loga mudança de estado
+ *          - Alterna m_status de true para false ou vice-versa
  */
 void ToggleButton::changeState()
 {
@@ -80,19 +99,21 @@ void ToggleButton::changeState()
 }
 
 /**
- * @brief Forces the ToggleButton to redraw.
- *
- * Sets the flag to redraw the button on the next redraw cycle.
+ * @brief Força o ToggleButton a redesenhar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
  */
 void ToggleButton::forceUpdate() { m_shouldRedraw = true; }
 
 /**
- * @brief Redraws the ToggleButton on the screen, updating its appearance based
- * on its state.
- *
- * Displays the toggle button with a sliding knob that moves based on the toggle
- * state. The appearance changes based on the current theme (light or dark
- * mode).
+ * @brief Redesenha o ToggleButton na tela, atualizando sua aparência baseada no estado.
+ * @details Desenha o botão toggle com uma bola deslizante:
+ *          - Valida TFT, visibilidade, tela atual, carregamento e flag de redesenho
+ *          - Escolhe cores baseadas no modo claro/escuro
+ *          - Desenha fundo do botão com cor dependente do estado
+ *          - Desenha borda
+ *          - Calcula posição da bola deslizante (esquerda quando desligado, direita quando ligado)
+ *          - Desenha bola com bordas
+ *          - Limpa buffer do canvas se existir
  */
 void ToggleButton::redraw()
 {
@@ -112,29 +133,29 @@ void ToggleButton::redraw()
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
   uint16_t statusBall = m_status ? CFK_WHITE : CFK_GREY3;
 
-  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_width, m_height, m_height / 2,
-                                    m_status ? m_pressedColor
+  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.height / 2,
+                                    m_status ? m_config.pressedColor
                                              : lightBg); // fundo
-  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_width, m_height, m_height / 2,
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.height / 2,
                                     baseBorder); // borda
 
   uint8_t offsetBorder = 5;
 
-  uint8_t raioBall = (m_height - (2 * offsetBorder)) / 2;
+  uint8_t raioBall = (m_config.height - (2 * offsetBorder)) / 2;
   uint16_t posBall = m_xPos;
 
   if (m_status)
   {
-    posBall = m_xPos + m_width - offsetBorder - raioBall;
+    posBall = m_xPos + m_config.width - offsetBorder - raioBall;
   }
   else
   {
     posBall = m_xPos + offsetBorder + raioBall;
   }
 
-  WidgetBase::objTFT->fillCircle(posBall, m_yPos + m_height / 2, raioBall,
+  WidgetBase::objTFT->fillCircle(posBall, m_yPos + m_config.height / 2, raioBall,
                                  statusBall); // circulo
-  WidgetBase::objTFT->drawCircle(posBall, m_yPos + m_height / 2, raioBall,
+  WidgetBase::objTFT->drawCircle(posBall, m_yPos + m_config.height / 2, raioBall,
                                  baseBorder); // circulo
   /*
   if(m_status){
@@ -145,52 +166,41 @@ void ToggleButton::redraw()
       blitRowFromCanvas(50, 50 + r, 20);
     }
   }*/
-
-  if (m_canvas)
-  {
-    m_canvas->flush();
-  }
 #endif
 }
 
+/**
+ * @brief Copia uma linha do framebuffer do canvas para o TFT.
+ * @param x Coordenada X da linha para copiar.
+ * @param y Coordenada Y da linha para copiar.
+ * @param w Largura da linha para copiar.
+ * @details Copia dados do buffer do canvas para o display TFT.
+ */
 void ToggleButton::blitRowFromCanvas(int x, int y, int w)
 {
-  if (m_canvas)
-  {
-    // O buffer do canvas é RGB565 contínuo, com stride = SCREEN_W
-    uint16_t *buf = (uint16_t *)m_canvas->getFramebuffer();
-    uint16_t *row = buf + (y * m_width + x);
-    WidgetBase::objTFT->draw16bitRGBBitmap(x, y, row, w, 1);
-  }
+  
 }
 
 /**
- * @brief Initializes the ToggleButton settings.
- *
- * Ensures button width is within valid ranges based on the display size.
+ * @brief Inicia o widget ToggleButton.
+ * @details Garante que a largura do botão esteja dentro de intervalos válidos:
+ *          - Restringe largura dentro de bounds válidos (30 até largura da tela)
  */
 void ToggleButton::start()
 {
   CHECK_TFT_VOID
 #if defined(DISP_DEFAULT)
-  m_width = constrain(m_width, 30, WidgetBase::objTFT->width());
+  m_config.width = constrain(m_config.width, 30, WidgetBase::objTFT->width());
 #endif
 }
 
 /**
- * @brief Configures the ToggleButton with specific dimensions, color, and
- * callback function.
- * @param _width Width of the button.
- * @param _height Height of the button.
- * @param _pressedColor Color displayed when the button is toggled on.
- * @param _cb Callback function to execute when the button is toggled.
- *
- * Initializes the button properties and marks it as loaded when complete.
+ * @brief Configura o ToggleButton com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref ToggleButtonConfig contendo os parâmetros de configuração do botão.
+ * @details Chama método setup() com parâmetros individuais da configuração.
  */
-void ToggleButton::setup(uint16_t _width, uint16_t _height,
-                         uint16_t _pressedColor, functionCB_t _cb)
+void ToggleButton::setup(const ToggleButtonConfig &config)
 {
-
   if (!WidgetBase::objTFT)
   {
     ESP_LOGE(TAG, "TFT not defined on WidgetBase");
@@ -201,44 +211,28 @@ void ToggleButton::setup(uint16_t _width, uint16_t _height,
     ESP_LOGD(TAG, "ToggleButton widget already configured");
     return;
   }
-
-  m_width = _width;
-  m_height = _height;
-  m_pressedColor = _pressedColor;
-  m_callback = _cb;
-  // m_canvas = new Arduino_Canvas(m_width, m_height, WidgetBase::objTFT, 50, 50);
-  // m_canvas->begin();
-  // m_canvas->fillRect(0, 0, m_width, m_height, CFK_AQUA);
-  // m_canvas->fillCircle(m_width / 2, m_height / 2, m_height / 2, CFK_DEEPPINK);
-  // m_canvas->flush();
-
+  m_config = config;
+  m_callback = config.callback;
   start();
 
-  m_loaded = true;
+    m_loaded = true;
+    m_initialized = true;
 }
 
 /**
- * @brief Configures the ToggleButton with parameters defined in a configuration
- * structure.
- * @param config Structure containing the button configuration parameters.
- */
-void ToggleButton::setup(const ToggleButtonConfig &config)
-{
-  setup(config.width, config.height, config.pressedColor, config.callback);
-}
-
-/**
- * @brief Retrieves the current status of the button.
- * @return True if the button is toggled on, otherwise false.
+ * @brief Recupera o status atual do botão.
+ * @return True se o botão está ligado, False caso contrário.
+ * @details Consulta se o botão está no estado ligado ou desligado.
  */
 bool ToggleButton::getStatus() { return m_status; }
 
 /**
- * @brief Sets the current state of the toggle button.
- * @param status True for on, false for off.
- *
- * Updates the button state, marks it for redraw, and triggers the callback if
- * provided.
+ * @brief Define o estado atual do botão toggle.
+ * @param status True para ligado, False para desligado.
+ * @details Atualiza o estado do botão, marca para redesenho e dispara callback se fornecido:
+ *          - Valida se widget está carregado
+ *          - Define novo status e marca para redesenho
+ *          - Dispara callback se não for nullptr
  */
 void ToggleButton::setStatus(bool status)
 {
@@ -256,12 +250,20 @@ void ToggleButton::setStatus(bool status)
   }
 }
 
+/**
+ * @brief Torna o ToggleButton visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void ToggleButton::show()
 {
   m_visible = true;
   m_shouldRedraw = true;
 }
 
+/**
+ * @brief Oculta o ToggleButton da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void ToggleButton::hide()
 {
   m_visible = false;

@@ -8,10 +8,12 @@ const char* HSlider::TAG = "HSlider";
 // #define DETECT_ON_HANDLER
 
 /**
- * @brief Constructor for the HSlider class.
- * @param _x X-coordinate for the HSlider position.
- * @param _y Y-coordinate for the HSlider position.
- * @param _screen Screen identifier where the HSlider will be displayed.
+ * @brief Construtor da classe HSlider.
+ * @param _x Coordenada X para a posição do HSlider.
+ * @param _y Coordenada Y para a posição do HSlider.
+ * @param _screen Identificador da tela onde o HSlider será exibido.
+ * @details Inicializa o widget com valores padrão e configuração vazia.
+ *          O slider não será funcional até que setup() seja chamado.
  */
 HSlider::HSlider(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_currentPos(0), m_lastPos(0),
@@ -25,7 +27,8 @@ HSlider::HSlider(uint16_t _x, uint16_t _y, uint8_t _screen)
 }
 
 /**
- * @brief Destructor for the HSlider class.
+ * @brief Destrutor da classe HSlider.
+ * @details Limpa recursos e callbacks associados ao widget.
  */
 HSlider::~HSlider() {
   ESP_LOGD(TAG, "HSlider destroyed at (%d, %d)", m_xPos, m_yPos);
@@ -37,12 +40,18 @@ HSlider::~HSlider() {
 }
 
 /**
- * @brief Detects if the slider has been touched and processes the touch input.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is within the slider handle area, otherwise false.
- *
- * Updates the slider position and value based on the touch position.
+ * @brief Detecta se o HSlider foi tocado pelo usuário e processa a entrada de toque.
+ * @param _xTouch Ponteiro para a coordenada X do toque na tela.
+ * @param _yTouch Ponteiro para a coordenada Y do toque na tela.
+ * @return True se o toque está dentro da área do slider, False caso contrário.
+ * @details Este método realiza múltiplas validações antes de processar o toque:
+ *          - Verifica se o widget está visível, inicializado, carregado e habilitado
+ *          - Valida que o teclado virtual não está ativo
+ *          - Verifica que o slider está na tela atual
+ *          - Verifica se o widget não está bloqueado
+ *          - Detecta toque na área da trilha e move o controle proporcionalmente
+ *          - Atualiza o valor baseado na nova posição e marca para redesenho
+ *          Suporta dois modos: detecção apenas no controle (DETECT_ON_HANDLER) ou na área total.
  */
 bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   // Early validation checks using macros
@@ -91,16 +100,21 @@ bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 }
 
 /**
- * @brief Retrieves the callback function associated with the slider.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao slider.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o valor do slider mudar.
  */
 functionCB_t HSlider::getCallbackFunc() { return m_callback; }
 
 
 /**
- * @brief Validates the configuration structure.
- * @param config Configuration to validate.
- * @return True if valid, false otherwise.
+ * @brief Valida a estrutura de configuração do slider.
+ * @param config Configuração a ser validada.
+ * @return True se válida, False caso contrário.
+ * @details Verifica se todos os parâmetros essenciais estão dentro dos limites aceitáveis:
+ *          - Largura deve ser maior que zero
+ *          - Valor mínimo deve ser menor que o máximo
+ *          - Raio deve ser maior que zero
  */
 bool HSlider::validateConfig(const HSliderConfig& config) {
   // Validate basic parameters
@@ -123,14 +137,21 @@ bool HSlider::validateConfig(const HSliderConfig& config) {
 }
 
 /**
- * @brief Updates the slider value based on current position.
+ * @brief Atualiza o valor do slider baseado na posição atual.
+ * @details Mapeia a posição atual do controle para o valor correspondente
+ *          dentro da faixa configurada usando a função map().
  */
 void HSlider::updateValue() {
   m_value = map(m_currentPos, m_minX, m_maxX, m_config.minValue, m_config.maxValue);
 }
 
 /**
- * @brief Updates the slider dimensions and constraints.
+ * @brief Atualiza as dimensões e restrições do slider.
+ * @details Calcula e define todas as dimensões necessárias para o funcionamento do slider:
+ *          - Altura da trilha baseada no raio
+ *          - Posição vertical central
+ *          - Limites mínimo e máximo para movimento do controle
+ *          - Raio interno para área de conteúdo
  */
 void HSlider::updateDimensions() {
   m_height = m_config.radius * 2;
@@ -141,7 +162,9 @@ void HSlider::updateDimensions() {
 }
 
 /**
- * @brief Initializes the HSlider widget with default calculations.
+ * @brief Inicializa o widget HSlider com cálculos padrão.
+ * @details Chama updateDimensions() para calcular dimensões e marca o widget
+ *          para redesenho na próxima atualização.
  */
 void HSlider::start() {
   updateDimensions();
@@ -152,10 +175,15 @@ void HSlider::start() {
 // setEnabled method removed - use inherited methods from WidgetBase
 
 /**
- * @brief Redraws the slider handle and filled portion on the screen.
- *
- * Updates the visual appearance of the slider based on its current value.
- * Only redraws if the slider is on the current screen and needs updating.
+ * @brief Redesenha o controle deslizante e a porção preenchida na tela.
+ * @details Este método é responsável por renderizar o slider na tela:
+ *          - Verifica todas as condições necessárias para o redesenho
+ *          - Limpa a posição anterior do controle
+ *          - Desenha a barra de progresso baseada na direção do movimento
+ *          - Renderiza o controle deslizante com cores apropriadas
+ *          - Atualiza a posição anterior para próxima renderização
+ *          Apenas redesenha se o slider está visível, inicializado, carregado, na tela atual
+ *          e a flag m_shouldRedraw está configurada como true.
  */
 void HSlider::redraw() {
   CHECK_TFT_VOID
@@ -203,10 +231,12 @@ void HSlider::redraw() {
 }
 
 /**
- * @brief Draws the slider's background and static elements.
- *
- * Creates the track and border for the slider.
- * Called during initial setup and when the slider needs a complete redraw.
+ * @brief Desenha o fundo do slider e elementos estáticos.
+ * @details Cria a trilha e borda do slider:
+ *          - Desenha o fundo da trilha com cantos arredondados
+ *          - Adiciona borda com cor baseada no modo claro/escuro
+ *          - Chama redraw() para renderizar o controle deslizante
+ *          Chamado durante a configuração inicial e quando o slider precisa de redesenho completo.
  */
 void HSlider::drawBackground() {
   CHECK_TFT_VOID
@@ -225,9 +255,16 @@ void HSlider::drawBackground() {
 }
 
 /**
- * @brief Configures the HSlider with parameters defined in a configuration
- * structure.
- * @param config Structure containing the slider configuration parameters.
+ * @brief Configura o HSlider com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref HSliderConfig contendo os parâmetros de configuração do slider.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Valida a configuração usando validateConfig()
+ *          - Atribui a estrutura de configuração
+ *          - Chama start() para cálculos e inicialização
+ *          - Define posição inicial do controle
+ *          - Atualiza o valor inicial
+ *          - Marca o widget como inicializado e carregado
+ *          O slider não será exibido corretamente até que este método seja chamado.
  */
 void HSlider::setup(const HSliderConfig &config) {
   // Validate TFT object
@@ -256,17 +293,20 @@ void HSlider::setup(const HSliderConfig &config) {
 }
 
 /**
- * @brief Retrieves the current value of the slider.
- * @return Current value of the slider.
+ * @brief Recupera o valor atual do slider.
+ * @return Valor atual do slider dentro da faixa configurada.
+ * @details Retorna o valor mapeado baseado na posição atual do controle deslizante.
  */
 int HSlider::getValue() const { return m_value; }
 
 /**
- * @brief Sets the value of the slider.
- * @param newValue New value for the slider.
- *
- * Updates the slider position based on the provided value and triggers the
- * callback.
+ * @brief Define o valor do slider.
+ * @param newValue Novo valor para o slider.
+ * @details Atualiza a posição do controle baseada no valor fornecido:
+ *          - Restringe o valor dentro da faixa configurada
+ *          - Mapeia o valor para a posição correspondente na trilha
+ *          - Marca para redesenho
+ *          - Executa callback se configurado
  */
 void HSlider::setValue(int newValue) {
   CHECK_LOADED_VOID
@@ -287,20 +327,29 @@ void HSlider::setValue(int newValue) {
 }
 
 /**
- * @brief Forces the slider to update, refreshing its visual state on next
- * redraw.
+ * @brief Força o slider a atualizar, refrescando seu estado visual no próximo redesenho.
+ * @details Define a flag m_shouldRedraw como true para garantir que o widget
+ *          seja redesenhado na próxima oportunidade.
  */
 void HSlider::forceUpdate() { 
   m_shouldRedraw = true; 
   ESP_LOGD(TAG, "HSlider force update requested");
 }
 
+/**
+ * @brief Torna o slider visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void HSlider::show() {
   m_visible = true;
   m_shouldRedraw = true;
   ESP_LOGD(TAG, "HSlider shown at (%d, %d)", m_xPos, m_yPos);
 }
 
+/**
+ * @brief Oculta o slider da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void HSlider::hide() {
   m_visible = false;
   m_shouldRedraw = true;

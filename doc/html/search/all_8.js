@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['headers_0',['headers',['../namespacegen__keywords.html#a16cc4e24f6a7b7ae4d2e187cffb0264c',1,'gen_keywords']]],
-  ['height_1',['height',['../struct_rect__t.html#a7fadf79c99e6ee1a339ed53c2fa83f81',1,'Rect_t::height()'],['../struct_text_bound__t.html#a3b1e8da09bc3260c0490fd7d4efa4d10',1,'TextBound_t::height()'],['../struct_input_external_config.html#a60a0b6880facdbebd704af621c2d4f8c',1,'InputExternalConfig::height()'],['../struct_image_from_pixels_config.html#a1e1d1250468bb7fa19a8318a24bdea01',1,'ImageFromPixelsConfig::height()'],['../struct_line_chart_config.html#a177fba04c55e307177eecd82b8352bfd',1,'LineChartConfig::height()'],['../struct_number_box_config.html#aaabd58fb817aa263a781e566c81d4337',1,'NumberBoxConfig::height()'],['../struct_rect_button_config.html#ad4d27634a2e4c39f4a7f4dbafe51583d',1,'RectButtonConfig::height()'],['../struct_spin_box_config.html#afdf7337678c5f80a22e1f09bce575f5a',1,'SpinBoxConfig::height()'],['../struct_text_box_config.html#a1968e0d7e1aad0d556e0e03981c26c20',1,'TextBoxConfig::height()'],['../struct_text_button_config.html#ad7810eeb2378a0277326c9dbcb9c51e0',1,'TextButtonConfig::height()'],['../struct_toggle_button_config.html#aa70814d0f557cfa75144840c303517cf',1,'ToggleButtonConfig::height()'],['../struct_touch_area_config.html#abcd696df62cbdb2be728443caa6b585d',1,'TouchAreaConfig::height()'],['../struct_vertical_analog_config.html#a9827f9e47b6995ff62e035b441fbda78',1,'VerticalAnalogConfig::height()'],['../struct_vertical_bar_config.html#a805abdc56aa506f8a7188b3b0664ce48',1,'VerticalBarConfig::height()']]],
-  ['helpers_2',['HELPERS',['../widgetbase_8h.html#afd0e26a22bd84938857b2f67be8433db',1,'widgetbase.h']]],
-  ['hslider_3',['HSlider',['../class_h_slider.html',1,'HSlider'],['../class_h_slider.html#a646b0936f5b6182c21530a03f749f970',1,'HSlider::HSlider()']]],
-  ['hsliderconfig_4',['HSliderConfig',['../struct_h_slider_config.html',1,'']]]
+  ['_5fclk_0',['_clk',['../class_x_p_t2046.html#a17d733ba3190bac6845df777fdc5511c',1,'XPT2046']]],
+  ['_5fcs_1',['_cs',['../class_x_p_t2046.html#a6460a0ddf40c43d88bb0916d44c4aa46',1,'XPT2046']]],
+  ['_5fget_5fcal_5fmsg_2',['_Get_Cal_msg',['../esp__lcd__gsl3680_8c.html#aaf4d9feeb0cd83d7b5467dc5d8296e6c',1,'esp_lcd_gsl3680.c']]],
+  ['_5fmiso_3',['_miso',['../class_x_p_t2046.html#aaf4750728d4ae0d2e1b27c0b6e8da0c1',1,'XPT2046']]],
+  ['_5fmosi_4',['_mosi',['../class_x_p_t2046.html#a0a52d5af9ef66aa176c0327c1cbf0743',1,'XPT2046']]],
+  ['_5ftpdsvr_5fsig_5ft_5',['_TPDSVR_SIG_T',['../struct___t_p_d_s_v_r___s_i_g___t.html',1,'']]],
+  ['_5fxy_5fdata_5ft_6',['_XY_DATA_T',['../struct___x_y___d_a_t_a___t.html',1,'']]]
 ];

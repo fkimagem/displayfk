@@ -1,9 +1,27 @@
 var searchData=
 [
-  ['text_0',['text',['../struct_label_config.html#a055715273c1fc8f2eb0bcbf31df62ede',1,'LabelConfig::text()'],['../struct_text_button_config.html#a76eca8924db6ddbdce7009846455e39e',1,'TextButtonConfig::text()']]],
-  ['textcolor_1',['textColor',['../struct_circular_bar_config.html#a9e0b006d72c708e8715380b078d6cda0',1,'CircularBarConfig::textColor()'],['../struct_gauge_config.html#aa9007603fde8e840567e0e8fa0009785',1,'GaugeConfig::textColor()'],['../struct_line_chart_config.html#a14d98c4359a1c96d7fbc485baa6eb2c6',1,'LineChartConfig::textColor()'],['../struct_spin_box_config.html#aa1a85699ac4a50c288282174e9fc44b8',1,'SpinBoxConfig::textColor()'],['../struct_text_button_config.html#a7e65931fb9d36f8095238f6a71be3123',1,'TextButtonConfig::textColor()'],['../struct_vertical_analog_config.html#a69b6b73448edcc02195f59c71d0e0020',1,'VerticalAnalogConfig::textColor()']]],
-  ['thickness_2',['thickness',['../struct_circular_bar_config.html#a714a593c50de3a99d1f26c1e802d990e',1,'CircularBarConfig']]],
-  ['title_3',['title',['../struct_gauge_config.html#a17641544e0fd70461131e9db0fe06f40',1,'GaugeConfig']]],
-  ['titlecolor_4',['titleColor',['../struct_gauge_config.html#a51579068dc807e451c615d123785b088',1,'GaugeConfig']]],
-  ['touchspi_5',['touchspi',['../class_x_p_t2046.html#a422e29bdeef1ec23c98708871152c510',1,'XPT2046']]]
+  ['tag_0',['TAG',['../esp__lcd__touch_8c.html#a5a85b9c772bbeb480b209a3e6ea92b4c',1,'TAG:&#160;esp_lcd_touch.c'],['../gsl3680__touch_8cpp.html#a5a85b9c772bbeb480b209a3e6ea92b4c',1,'TAG:&#160;gsl3680_touch.cpp']]],
+  ['text_1',['text',['../struct_label_config.html#a055715273c1fc8f2eb0bcbf31df62ede',1,'LabelConfig::text'],['../struct_text_button_config.html#a76eca8924db6ddbdce7009846455e39e',1,'TextButtonConfig::text']]],
+  ['textcolor_2',['textColor',['../struct_circular_bar_config.html#a9e0b006d72c708e8715380b078d6cda0',1,'CircularBarConfig::textColor'],['../struct_gauge_config.html#aa9007603fde8e840567e0e8fa0009785',1,'GaugeConfig::textColor'],['../struct_line_chart_config.html#a14d98c4359a1c96d7fbc485baa6eb2c6',1,'LineChartConfig::textColor'],['../struct_spin_box_config.html#aa1a85699ac4a50c288282174e9fc44b8',1,'SpinBoxConfig::textColor'],['../struct_text_button_config.html#a7e65931fb9d36f8095238f6a71be3123',1,'TextButtonConfig::textColor'],['../struct_vertical_analog_config.html#a69b6b73448edcc02195f59c71d0e0020',1,'VerticalAnalogConfig::textColor']]],
+  ['thickness_3',['thickness',['../struct_circular_bar_config.html#a714a593c50de3a99d1f26c1e802d990e',1,'CircularBarConfig']]],
+  ['thumb_4',['thumb',['../uniongsl___f_l_a_g___t_y_p_e.html#a8118cd7fb26a4fdbac6a9411d8fe6aee',1,'gsl_FLAG_TYPE']]],
+  ['timestamp_5',['timestamp',['../struct_string_allocation__t.html#aaacf2749ede906e4cd6dc393d221bc39',1,'StringAllocation_t']]],
+  ['title_6',['title',['../struct_gauge_config.html#a17641544e0fd70461131e9db0fe06f40',1,'GaugeConfig']]],
+  ['titlecolor_7',['titleColor',['../struct_gauge_config.html#a51579068dc807e451c615d123785b088',1,'GaugeConfig']]],
+  ['top_8',['top',['../struct_margin__t.html#a117e4eddef63fcdd49a89dd5be5e2463',1,'Margin_t']]],
+  ['totaldrawtime_9',['totalDrawTime',['../struct_performance_metrics__t.html#a0647854f25fbd98a65fd35cb856a3aba',1,'PerformanceMetrics_t']]],
+  ['totalfileloadtime_10',['totalFileLoadTime',['../struct_performance_metrics__t.html#a4c3e8c3517d90efa7641d6e94148a9f1',1,'PerformanceMetrics_t']]],
+  ['totalrotationtime_11',['totalRotationTime',['../struct_performance_metrics__t.html#a549294462996fe69b5799db9767bfbab',1,'PerformanceMetrics_t']]],
+  ['touch_5fcnt_12',['touch_cnt',['../gsl3680__touch_8cpp.html#aacd7dd5a9f43c997abb7a2fb0bf81c2f',1,'gsl3680_touch.cpp']]],
+  ['touch_5fcount_13',['touch_count',['../struct_f_t6336_u___touch_point_type.html#a136aa20e06ffdc8538b1b226f7ac7dab',1,'FT6336U_TouchPointType']]],
+  ['touch_5fstrength_14',['touch_strength',['../gsl3680__touch_8cpp.html#ad8ef1d39442e82ae1cdb1b1e9d645baa',1,'gsl3680_touch.cpp']]],
+  ['touches_15',['touches',['../class_t_a_m_c___g_t911.html#ad17a3e681ed9071eff7bf9daf668e9d3',1,'TAMC_GT911']]],
+  ['touchexterno_16',['touchExterno',['../class_display_f_k.html#a1343eb3918facd8541e07040004dc812',1,'DisplayFK']]],
+  ['touchspi_17',['touchspi',['../class_x_p_t2046.html#a422e29bdeef1ec23c98708871152c510',1,'XPT2046']]],
+  ['tp_18',['tp',['../struct_f_t6336_u___touch_point_type.html#afff87b6b168ab2962d3fe625023e1538',1,'FT6336U_TouchPointType::tp'],['../_scan_multi_touch_8ino.html#a8e6e089728734f8dfe5ffcfb80433779',1,'tp:&#160;ScanMultiTouch.ino'],['../gsl3680__touch_8cpp.html#a3c047daf57981dfb83ec2852882fa21f',1,'tp:&#160;gsl3680_touch.cpp'],['../_touch_print_8ino.html#a492f84bd0eccb4ddbf71c37820f1b45f',1,'tp:&#160;TouchPrint.ino']]],
+  ['tp_5fevent_19',['tp_event',['../esp__lcd__gsl3680_8c.html#a88c4484df1702d6c66583289fed68419',1,'esp_lcd_gsl3680.c']]],
+  ['tp_5fio_5fhandle_20',['tp_io_handle',['../gsl3680__touch_8cpp.html#aeac464588aeba80cb3460170902fd77b',1,'gsl3680_touch.cpp']]],
+  ['tpc_5fgesture_5fid_21',['tpc_gesture_id',['../esp__lcd__gsl3680_8c.html#a2bf1fe42fb28c2ec29d6619814ed55d0',1,'esp_lcd_gsl3680.c']]],
+  ['ts_22',['ts',['../simple__touch_8ino.html#a401d283dbe355164b8f05527d5302330',1,'simple_touch.ino']]],
+  ['type_23',['type',['../struct_key__t.html#af6c1a96613171d523783e3168669a111',1,'Key_t']]]
 ];

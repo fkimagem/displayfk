@@ -6,6 +6,10 @@
 const char* LineChart::TAG = "LineChart";
 
 
+/**
+ * @brief Inicializa o mutex para proteção de acesso aos dados.
+ * @details Cria um mutex usando FreeRTOS se DISP_DEFAULT está definido.
+ */
 void LineChart::initMutex()
 {
   #if defined(DISP_DEFAULT)
@@ -16,6 +20,10 @@ void LineChart::initMutex()
   #endif
 }
 
+/**
+ * @brief Destrói o mutex de proteção de dados.
+ * @details Libera recursos do mutex criado por initMutex().
+ */
 void LineChart::destroyMutex()
 {
   #if defined(DISP_DEFAULT)
@@ -28,10 +36,13 @@ void LineChart::destroyMutex()
 }
 
 /**
- * @brief Constructor for the LineChart class.
- * @param _x X position of the widget.
- * @param _y Y position of the widget.
- * @param _screen Screen number.
+ * @brief Construtor da classe LineChart.
+ * @param _x Posição X do widget.
+ * @param _y Posição Y do widget.
+ * @param _screen Número da tela.
+ * @details Inicializa o widget com valores padrão e configuração vazia.
+ *          O gráfico não será funcional até que setup() seja chamado.
+ *          Inicializa o mutex para proteção de acesso aos dados.
  */
 LineChart::LineChart(uint16_t _x, uint16_t _y, uint8_t _screen) 
     : WidgetBase(_x, _y, _screen),
@@ -102,9 +113,10 @@ LineChart::LineChart(uint16_t _x, uint16_t _y, uint8_t _screen)
 }
 
 /**
- * @brief Destructor for the LineChart class.
- *
- * Frees all allocated memory for chart data series.
+ * @brief Destrutor da classe LineChart.
+ * @details Libera toda memória alocada para séries de dados do gráfico.
+ *          Chama cleanupMemory(), clearColorsSeries() e clearSubtitles().
+ *          Destrói o mutex para liberar recursos.
  */
 LineChart::~LineChart()
 {
@@ -131,9 +143,9 @@ LineChart::~LineChart()
 }
 
 /**
- * @brief Centralized memory cleanup method.
- *
- * Safely deallocates all dynamically allocated memory with proper tracking.
+ * @brief Método centralizado de limpeza de memória.
+ * @details Desaloca com segurança toda memória alocada dinamicamente com rastreamento adequado.
+ *          Chama clearValues() para liberar arrays de valores.
  */
 void LineChart::cleanupMemory()
 {
@@ -144,6 +156,10 @@ void LineChart::cleanupMemory()
   #endif
 }
 
+/**
+ * @brief Limpa o array interno de cores das séries.
+ * @details Reseta todos os valores do array m_colorsSeries para zero.
+ */
 void LineChart::clearColorsSeries()
 {
   ESP_LOGD(TAG, "Resetting internal color array");
@@ -152,6 +168,10 @@ void LineChart::clearColorsSeries()
   }
 }
 
+/**
+ * @brief Limpa o array interno de ponteiros para legendas.
+ * @details Reseta todos os ponteiros do array m_subtitles para nullptr.
+ */
 void LineChart::clearSubtitles()
 {
   ESP_LOGD(TAG, "Resetting internal subtitles array");
@@ -160,6 +180,11 @@ void LineChart::clearSubtitles()
   }
 }
 
+/**
+ * @brief Limpa e desaloca o array de valores das séries.
+ * @details Libera memória do array 2D m_values se foi alocado.
+ *          Usa flags m_valuesAllocated para rastreamento seguro.
+ */
 void LineChart::clearValues()
 {
   ESP_LOGD(TAG, "Resetting internal values array");
@@ -185,9 +210,15 @@ void LineChart::clearValues()
 
 
 /**
- * @brief Validates the LineChart configuration.
- * @param config Configuration structure to validate.
- * @return True if configuration is valid, false otherwise.
+ * @brief Valida a configuração do LineChart.
+ * @param config Estrutura de configuração a validar.
+ * @return True se a configuração é válida, False caso contrário.
+ * @details Verifica se todos os parâmetros essenciais estão dentro dos limites aceitáveis:
+ *          - Dimensões devem ser maiores que zero
+ *          - minValue deve ser menor que maxValue
+ *          - amountSeries deve estar entre 1 e MAX_SERIES
+ *          - colorsSeries array não pode ser nulo
+ *          - maxPointsAmount deve ser pelo menos 2
  */
 bool LineChart::validateConfig(const LineChartConfig& config)
 {
@@ -230,10 +261,12 @@ bool LineChart::validateConfig(const LineChartConfig& config)
 }
 
 /**
- * @brief Detects touch events on the LineChart.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return Always returns false as LineChart does not respond to touch events.
+ * @brief Detecta eventos de toque no LineChart.
+ * @param _xTouch Ponteiro para a coordenada X do toque.
+ * @param _yTouch Ponteiro para a coordenada Y do toque.
+ * @return Sempre retorna False, pois LineChart não responde a eventos de toque.
+ * @details Este método é implementado para conformidade com a interface de WidgetBase
+ *          mas não processa toques, já que gráficos são elementos apenas visuais.
  */
 bool LineChart::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
@@ -241,8 +274,10 @@ bool LineChart::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 }
 
 /**
- * @brief Retrieves the callback function associated with the LineChart.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao LineChart.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o gráfico for tocado.
+ *          Note que LineChart não detecta toques por padrão.
  */
 functionCB_t LineChart::getCallbackFunc()
 {
@@ -250,9 +285,9 @@ functionCB_t LineChart::getCallbackFunc()
 }
 
 /**
- * @brief Resets and frees all data arrays.
- *
- * This method cleans up memory allocated for chart data series.
+ * @brief Reseta e libera todos os arrays de dados.
+ * @details Este método limpa memória alocada para séries de dados do gráfico.
+ *          Usa mutex para acesso thread-safe e chama cleanupMemory().
  */
 void LineChart::resetArray()
 {
@@ -269,9 +304,13 @@ void LineChart::resetArray()
 }
 
 /**
- * @brief Initializes the chart parameters and prepares the data structures.
- *
- * Calculates layout dimensions, prepares grid dimensions, and initializes data arrays.
+ * @brief Inicializa parâmetros do gráfico e prepara estruturas de dados.
+ * @details Calcula dimensões do layout, prepara dimensões da grade e inicializa arrays de dados:
+ *          - Calcula tamanho de texto para rótulos min/max
+ *          - Calcula espaçamento entre pontos
+ *          - Calcula dimensões de plotagem disponíveis
+ *          - Aloca memória para arrays de valores
+ *          - Inicializa valores com minValue
  */
 void LineChart::start()
 {
@@ -391,9 +430,12 @@ void LineChart::start()
 }
 
 /**
- * @brief Draws the background of the chart including axes, labels, and grid.
- *
- * Handles drawing the chart framework, axes, labels, and grid lines.
+ * @brief Desenha o fundo do gráfico incluindo eixos, rótulos e grade.
+ * @details Manipula desenho da estrutura do gráfico, eixos, rótulos e linhas da grade:
+ *          - Desenha borda do gráfico
+ *          - Preenche fundo
+ *          - Desenha rótulos de valores mínimo, máximo e zero (se aplicável)
+ *          - Desenha eixos
  */
 void LineChart::drawBackground()
 {
@@ -452,12 +494,16 @@ void LineChart::drawBackground()
 }
 
 /**
- * @brief Adds a new value to the specified series of the chart.
- * @param serieIndex Index of the series to add the value to.
- * @param newValue New value to add to the series.
- * @return True if the value was added successfully, otherwise false.
- *
- * Adds a new data point to a series, shifting existing points and updating the display.
+ * @brief Adiciona um novo valor à série especificada do gráfico.
+ * @param serieIndex Índice da série para adicionar o valor.
+ * @param newValue Novo valor para adicionar à série.
+ * @return True se o valor foi adicionado com sucesso, False caso contrário.
+ * @details Adiciona novo ponto de dados a uma série, deslocando pontos existentes:
+ *          - Restringe valor dentro da faixa min/max
+ *          - Desloca todos os valores uma posição para trás
+ *          - Insere novo valor na última posição
+ *          - Atualiza flag de redesenho
+ *          - Usa mutex para acesso thread-safe
  */
 bool LineChart::push(uint16_t serieIndex, int newValue)
 {
@@ -512,9 +558,12 @@ bool LineChart::push(uint16_t serieIndex, int newValue)
 }
 
 /**
- * @brief Clears previous plotted values from the chart.
- *
- * Erases all previously plotted lines by drawing over them with the background color.
+ * @brief Limpa valores anteriormente plotados do gráfico.
+ * @details Apaga todas as linhas anteriormente plotadas desenhando sobre elas com cor de fundo:
+ *          - Desenha linhas antigas com cor de fundo
+ *          - Suporta linhas em negrito
+ *          - Remove pontos se showDots estiver habilitado
+ *          - Usa mutex para acesso thread-safe (não-bloqueante)
  */
 void LineChart::clearPreviousValues()
 {
@@ -556,9 +605,11 @@ void LineChart::clearPreviousValues()
 }
 
 /**
- * @brief Draws the grid lines for the chart.
- *
- * Draws both horizontal and vertical gridlines based on the chart configuration.
+ * @brief Desenha as linhas da grade do gráfico.
+ * @details Desenha linhas horizontais e verticais da grade baseado na configuração:
+ *          - Linhas horizontais baseadas em verticalDivision
+ *          - Linhas verticais espaçadas igualmente
+ *          - Usa gridColor para desenhar as linhas
  */
 void LineChart::drawGrid()
 {
@@ -592,10 +643,14 @@ void LineChart::drawGrid()
 }
 
 /**
- * @brief Draws a single data series on the chart.
- * @param serieIndex Index of the series to draw.
- *
- * Plots a single series of data points on the chart.
+ * @brief Desenha uma única série de dados no gráfico.
+ * @param serieIndex Índice da série para desenhar.
+ * @details Plota uma única série de pontos de dados no gráfico:
+ *          - Desenha linhas conectando pontos consecutivos
+ *          - Suporta linhas em negrito desenhando múltiplas linhas
+ *          - Desenha pontos se showDots estiver habilitado
+ *          - Atualiza legendas se configuradas
+ *          - Usa mutex para acesso thread-safe (não-bloqueante)
  */
 void LineChart::drawSerie(uint8_t serieIndex)
 {
@@ -642,10 +697,10 @@ void LineChart::drawSerie(uint8_t serieIndex)
 }
 
 /**
- * @brief Draws a horizontal marker line at a specific value.
- * @param value The value at which to draw the marker line.
- *
- * Draws a horizontal line across the chart at the specified value position.
+ * @brief Desenha uma linha marcadora horizontal em um valor específico.
+ * @param value O valor no qual desenhar a linha marcadora.
+ * @details Desenha uma linha horizontal através do gráfico na posição de valor especificada.
+ *          Usado para marcar a linha zero ou outros valores importantes.
  */
 void LineChart::drawMarkLineAt(int value)
 {
@@ -656,10 +711,10 @@ void LineChart::drawMarkLineAt(int value)
 }
 
 /**
- * @brief Debug method that prints the values of a series to the ESP log.
- * @param serieIndex Index of the series to print values for.
- *
- * Outputs both old and current values of the specified series to log.
+ * @brief Método de debug que imprime os valores de uma série no log do ESP.
+ * @param serieIndex Índice da série para imprimir valores.
+ * @details Exibe valores antigos e atuais da série especificada no log.
+ *          Útil para depuração e verificação de dados do gráfico.
  */
 void LineChart::printValues(uint8_t serieIndex)
 {
@@ -684,9 +739,9 @@ void LineChart::printValues(uint8_t serieIndex)
 }
 
 /**
- * @brief Draws all data series on the chart.
- *
- * Calls drawSerie for each data series to plot them all on the chart.
+ * @brief Desenha todas as séries de dados no gráfico.
+ * @details Chama drawSerie para cada série de dados para plotar todas no gráfico.
+ *          Itera sobre todas as séries configuradas e as desenha uma por uma.
  */
 void LineChart::drawAllSeries()
 {
@@ -699,9 +754,9 @@ void LineChart::drawAllSeries()
 }
 
 /**
- * @brief Copies current values to old values for all data series.
- *
- * Updates the old values to match the current values before redrawing.
+ * @brief Copia valores atuais para valores antigos para todas as séries de dados.
+ * @details Atualiza os valores antigos para corresponder aos valores atuais antes de redesenhar.
+ *          Usado para limpar linhas antigas na próxima atualização. Usa mutex para acesso thread-safe.
  */
 void LineChart::copyCurrentValuesToOldValues()
 {
@@ -722,9 +777,14 @@ void LineChart::copyCurrentValuesToOldValues()
 }
 
 /**
- * @brief Redraws the entire LineChart.
- *
- * Updates the chart display with the current values, clearing old lines and drawing new ones.
+ * @brief Redesenha o LineChart completo.
+ * @details Atualiza o display do gráfico com valores atuais, limpando linhas antigas e desenhando novas:
+ *          - Limpa linhas anteriores desenhando com cor de fundo
+ *          - Copia valores atuais para antigos
+ *          - Desenha grade
+ *          - Desenha linha zero se aplicável
+ *          - Desenha todas as séries
+ *          - Usa flags de bloqueio para evitar atualizações durante redesenho
  */
 void LineChart::redraw()
 {
@@ -769,9 +829,8 @@ void LineChart::redraw()
 }
 
 /**
- * @brief Forces the LineChart to update.
- *
- * Sets the update flag to trigger a redraw on the next cycle.
+ * @brief Força o LineChart a atualizar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
  */
 void LineChart::forceUpdate()
 {
@@ -779,8 +838,16 @@ void LineChart::forceUpdate()
 }
 
 /**
- * @brief Configures the LineChart using a configuration structure.
- * @param config Structure containing all configuration parameters.
+ * @brief Configura o LineChart usando uma estrutura de configuração.
+ * @param config Estrutura @ref LineChartConfig contendo todos os parâmetros de configuração.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Valida a configuração usando validateConfig()
+ *          - Atribui a estrutura de configuração
+ *          - Copia array de cores para buffer interno
+ *          - Copia ponteiros de legendas
+ *          - Chama start() para inicializar estruturas e cálculos
+ *          - Marca o widget como carregado
+ *          O gráfico não será exibido corretamente até que este método seja chamado.
  */
 void LineChart::setup(const LineChartConfig &config)
 {
@@ -839,6 +906,10 @@ void LineChart::setup(const LineChartConfig &config)
   ESP_LOGD(TAG, "LineChart setup completed at (%d, %d)", m_xPos, m_yPos);
 }
 
+/**
+ * @brief Torna o gráfico de linhas visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void LineChart::show()
 {
   m_visible = true;
@@ -846,6 +917,10 @@ void LineChart::show()
   ESP_LOGD(TAG, "LineChart shown at (%d, %d)", m_xPos, m_yPos);
 }
 
+/**
+ * @brief Oculta o gráfico de linhas da tela.
+ * @details Define o widget como invisível e desativa o redesenho.
+ */
 void LineChart::hide()
 {
   m_visible = false;

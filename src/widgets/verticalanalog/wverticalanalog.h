@@ -6,68 +6,61 @@
 #include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
 #endif
 
-/// @brief Configuration structure for VAnalog
+/// @brief Estrutura de configuração para o VAnalog.
+/// @details Esta estrutura contém todos os parâmetros necessários para configurar um display analógico vertical.
+///          Deve ser preenchida e passada para o método setup().
 struct VerticalAnalogConfig {
-  uint16_t width;           ///< Width of the VAnalog display
-  uint16_t height;          ///< Height of the VAnalog display
-  int minValue;                 ///< Minimum value of the scale
-  int maxValue;                 ///< Maximum value of the scale
-  uint8_t steps;            ///< Number of divisions on the scale
-  uint16_t arrowColor;      ///< Color of the arrow marker
-  uint16_t textColor;       ///< Color of the text display
-  uint16_t backgroundColor; ///< Background color of the display
-  uint16_t borderColor;     ///< Color of the display border
+  uint16_t width;           ///< Largura do display VAnalog.
+  uint16_t height;          ///< Altura do display VAnalog.
+  int minValue;                 ///< Valor mínimo da escala.
+  int maxValue;                 ///< Valor máximo da escala.
+  uint8_t steps;            ///< Número de divisões na escala.
+  uint16_t arrowColor;      ///< Cor da seta marcadora.
+  uint16_t textColor;       ///< Cor do texto de exibição.
+  uint16_t backgroundColor; ///< Cor de fundo do display.
+  uint16_t borderColor;     ///< Cor da borda do display.
 };
 
-/// @brief Represents a vertical analog display widget, used to visualize numeric values on a vertical scale.
+/// @brief Representa um widget de display analógico vertical usado para visualizar valores numéricos em uma escala vertical.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcional一章 completa para criar e gerenciar
+///          displays analógicos verticais na tela. O VAnalog desenha uma escala vertical com marcações,
+///          uma seta indicadora que move baseada no valor atual, e opcionalmente exibe o valor numérico.
+///          O widget pode ser configurado com diferentes tamanhos, cores, faixas de valores e número de divisões.
 class VAnalog : public WidgetBase
 {
-private:
-  static const char* TAG; ///< Tag for logging
-  uint16_t m_padding; ///< Padding around the display area.
-  uint16_t m_paddingDraw; ///< Padding within the drawing area.
-  uint16_t m_drawArea; ///< Area for drawing the analog scale.
-  uint32_t m_lastYArrow; ///< Last Y-coordinate of the arrow marker.
-  bool m_updateText; ///< Flag indicating if the text display needs to be updated.
-  uint16_t m_filledColor; ///< Color used for the filled portion of the scale.
-  uint32_t m_vmin; ///< Minimum value of the scale.
-  uint32_t m_vmax; ///< Maximum value of the scale.
-  uint32_t m_width; ///< Width of the VAnalog display.
-  uint32_t m_height; ///< Height of the VAnalog display.
-  uint16_t m_steps; ///< Number of divisions on the scale.
-  int m_currentValue; ///< Current value displayed on the scale.
-  int m_lastValue; ///< Last value displayed on the scale.
-  uint16_t m_backgroundColor; ///< Background color of the display.
-  uint16_t m_textColor; ///< Color of the text display.
-  uint16_t m_arrowColor; ///< Color of the arrow marker.
-  uint16_t m_borderColor; ///< Color of the display border.
-  bool m_shouldRedraw = false; ///< Flag indicating if the VAnalog should be redrawn.
-
-  void start();
-
-  void setup(uint16_t _width, uint16_t _height, int _vmin, int _vmax, uint8_t _steps, uint16_t _arrowColor, uint16_t _textColor, uint16_t _backgroundColor, uint16_t _borderColor);
-
 public:
-
   VAnalog(uint16_t _x, uint16_t _y, uint8_t _screen);
-
   ~VAnalog();
-
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
-
   functionCB_t getCallbackFunc() override;
-
   void drawBackground();
-
   void setValue(int newValue, bool _viewValue);
-
   void redraw() override;
-
   void forceUpdate() override;
-
   void setup(const VerticalAnalogConfig& config);
   void show() override;
   void hide() override;
+
+private:
+  static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
+  bool m_updateText; ///< Flag indicando se o texto de exibição precisa ser atualizado.
+  int m_currentValue; ///< Valor atual exibido na escala.
+  int m_lastValue; ///< Último valor exibido na escala.
+  Margin_t m_margin; ///< Margin data.
+
+  uint8_t m_arrowSize = 6; ///< Size of the arrow.
+  Rect_t m_drawArea; ///< Area to draw the analog scale.
+  Rect_t m_arrowArea; ///< Area to draw the arrow.
+  Rect_t m_textArea; ///< Area to draw the text.
+
+  VerticalAnalogConfig m_config; ///< Estrutura de configuração para o VAnalog.
+
+  void cleanupMemory();
+  void start();
+  uint16_t calculateArrowVerticalPosition(uint16_t value);
+  void drawArrow();
+  void clearArrow();
+  void drawText();
 };
 
 #endif

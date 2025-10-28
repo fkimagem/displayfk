@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['xpt2046_0',['XPT2046',['../class_x_p_t2046.html#a12a2f9ce950d6e56dc85d82416d1c16e',1,'XPT2046::XPT2046(uint8_t cs)'],['../class_x_p_t2046.html#a2b319fa5d901575ba343d771abcc92db',1,'XPT2046::XPT2046(uint8_t clk, uint8_t miso, uint8_t mosi, uint8_t cs)']]]
+  ['unlock_0',['unlock',['../class_widget_base.html#ac6942ec86d6fa0f3505d56dee3ba17ab',1,'WidgetBase']]],
+  ['updatefont_1',['updateFont',['../class_widget_base.html#a685bdf04c94ef540804da7d07ef170ff',1,'WidgetBase']]]
 ];

@@ -6,84 +6,37 @@
 #include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
 #endif
 
-/// @brief Configuration structure for GaugeSuper
+/// @brief Estrutura de configuração para o GaugeSuper.
+/// @details Esta estrutura contém todos os parâmetros necessários para configurar um gauge super.
+///          Deve ser preenchida e passada para o método setup().
 struct GaugeConfig {
-  uint16_t width;                ///< Width of the gauge
-  const char* title;             ///< Title displayed on the gauge
-  const int* intervals;          ///< Array of interval values
-  const uint16_t* colors;        ///< Array of colors corresponding to intervals
-  uint8_t amountIntervals;       ///< Number of intervals and colors
-  int minValue;                  ///< Minimum value of the gauge range
-  int maxValue;                  ///< Maximum value of the gauge range
-  uint16_t borderColor;          ///< Color of the gauge border
-  uint16_t textColor;            ///< Color for text and value display
-  uint16_t backgroundColor;      ///< Background color of the gauge
-  uint16_t titleColor;           ///< Color of the title text
-  uint16_t needleColor;          ///< Color of the needle
-  uint16_t markersColor;         ///< Color of the markers
-  bool showLabels;               ///< Flag to show text labels for intervals
+  uint16_t width; ///< Largura do gauge em pixels.
+  const char* title; ///< Título exibido no gauge.
+  const int* intervals; ///< Array de valores dos intervalos.
+  const uint16_t* colors; ///< Array de cores correspondentes aos intervalos.
+  uint8_t amountIntervals; ///< Número de intervalos e cores.
+  int minValue; ///< Valor mínimo da faixa do gauge.
+  int maxValue; ///< Valor máximo da faixa do gauge.
+  uint16_t borderColor; ///< Cor da borda do gauge.
+  uint16_t textColor; ///< Cor para texto e exibição de valores.
+  uint16_t backgroundColor; ///< Cor de fundo do gauge.
+  uint16_t titleColor; ///< Cor do texto do título.
+  uint16_t needleColor; ///< Cor da agulha.
+  uint16_t markersColor; ///< Cor dos marcadores.
+  bool showLabels; ///< Flag para mostrar rótulos de texto dos intervalos.
   #if defined(USING_GRAPHIC_LIB)
-  const GFXfont* fontFamily;     ///< Font used for text rendering
+  const GFXfont* fontFamily; ///< Fonte usada para renderização de texto.
   #endif
 };
 
-/// @brief Represents a gauge widget with a needle and color-coded intervals.
+/// @brief Widget de gauge super com agulha e intervalos codificados por cores.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar 
+///          gauges super avançados na tela. O GaugeSuper desenha um gauge circular com agulha móvel,
+///          intervalos coloridos, marcadores graduados e rótulos opcionais. O widget pode ser configurado
+///          com diferentes larguras, faixas de valores, intervalos coloridos e exibição de título.
+///          O gauge é totalmente funcional com suporte a animação suave da agulha e atualização em tempo real.
 class GaugeSuper : public WidgetBase
 {
-private:
-  static constexpr uint8_t MAX_SERIES = 10;  // Define according to your needs/limits
-  static constexpr uint8_t MAX_TITLE_LENGTH = 20;  // Maximum title length
-  static const char* TAG; ///< Tag for logging identification
-  
-  // Configuration
-  GaugeConfig m_config; ///< Configuration for the GaugeSuper
-  
-  // Internal state
-  float m_ltx = 0; ///< Last calculated tangent for the needle angle
-  CoordPoint_t m_lastPointNeedle; ///< Coordinates of the needle's end point
-  uint16_t m_stripColor; ///< Color for the colorful strip
-  uint16_t m_indexCurrentStrip; ///< Index for the current color strip segment
-  int m_divisor; ///< Multiplier for range values (used to display values >999)
-  bool m_isFirstDraw; ///< Flag indicating if the gauge is being drawn for the first time
-  
-  // Dynamic arrays (managed carefully to avoid memory leaks)
-  int *m_intervals = nullptr; ///< Array of interval values
-  uint16_t *m_colors = nullptr; ///< Array of colors corresponding to intervals
-  char *m_title = nullptr; ///< Title displayed on the gauge
-  
-  // Memory management flags
-  bool m_intervalsAllocated = false; ///< Flag to track intervals allocation
-  bool m_colorsAllocated = false; ///< Flag to track colors allocation
-  bool m_titleAllocated = false; ///< Flag to track title allocation
-  
-  // Calculated dimensions
-  uint32_t m_height; ///< Height of the gauge rectangle
-  uint32_t m_radius; ///< Radius of the gauge circle
-  int m_currentValue; ///< Current value to display on the gauge
-  int m_lastValue; ///< Last value displayed by the needle
-  
-  // Drawing parameters
-  int m_stripWeight = 16; ///< Width of the colored strip
-  int m_maxAngle = 40; ///< Half of the total angle in degrees of the gauge
-  int m_offsetYAgulha = 40; ///< Y-offset for the needle's pivot point
-  int m_rotation = 90; ///< Rotation angle of the gauge (0 = middle right)
-  int m_distanceAgulhaArco = 2; ///< Distance from the needle end point to the arc
-  uint8_t m_borderSize = 5; ///< Width of the border
-  uint16_t m_availableWidth; ///< Available width for drawing
-  uint16_t m_availableHeight; ///< Available height for drawing
-  
-  #if defined(USING_GRAPHIC_LIB)
-  const GFXfont* m_usedFont = nullptr; ///< Font used for text rendering
-  #endif
-  TextBound_t m_textBoundForValue; ///< Bounding box for the displayed value text
-  CoordPoint_t m_origem; ///< Center of the gauge clock
-  
-  void start();
-  void cleanupMemory();
-  bool validateConfig(const GaugeConfig& config);
-  bool isTitleVisible() const;
-  bool isLabelsVisible() const;
-  
 public:
   GaugeSuper(uint16_t _x, uint16_t _y, uint8_t _screen);
   virtual ~GaugeSuper();
@@ -98,6 +51,60 @@ public:
   void setup(const GaugeConfig& config);
   void drawBackground();
   void setValue(int newValue);
+
+private:
+  static constexpr uint8_t MAX_SERIES = 10;  ///< Número máximo de séries/intervalos permitidos.
+  static constexpr uint8_t MAX_TITLE_LENGTH = 20;  ///< Comprimento máximo do título.
+  static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
+  
+  // Configuration
+  GaugeConfig m_config; ///< Estrutura contendo configuração completa do gauge super.
+  
+  // Internal state
+  float m_ltx; ///< Última tangente calculada para o ângulo da agulha.
+  CoordPoint_t m_lastPointNeedle; ///< Coordenadas do ponto final da agulha.
+  uint16_t m_stripColor; ///< Cor para a faixa colorida.
+  uint16_t m_indexCurrentStrip; ///< Índice para o segmento atual da faixa de cor.
+  int m_divisor; ///< Multiplicador para valores de faixa (usado para exibir valores >999).
+  bool m_isFirstDraw; ///< Flag indicando se o gauge está sendo desenhado pela primeira vez.
+  
+  // Dynamic arrays (managed carefully to avoid memory leaks)
+  int *m_intervals; ///< Array de valores dos intervalos.
+  uint16_t *m_colors; ///< Array de cores correspondentes aos intervalos.
+  char *m_title; ///< Título exibido no gauge.
+  
+  // Memory management flags
+  bool m_intervalsAllocated; ///< Flag para rastrear alocação de intervalos.
+  bool m_colorsAllocated; ///< Flag para rastrear alocação de cores.
+  bool m_titleAllocated; ///< Flag para rastrear alocação do título.
+  
+  // Calculated dimensions
+  uint32_t m_height; ///< Altura do retângulo do gauge.
+  uint32_t m_radius; ///< Raio do círculo do gauge.
+  int m_currentValue; ///< Valor atual a ser exibido no gauge.
+  int m_lastValue; ///< Último valor exibido pela agulha.
+  
+  // Drawing parameters
+  int m_stripWeight; ///< Largura da faixa colorida.
+  int m_maxAngle; ///< Metade do ângulo total em graus do gauge.
+  int m_offsetYAgulha; ///< Offset Y para o ponto de pivô da agulha.
+  int m_rotation; ///< Ângulo de rotação do gauge (0 = meio direito).
+  int m_distanceAgulhaArco; ///< Distância do ponto final da agulha ao arco.
+  uint8_t m_borderSize; ///< Largura da borda.
+  uint16_t m_availableWidth; ///< Largura disponível para desenho.
+  uint16_t m_availableHeight; ///< Altura disponível para desenho.
+  
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* m_usedFont; ///< Fonte usada para renderização de texto.
+  #endif
+  TextBound_t m_textBoundForValue; ///< Caixa delimitadora para o texto do valor exibido.
+  CoordPoint_t m_origem; ///< Centro do relógio do gauge.
+  
+  void start();
+  void cleanupMemory();
+  bool validateConfig(const GaugeConfig& config);
+  bool isTitleVisible() const;
+  bool isLabelsVisible() const;
 };
 
 #endif

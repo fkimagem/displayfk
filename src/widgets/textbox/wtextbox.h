@@ -4,56 +4,68 @@
 #include "../widgetbase.h"
 #include "../../extras/charstring.h"
 
-/// @brief Configuration struct for TextBox setup
+/// @brief Estrutura de configuração para o TextBox.
+/// @details Esta estrutura contém todos os parâmetros necessários para configurar uma caixa de texto.
+///          Deve ser preenchida e passada para o método setup().
 struct TextBoxConfig {
-    uint16_t width;            ///< Width of the TextBox
-    uint16_t height;           ///< Height of the TextBox
-    uint16_t letterColor;      ///< Text color for displaying the value
-    uint16_t backgroundColor;  ///< Background color of the TextBox
-    const char* startValue;    ///< Initial text value to display
-    #if defined(USING_GRAPHIC_LIB)
-    const GFXfont* font;       ///< Font to use for the text
-    #endif
-    functionLoadScreen_t funcPtr; ///< Function pointer to the parent screen's load function
-    functionCB_t cb;           ///< Callback function to execute on interaction
+  uint16_t width;            ///< Largura da caixa de texto.
+  uint16_t height;           ///< Altura da caixa de texto.
+  uint16_t letterColor;      ///< Cor do texto para exibir o valor.
+  uint16_t backgroundColor;  ///< Cor de fundo da caixa de texto.
+  const char* startValue;    ///< Valor de texto inicial para exibir.
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* font;       ///< Fonte para usar no texto.
+  #endif
+  functionLoadScreen_t funcPtr; ///< Ponteiro de função para a função de carregamento da tela pai.
+  functionCB_t cb;           ///< Função callback para executar na interação.
 };
 
-/// @brief Represents a text box widget for displaying and editing text.
+/// @brief Widget de caixa de texto para exibir e editar texto.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar 
+///          caixas de texto interativas na tela. O TextBox desenha um retângulo com borda para exibir
+///          e editar texto, permitindo entrada através de um teclado virtual (@ref WKeyboard).
+///          O widget pode ser configurado com diferentes tamanhos, cores, fontes e valores iniciais.
+///          O TextBox é totalmente funcional com suporte a detecção de toque para ativar o teclado,
+///          atualização de valores em tempo real e callback para eventos de interação.
 class TextBox : public WidgetBase
 {
-private:
-    static const char* TAG; ///< Tag for logging
-    unsigned long m_myTime; ///< Timestamp for handling timing-related functions.
-    uint16_t m_width; ///< Width of the TextBox.
-    uint16_t m_height; ///< Height of the TextBox.
-    uint16_t m_backgroundColor; ///< Background color of the TextBox.
-    uint16_t m_letterColor; ///< Text color for displaying the value.
-    CharString m_value; ///< String representing the current text value.
-    #if defined(USING_GRAPHIC_LIB)
-    const GFXfont *m_font; ///< Font to use for the text.
-    #endif
-    uint8_t m_padding; ///< Padding of the TextBox.
-    bool m_shouldRedraw = false; ///< Flag to indicate if the TextBox should be redrawn.
-
-    #if defined(USING_GRAPHIC_LIB)
-    void setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, uint16_t _backgroundColor, const char* _startValue, const GFXfont* _font, functionLoadScreen_t _funcPtr, functionCB_t _cb);
-    #endif
-
 public:
-    functionLoadScreen_t parentScreen; ///< Pointer to the function for loading the parent screen.
+  functionLoadScreen_t parentScreen; ///< Ponteiro para a função de carregamento da tela pai.
 
-    TextBox(uint16_t _x, uint16_t _y, uint8_t _screen);
-    TextBox();
-    ~TextBox();
-    bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
-    functionCB_t getCallbackFunc() override;
-    void redraw() override;
-    void forceUpdate() override;
-    void setup(const TextBoxConfig& config);
-    void setValue(const char* str);
-    const char* getValue();
-    void show() override;
+  TextBox(uint16_t _x, uint16_t _y, uint8_t _screen);
+  TextBox();
+  ~TextBox();
+  
+  bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
+  functionCB_t getCallbackFunc() override;
+  void redraw() override;
+  void forceUpdate() override;
+  
+  void setup(const TextBoxConfig& config);
+  void setValue(const char* str);
+  const char* getValue();
+  
+  void show() override;
   void hide() override;
+
+private:
+  static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
+  
+  unsigned long m_myTime; ///< Timestamp para manipular funções relacionadas a tempo.
+  uint16_t m_width; ///< Largura da caixa de texto.
+  uint16_t m_height; ///< Altura da caixa de texto.
+  uint16_t m_backgroundColor; ///< Cor de fundo da caixa de texto.
+  uint16_t m_letterColor; ///< Cor do texto para exibir o valor.
+  CharString m_value; ///< String representando o valor de texto atual.
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont *m_font; ///< Fonte para usar no texto.
+  #endif
+  uint8_t m_padding; ///< Preenchimento da caixa de texto.
+  bool m_shouldRedraw; ///< Flag para indicar se o TextBox deve ser redesenhado.
+  
+  #if defined(USING_GRAPHIC_LIB)
+  void setup(uint16_t _width, uint16_t _height, uint16_t _letterColor, uint16_t _backgroundColor, const char* _startValue, const GFXfont* _font, functionLoadScreen_t _funcPtr, functionCB_t _cb);
+  #endif
 };
 
 #endif

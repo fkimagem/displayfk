@@ -7,35 +7,32 @@
 #include "../../fonts/RobotoRegular/RobotoRegular10pt7b.h"
 #endif
 
-/// @brief Configuration structure for CircularBar
+/// @brief Estrutura de configuração para o CircularBar.
+/// @details Esta estrutura contém todos os parâmetros necessários para configurar uma barra circular.
+///          Deve ser preenchida e passada para o método setup().
 struct CircularBarConfig {
-  uint16_t radius;        ///< Radius of the circular bar
-  int minValue;               ///< Minimum value of the bar range
-  int maxValue;               ///< Maximum value of the bar range
-  uint16_t startAngle;    ///< Starting angle of the circular bar
-  uint16_t endAngle;      ///< Ending angle of the circular bar
-  uint8_t thickness;         ///< Thickness of the circular bar line
-  uint16_t color;         ///< Color of the circular bar
-  uint16_t backgroundColor;       ///< Background color of the CircularBar
-  uint16_t textColor;     ///< Color of the text displaying the value
-  uint16_t backgroundText;///< Background color of the text area
-  bool showValue;         ///< Flag to show/hide the value text
-  bool inverted;          ///< Flag to indicate if the fill direction is inverted
+  uint16_t radius; ///< Raio da barra circular em pixels.
+  int minValue; ///< Valor mínimo da faixa da barra.
+  int maxValue; ///< Valor máximo da faixa da barra.
+  uint16_t startAngle; ///< Ângulo inicial da barra circular em graus.
+  uint16_t endAngle; ///< Ângulo final da barra circular em graus.
+  uint8_t thickness; ///< Espessura da linha da barra circular em pixels.
+  uint16_t color; ///< Cor RGB565 da barra circular quando preenchida.
+  uint16_t backgroundColor; ///< Cor RGB565 de fundo da barra circular.
+  uint16_t textColor; ///< Cor RGB565 do texto que exibe o valor.
+  uint16_t backgroundText; ///< Cor RGB565 do fundo da área do texto.
+  bool showValue; ///< Flag para mostrar/ocultar o texto do valor.
+  bool inverted; ///< Flag para indicar se a direção de preenchimento está invertida.
 };
 
-/// @brief Represents a circular bar widget used to display a value as a filled arc within a specified range.
+/// @brief Widget de barra circular que exibe um valor como um arco preenchido dentro de uma faixa especificada.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar 
+///          barras circulares interativas na tela. O CircularBar desenha um arco circular que se preenche
+///          proporcionalmente ao valor atual dentro da faixa configurada. O widget pode ser configurado
+///          com diferentes raios, ângulos, espessuras, cores e pode exibir o valor atual no centro.
+///          A barra é totalmente funcional com suporte a animação suave e atualização em tempo real.
 class CircularBar : public WidgetBase
 {
-private:
-  static const char* TAG; ///< Tag for logging identification
-  int m_lastValue; ///< Last value represented by the bar.
-  int m_value; ///< Current value to show on the bar.
-  int m_rotation = 0; ///< Rotation angle of the gauge, where 0 is at the middle right.
-  TextBound_t m_lastArea = {0, 0, 0, 0}; ///< Last calculated area for the label.
-  CircularBarConfig m_config; ///< Configuration for the CircularBar.
-
-  void start();
-
 public:
   CircularBar(uint16_t _x, uint16_t _y, uint8_t _screen);
   virtual ~CircularBar();
@@ -48,5 +45,15 @@ public:
   void setup(const CircularBarConfig& config);
   void drawBackground();
   void setValue(int newValue);
+
+private:
+  static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
+  int m_lastValue; ///< Último valor representado pela barra.
+  int m_value; ///< Valor atual a ser exibido na barra.
+  int m_rotation; ///< Ângulo de rotação do gauge, onde 0 está no meio direito.
+  TextBound_t m_lastArea; ///< Última área calculada para o rótulo.
+  CircularBarConfig m_config; ///< Estrutura contendo configuração completa da barra circular.
+
+  void start();
 };
 #endif

@@ -171,7 +171,17 @@ uint16_t WidgetBase::darkenColor565(unsigned short color, float factor)
  * @param _screen Screen number.
  */
 WidgetBase::WidgetBase(uint16_t _x, uint16_t _y, uint8_t _screen) 
-    : m_xPos(_x), m_yPos(_y), m_screen(_screen), m_loaded(false), m_myTime(0), m_callback(nullptr)
+    : m_visible(true)
+    , m_xPos(_x)
+    , m_yPos(_y)
+    , m_screen(_screen)
+    , m_loaded(false)
+    , m_enabled(true)
+    , m_initialized(false)
+    , m_shouldRedraw(false)
+    , m_locked(false)
+    , m_myTime(0)
+    , m_callback(nullptr)
 {
     ESP_LOGD(TAG, "WidgetBase created at (%d, %d) on screen %d", _x, _y, _screen);
 }

@@ -4,10 +4,14 @@
 const char* GaugeSuper::TAG = "GaugeSuper";
 
 /**
- * @brief Constructor for the GaugeSuper class.
- * @param _x X position of the gauge.
- * @param _y Y position of the gauge.
- * @param _screen Screen number.
+ * @brief Construtor da classe GaugeSuper.
+ * @param _x Coordenada X da posição central do gauge na tela.
+ * @param _y Coordenada Y da posição central do gauge na tela.
+ * @param _screen Identificador da tela onde o gauge será exibido.
+ * @details Inicializa o gauge super com valores padrão: largura 0, faixa 0-100,
+ *          cores padrão, sem título, sem intervalos. O gauge deve ser configurado
+ *          com setup() antes de ser exibido. Gerencia memória dinamicamente para
+ *          arrays de intervalos, cores e título.
  */
 GaugeSuper::GaugeSuper(uint16_t _x, uint16_t _y, uint8_t _screen) 
     : WidgetBase(_x, _y, _screen), 
@@ -40,7 +44,10 @@ GaugeSuper::GaugeSuper(uint16_t _x, uint16_t _y, uint8_t _screen)
 }
 
 /**
- * @brief Destructor for the GaugeSuper class.
+ * @brief Destrutor da classe GaugeSuper.
+ * @details Registra o evento no log do ESP32, limpa toda a memória alocada dinamicamente
+ *          usando cleanupMemory() e limpa o ponteiro da função callback.
+ *          Todos os recursos são liberados automaticamente pela herança de @ref WidgetBase.
  */
 GaugeSuper::~GaugeSuper()
 {
@@ -56,10 +63,12 @@ GaugeSuper::~GaugeSuper()
 }
 
 /**
- * @brief Detects a touch on the gauge.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is detected, false otherwise.
+ * @brief Detecta se o GaugeSuper foi tocado pelo usuário.
+ * @param _xTouch Ponteiro para a coordenada X do toque na tela.
+ * @param _yTouch Ponteiro para a coordenada Y do toque na tela.
+ * @return Sempre retorna False, pois GaugeSuper não processa eventos de toque.
+ * @details Este widget é apenas visual e não responde a interações de toque.
+ *          Os parâmetros são marcados como UNUSED para evitar avisos do compilador.
  */
 bool GaugeSuper::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 {
@@ -70,8 +79,10 @@ bool GaugeSuper::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 }
 
 /**
- * @brief Retrieves the callback function for the gauge.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao GaugeSuper.
+ * @return Ponteiro para a função callback, ou nullptr se nenhuma foi definida.
+ * @details A função callback é executada quando o estado do gauge muda.
+ *          Para mais informações sobre callbacks, consulte @ref WidgetBase.
  */
 functionCB_t GaugeSuper::getCallbackFunc()
 {
@@ -79,10 +90,11 @@ functionCB_t GaugeSuper::getCallbackFunc()
 }
 
 /**
- * @brief Initializes the GaugeSuper widget with default calculations and constraints.
- * 
- * Calculates gauge dimensions, text bounds, and sets up initial values.
- * Constrains the maximum angle between 22 and 80 degrees.
+ * @brief Inicializa o widget GaugeSuper com cálculos padrão e restrições.
+ * @details Calcula dimensões do gauge, limites de texto e define valores iniciais.
+ *          Restringe o ângulo máximo entre 22 e 80 graus. Calcula o raio sugerido
+ *          baseado na largura configurada e ajusta o offset da agulha automaticamente.
+ *          Este método é chamado internamente por setup() após a configuração.
  */
 void GaugeSuper::start()
 {
@@ -169,10 +181,13 @@ void GaugeSuper::start()
 }
 
 /**
- * @brief Draws the background of the GaugeSuper widget.
- * 
- * Renders the gauge background including colored strips, markers, and labels.
- * Only draws if the widget is on the current screen and properly loaded.
+ * @brief Desenha o fundo do widget GaugeSuper.
+ * @details Renderiza o fundo do gauge incluindo faixas coloridas, marcadores e rótulos.
+ *          Este método deve ser chamado uma vez para configurar o fundo antes
+ *          de usar setValue() para atualizar o valor. Desenha bordas, fundo,
+ *          faixas coloridas baseadas nos intervalos, marcadores graduados e
+ *          rótulos opcionais. Apenas desenha se o widget está na tela atual
+ *          e adequadamente carregado.
  */
 void GaugeSuper::drawBackground()
 {
@@ -382,10 +397,14 @@ void GaugeSuper::drawBackground()
 }
 
 /**
- * @brief Sets the current value of the GaugeSuper widget.
- * @param newValue New value to display on the gauge.
- * 
- * Updates the current value and marks the widget for redraw if the value changed.
+ * @brief Define o valor atual do widget GaugeSuper.
+ * @param newValue Novo valor a ser exibido no gauge.
+ * @details Este método permite atualizar o valor do gauge:
+ *          - Restringe o valor entre minValue e maxValue usando constrain()
+ *          - Atualiza apenas se o valor mudou para evitar redesenhos desnecessários
+ *          - Marca o widget para redesenho se o valor mudou
+ *          - Registra o evento no log do ESP32
+ *          O valor será mapeado proporcionalmente para o ângulo da agulha na próxima chamada de redraw().
  */
 void GaugeSuper::setValue(int newValue)
 {
@@ -410,10 +429,17 @@ void GaugeSuper::setValue(int newValue)
 }
 
 /**
- * @brief Redraws the GaugeSuper widget on the screen, updating the needle position.
- * 
- * Displays the gauge with the current value and updates the needle position.
- * Only redraws if the widget is on the current screen and needs updating.
+ * @brief Redesenha o widget GaugeSuper na tela, atualizando a posição da agulha.
+ * @details Este método é responsável por renderizar o gauge na tela:
+ *          - Verifica todas as condições necessárias para o redesenho
+ *          - Mapeia o valor atual para ângulos usando a função map()
+ *          - Apaga a agulha anterior desenhando sobre ela com a cor de fundo
+ *          - Desenha a nova agulha na posição calculada
+ *          - Usa funções trigonométricas otimizadas (fastCos, fastSin, fastTan)
+ *          - Desenha título e rótulos se habilitados
+ *          - Aplica debounce para evitar redesenhos excessivos
+ *          Apenas redesenha se o gauge está visível, inicializado, carregado, na tela atual
+ *          e a flag m_shouldRedraw está configurada como true.
  */
 void GaugeSuper::redraw()
 {
@@ -499,9 +525,10 @@ void GaugeSuper::redraw()
 }
 
 /**
- * @brief Forces an immediate update of the GaugeSuper widget.
- * 
- * Sets the flag to redraw the gauge on the next redraw cycle.
+ * @brief Força uma atualização imediata do GaugeSuper.
+ * @details Define a flag m_shouldRedraw para true, forçando o redesenho do gauge
+ *          no próximo ciclo de atualização da tela. Útil para garantir que mudanças
+ *          no valor sejam visíveis imediatamente.
  */
 void GaugeSuper::forceUpdate()
 {
@@ -511,8 +538,16 @@ void GaugeSuper::forceUpdate()
 
 
 /**
- * @brief Configures the GaugeSuper with parameters defined in a configuration structure.
- * @param config Structure containing the GaugeSuper configuration parameters.
+ * @brief Configura o GaugeSuper com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref GaugeConfig contendo os parâmetros de configuração do gauge.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Valida a configuração usando validateConfig()
+ *          - Limpa memória existente usando cleanupMemory()
+ *          - Copia título para buffer interno com validação de tamanho
+ *          - Copia arrays de intervalos e cores para buffers internos
+ *          - Chama start() para cálculos e inicialização
+ *          - Marca o widget como inicializado e carregado
+ *          - O gauge não será exibido corretamente até que este método seja chamado
  */
 void GaugeSuper::setup(const GaugeConfig& config)
 {
@@ -616,6 +651,11 @@ void GaugeSuper::setup(const GaugeConfig& config)
   #endif
 }
 
+/**
+ * @brief Torna o gauge super visível na tela.
+ * @details Define m_visible como true e marca para redesenho. O gauge será
+ *          desenhado na próxima chamada de redraw() se estiver na tela atual.
+ */
 void GaugeSuper::show()
 {
     m_visible = true;
@@ -623,6 +663,11 @@ void GaugeSuper::show()
     ESP_LOGD(TAG, "GaugeSuper shown at (%d, %d)", m_xPos, m_yPos);
 }
 
+/**
+ * @brief Oculta o gauge super da tela.
+ * @details Define m_visible como false e marca para redesenho. O gauge não será
+ *          mais desenhado até que show() seja chamado novamente.
+ */
 void GaugeSuper::hide()
 {
     m_visible = false;
@@ -631,8 +676,9 @@ void GaugeSuper::hide()
 }
 
 /**
- * @brief Checks if the title should be visible.
- * @return True if title is visible, false otherwise.
+ * @brief Verifica se o título deve ser visível.
+ * @return True se o título é visível, False caso contrário.
+ * @details Verifica se o título foi definido e não está vazio.
  */
 bool GaugeSuper::isTitleVisible() const
 {
@@ -640,8 +686,9 @@ bool GaugeSuper::isTitleVisible() const
 }
 
 /**
- * @brief Checks if labels should be visible.
- * @return True if labels are visible, false otherwise.
+ * @brief Verifica se os rótulos devem ser visíveis.
+ * @return True se os rótulos são visíveis, False caso contrário.
+ * @details Verifica a flag showLabels da configuração.
  */
 bool GaugeSuper::isLabelsVisible() const
 {
@@ -649,9 +696,10 @@ bool GaugeSuper::isLabelsVisible() const
 }
 
 /**
- * @brief Centralized memory cleanup method.
- * 
- * Safely deallocates all dynamic memory and resets allocation flags.
+ * @brief Método centralizado de limpeza de memória.
+ * @details Desaloca com segurança toda a memória dinâmica e reseta flags de alocação.
+ *          Usado pelo destrutor e setup() para evitar vazamentos de memória.
+ *          Verifica flags de alocação antes de desalocar para segurança.
  */
 void GaugeSuper::cleanupMemory()
 {
@@ -685,9 +733,12 @@ void GaugeSuper::cleanupMemory()
 // Color and value access methods removed - now using m_config directly
 
 /**
- * @brief Validates the configuration structure.
- * @param config Configuration to validate.
- * @return True if valid, false otherwise.
+ * @brief Valida a estrutura de configuração.
+ * @param config Configuração a ser validada.
+ * @return True se válida, False caso contrário.
+ * @details Valida parâmetros básicos como largura, faixa de valores,
+ *          número de intervalos e arrays de intervalos/cores.
+ *          Registra erros no log do ESP32 para facilitar depuração.
  */
 bool GaugeSuper::validateConfig(const GaugeConfig& config)
 {

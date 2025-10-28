@@ -1,11 +1,24 @@
 var searchData=
 [
-  ['filledcolor_0',['filledColor',['../struct_vertical_bar_config.html#a2cc66c3fa49a8fdb17d40bc205e8e272',1,'VerticalBarConfig']]],
-  ['font_1',['font',['../struct_input_external_config.html#a553b540cd91964d0abdb11a13f47ced8',1,'InputExternalConfig::font()'],['../struct_line_chart_config.html#a5cdae475c35c8ec5b4508d363204da0a',1,'LineChartConfig::font()'],['../struct_number_box_config.html#a576f52f92d5e54b3facb0cf41fed0198',1,'NumberBoxConfig::font()'],['../struct_text_box_config.html#af140a21a89e07ad0d85bea847069b319',1,'TextBoxConfig::font()']]],
-  ['fontbold_2',['fontBold',['../class_widget_base.html#a2e190ffe4ba73d56fb37905e1ffab55e',1,'WidgetBase']]],
-  ['fontcolor_3',['fontColor',['../struct_label_config.html#acd3381a334e05cb550630b9bd5b80e1e',1,'LabelConfig']]],
-  ['fontfamily_4',['fontFamily',['../struct_gauge_config.html#a38c649f2c3a04b32ca002724b7df712d',1,'GaugeConfig::fontFamily()'],['../struct_label_config.html#af5b9adcbfaf0ece84f92771e85108954',1,'LabelConfig::fontFamily()']]],
-  ['fontnormal_5',['fontNormal',['../class_widget_base.html#ac013adf650a2952b8fd45bd6fa31b472',1,'WidgetBase']]],
-  ['funcptr_6',['funcPtr',['../struct_input_external_config.html#a5a6ff38eb3fd0c088c17c29af635a6fd',1,'InputExternalConfig::funcPtr()'],['../struct_number_box_config.html#aa6381dd91cb1088ce9530230fd4da60c',1,'NumberBoxConfig::funcPtr()'],['../struct_text_box_config.html#ad80d0fe3bf178cb0f563750df1bfa158',1,'TextBoxConfig::funcPtr()']]],
-  ['functions_7',['functions',['../namespacegen__keywords.html#a1c8850355846c4d9a50e4ef0b9745085',1,'gen_keywords']]]
+  ['fileloadcount_0',['fileLoadCount',['../struct_performance_metrics__t.html#a2039f8f6f6521c202d0a2a6362bc453e',1,'PerformanceMetrics_t']]],
+  ['fill_1',['fill',['../uniongsl___p_o_i_n_t___t_y_p_e.html#afed46bb7cb01dc7f248ed2005bbcb0ef',1,'gsl_POINT_TYPE']]],
+  ['filledcolor_2',['filledColor',['../struct_thermometer_config.html#a6c663dbe463281a8769605f0c2af6447',1,'ThermometerConfig::filledColor'],['../struct_vertical_bar_config.html#a2cc66c3fa49a8fdb17d40bc205e8e272',1,'VerticalBarConfig::filledColor']]],
+  ['filter_5fable_3',['filter_able',['../gsl__point__id_8c.html#a98de19509b649c4b49f44d37ac2e15cf',1,'gsl_point_id.c']]],
+  ['filter_5fcoe_4',['filter_coe',['../gsl__point__id_8c.html#ad783b0acdc5924f2cc8db3504a604221',1,'gsl_point_id.c']]],
+  ['filter_5fdeep_5',['filter_deep',['../gsl__point__id_8c.html#a391b4ae8a6695465e6e7f4f62d55debf',1,'gsl_point_id.c']]],
+  ['finger_5fid_6',['finger_id',['../struct___x_y___d_a_t_a___t.html#a505341a56120578595d114be4edeb0c6',1,'_XY_DATA_T']]],
+  ['finger_5fnum_7',['Finger_num',['../esp__lcd__gsl3680_8c.html#ac29b9e4ae904344747e31d7a255dbac4',1,'esp_lcd_gsl3680.c']]],
+  ['finger_5fnum_8',['finger_num',['../structgsl__touch__info.html#a823ea34235e265ceec9a23323aa78c8f',1,'gsl_touch_info']]],
+  ['first_5favg_9',['first_avg',['../uniongsl___i_d___f_l_a_g___t_y_p_e.html#a78304f3eb255db5d4de7020a0bc21891',1,'gsl_ID_FLAG_TYPE']]],
+  ['flags_10',['flags',['../structesp__lcd__touch__config__t.html#a29c90a7226dee380441b227302c1f3fb',1,'esp_lcd_touch_config_t']]],
+  ['font_11',['font',['../struct_line_chart_config.html#a5cdae475c35c8ec5b4508d363204da0a',1,'LineChartConfig::font'],['../struct_number_box_config.html#a576f52f92d5e54b3facb0cf41fed0198',1,'NumberBoxConfig::font'],['../struct_text_box_config.html#af140a21a89e07ad0d85bea847069b319',1,'TextBoxConfig::font']]],
+  ['fontbold_12',['fontBold',['../class_widget_base.html#a2e190ffe4ba73d56fb37905e1ffab55e',1,'WidgetBase']]],
+  ['fontcolor_13',['fontColor',['../struct_label_config.html#acd3381a334e05cb550630b9bd5b80e1e',1,'LabelConfig']]],
+  ['fontfamily_14',['fontFamily',['../struct_gauge_config.html#a38c649f2c3a04b32ca002724b7df712d',1,'GaugeConfig::fontFamily'],['../struct_label_config.html#af5b9adcbfaf0ece84f92771e85108954',1,'LabelConfig::fontFamily']]],
+  ['fontkeys_15',['fontKeys',['../struct_numpad_config.html#a90981969cf255a743514cb34b84e9b26',1,'NumpadConfig']]],
+  ['fontnormal_16',['fontNormal',['../class_widget_base.html#ac013adf650a2952b8fd45bd6fa31b472',1,'WidgetBase']]],
+  ['fontpreview_17',['fontPreview',['../struct_numpad_config.html#ad7396a527523574672bd46a6e507863c',1,'NumpadConfig']]],
+  ['ft6336u_18',['ft6336u',['../_read_touch_param_8ino.html#aec8c8c2e8522d97def3a1cd4c64c519c',1,'ft6336u:&#160;ReadTouchParam.ino'],['../_scan_multi_touch_8ino.html#aec8c8c2e8522d97def3a1cd4c64c519c',1,'ft6336u:&#160;ScanMultiTouch.ino']]],
+  ['funcptr_19',['funcPtr',['../struct_number_box_config.html#aa6381dd91cb1088ce9530230fd4da60c',1,'NumberBoxConfig::funcPtr'],['../struct_text_box_config.html#ad80d0fe3bf178cb0f563750df1bfa158',1,'TextBoxConfig::funcPtr']]],
+  ['functions_20',['functions',['../namespacegen__keywords.html#a1c8850355846c4d9a50e4ef0b9745085',1,'gen_keywords']]]
 ];

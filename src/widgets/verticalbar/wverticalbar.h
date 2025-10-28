@@ -3,36 +3,26 @@
 
 #include "../widgetbase.h"
 
-/// @brief Configuration structure for VBar
+/// @brief Estrutura de configuração para o VBar.
+/// @details Esta estrutura contém todos os parâmetros necessários para configurar uma barra vertical.
+///          Deve ser preenchida e passada para o método setup().
 struct VerticalBarConfig {
-  uint16_t width;          ///< Width of the VBar display
-  uint16_t height;         ///< Height of the VBar display
-  uint16_t filledColor;    ///< Color used for the filled portion of the bar
-  int minValue;                ///< Minimum value of the bar range
-  int maxValue;                ///< Maximum value of the bar range
-  int round;
-  Orientation orientation; ///< Orientation of the bar (vertical or horizontal)
+  uint16_t width;          ///< Largura da exibição do VBar.
+  uint16_t height;         ///< Altura da exibição do VBar.
+  uint16_t filledColor;    ///< Cor usada para a porção preenchida da barra.
+  int minValue;                ///< Valor mínimo da faixa da barra.
+  int maxValue;                ///< Valor máximo da faixa da barra.
+  int round; ///< Raio para os cantos arredondados da barra.
+  Orientation orientation; ///< Orientação da barra (vertical ou horizontal).
 };
 
-/// @brief Represents a vertical bar widget, used to display a value as a filled bar within a specified range.
+/// @brief Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de uma faixa especificada.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar
+///          barras verticais ou horizontais na tela. O VBar desenha uma barra que se preenche proporcionalmente
+///          ao valor atual dentro de uma faixa definida. O widget pode ser configurado com diferentes tamanhos,
+///          cores, faixas de valores, raios de canto e orientação.
 class VBar : public WidgetBase
 {
-private:
-  static const char* TAG; ///< Tag for logging
-  uint16_t m_filledColor; ///< Color used for the filled portion of the bar.
-  uint32_t m_vmin; ///< Minimum value of the bar range.
-  uint32_t m_vmax; ///< Maximum value of the bar range.
-  uint32_t m_width; ///< Width of the VBar display.
-  uint32_t m_height; ///< Height of the VBar display.
-  uint32_t m_currentValue; ///< Current value represented by the filled portion of the bar.
-  uint32_t m_lastValue; ///< Last value represented by the filled portion of the bar.
-  Orientation m_orientation; ///< Orientation of the bar (vertical or horizontal).
-  int m_round = 0;
-  bool m_shouldRedraw = false; ///< Flag indicating if the VBar should be redrawn.
-
-  void start();
-  void setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax, int _round, Orientation _orientation);
-
 public:
   VBar(uint16_t _x, uint16_t _y, uint8_t _screen);
   ~VBar();
@@ -45,5 +35,14 @@ public:
   void setup(const VerticalBarConfig& config);
   void show() override;
   void hide() override;
+
+private:
+  static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
+  uint32_t m_currentValue; ///< Valor atual representado pela porção preenchida da barra.
+  uint32_t m_lastValue; ///< Último valor representado pela porção preenchida da barra.
+  VerticalBarConfig m_config; ///< Estrutura de configuração para o VBar.
+
+  void cleanupMemory();
+  void start();
 };
 #endif

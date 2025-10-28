@@ -4,10 +4,12 @@
 const char* Image::TAG = "Image";
 
 /**
- * @brief Constructor for the Image class.
- * @param _x X position of the image.
- * @param _y Y position of the image.
- * @param _screen Screen number.
+ * @brief Construtor da classe Image.
+ * @param _x Posição X da imagem.
+ * @param _y Posição Y da imagem.
+ * @param _screen Número da tela.
+ * @details Inicializa o widget com valores padrão e configuração vazia.
+ *          A imagem não será funcional até que setupFromFile() ou setupFromPixels() seja chamado.
  */
 Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen),
@@ -29,15 +31,24 @@ Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen)
 }
 
 /**
- * @brief Destructor for the Image class.
+ * @brief Destrutor da classe Image.
+ * @details Limpa todos os buffers e libera memória alocada.
  */
 Image::~Image() { clearBuffers(); }
 
 /**
- * @brief Detects if the Image has been touched
- * @param _xTouch Pointer to the X-coordinate of the touch
- * @param _yTouch Pointer to the Y-coordinate of the touch
- * @return True if the touch is within the Image area, otherwise false
+ * @brief Detecta se a Image foi tocada.
+ * @param _xTouch Ponteiro para a coordenada X do toque na tela.
+ * @param _yTouch Ponteiro para a coordenada Y do toque na tela.
+ * @return True se o toque está dentro da área da imagem, False caso contrário.
+ * @details Este método realiza múltiplas validações antes de processar o toque:
+ *          - Verifica se o widget está visível, inicializado, carregado e habilitado
+ *          - Valida que o teclado virtual não está ativo
+ *          - Verifica que a imagem está na tela atual
+ *          - Aplica debounce para evitar múltiplos cliques
+ *          - Verifica se o widget não está bloqueado
+ *          - Verifica se o toque está dentro dos limites da imagem
+ *          Se todas as validações passarem, marca o widget para redesenho.
  */
 bool Image::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   // Early validation checks using macros
@@ -64,11 +75,23 @@ if(detected) {
 }
 
 /**
- * @brief Retrieves the callback function associated with the image.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada à imagem.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando a imagem for tocada.
  */
 functionCB_t Image::getCallbackFunc() { return m_callback; }
 
+/**
+ * @brief Lê o arquivo de imagem do disco (SD, SPIFFS ou FATFS).
+ * @return True se o arquivo foi lido com sucesso, False caso contrário.
+ * @details Este método lê um arquivo de imagem do sistema de arquivos:
+ *          - Abre o arquivo e valida suas dimensões
+ *          - Lê dados de pixels no formato apropriado (RGB565 ou monocromático)
+ *          - Lê a máscara de transparência se disponível
+ *          - Aloca memória dinamicamente para os dados
+ *          - Registra métricas de desempenho para otimização
+ *          - Suporta leitura otimizada por linhas completas
+ */
 bool Image::readFileFromDisk() {
   if (m_source == SourceFile::EMBED) {
     ESP_LOGE(TAG, "Cannot read from embedded source");
@@ -218,10 +241,10 @@ bool Image::readFileFromDisk() {
 }
 
 /**
- * @brief Draws the background of the image widget.
- *
- * Fills the image area with the background color. Only draws if the widget
- * is on the current screen and needs updating.
+ * @brief Desenha o fundo do widget de imagem.
+ * @details Preenche a área da imagem com a cor de fundo. Apenas desenha se o widget
+ *          está na tela atual e precisa de atualização.
+ *          Valida a configuração usando o método centralizado validateConfig().
  */
 void Image::drawBackground() {
   CHECK_TFT_VOID
@@ -242,11 +265,14 @@ void Image::drawBackground() {
 }
 
 /**
- * @brief Draws the image on the screen.
- *
- * Loads and renders the image from its source (file or pixels) with optional
- * rotation. Only draws if the widget is on the current screen and needs
- * updating.
+ * @brief Desenha a imagem na tela.
+ * @details Carrega e renderiza a imagem de sua fonte (arquivo ou pixels) com rotação opcional.
+ *          Apenas desenha se o widget está na tela atual e precisa de atualização:
+ *          - Aplica rotação se o ângulo não for zero usando drawRotatedImage()
+ *          - Usa draw16bitRGBBitmapWithMask() para formatos RGB565
+ *          - Usa drawBitmap() para displays monocromáticos
+ *          - Registra métricas de desempenho para otimização
+ *          - Desenha fundo se o widget não estiver visível
  */
 void Image::draw() {
   CHECK_TFT_VOID
@@ -311,19 +337,17 @@ void Image::draw() {
 }
 
 /**
- * @brief Redraws the image on the screen.
- *
- * Simply calls the draw() method to render the image.
- * All validation is handled by the draw() method itself.
+ * @brief Redesenha a imagem na tela.
+ * @details Chama simplesmente o método draw() para renderizar a imagem.
+ *          Toda a validação é tratada pelo próprio método draw().
  */
 void Image::redraw() {
   draw();
 }
 
 /**
- * @brief Forces the image to update.
- *
- * Sets the update flag to trigger a redraw on the next cycle.
+ * @brief Força a imagem a atualizar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
  */
 void Image::forceUpdate() { 
   m_shouldRedraw = true; 
@@ -332,13 +356,16 @@ void Image::forceUpdate() {
 
 
 /**
- * @brief Configures the Image widget with a file source.
- *
- * Sets up the image with a file source, path, callback function, and rotation angle.
- * Uses readFileFromDisk() to convert file to pixel data and maps to m_config.
- *
- * @param config Configuration structure containing file source, path, callback
- * function, and rotation angle.
+ * @brief Configura o widget Image com uma fonte de arquivo.
+ * @param config Estrutura @ref ImageFromFileConfig contendo fonte de arquivo, caminho, callback e ângulo de rotação.
+ * @details Configura a imagem com uma fonte de arquivo, caminho, função callback e ângulo de rotação:
+ *          - Limpa buffers existentes usando clearBuffers()
+ *          - Define sistema de arquivos usando defineFileSystem()
+ *          - Carrega arquivo do disco usando readFileFromDisk()
+ *          - Mapeia dados carregados para configuração unificada
+ *          - Valida configuração usando validateConfig()
+ *          - Marca widget como carregado e inicializado
+ *          A imagem não será exibida corretamente até que este método seja chamado.
  */
 void Image::setupFromFile(ImageFromFileConfig &config) {
   if (!WidgetBase::objTFT) {
@@ -404,13 +431,16 @@ void Image::setupFromFile(ImageFromFileConfig &config) {
 
 
 /**
- * @brief Configures the Image widget with pixel data.
- *
- * Sets up the image with pixel data, dimensions, alpha mask, and callback function.
- * Uses direct reference to avoid memory overhead for embedded images.
- *
- * @param config Configuration structure containing pixel data, dimensions, 
- * alpha mask, and callback function.
+ * @brief Configura o widget Image com dados de pixels.
+ * @param config Estrutura @ref ImageFromPixelsConfig contendo dados de pixels, dimensões, máscara alfa e callback.
+ * @details Configura a imagem com dados de pixels, dimensões, máscara de transparência e função callback:
+ *          - Limpa buffers existentes usando clearBuffers()
+ *          - Armazena configuração para validação
+ *          - Valida usando validateConfig() método centralizado
+ *          - Usa referência direta para evitar overhead de memória para imagens embutidas
+ *          - Mapeia para variáveis legacy para compatibilidade
+ *          - Marca widget como carregado e inicializado
+ *          Ideal para imagens embutidas no código como arrays constantes.
  */
 void Image::setupFromPixels(ImageFromPixelsConfig &config) {
   if (!WidgetBase::objTFT) {
@@ -455,8 +485,13 @@ void Image::setupFromPixels(ImageFromPixelsConfig &config) {
 }
 
 /**
- * @brief Defines the file system for the image.
- * @param source Source of the image file.
+ * @brief Define o sistema de arquivos para a imagem.
+ * @param source Fonte do arquivo de imagem (@ref SourceFile).
+ * @details Configura o ponteiro do sistema de arquivos baseado na fonte:
+ *          - SD: usa WidgetBase::mySD se disponível
+ *          - SPIFFS: monta SPIFFS se necessário
+ *          - FATFS: monta FFat se necessário
+ *          - EMBED: retorna erro (embutido não precisa de sistema de arquivos)
  */
 void Image::defineFileSystem(SourceFile source) {
   if (source == SourceFile::SD) {
@@ -466,11 +501,27 @@ void Image::defineFileSystem(SourceFile source) {
     }
     m_fs = WidgetBase::mySD;
   } else if (source == SourceFile::SPIFFS) {
+    #if defined(USE_SPIFFS)
     if (!SPIFFS.begin(false)) {
       ESP_LOGE(TAG, "SPIFFS Mount Failed");
       return;
     }
     m_fs = &SPIFFS;
+    #else
+    ESP_LOGE(TAG, "USE_SPIFFS is not defined in widgetsetup.h");
+    return;
+    #endif
+  } else if (source == SourceFile::FATFS) {
+    #if defined(USE_FATFS)
+    if (!FFat.begin(false)) {
+      ESP_LOGE(TAG, "FAT Mount Failed");
+        return;
+      }
+      m_fs = &FFat;
+      #else
+      ESP_LOGE(TAG, "USE_FATFS is not defined in widgetsetup.h");
+      return;
+    #endif
   } else {
     ESP_LOGE(TAG, "Invalid source");
     return;
@@ -478,10 +529,12 @@ void Image::defineFileSystem(SourceFile source) {
 }
 
 /**
- * @brief Prints performance metrics to the log.
- *
- * Displays comprehensive performance statistics including draw times,
- * file load times, rotation times, and their averages.
+ * @brief Imprime métricas de desempenho no log.
+ * @details Exibe estatísticas completas de desempenho incluindo tempos de desenho,
+ *          tempos de carregamento de arquivos, tempos de rotação e suas médias:
+ *          - Número de operações de desenho, carregamento e rotação
+ *          - Tempo último, médio e máximo para cada operação
+ *          - Tempo total acumulado
  */
 void Image::printMetrics() const {
   ESP_LOGI(TAG, "=== Image Performance Metrics ===");
@@ -510,10 +563,15 @@ void Image::printMetrics() const {
 }
 
 /**
- * @brief Draws the image with rotation applied.
- *
- * Implements pixel-by-pixel rotation using trigonometric calculations.
- * Supports rotation around the center of the image.
+ * @brief Desenha a imagem com rotação aplicada.
+ * @details Implementa rotação pixel por pixel usando cálculos trigonométricos:
+ *          - Converte ângulo para radianos e calcula seno/cosseno
+ *          - Calcula dimensões da caixa delimitadora rotacionada
+ *          - Para cada pixel na área rotacionada, aplica rotação inversa para obter coordenadas originais
+ *          - Desenha apenas se coordenadas originais estão dentro dos limites
+ *          - Suporta máscara de transparência
+ *          - Registra métricas de desempenho para otimização
+ *          Rotação ao redor do centro da imagem.
  */
 void Image::drawRotatedImage() {
   // Start rotation performance timing
@@ -591,13 +649,18 @@ void Image::drawRotatedImage() {
 }
 
 /**
- * @brief Validates the current image configuration.
- *
- * Performs comprehensive validation of the image configuration including
- * dimensions, pixel data, and display compatibility. Centralizes all
- * validation logic to ensure consistency across the widget.
- *
- * @return true if configuration is valid, false otherwise
+ * @brief Valida a configuração atual da imagem.
+ * @return True se a configuração é válida, False caso contrário.
+ * @details Realiza validação abrangente da configuração da imagem incluindo
+ *          dimensões, dados de pixels e compatibilidade com display. Centraliza toda
+ *          a lógica de validação para garantir consistência em todo o widget:
+ *          - Verifica se pixels não são nulos
+ *          - Valida dimensões não-zero e dentro de limites razoáveis (max 4096x4096)
+ *          - Valida contagem de pixels não-overflow
+ *          - Normaliza ângulo para faixa 0-360°
+ *          - Verifica se display está inicializado
+ *          - Valida posição dentro dos limites do display
+ *          - Considera bounding box para imagens rotacionadas
  */
 bool Image::validateConfig() {
   // Validate basic configuration
@@ -677,10 +740,14 @@ bool Image::validateConfig() {
 }
 
 /**
- * @brief Clears all buffers and resets memory management.
- * 
- * Handles memory cleanup based on whether the image is embedded or loaded from file.
- * For embedded images, only clears references. For file images, deallocates memory.
+ * @brief Limpa todos os buffers e redefine gerenciamento de memória.
+ * @details Gerencia limpeza de memória baseada se a imagem é embutida ou carregada de arquivo:
+ *          - Limpa configuração unificada
+ *          - Para imagens embutidas: apenas limpa referências
+ *          - Para imagens de arquivo: desaloca memória se m_ownsMemory é true
+ *          - Limpa referências de sistema de arquivos
+ *          - Reseta flags de estado (m_ownsMemory, m_loaded, m_shouldRedraw)
+ *          Previne vazamentos de memória através de gerenciamento inteligente de propriedade.
  */
 void Image::clearBuffers() {
   // Clear unified configuration
@@ -726,20 +793,9 @@ void Image::clearBuffers() {
 
 
 /**
- * @brief Configures the Image widget with a file source.
- *
- * Sets up the image with a file source, path, callback function, and rotation
- * angle.
- *
- * @param config Configuration structure containing file source, path, callback
- * function, and rotation angle.
- */
-
-/**
- * @brief Shows the image widget.
- *
- * Makes the image visible and marks it for redraw.
- * Only works if the widget is properly loaded.
+ * @brief Torna o widget de imagem visível.
+ * @details Torna a imagem visível e marca para redesenho.
+ *          Funciona apenas se o widget estiver adequadamente carregado.
  */
 void Image::show() {
   if (!m_loaded) {
@@ -753,10 +809,9 @@ void Image::show() {
 }
 
 /**
- * @brief Hides the image widget.
- *
- * Makes the image invisible and marks it for redraw.
- * Only works if the widget is properly loaded.
+ * @brief Oculta o widget de imagem.
+ * @details Torna a imagem invisível e marca para redesenho.
+ *          Funciona apenas se o widget estiver adequadamente carregado.
  */
 void Image::hide() {
   if (!m_loaded) {

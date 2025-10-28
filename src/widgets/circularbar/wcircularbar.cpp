@@ -4,10 +4,13 @@
 const char* CircularBar::TAG = "CircularBar";
 
 /**
- * @brief Constructor for the CircularBar class.
- * @param _x X position of the circular bar.
- * @param _y Y position of the circular bar.
- * @param _screen Screen number.
+ * @brief Construtor da classe CircularBar.
+ * @param _x Coordenada X da posição central da barra na tela.
+ * @param _y Coordenada Y da posição central da barra na tela.
+ * @param _screen Identificador da tela onde a barra será exibida.
+ * @details Inicializa a barra circular com valores padrão: raio 0, faixa 0-100,
+ *          ângulos 0-360°, espessura 10 pixels, cores padrão, exibição de valor habilitada.
+ *          A barra deve ser configurada com setup() antes de ser exibida.
  */
 CircularBar::CircularBar(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_lastValue(0), m_value(0)
@@ -19,7 +22,9 @@ CircularBar::CircularBar(uint16_t _x, uint16_t _y, uint8_t _screen)
 }
 
 /**
- * @brief Destructor for the CircularBar class.
+ * @brief Destrutor da classe CircularBar.
+ * @details Registra o evento no log do ESP32 e limpa o ponteiro da função callback.
+ *          Todos os recursos são liberados automaticamente pela herança de @ref WidgetBase.
  */
 CircularBar::~CircularBar() {
     ESP_LOGD(TAG, "CircularBar destroyed at (%d, %d)", m_xPos, m_yPos);
@@ -27,10 +32,12 @@ CircularBar::~CircularBar() {
 }
 
 /**
- * @brief Detects a touch on the circular bar.
- * @param _xTouch Pointer to the X-coordinate of the touch.
- * @param _yTouch Pointer to the Y-coordinate of the touch.
- * @return True if the touch is detected, false otherwise.
+ * @brief Detecta se o CircularBar foi tocado pelo usuário.
+ * @param _xTouch Ponteiro para a coordenada X do toque na tela.
+ * @param _yTouch Ponteiro para a coordenada Y do toque na tela.
+ * @return Sempre retorna False, pois CircularBar não processa eventos de toque.
+ * @details Este widget é apenas visual e não responde a interações de toque.
+ *          Os parâmetros são marcados como UNUSED para evitar avisos do compilador.
  */
 bool CircularBar::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   // CircularBar doesn't handle touch events
@@ -40,16 +47,19 @@ bool CircularBar::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 }
 
 /**
- * @brief Gets the callback function for the circular bar.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao CircularBar.
+ * @return Ponteiro para a função callback, ou nullptr se nenhuma foi definida.
+ * @details A função callback é executada quando o estado da barra muda.
+ *          Para mais informações sobre callbacks, consulte @ref WidgetBase.
  */
 functionCB_t CircularBar::getCallbackFunc() { return m_callback; }
 
 /**
- * @brief Draws the background of the CircularBar widget.
- *
- * Renders the background arc of the circular bar and initializes the display.
- * Only draws if the widget is on the current screen and properly loaded.
+ * @brief Desenha o fundo do widget CircularBar.
+ * @details Renderiza o arco de fundo da barra circular e inicializa a exibição.
+ *          Este método deve ser chamado uma vez para configurar o fundo antes
+ *          de usar setValue() para atualizar o valor. Apenas desenha se o widget
+ *          está na tela atual e adequadamente carregado.
  */
 void CircularBar::drawBackground() {
   CHECK_TFT_VOID
@@ -71,10 +81,14 @@ uint8_t borderOffset = 1;
 }
 
 /**
- * @brief Sets the current value of the CircularBar widget.
- * @param newValue New value to display on the circular bar.
- *
- * Updates the current value and marks the widget for redraw.
+ * @brief Define o valor atual do widget CircularBar.
+ * @param newValue Novo valor a ser exibido na barra circular.
+ * @details Este método permite atualizar o valor da barra:
+ *          - Armazena o valor anterior em m_lastValue
+ *          - Define o novo valor em m_value
+ *          - Marca o widget para redesenho
+ *          - Registra o evento no log do ESP32
+ *          O valor será mapeado proporcionalmente para o ângulo da barra na próxima chamada de redraw().
  */
 void CircularBar::setValue(int newValue) {
   CHECK_LOADED_VOID
@@ -87,12 +101,16 @@ void CircularBar::setValue(int newValue) {
 }
 
 /**
- * @brief Redraws the CircularBar widget on the screen, updating its appearance
- * based on the current value.
- *
- * Displays the circular bar with the current value and updates the visual
- * representation. Only redraws if the widget is on the current screen and needs
- * updating.
+ * @brief Redesenha o widget CircularBar na tela, atualizando sua aparência baseada no valor atual.
+ * @details Este método é responsável por renderizar a barra circular na tela:
+ *          - Verifica todas as condições necessárias para o redesenho
+ *          - Mapeia o valor atual para ângulos usando a função map()
+ *          - Desenha apenas a diferença entre o valor anterior e atual para eficiência
+ *          - Usa fillArc() da biblioteca @ref Arduino_GFX_Library para o desenho
+ *          - Exibe o valor atual no centro se showValue estiver habilitado
+ *          - Aplica debounce para evitar redesenhos excessivos
+ *          Apenas redesenha se a barra está visível, inicializada, carregada, na tela atual
+ *          e a flag m_shouldRedraw está configurada como true.
  */
 void CircularBar::redraw() {
   CHECK_TFT_VOID
@@ -174,9 +192,10 @@ void CircularBar::redraw() {
 }
 
 /**
- * @brief Forces an immediate update of the CircularBar widget.
- *
- * Sets the flag to redraw the circular bar on the next redraw cycle.
+ * @brief Força uma atualização imediata do CircularBar.
+ * @details Define a flag m_shouldRedraw para true, forçando o redesenho da barra
+ *          no próximo ciclo de atualização da tela. Útil para garantir que mudanças
+ *          no valor sejam visíveis imediatamente.
  */
 void CircularBar::forceUpdate() { 
   m_shouldRedraw = true; 
@@ -185,9 +204,15 @@ void CircularBar::forceUpdate() {
 
 
 /**
- * @brief Configures the CircularBar with parameters defined in a configuration
- * structure.
- * @param config Structure containing the CircularBar configuration parameters.
+ * @brief Configura o CircularBar com parâmetros definidos em uma estrutura de configuração.
+ * @param config Estrutura @ref CircularBarConfig contendo os parâmetros de configuração da barra.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ *          - Copia todas as configurações para m_config
+ *          - Valida e corrige valores min/max se necessário
+ *          - Inicializa os valores atual e anterior com o valor mínimo
+ *          - Desabilita exibição de valor se o raio for muito pequeno (< 20 pixels)
+ *          - Marca o widget como inicializado e carregado
+ *          - A barra não será exibida corretamente até que este método seja chamado
  */
 void CircularBar::setup(const CircularBarConfig &config) {
   // Validate TFT object
@@ -217,12 +242,22 @@ void CircularBar::setup(const CircularBarConfig &config) {
                 m_xPos, m_yPos, m_config.radius);
 }
 
+/**
+ * @brief Torna a barra circular visível na tela.
+ * @details Define m_visible como true e marca para redesenho. A barra será
+ *          desenhada na próxima chamada de redraw() se estiver na tela atual.
+ */
 void CircularBar::show() {
   m_visible = true;
   m_shouldRedraw = true;
   ESP_LOGD(TAG, "CircularBar shown at (%d, %d)", m_xPos, m_yPos);
 }
 
+/**
+ * @brief Oculta a barra circular da tela.
+ * @details Define m_visible como false e marca para redesenho. A barra não será
+ *          mais desenhada até que show() seja chamado novamente.
+ */
 void CircularBar::hide() {
   m_visible = false;
   m_shouldRedraw = true;

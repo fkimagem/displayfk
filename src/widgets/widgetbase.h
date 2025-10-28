@@ -287,8 +287,60 @@
 
 #define HELPERS
 
+#define LOG_CHECK_ERRORS 0
+
 // START SECTION - MACROS FOR VALIDATION
-#define CHECK_TFT_BOOL {if(!WidgetBase::objTFT){return false;}}
+
+#if (LOG_CHECK_ERRORS)
+
+#define CHECK_INITIALIZED_BOOL {if(!m_initialized){ESP_LOGW(TAG, "Widget is not initialized"); return false;}}
+#define CHECK_INITIALIZED_VOID {if(!m_initialized){ESP_LOGW(TAG, "Widget is not initialized"); return;}}
+
+#define CHECK_LOADED_BOOL {if(!m_loaded){ESP_LOGW(TAG, "Widget is not loaded"); return false;}}
+#define CHECK_LOADED_VOID {if(!m_loaded){ESP_LOGW(TAG, "Widget is not loaded"); return;}}
+
+#define CHECK_TFT_BOOL {if(!WidgetBase::objTFT){ESP_LOGW(TAG, "Display object is null"); return false;}}
+#define CHECK_TFT_VOID {if(!WidgetBase::objTFT){ESP_LOGW(TAG, "Display object is null"); return;}}
+
+#define CHECK_VISIBLE_VOID {if(!m_visible){ESP_LOGW(TAG, "Widget is not visible"); return;}}
+#define CHECK_VISIBLE_BOOL {if(!m_visible){ESP_LOGW(TAG, "Widget is not visible"); return false;}}
+
+#define CHECK_DEBOUNCE_CLICK_BOOL {if(millis() - m_myTime < TIMEOUT_CLICK){ESP_LOGW(TAG, "Debounce click timeout"); return false;}}
+#define CHECK_DEBOUNCE_CLICK_VOID {if(millis() - m_myTime < TIMEOUT_CLICK){ESP_LOGW(TAG, "Debounce click timeout"); return;}}
+
+#define CHECK_DEBOUNCE_REDRAW_BOOL {if(millis() - m_myTime < TIMEOUT_REDRAW){ESP_LOGW(TAG, "Debounce redraw timeout"); return false;}}
+#define CHECK_DEBOUNCE_REDRAW_VOID {if(millis() - m_myTime < TIMEOUT_REDRAW){ESP_LOGW(TAG, "Debounce redraw timeout"); return;}}
+
+#define CHECK_DEBOUNCE_FAST_REDRAW_BOOL {if(millis() - m_myTime < TIMEOUT_FAST_REDRAW){ESP_LOGW(TAG, "Debounce fast redraw timeout"); return false;}}
+#define CHECK_DEBOUNCE_FAST_REDRAW_VOID {if(millis() - m_myTime < TIMEOUT_FAST_REDRAW){ESP_LOGW(TAG, "Debounce fast redraw timeout"); return;}}
+
+#define CHECK_ENABLED_BOOL {if(!m_enabled){ESP_LOGW(TAG, "Widget is disabled"); return false;}}
+#define CHECK_ENABLED_VOID {if(!m_enabled){ESP_LOGW(TAG, "Widget is disabled"); return;}}
+
+#define CHECK_LOCKED_BOOL {if(m_locked){ESP_LOGW(TAG, "Widget is locked"); return false;}}
+#define CHECK_LOCKED_VOID {if(m_locked){ESP_LOGW(TAG, "Widget is locked"); return;}}
+
+#define CHECK_USINGKEYBOARD_BOOL {if(WidgetBase::usingKeyboard){ESP_LOGW(TAG, "Using keyboard"); return false;}}
+#define CHECK_USINGKEYBOARD_VOID {if(WidgetBase::usingKeyboard){ESP_LOGW(TAG, "Using keyboard"); return;}}
+
+#define CHECK_CURRENTSCREEN_BOOL {if(WidgetBase::currentScreen != m_screen){ESP_LOGW(TAG, "Not on current screen"); return false;}}
+#define CHECK_CURRENTSCREEN_VOID {if(WidgetBase::currentScreen != m_screen){ESP_LOGW(TAG, "Not on current screen"); return;}}
+
+#define CHECK_SHOULDREDRAW_BOOL {if(!m_shouldRedraw){ESP_LOGW(TAG, "Should not redraw"); return false;}}
+#define CHECK_SHOULDREDRAW_VOID {if(!m_shouldRedraw){ESP_LOGW(TAG, "Should not redraw"); return;}}
+
+#define CHECK_POINTER_TOUCH_NULL_BOOL {if(_xTouch == nullptr || _yTouch == nullptr){ ESP_LOGW(TAG, "Touch coordinates are null"); return false;}}
+#define CHECK_POINTER_TOUCH_NULL_VOID {if(_xTouch == nullptr || _yTouch == nullptr){ ESP_LOGW(TAG, "Touch coordinates are null"); return;}}
+
+#else
+
+#define CHECK_INITIALIZED_BOOL {if(!m_initialized){ return false;}}
+#define CHECK_INITIALIZED_VOID {if(!m_initialized){ return;}}
+
+#define CHECK_LOADED_BOOL {if(!m_loaded){ return false;}}
+#define CHECK_LOADED_VOID {if(!m_loaded){return;}}
+
+#define CHECK_TFT_BOOL {if(!WidgetBase::objTFT){ return false;}}
 #define CHECK_TFT_VOID {if(!WidgetBase::objTFT){return;}}
 
 #define CHECK_VISIBLE_VOID {if(!m_visible){return;}}
@@ -303,17 +355,11 @@
 #define CHECK_DEBOUNCE_FAST_REDRAW_BOOL {if(millis() - m_myTime < TIMEOUT_FAST_REDRAW){return false;}}
 #define CHECK_DEBOUNCE_FAST_REDRAW_VOID {if(millis() - m_myTime < TIMEOUT_FAST_REDRAW){return;}}
 
-#define CHECK_ENABLED_BOOL {if(!m_enabled){ESP_LOGW(TAG, "Widget is disabled"); return false;}}
-#define CHECK_ENABLED_VOID {if(!m_enabled){ESP_LOGW(TAG, "Widget is disabled"); return;}}
+#define CHECK_ENABLED_BOOL {if(!m_enabled){return false;}}
+#define CHECK_ENABLED_VOID {if(!m_enabled){return;}}
 
-#define CHECK_LOCKED_BOOL {if(m_locked){ESP_LOGW(TAG, "Widget is locked"); return false;}}
-#define CHECK_LOCKED_VOID {if(m_locked){ESP_LOGW(TAG, "Widget is locked"); return;}}
-
-#define CHECK_INITIALIZED_BOOL {if(!m_initialized){return false;}}
-#define CHECK_INITIALIZED_VOID {if(!m_initialized){return;}}
-
-#define CHECK_LOADED_BOOL {if(!m_loaded){return false;}}
-#define CHECK_LOADED_VOID {if(!m_loaded){return;}}
+#define CHECK_LOCKED_BOOL {if(m_locked){return false;}}
+#define CHECK_LOCKED_VOID {if(m_locked){return;}}
 
 #define CHECK_USINGKEYBOARD_BOOL {if(WidgetBase::usingKeyboard){return false;}}
 #define CHECK_USINGKEYBOARD_VOID {if(WidgetBase::usingKeyboard){return;}}
@@ -324,41 +370,50 @@
 #define CHECK_SHOULDREDRAW_BOOL {if(!m_shouldRedraw){return false;}}
 #define CHECK_SHOULDREDRAW_VOID {if(!m_shouldRedraw){return;}}
 
-#define CHECK_POINTER_TOUCH_NULL_BOOL {if(_xTouch == nullptr || _yTouch == nullptr){ ESP_LOGW(TAG, "Touch coordinates are null"); return false;}}
-#define CHECK_POINTER_TOUCH_NULL_VOID {if(_xTouch == nullptr || _yTouch == nullptr){ ESP_LOGW(TAG, "Touch coordinates are null"); return;}}
+#define CHECK_POINTER_TOUCH_NULL_BOOL {if(_xTouch == nullptr || _yTouch == nullptr){ return false;}}
+#define CHECK_POINTER_TOUCH_NULL_VOID {if(_xTouch == nullptr || _yTouch == nullptr){ return;}}
+
+
+
+#endif
 
 // END SECTION - MACROS FOR VALIDATION
 
 
-/// @brief Abstract base class for all widgets.
-/// @note This class cannot be instantiated directly. It must be inherited by concrete widget classes.
+/// @brief Classe base abstrata para todos os widgets.
+/// @details Esta classe fornece funcionalidade comum para todos os widgets no sistema DisplayFK.
+///          Define métodos virtuais puros que devem ser implementados pelas classes derivadas,
+///          além de fornecer funcionalidades estáticas compartilhadas como gerenciamento de cores,
+///          callbacks, fontes e referências ao display. Esta classe não pode ser instanciada diretamente
+///          e deve ser herdada por classes de widgets concretos como Button, TextBox, Gauge, etc.
+///          Todos os widgets herdam de @ref WidgetBase e implementam seus métodos virtuais puros.
 class WidgetBase
 {
 private:
-  static const char* TAG; ///< Tag for logging identification
+  static const char* TAG; ///< Tag estática para identificação em logs.
   static uint16_t convertToRGB565(uint8_t r, uint8_t g, uint8_t b);
   static void extract565toRGB(uint16_t color565, uint8_t &r, uint8_t &g, uint8_t &b);
 
 public:
   enum class CallbackOrigin{
-    TOUCH = 1,
-    SELF = 2
+    TOUCH = 1,  ///< Callback originado de um toque no widget.
+    SELF = 2    ///< Callback originado de uma ação interna do widget.
   };
 
-  static QueueHandle_t xFilaCallback; ///< Queue for callbacks
-  static bool usingKeyboard;    ///< True if using a virtual keyboard.
-  static uint8_t currentScreen; ///< Number of the current screen.
-  static bool showingLog;       ///< True if log is being displayed.
+  static QueueHandle_t xFilaCallback; ///< Fila de callbacks para processamento assíncrono.
+  static bool usingKeyboard;    ///< Indica se um teclado virtual está em uso.
+  static uint8_t currentScreen; ///< Número da tela atual.
+  static bool showingLog;       ///< Indica se o log está sendo exibido.
   #if defined(USING_GRAPHIC_LIB)
-  static const GFXfont *fontNormal; ///< Pointer to the normal font.
-  static const GFXfont *fontBold;   ///< Pointer to the bold font.
+  static const GFXfont *fontNormal; ///< Ponteiro para a fonte normal.
+  static const GFXfont *fontBold;   ///< Ponteiro para a fonte em negrito.
   #endif
   static void addCallback(functionCB_t callback, CallbackOrigin origin);
-  static uint16_t screenWidth;             ///< Width of the screen.
-  static uint16_t screenHeight;            ///< Height of the screen.
-  static bool lightMode;                   ///< True for light mode, false for dark mode.
-  static functionLoadScreen_t loadScreen; ///< Pointer to the function that loads the screen.
-  static uint16_t backgroundColor;         ///< Background color for the widget.
+  static uint16_t screenWidth;             ///< Largura da tela.
+  static uint16_t screenHeight;            ///< Altura da tela.
+  static bool lightMode;                   ///< True para modo claro, False para modo escuro.
+  static functionLoadScreen_t loadScreen; ///< Ponteiro para a função que carrega a tela.
+  static uint16_t backgroundColor;         ///< Cor de fundo para os widgets.
   
 
   static uint16_t lightenColor565(unsigned short color, float factor);
@@ -367,21 +422,19 @@ public:
   static uint16_t blendColors(uint16_t color1, uint16_t color2, float factor);
 
 #if defined(DISP_DEFAULT)
-  static Arduino_GFX *objTFT; ///< Pointer to the Arduino display object.
+  static Arduino_GFX *objTFT; ///< Ponteiro para o objeto de display Arduino GFX.
 #elif defined(DISP_PCD8544)
-  static Adafruit_PCD8544 *objTFT; ///< Pointer to the PCD8544 display object.
+  static Adafruit_PCD8544 *objTFT; ///< Ponteiro para o objeto de display PCD8544.
 #elif defined(DISP_SSD1306)
-  static Adafruit_SSD1306 *objTFT; ///< Pointer to the SSD1306 display object.
+  static Adafruit_SSD1306 *objTFT; ///< Ponteiro para o objeto de display SSD1306.
 #elif defined(DISP_U8G2)
-  static U8G2 *objTFT; ///< Pointer to the U8G2 display object.
+  static U8G2 *objTFT; ///< Ponteiro para o objeto de display U8G2.
 #else
-#error "Choose a display model on user_setup.h"
+#error "Escolha um modelo de display em user_setup.h"
 #endif
 
-  
-
 #if defined(DFK_SD)
-  static fs::SDFS *mySD; ///< Pointer to the SD file system.
+  static fs::SDFS *mySD; ///< Ponteiro para o sistema de arquivos SD.
 #endif
 
   WidgetBase(uint16_t _x, uint16_t _y, uint8_t _screen);
@@ -413,17 +466,17 @@ public:
   #endif
 
 protected:
-  bool m_visible = true;        ///< True if the widget is visible
-  uint16_t m_xPos;              ///< X position of the widget
-  uint16_t m_yPos;              ///< Y position of the widget
-  uint8_t m_screen;             ///< Screen index for the widget
-  bool m_loaded = false;        ///< True if the widget has been initialized
-  bool m_enabled = true;        ///< True if the widget is enabled
-  bool m_initialized = false;   ///< True if the widget is properly initialized
-  bool m_shouldRedraw = true;   ///< Flag to indicate if the widget should be redrawn
-  bool m_locked = false;        ///< True if the widget is locked (prevents interaction)
-  unsigned long m_myTime = 0;   ///< Timestamp for handling timing-related functions (debounce, etc.)
-  functionCB_t m_callback = nullptr; ///< Callback function to execute when the widget is clicked
+  bool m_visible;        ///< True se o widget está visível.
+  uint16_t m_xPos;              ///< Posição X do widget.
+  uint16_t m_yPos;              ///< Posição Y do widget.
+  uint8_t m_screen;             ///< Índice da tela para o widget.
+  bool m_loaded;        ///< True se o widget foi inicializado.
+  bool m_enabled;        ///< True se o widget está habilitado.
+  bool m_initialized;   ///< True se o widget está propriamente inicializado.
+  bool m_shouldRedraw;   ///< Flag indicando se o widget deve ser redesenhado.
+  bool m_locked;        ///< True se o widget está bloqueado (previne interação).
+  unsigned long m_myTime;   ///< Timestamp para manipulação de funções relacionadas a tempo (debounce, etc).
+  functionCB_t m_callback; ///< Função callback para executar quando o widget é clicado.
 
 #if defined(USING_GRAPHIC_LIB)
   const GFXfont* getBestRobotoBold(uint16_t availableWidth, uint16_t availableHeight, const char* texto);

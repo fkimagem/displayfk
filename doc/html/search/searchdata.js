@@ -1,16 +1,16 @@
 var indexSectionsWithContent =
 {
-  0: "_abcdefghiklmnopqrstuvwxyz~",
-  1: "cdeghiklnrstvwx",
+  0: "12345678_abcdefghijklmnoprstuvwxyz~áâé⚙⚡🎨🎯🏗👥💡💻📊📋📏📐📚📝🔄🔒🔔🔗🔢🔧🖥",
+  1: "_cdefghiklmnprstvwx",
   2: "g",
-  3: "bcdfgnortwx",
-  4: "abcdefghilnoprstuvwx~",
-  5: "_abcdefghiklmnopqrstuvwxyz",
-  6: "f",
-  7: "cfkps",
-  8: "abcdeilnrstu",
-  9: "abcdfhlmnqrst",
-  10: "d"
+  3: "bcdefglmnoprstuvwx",
+  4: "_abcdefghiklmnoprstuvwx~",
+  5: "_abcdefghijklmnoprstuvwxyz",
+  6: "bdefipstuwx",
+  7: "cdfgkopst",
+  8: "abcdefhiklmnprstuvw",
+  9: "abcdefghilmnprstu",
+  10: "12345678abcdefghiklmnoprstuvwáâé⚙⚡🎨🎯🏗👥💡💻📊📋📏📐📚📝🔄🔒🔔🔗🔢🔧🖥"
 };
 
 var indexSectionNames =
@@ -31,7 +31,7 @@ var indexSectionNames =
 var indexSectionLabels =
 {
   0: "All",
-  1: "Data Structures",
+  1: "Classes",
   2: "Namespaces",
   3: "Files",
   4: "Functions",

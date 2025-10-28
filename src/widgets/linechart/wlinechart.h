@@ -14,90 +14,44 @@ typedef struct {
   int oldValue;
 } LineChartValue_t;
 
-/// @brief Configuration structure for LineChart
+/// @brief Estrutura de configuração para o LineChart.
+/// @details Esta estrutura contém todos os parâmetros necessários para configurar um gráfico de linhas.
+///          Deve ser preenchida e passada para o método setup().
 struct LineChartConfig {
-  uint16_t width;                ///< Width of the chart
-  uint16_t height;               ///< Height of the chart
-  int minValue;                      ///< Minimum value for the chart range
-  int maxValue;                      ///< Maximum value for the chart range
-  uint8_t amountSeries;          ///< Number of series to plot
-  uint16_t* colorsSeries;        ///< Array of colors for each series
-  uint16_t gridColor;            ///< Color of the grid lines
-  uint16_t borderColor;          ///< Color of the chart border
-  uint16_t backgroundColor;      ///< Background color of the chart
-  uint16_t textColor;            ///< Color of text displayed on the chart
-  uint16_t verticalDivision;     ///< Spacing between vertical grid lines
-  bool workInBackground;         ///< Flag for background drawing
-  bool showZeroLine;             ///< Flag to show the zero line on the chart
-  bool boldLine;                 ///< Flag to make the line bold
-  bool showDots;                 ///< Flag to show the dots on the line
-  uint16_t maxPointsAmount;      ///< Maximum number of points to show on the chart
-    #if defined(USING_GRAPHIC_LIB)
-  const GFXfont* font;           ///< Font used for text on the chart
+  uint16_t width;                ///< Largura do gráfico em pixels.
+  uint16_t height;               ///< Altura do gráfico em pixels.
+  int minValue;                  ///< Valor mínimo para a faixa do gráfico.
+  int maxValue;                  ///< Valor máximo para a faixa do gráfico.
+  uint8_t amountSeries;          ///< Número de séries para plotar.
+  uint16_t* colorsSeries;        ///< Array de cores para cada série.
+  uint16_t gridColor;            ///< Cor das linhas da grade.
+  uint16_t borderColor;          ///< Cor da borda do gráfico.
+  uint16_t backgroundColor;      ///< Cor de fundo do gráfico.
+  uint16_t textColor;            ///< Cor do texto exibido no gráfico.
+  uint16_t verticalDivision;     ///< Espaçamento entre linhas verticais da grade.
+  bool workInBackground;         ///< Flag para desenho em background.
+  bool showZeroLine;             ///< Flag para mostrar a linha zero no gráfico.
+  bool boldLine;                 ///< Flag para tornar a linha em negrito.
+  bool showDots;                 ///< Flag para mostrar os pontos na linha.
+  uint16_t maxPointsAmount;      ///< Número máximo de pontos para mostrar no gráfico.
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* font;           ///< Fonte usada para texto no gráfico.
   #endif
-  Label** subtitles;             ///< Array of pointers to Label for each series (can be nullptr)
+  Label** subtitles;             ///< Array de ponteiros para Label para cada série (pode ser nullptr).
 };
 
-/// @brief Represents a line chart widget for plotting data with optional secondary line.
+/// @brief Widget de gráfico de linhas para plotar dados com múltiplas séries opcionais.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar 
+///          gráficos de linhas interativos na tela. O LineChart desenha um gráfico com múltiplas séries de dados,
+///          grade de referência, rótulos de valores e suporte a atualizações em tempo real. O widget pode ser
+///          configurado com diferentes tamanhos, faixas de valores, cores para cada série, grid, linhas em negrito,
+///          pontos nas linhas e pode exibir até 10 séries simultaneamente. O gráfico é totalmente funcional com
+///          suporte a mutex para acesso thread-safe e atualização de dados em background.
 class LineChart : public WidgetBase
 {
-private:
-  static const char* TAG;                          ///< Logging tag
-  static constexpr uint8_t MAX_SERIES = 10;        ///< Maximum number of series allowed
-  
-  
-  
-  // Internal state (specific to this widget, not in config)
-  uint8_t m_dotRadius = 2;                         ///< Radius of dots on the line
-  uint8_t m_minSpaceToShowDot = 10;                ///< Minimum space between points to show dots
-  uint32_t m_maxHeight;                            ///< Available height for plotting
-  uint32_t m_maxWidth;                             ///< Available width for plotting
-  uint16_t m_maxAmountValues;                      ///< Maximum number of values to store in the chart
-  uint16_t m_amountPoints;                         ///< Current number of points in the chart
-  float m_spaceBetweenPoints;                      ///< Calculated spacing between points
-  int16_t m_leftPadding;                           ///< Left padding for the plot area
-  uint8_t m_topBottomPadding;                      ///< Top and bottom padding for the plot area
-  int16_t m_aux;                                   ///< Auxiliary variable for calculations
-  bool m_blocked;                                  ///< Indicates if the chart is currently blocked from updates
-  uint16_t m_borderSize = 2;                       ///< Border size for the chart
-  uint16_t m_availableWidth;                       ///< Available width for the chart area
-  uint16_t m_availableheight;                      ///< Available height for the chart area
-  uint16_t m_yTovmin;                              ///< Mapping value for minimum Y
-  uint16_t m_yTovmax;                              ///< Mapping value for maximum Y
-  bool m_shouldRedraw = false;                     ///< Flag to indicate if the chart should be redrawn
-  
-  // Memory management with tracking
-  bool m_valuesAllocated = false;                  ///< Track if values array was allocated
-  bool m_colorsSeriesAllocated = false;            ///< Track if colors array was allocated
-  LineChartValue_t** m_values = nullptr;           ///< 2D array of values for all series
-  uint16_t m_colorsSeries[MAX_SERIES];             ///< Internal storage for colors (deep copy)
-  Label* m_subtitles[MAX_SERIES] = {nullptr};      ///< Internal storage for subtitle pointers
-  
-  SemaphoreHandle_t m_mutex = nullptr;             ///< Mutex to protect data access
-
-  // Configuration
-  LineChartConfig m_config;                        ///< Configuration for the LineChart widget
-  
-  // Helper methods
-  void cleanupMemory();                            ///< Centralized memory cleanup
-  void clearColorsSeries();
-  void clearSubtitles();
-  void clearValues();
-  bool validateConfig(const LineChartConfig& config); ///< Configuration validation
-  void initMutex();
-  void destroyMutex();
-
-  void start();
-  void resetArray();
-  void printValues(uint8_t serieIndex);
-  void drawGrid();
-  void clearPreviousValues();
-  void drawMarkLineAt(int value);
-  void drawSerie(uint8_t serieIndex);
-  void drawAllSeries();
-  void copyCurrentValuesToOldValues();
 public:
-  static constexpr uint16_t SHOW_ALL = 9999;//Considering the max amount of points is 9999
+  static constexpr uint16_t SHOW_ALL = 9999; ///< Constante para mostrar todos os pontos (máximo 9999).
+  
   LineChart(uint16_t _x, uint16_t _y, uint8_t _screen);
   ~LineChart();
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
@@ -109,6 +63,52 @@ public:
   void setup(const LineChartConfig& config);
   void show() override;
   void hide() override;
+
+private:
+  static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
+  static constexpr uint8_t MAX_SERIES = 10; ///< Número máximo de séries permitidas.
+  
+  uint8_t m_dotRadius; ///< Raio dos pontos na linha.
+  uint8_t m_minSpaceToShowDot; ///< Espaço mínimo entre pontos para mostrar os pontos.
+  uint32_t m_maxHeight; ///< Altura disponível para plotar.
+  uint32_t m_maxWidth; ///< Largura disponível para plotar.
+  uint16_t m_maxAmountValues; ///< Número máximo de valores para armazenar no gráfico.
+  uint16_t m_amountPoints; ///< Número atual de pontos no gráfico.
+  float m_spaceBetweenPoints; ///< Espaçamento calculado entre pontos.
+  int16_t m_leftPadding; ///< Padding esquerdo para área de plotagem.
+  uint8_t m_topBottomPadding; ///< Padding superior e inferior para área de plotagem.
+  int16_t m_aux; ///< Variável auxiliar para cálculos.
+  bool m_blocked; ///< Indica se o gráfico está atualmente bloqueado para atualizações.
+  uint16_t m_borderSize; ///< Tamanho da borda para o gráfico.
+  uint16_t m_availableWidth; ///< Largura disponível para área do gráfico.
+  uint16_t m_availableheight; ///< Altura disponível para área do gráfico.
+  uint16_t m_yTovmin; ///< Valor de mapeamento para Y mínimo.
+  uint16_t m_yTovmax; ///< Valor de mapeamento para Y máximo.
+  bool m_shouldRedraw; ///< Flag para indicar se o gráfico deve ser redesenhado.
+  bool m_valuesAllocated; ///< Rastreia se o array de valores foi alocado.
+  bool m_colorsSeriesAllocated; ///< Rastreia se o array de cores foi alocado.
+  LineChartValue_t** m_values; ///< Array 2D de valores para todas as séries.
+  uint16_t m_colorsSeries[10]; ///< Armazenamento interno para cores (cópia profunda).
+  Label* m_subtitles[10]; ///< Armazenamento interno para ponteiros de legenda.
+  SemaphoreHandle_t m_mutex; ///< Mutex para proteger acesso aos dados.
+  LineChartConfig m_config; ///< Configuração para o widget LineChart.
+  
+  void cleanupMemory();
+  void clearColorsSeries();
+  void clearSubtitles();
+  void clearValues();
+  bool validateConfig(const LineChartConfig& config);
+  void initMutex();
+  void destroyMutex();
+  void start();
+  void resetArray();
+  void printValues(uint8_t serieIndex);
+  void drawGrid();
+  void clearPreviousValues();
+  void drawMarkLineAt(int value);
+  void drawSerie(uint8_t serieIndex);
+  void drawAllSeries();
+  void copyCurrentValuesToOldValues();
 };
 
 #endif

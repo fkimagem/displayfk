@@ -80,10 +80,12 @@ const Key_t WKeyboard::m_alphabetCap[AROWS][ACOLS] = {
 };
 
 /**
- * @brief Constructs a WKeyboard widget at a specified position on a specified screen.
- * @param _x X-coordinate for the WKeyboard position.
- * @param _y Y-coordinate for the WKeyboard position.
- * @param _screen Screen identifier where the WKeyboard will be displayed.
+ * @brief Constrói um widget WKeyboard em uma posição especificada em uma tela especificada.
+ * @param _x Coordenada X para a posição do WKeyboard.
+ * @param _y Coordenada Y para a posição do WKeyboard.
+ * @param _screen Identificador da tela onde o WKeyboard será exibido.
+ * @details Inicializa o teclado com valores padrão.
+ *          O teclado não será funcional até que setup() seja chamado.
  */
 WKeyboard::WKeyboard(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen)
 {
@@ -91,16 +93,16 @@ WKeyboard::WKeyboard(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x,
 }
 
 /**
- * @brief Default constructor for WKeyboard.
- * 
- * Initializes a keyboard at position (0,0) on screen 0.
+ * @brief Construtor padrão para o WKeyboard.
+ * @details Inicializa um teclado na posição (0,0) na tela 0.
  */
 WKeyboard::WKeyboard() : WidgetBase(0, 0, 0)
 {
 }
 
 /**
- * @brief Destructor for the WKeyboard class.
+ * @brief Destrutor da classe WKeyboard.
+ * @details Limpa quaisquer recursos usados pelo WKeyboard.
  */
 WKeyboard::~WKeyboard()
 {
@@ -122,8 +124,9 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 }
 
 /**
- * @brief Retrieves the callback function associated with the keyboard.
- * @return Pointer to the callback function.
+ * @brief Recupera a função callback associada ao teclado.
+ * @return Ponteiro para a função callback.
+ * @details Retorna o ponteiro para a função que será executada quando o teclado for utilizado.
  */
 functionCB_t WKeyboard::getCallbackFunc()
 {
@@ -239,12 +242,11 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
 }
 
 /**
- * @brief Redraws the keyboard on the screen.
- * @param fullScreen If true, redraws the entire screen; otherwise, only the keyboard.
- * @param onlyContent If true, redraws only the content area without borders or background.
- * 
- * This method handles drawing the keyboard layout including keys, content display area,
- * and handling the different states (caps lock on/off).
+ * @brief Redesenha o teclado na tela.
+ * @param fullScreen Se true, redesenha a tela inteira; caso contrário, apenas o teclado.
+ * @param onlyContent Se true, redesenha apenas a área de conteúdo sem bordas ou fundo.
+ * @details Este método manipula o desenho do layout do teclado incluindo teclas, área de exibição
+ *          de conteúdo e manipulação dos diferentes estados (caps lock ligado/desligado).
  */
 void WKeyboard::drawKeys(bool fullScreen, bool onlyContent)
 {
@@ -318,10 +320,10 @@ void WKeyboard::drawKeys(bool fullScreen, bool onlyContent)
 }
 
 /**
- * @brief Adds a character to the keyboard's current input.
- * @param c Character to add.
- * 
- * Adds a character to the current content string and redraws the content area to show the update.
+ * @brief Adiciona um caractere à entrada atual do teclado.
+ * @param c Caractere para adicionar.
+ * @details Adiciona um caractere à string de conteúdo atual e redesenha a área de conteúdo
+ *          para mostrar a atualização.
  */
 void WKeyboard::addLetter(char c)
 {
@@ -337,10 +339,9 @@ void WKeyboard::addLetter(char c)
 }
 
 /**
- * @brief Removes the last character from the keyboard's current input.
- * 
- * Deletes the last character from the content string and redraws the content area
- * to show the update.
+ * @brief Remove o último caractere da entrada atual do teclado.
+ * @details Deleta o último caractere da string de conteúdo e redesenha a área de conteúdo
+ *          para mostrar a atualização.
  */
 void WKeyboard::removeLetter()
 {
@@ -350,10 +351,10 @@ void WKeyboard::removeLetter()
 }
 
 /**
- * @brief Sets up the keyboard, configuring necessary parameters.
- * 
- * Initializes the keyboard layout, calculates key dimensions, and sets up
- * the display area based on screen dimensions.
+ * @brief Configura o teclado, configurando parâmetros necessários.
+ * @return True se a configuração foi bem-sucedida, False caso contrário.
+ * @details Inicializa o layout do teclado, calcula dimensões das teclas e configura
+ *          a área de exibição baseada nas dimensões da tela.
  */
 bool WKeyboard::setup()
 {
@@ -412,9 +413,8 @@ bool WKeyboard::setup()
 }
 
 /**
- * @brief Clears the current input content.
- * 
- * Resets the content string to empty and redraws the content area.
+ * @brief Limpa o conteúdo de entrada atual.
+ * @details Redefine a string de conteúdo para vazia e redesenha a área de conteúdo.
  */
 void WKeyboard::clear()
 {
@@ -423,11 +423,10 @@ void WKeyboard::clear()
 }
 
 /**
- * @brief Opens the keyboard for a specific TextBox field.
- * @param _field Pointer to the TextBox field to be edited.
- * 
- * Prepares the keyboard for input by setting the appropriate flags and initializing
- * the content with the current value from the TextBox.
+ * @brief Abre o teclado para um campo TextBox específico.
+ * @param _field Ponteiro para o campo TextBox a ser editado.
+ * @details Prepara o teclado para entrada definindo as flags apropriadas e inicializando
+ *          o conteúdo com o valor atual do TextBox.
  */
 void WKeyboard::open(TextBox *_field)
 {
@@ -449,9 +448,8 @@ void WKeyboard::open(TextBox *_field)
 }
 
 /**
- * @brief Closes the keyboard and applies the content to the associated field.
- * 
- * Updates the TextBox with the edited content and cleans up resources.
+ * @brief Fecha o teclado e aplica o conteúdo ao campo associado.
+ * @details Atualiza o TextBox com o conteúdo editado e limpa recursos.
  */
 void WKeyboard::close()
 {
@@ -466,10 +464,9 @@ void WKeyboard::close()
 }
 
 /**
- * @brief Inserts a character into the current input content.
- * @param c Character to insert.
- * 
- * Adds a character to the content if the keyboard is currently open.
+ * @brief Insere um caractere no conteúdo de entrada atual.
+ * @param c Caractere para inserir.
+ * @details Adiciona um caractere ao conteúdo se o teclado estiver aberto no momento.
  */
 void WKeyboard::insertChar(char c)
 {
@@ -480,21 +477,37 @@ void WKeyboard::insertChar(char c)
     }
 }
 
+/**
+ * @brief Torna o WKeyboard visível na tela.
+ * @details Define o widget como visível e marca para redesenho.
+ */
 void WKeyboard::show()
 {
     m_visible = true;
     m_shouldRedraw = true;
 }
 
+/**
+ * @brief Oculta o WKeyboard da tela.
+ * @details Define o widget como invisível e marca para redesenho.
+ */
 void WKeyboard::hide()
 {
     m_visible = false;
     m_shouldRedraw = true;
 }
 
+/**
+ * @brief Redesenha o WKeyboard na tela.
+ * @details Chama drawKeys() para redesenhar o teclado completo.
+ */
 void WKeyboard::redraw()
 {
     drawKeys(false, false);
 }       
 
+/**
+ * @brief Força o WKeyboard a atualizar.
+ * @details Define a flag de atualização para disparar um redesenho no próximo ciclo.
+ */
 void WKeyboard::forceUpdate() { m_shouldRedraw = true; }

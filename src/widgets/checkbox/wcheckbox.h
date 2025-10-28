@@ -20,27 +20,14 @@ struct CheckBoxConfig {
 
 
 
-/// @brief Represents a checkbox widget, allowing toggling between checked and unchecked states.
+/// @brief Widget de checkbox interativo que permite alternar entre estados marcado e desmarcado.
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar 
+///          checkboxes interativos na tela. O CheckBox desenha um quadrado com bordas arredondadas e uma 
+///          marca de verificação quando está no estado marcado. O widget pode ser configurado com diferentes
+///          tamanhos, cores, pesos de linha para a marca e callbacks para responder a mudanças de estado.
+///          O checkbox é totalmente funcional com suporte a toque em displays capacitivos e touchscreen.
 class CheckBox : public WidgetBase
 {
-private:
-  static const char *TAG;
-  bool m_status; ///< Current checked/unchecked status of the CheckBox.
-  uint8_t m_borderWidth; ///< Width of the checkbox border.
-  uint8_t m_borderRadius; ///< Radius of the checkbox border.
-  CheckBoxConfig m_config; ///< Configuration for the CheckBox.
-
-  // Point to create line and draw a check mark. from m_topRightPoint to m_bottomCenterPoint then m_bottomCenterPoint to m_middleLeftPoint
-  CoordPoint_t m_topRightPoint;
-  CoordPoint_t m_bottomCenterPoint;
-  CoordPoint_t m_middleLeftPoint;
-
-  void changeState();
-  uint16_t getUncheckedColor();
-  uint16_t getBorderColor();
-  void drawCheckmark();
-  void drawBorder();
-
 public:
   CheckBox(uint16_t _x, uint16_t _y, uint8_t _screen);
   ~CheckBox();
@@ -56,6 +43,22 @@ public:
   void setSize(uint16_t newSize);
   uint16_t getSize() const;
   void setColors(uint16_t checkedColor, uint16_t uncheckedColor = 0);
+
+private:
+  static const char *TAG; ///< Tag estática para identificação em logs do ESP32.
+  bool m_status; ///< Status atual do checkbox: true = marcado, false = desmarcado.
+  uint8_t m_borderWidth; ///< Largura da borda do checkbox em pixels.
+  uint8_t m_borderRadius; ///< Raio dos cantos arredondados do checkbox em pixels.
+  CheckBoxConfig m_config; ///< Estrutura contendo configuração completa do checkbox (tamanho, cores, peso, callback).
+  CoordPoint_t m_topRightPoint; ///< Ponto superior direito para desenho da marca de verificação.
+  CoordPoint_t m_bottomCenterPoint; ///< Ponto central inferior para desenho da marca de verificação.
+  CoordPoint_t m_middleLeftPoint; ///< Ponto esquerdo médio para desenho da marca de verificação.
+
+  void changeState();
+  uint16_t getUncheckedColor();
+  uint16_t getBorderColor();
+  void drawCheckmark();
+  void drawBorder();
 };
 
 #endif

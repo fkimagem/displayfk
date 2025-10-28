@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['key_0',['key',['../structkey_extern__t.html#af509151735d29cc0a8f7d2018d7f0a10',1,'keyExtern_t']]],
-  ['keys_1',['keys',['../structkeypad_extern__t.html#aefa574c18ff0671fe284370e7eb159c2',1,'keypadExtern_t']]]
+  ['j_0',['j',['../structgsl___d_i_s_t_a_n_c_e___t_y_p_e.html#a40b9e82f244ec23499c7387d5a9a1e5c',1,'gsl_DISTANCE_TYPE']]]
 ];

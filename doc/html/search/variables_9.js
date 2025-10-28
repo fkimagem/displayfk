@@ -1,6 +1,29 @@
 var searchData=
 [
-  ['id_0',['id',['../structradio__t.html#ae9f61669cd7f62f8c56648abe974742f',1,'radio_t']]],
-  ['intervals_1',['intervals',['../struct_gauge_config.html#acac8c39386a88113e86e8fc6e996c480',1,'GaugeConfig']]],
-  ['inverted_2',['inverted',['../struct_circular_bar_config.html#aa7a55af6dc1d1723dfbb4a86f6cc8868',1,'CircularBarConfig']]]
+  ['i_0',['i',['../structgsl___d_i_s_t_a_n_c_e___t_y_p_e.html#aead3b0c052abcf2faecb0c0aaf25ed30',1,'gsl_DISTANCE_TYPE']]],
+  ['i2c_5fbus_5fhandle_1',['i2c_bus_handle',['../gsl3680__touch_8cpp.html#a9c70a428d7203e9ed1f52f0848163e39',1,'gsl3680_touch.cpp']]],
+  ['id_2',['id',['../structgsl__touch__info.html#a679d1b4233d9f60b2c9b64acd157988b',1,'gsl_touch_info::id'],['../class_t_p___point.html#ae8a1834f6f13879495923227f199090c',1,'TP_Point::id'],['../structradio__t.html#ae9f61669cd7f62f8c56648abe974742f',1,'radio_t::id'],['../gsl__point__id_8c.html#a35fc2aadb5f638d5cc76810431d956c7',1,'id:&#160;gsl_point_id.c']]],
+  ['id_5ffirst_5fcoe_3',['id_first_coe',['../gsl__point__id_8c.html#afabaa7ddcd41ab7bb956f14cf9d07854',1,'gsl_point_id.c']]],
+  ['id_5fflag_4',['id_flag',['../gsl__point__id_8c.html#a693f4068e42af058663f12e8c3ba30c4',1,'gsl_point_id.c']]],
+  ['id_5fover_5',['id_over',['../uniongsl___f_l_a_g___t_y_p_e.html#a6be77bd0125964a79ac630d1d207d500',1,'gsl_FLAG_TYPE']]],
+  ['id_5fprec_5fable_6',['id_prec_able',['../uniongsl___i_d___f_l_a_g___t_y_p_e.html#a2620e8e1a9674a46a09a6bcf5e1091af',1,'gsl_ID_FLAG_TYPE']]],
+  ['id_5fspeed_5fcoe_7',['id_speed_coe',['../gsl__point__id_8c.html#a1f88876d752e5ec64669de54924c5f78',1,'gsl_point_id.c']]],
+  ['id_5fstatic_5fcoe_8',['id_static_coe',['../gsl__point__id_8c.html#aaa4f06faa592bdf3d6314ed14a565348',1,'gsl_point_id.c']]],
+  ['ignore_5fpri_9',['ignore_pri',['../uniongsl___i_d___f_l_a_g___t_y_p_e.html#a33ed926a7841eb8789db3af9c1db8700',1,'gsl_ID_FLAG_TYPE']]],
+  ['ignore_5fx_10',['ignore_x',['../gsl__point__id_8c.html#abc01c74d749aba1f1d073f26c80c9595',1,'gsl_point_id.c']]],
+  ['ignore_5fy_11',['ignore_y',['../gsl__point__id_8c.html#a1b343962b2f8ebf20942bb5b1ec97b09',1,'gsl_point_id.c']]],
+  ['init_12',['init',['../uniongsl___d_e_l_a_y___t_y_p_e.html#ae804e81c8d2fcf2d59bc009e6b0fa7bc',1,'gsl_DELAY_TYPE']]],
+  ['init_5frepeat_13',['init_repeat',['../uniongsl___f_l_a_g___t_y_p_e.html#a16e8d897018e6b76eaebfa27be754d37',1,'gsl_FLAG_TYPE']]],
+  ['instance_14',['instance',['../class_display_f_k.html#aea3bc02a97aad138f76ce102ebef2404',1,'DisplayFK']]],
+  ['int_5fgpio_5fnum_15',['int_gpio_num',['../structesp__lcd__touch__config__t.html#a5b241f9e3ba52224f4c2ee19f45350e8',1,'esp_lcd_touch_config_t']]],
+  ['inte_5fcount_16',['inte_count',['../gsl__point__id_8c.html#a0698deffbc2e12aa6cfe62899f5ccae5',1,'gsl_point_id.c']]],
+  ['interpolation_17',['interpolation',['../uniongsl___s_t_a_t_e___t_y_p_e.html#a49d4cfe49122868b0544c468c9be5342',1,'gsl_STATE_TYPE::interpolation'],['../uniongsl___f_l_a_g___t_y_p_e.html#a4114edc3d52049f1de213bbfcb92881a',1,'gsl_FLAG_TYPE::interpolation']]],
+  ['interrupt_18',['interrupt',['../structesp__lcd__touch__config__t.html#ad1afa46fdad0c5a9d3c87d16c7a049ec',1,'esp_lcd_touch_config_t']]],
+  ['interrupt_5fcallback_19',['interrupt_callback',['../structesp__lcd__touch__config__t.html#a97ea2899a5e12741a07ef13d1c7dd3b2',1,'esp_lcd_touch_config_t']]],
+  ['intervals_20',['intervals',['../struct_gauge_config.html#acac8c39386a88113e86e8fc6e996c480',1,'GaugeConfig']]],
+  ['inverted_21',['inverted',['../struct_circular_bar_config.html#aa7a55af6dc1d1723dfbb4a86f6cc8868',1,'CircularBarConfig']]],
+  ['io_22',['io',['../structesp__lcd__touch__s.html#ab7352b2e45665c7ed416d380d82d3d24',1,'esp_lcd_touch_s']]],
+  ['isfrompool_23',['isFromPool',['../struct_string_allocation__t.html#a4bf32c8a5969561d1e68b85bcd3fcdea',1,'StringAllocation_t']]],
+  ['islargedetect_24',['isLargeDetect',['../class_t_a_m_c___g_t911.html#a2d06836cd3cfaa23041d946fc4a79b39',1,'TAMC_GT911']]],
+  ['istouched_25',['isTouched',['../class_t_a_m_c___g_t911.html#a316a0fe486ce981d5f5f16af64ab575c',1,'TAMC_GT911']]]
 ];
