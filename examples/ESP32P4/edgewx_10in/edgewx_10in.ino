@@ -252,8 +252,8 @@ void drawHueCircle(int16_t cx, int16_t cy, uint16_t radius) {
 
 
 void screen0(){
-   tft->fillScreen(CFK_WHITE);
-    WidgetBase::backgroundColor = CFK_WHITE;
+   tft->fillScreen(CFK_BLACK);
+    WidgetBase::backgroundColor = CFK_BLACK;
     tft->fillCircle(16, 16, 9, CFK_COLOR01);
     tft->drawCircle(16, 16, 9, CFK_BLACK);
     tft->fillCircle(30, 15, 9, CFK_COLOR11);
