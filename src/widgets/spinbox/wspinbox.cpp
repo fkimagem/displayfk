@@ -38,6 +38,7 @@ SpinBox::SpinBox(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen){
 
       m_config = {.width = 0, .height = 0, .step = 0, .minValue = 0, .maxValue = 0, .startValue = 0, .color = 0, .textColor = 0, .callback = nullptr};
+      m_offset = 10;
       ESP_LOGD(TAG, "SpinBox created at (%d, %d) on screen %d", _x, _y, _screen);
     }
 
@@ -75,7 +76,6 @@ bool SpinBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   CHECK_CURRENTSCREEN_BOOL
   CHECK_LOADED_BOOL
   CHECK_DEBOUNCE_CLICK_BOOL
-  bool detectado = false;
 
   uint16_t topY = m_yPos;
   // uint16_t bottomY = m_yPos + m_height;
@@ -84,42 +84,25 @@ bool SpinBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   Rect_t boundsAreaIncrement = {.x = (uint16_t)(m_xPos + (m_config.width / 2)), .y = topY, .width = (uint16_t)(m_config.width / 2),
                                 .height = m_config.height};
 
-  /*uint16_t d_x = m_xPos;
-  uint16_t d_x_max = m_xPos + m_width;
+  bool detectLeft = POINT_IN_RECT(*_xTouch, *_yTouch, boundsAreaDecrement.x, boundsAreaDecrement.y, boundsAreaDecrement.width, boundsAreaDecrement.height);
+  bool detectRight = POINT_IN_RECT(*_xTouch, *_yTouch, boundsAreaIncrement.x, boundsAreaIncrement.y, boundsAreaIncrement.width, boundsAreaIncrement.height);
 
-  uint16_t y_min = m_yPos;
-  uint16_t y_max = m_yPos + m_height;*/
+  if(!detectLeft && !detectRight) {
+    return false;
+  }
 
-  // uint16_t i_x = m_xPos + m_width - m_height;
-  // uint16_t i_x_max = m_xPos + m_width;
 
-  // Detect decrement
-  if ((*_xTouch > boundsAreaDecrement.x) &&
-      (*_xTouch < boundsAreaDecrement.x + boundsAreaDecrement.width) &&
-      (*_yTouch > boundsAreaDecrement.y) &&
-      (*_yTouch < boundsAreaDecrement.y + boundsAreaDecrement.height)) {
+  
+  if(detectLeft) {
     decreaseValue();
-    m_shouldRedraw = true;
-    m_myTime = millis();
-    detectado = true;
-  }
-
-  if (detectado) {
-    return true;
-  }
-
-  // Detect increment
-  if ((*_xTouch > boundsAreaIncrement.x) &&
-      (*_xTouch < boundsAreaIncrement.x + boundsAreaIncrement.width) &&
-      (*_yTouch > boundsAreaIncrement.y) &&
-      (*_yTouch < boundsAreaIncrement.y + boundsAreaIncrement.height)) {
+  }else if(detectRight) {
     increaseValue();
-    m_shouldRedraw = true;
-    m_myTime = millis();
-    detectado = true;
   }
 
-  return detectado;
+  m_myTime = millis();
+  m_shouldRedraw = true;
+
+  return true;
 }
 
 /**
@@ -149,21 +132,21 @@ void SpinBox::redraw() {
 
   m_shouldRedraw = false;
 
-  uint16_t btnW = m_config.height - (2 * m_offset);
-  uint16_t btnH = m_config.height - (2 * m_offset);
+  //uint16_t btnW = m_config.height - (2 * m_offset);
+  //uint16_t btnH = m_config.height - (2 * m_offset);
 
-  uint16_t availableW = m_config.width - (2 * m_offset);
-  uint16_t availableH = m_config.height - (2 * m_offset);
+  //uint16_t availableW = m_config.width - (2 * m_offset);
+  //uint16_t availableH = m_config.height - (2 * m_offset);
 
   WidgetBase::objTFT->setTextColor(m_config.textColor);
 
-  WidgetBase::objTFT->fillRoundRect(
-      m_xPos + (2 * m_offset) + btnW, m_yPos + m_offset,
-      m_config.width - (4 * m_offset + 2 * btnW), btnH, m_radius, m_config.color);
+  //WidgetBase::objTFT->fillRoundRect(m_xPos + (2 * m_offset) + btnW, m_yPos + m_offset,m_config.width - (4 * m_offset + 2 * btnW), btnH, m_radius, m_config.color);
+  WidgetBase::objTFT->fillRect(m_textAreaSize.x, m_textAreaSize.y, m_textAreaSize.width, m_textAreaSize.height, m_config.color);
 
 
-  uint16_t offsetFont = 10;
-  WidgetBase::objTFT->setFont(getBestRobotoBold( availableW - offsetFont, availableH - offsetFont, String(m_currentValue).c_str()));
+  //uint16_t offsetFont = 10;
+  //WidgetBase::objTFT->setFont(getBestRobotoBold( availableW - offsetFont, availableH - offsetFont, String(m_currentValue).c_str()));
+  WidgetBase::objTFT->setFont(m_font);
   printText(String(m_currentValue).c_str(), m_xPos + m_config.width / 2,
             m_yPos + (m_config.height / 2) - 3, MC_DATUM, m_lastArea, m_config.color);
   updateFont(FontType::UNLOAD);
@@ -187,49 +170,44 @@ void SpinBox::drawBackground() {
   CHECK_USINGKEYBOARD_VOID
   CHECK_LOADED_VOID
 
-  uint16_t btnW = m_config.height - (2 * m_offset);
-  uint16_t btnH = m_config.height - (2 * m_offset);
+  // Fundo
+  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_radius,m_config.color);
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_radius,CFK_BLACK);
 
-  // uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
+  uint16_t corBotao = lighten565(m_config.color, 0.5);//WidgetBase::lightenColor565(m_config.color, 4);
 
-  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_radius,
-                                    m_config.color);
-  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_radius,
-                                    CFK_BLACK);
+  // botao left
+  WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_buttonSize.width, m_buttonSize.height, m_radius, corBotao);
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_buttonSize.width, m_buttonSize.height, m_radius,CFK_BLACK);
 
-  WidgetBase::objTFT->fillRoundRect(
-      m_xPos + m_offset, m_yPos + m_offset, btnW, btnH, m_radius,
-      WidgetBase::lightenColor565(m_config.color, 4));
-  WidgetBase::objTFT->fillRoundRect(
-      m_xPos + m_config.width - m_offset - btnW, m_yPos + m_offset, btnW, btnH, m_radius,
-      WidgetBase::lightenColor565(m_config.color, 4));
+  // botao right
+  WidgetBase::objTFT->fillRoundRect(m_xPos + m_config.width - m_buttonSize.width, m_yPos, m_buttonSize.width, m_buttonSize.height, m_radius, corBotao);
+  WidgetBase::objTFT->drawRoundRect(m_xPos + m_config.width - m_buttonSize.width, m_yPos, m_buttonSize.width, m_buttonSize.height, m_radius,CFK_BLACK);
 
-  WidgetBase::objTFT->drawRoundRect(m_xPos + m_offset, m_yPos + m_offset, btnW,
-                                    btnH, m_radius, CFK_BLACK);
-  WidgetBase::objTFT->drawRoundRect(m_xPos + m_config.width - m_offset - btnW,
-                                    m_yPos + m_offset, btnW, btnH, m_radius,
-                                    CFK_BLACK);
+  int centerX_left = m_xPos + (m_buttonSize.width / 2);
+  int centerY_left = m_yPos + (m_buttonSize.height / 2);
 
-  CoordPoint_t btnLeft = {static_cast<uint16_t>(m_xPos + m_offset + (btnW / 2)),
-                          static_cast<uint16_t>(m_yPos + m_offset + (btnH / 2))};
-  CoordPoint_t btnRight = {
-      static_cast<uint16_t>(m_xPos + m_config.width - (m_offset + (btnW / 2))),
-      static_cast<uint16_t>(m_yPos + m_offset + (btnH / 2))};
+  int centerX_right = m_xPos + m_config.width - (m_buttonSize.width / 2);
+  int centerY_right = m_yPos + (m_buttonSize.height / 2);
 
-  // WidgetBase::objTFT->fillCircle(btnLeft.x, btnLeft.y, 4, CFK_BLUE);
-  const uint8_t sinalW = btnW / 2;
-  const uint8_t sinalH = ceil(sinalW / 10.0);
+  int signalSize = m_buttonSize.width / 2;
+  int signalHalfWeight = 2;
+
   // Sinal menos
-  WidgetBase::objTFT->fillRect(btnLeft.x - (sinalW / 2),
-                               btnLeft.y - (sinalH / 2), sinalW, sinalH,
+  WidgetBase::objTFT->fillRect(centerX_left - (signalSize / 2),
+                               centerY_left - signalHalfWeight, signalSize, signalHalfWeight * 2,
                                m_config.textColor);
 
   // Sinal mais
-  WidgetBase::objTFT->fillRect(btnRight.x - (sinalW / 2),
-                               btnRight.y - (sinalH / 2), sinalW, sinalH,
+  WidgetBase::objTFT->fillRect(centerX_right - (signalSize / 2),
+                               centerY_right - signalHalfWeight,
+                               signalSize,
+                               signalHalfWeight * 2,
                                m_config.textColor);
-  WidgetBase::objTFT->fillRect(btnRight.x - (sinalH / 2),
-                               btnRight.y - (sinalW / 2), sinalH, sinalW,
+  WidgetBase::objTFT->fillRect(centerX_right - signalHalfWeight,
+                               centerY_right - (signalSize / 2),
+                               signalHalfWeight * 2,
+                               signalSize,
                                m_config.textColor);
 
   m_shouldRedraw = true;
@@ -270,6 +248,28 @@ void SpinBox::setup(const SpinBoxConfig &config) {
     m_config.minValue = m_config.maxValue;
     m_config.maxValue = temp;
   }
+
+
+  m_buttonSize.x = 0;
+  m_buttonSize.y = 0;
+  m_buttonSize.height = m_config.height;
+  m_buttonSize.width = m_config.height;
+
+  m_textAreaSize.x = m_xPos + m_buttonSize.width + (m_offset / 2);
+  m_textAreaSize.y = m_yPos + (m_offset / 2);
+  m_textAreaSize.height = m_config.height - m_offset;
+  m_textAreaSize.width = m_config.width - (2 * m_buttonSize.width) - (m_offset);
+
+
+  int charCountMinValue = String(m_config.minValue).length();
+  int charCountMaxValue = String(m_config.maxValue).length();
+  
+  if (charCountMinValue > charCountMaxValue) {
+    m_font = getBestRobotoBold(m_textAreaSize.width, m_textAreaSize.height, String(m_config.minValue).c_str());
+  } else {
+    m_font = getBestRobotoBold(m_textAreaSize.width, m_textAreaSize.height, String(m_config.maxValue).c_str());
+  }
+
 
   m_currentValue = constrain(m_config.startValue, m_config.minValue, m_config.maxValue);
   m_callback = config.callback;

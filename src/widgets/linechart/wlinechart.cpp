@@ -344,7 +344,7 @@ void LineChart::start()
 
   updateFont(FontType::UNLOAD);
 
-  biggerText += 5;
+  biggerText += 10;
 
   m_maxAmountValues = m_config.width - (biggerText + 10) - (m_borderSize * 2);
   m_amountPoints = CLAMP(m_config.maxPointsAmount, 2, m_maxAmountValues);

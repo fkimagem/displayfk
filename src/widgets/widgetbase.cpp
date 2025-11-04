@@ -42,7 +42,7 @@ fs::SDFS *WidgetBase::mySD = nullptr;
  * @param factor The factor to lighten the color by. (0.0 to 5.0)
  * @return The lightened color.
  */
-uint16_t WidgetBase::lightenColor565(unsigned short color, float factor)
+/*uint16_t WidgetBase::lightenColor565(unsigned short color, float factor)
 {
     factor = constrain(factor, 0.0, 5.0);
     factor /= 20.0;
@@ -59,9 +59,9 @@ uint16_t WidgetBase::lightenColor565(unsigned short color, float factor)
 
     // Recombinar os componentes em uma cor 565
     return (red << 11) | (green << 5) | blue;
-}
+}*/
 
-uint16_t WidgetBase::lightenToWhite565(uint16_t color, float factor)
+/*uint16_t WidgetBase::lightenToWhite565(uint16_t color, float factor)
 {
     // limita factor entre 0.0 (original) e 1.0 (branco puro)
     if (factor < 0.0f) factor = 0.0f;
@@ -84,7 +84,7 @@ uint16_t WidgetBase::lightenToWhite565(uint16_t color, float factor)
 
     // recombinar
     return (r << 11) | (g << 5) | b;
-}
+}*/
 
 /**
  * @brief Blends two colors with a given factor.
@@ -93,7 +93,7 @@ uint16_t WidgetBase::lightenToWhite565(uint16_t color, float factor)
  * @param factor The factor to blend the colors by.
  * @return The blended color.
  */
-uint16_t WidgetBase::blendColors(uint16_t color1, uint16_t color2, float factor) {
+/*uint16_t WidgetBase::blendColors(uint16_t color1, uint16_t color2, float factor) {
     uint8_t r1, g1, b1;
     uint8_t r2, g2, b2;
     
@@ -109,7 +109,7 @@ uint16_t WidgetBase::blendColors(uint16_t color1, uint16_t color2, float factor)
     // Converte a cor intermediária para o formato RGB565 e retorna
     return convertToRGB565(r, g, b);
 }
-
+*/
 /**
  * @brief Extracts the RGB components from a color in RGB565 format.
  * @param color565 The color in RGB565 format.
@@ -135,9 +135,9 @@ void WidgetBase::extract565toRGB(uint16_t color565, uint8_t &r, uint8_t &g, uint
  * @param b The blue component.
  * @return The color in RGB565 format.
  */
-uint16_t WidgetBase::convertToRGB565(uint8_t r, uint8_t g, uint8_t b) {
+/*uint16_t WidgetBase::convertToRGB565(uint8_t r, uint8_t g, uint8_t b) {
     return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
-}
+}*/
 
 
 /**
@@ -146,7 +146,7 @@ uint16_t WidgetBase::convertToRGB565(uint8_t r, uint8_t g, uint8_t b) {
  * @param factor The factor to darken the color by.
  * @return The darkened color.
  */
-uint16_t WidgetBase::darkenColor565(unsigned short color, float factor)
+/*uint16_t WidgetBase::darkenColor565(unsigned short color, float factor)
 {
     factor = constrain(factor, 0.0, 5.0);
     factor /= 20.0;
@@ -162,7 +162,7 @@ uint16_t WidgetBase::darkenColor565(unsigned short color, float factor)
 
     // Recombinar os componentes em uma cor 565
     return (red << 11) | (green << 5) | blue;
-}
+}*/
 
 /**
  * @brief Constructor for the WidgetBase class.

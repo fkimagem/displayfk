@@ -1,6 +1,73 @@
-#ifndef COR_H
-#define COR_H
-#include <Arduino.h>
+#ifndef COLOR_HELPER
+#define COLOR_HELPER
+
+#include<Arduino.h>
+
+#define COLOR_RED             0xF800  // vermelho puro
+#define COLOR_ORANGE          0xFD20  // laranja intenso
+#define COLOR_AMBER           0xFEC0  // âmbar
+#define COLOR_YELLOW          0xFFE0  // amarelo puro
+#define COLOR_LIME            0x87E0  // verde-limão
+#define COLOR_GREEN           0x07E0  // verde puro
+#define COLOR_SEA_GREEN       0x07F6  // verde-água
+#define COLOR_CYAN            0x07FF  // ciano puro
+#define COLOR_SKY_BLUE        0x5D9F  // azul-celeste
+#define COLOR_BLUE            0x001F  // azul puro
+#define COLOR_VIOLET          0x801F  // violeta
+#define COLOR_MAGENTA         0xF81F  // magenta puro
+#define COLOR_PINK            0xF8BE  // rosa forte
+#define COLOR_ROSE            0xF9DF  // rosa quente
+#define COLOR_SCARLET         0xFCA0  // vermelho alaranjado
+#define COLOR_CHARTREUSE      0xAFE5  // verde-amarelado
+#define COLOR_TURQUOISE       0x07FB  // turquesa viva
+#define COLOR_INDIGO          0x481F  // azul arroxeado
+#define COLOR_PURPLE          0xA01F  // roxo
+#define COLOR_FUCHSIA         0xF81F  // fúcsia
+#define COLOR_CORAL           0xFB88  // coral intenso
+
+#define COLOR_PASTEL_RED      0xFBAE
+#define COLOR_PASTEL_ORANGE   0xFEC9
+#define COLOR_PASTEL_YELLOW   0xFFF3
+#define COLOR_PASTEL_LIME     0xCFF3
+#define COLOR_PASTEL_GREEN    0x9FF3
+#define COLOR_PASTEL_CYAN     0xAFFF
+#define COLOR_PASTEL_SKY      0xB5BF
+#define COLOR_PASTEL_BLUE     0xAD5F
+#define COLOR_PASTEL_INDIGO   0xA49F
+#define COLOR_PASTEL_VIOLET   0xD49F
+#define COLOR_PASTEL_PINK     0xFDBD
+#define COLOR_PASTEL_MAGENTA  0xFBBF
+#define COLOR_PASTEL_ROSE     0xFDDD
+#define COLOR_PASTEL_CORAL    0xFD9A
+#define COLOR_PASTEL_TURQUOISE 0x8FFD
+#define COLOR_PASTEL_MINT     0xA7FB
+#define COLOR_PASTEL_PEACH    0xFEDA
+#define COLOR_PASTEL_LAVENDER 0xD69E
+#define COLOR_PASTEL_SALMON   0xFDD4
+#define COLOR_PASTEL_BEIGE    0xFFF4
+#define COLOR_PASTEL_CREAM    0xFFFA
+
+#define COLOR_DARK_RED        0x8000
+#define COLOR_DARK_ORANGE     0xCA20
+#define COLOR_DARK_AMBER      0xC620
+#define COLOR_DARK_YELLOW     0xC660
+#define COLOR_DARK_LIME       0x4680
+#define COLOR_DARK_GREEN      0x03E0
+#define COLOR_DARK_SEA        0x03B3
+#define COLOR_DARK_CYAN       0x03BF
+#define COLOR_DARK_BLUE       0x0012
+#define COLOR_DARK_INDIGO     0x4013
+#define COLOR_DARK_VIOLET     0x8012
+#define COLOR_DARK_PURPLE     0x9012
+#define COLOR_DARK_MAGENTA    0x9815
+#define COLOR_DARK_PINK       0xA814
+#define COLOR_DARK_ROSE       0xB815
+#define COLOR_DARK_TEAL       0x036D
+#define COLOR_DARK_OLIVE      0x6B40
+#define COLOR_DARK_BROWN      0x6200
+#define COLOR_DARK_GRAY       0x4208
+#define COLOR_BLACK           0x0000
+#define COLOR_DARK_NAVY       0x0010
 
 
 /** @brief Representa uma cor no espaço HSV normalizado. */
@@ -21,48 +88,6 @@ constexpr uint16_t rgbTo565(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
 
-// Cores da tabela
-constexpr uint16_t COLOR_WHITE   = rgbTo565(255, 255, 255); ///< Branco em RGB565
-constexpr uint16_t COLOR_SILVER  = rgbTo565(192, 192, 192); ///< Prata em RGB565
-constexpr uint16_t COLOR_GRAY    = rgbTo565(128, 128, 128); ///< Cinza em RGB565
-constexpr uint16_t COLOR_BLACK   = rgbTo565(0, 0, 0); ///< Preto em RGB565
-constexpr uint16_t COLOR_MAROON  = rgbTo565(128, 0, 0); ///< Bordô em RGB565
-constexpr uint16_t COLOR_RED     = rgbTo565(255, 0, 0); ///< Vermelho em RGB565
-constexpr uint16_t COLOR_ORANGE  = rgbTo565(255, 165, 0); ///< Laranja em RGB565
-constexpr uint16_t COLOR_YELLOW  = rgbTo565(255, 255, 0); ///< Amarelo em RGB565
-constexpr uint16_t COLOR_OLIVE   = rgbTo565(128, 128, 0); ///< Oliva em RGB565
-constexpr uint16_t COLOR_LIME    = rgbTo565(0, 255, 0); ///< Lima (verde vivo) em RGB565
-constexpr uint16_t COLOR_GREEN   = rgbTo565(0, 128, 0); ///< Verde em RGB565
-constexpr uint16_t COLOR_AQUA    = rgbTo565(0, 255, 255); ///< Ciano (Aqua) em RGB565
-constexpr uint16_t COLOR_BLUE    = rgbTo565(0, 0, 255); ///< Azul em RGB565
-constexpr uint16_t COLOR_NAVY    = rgbTo565(0, 0, 128); ///< Azul marinho em RGB565
-constexpr uint16_t COLOR_TEAL    = rgbTo565(0, 128, 128); ///< Azul petróleo em RGB565
-constexpr uint16_t COLOR_FUCHSIA = rgbTo565(255, 0, 255); ///< Fúcsia (magenta) em RGB565
-constexpr uint16_t COLOR_PURPLE  = rgbTo565(128, 0, 128); ///< Roxo em RGB565
-
-const int amountColors = 17; ///< Quantidade de cores definidas na tabela `colors`.
-const uint16_t colors[amountColors] = { ///< Tabela de cores RGB565 padronizadas.
-    COLOR_WHITE,
-    COLOR_SILVER,
-    COLOR_GRAY,
-    COLOR_BLACK,
-    COLOR_MAROON,
-    COLOR_RED,
-    COLOR_ORANGE,
-    COLOR_YELLOW,
-    COLOR_OLIVE,
-    COLOR_LIME,
-    COLOR_GREEN,
-    COLOR_AQUA,
-    COLOR_BLUE,
-    COLOR_NAVY,
-    COLOR_TEAL,
-    COLOR_FUCHSIA,
-    COLOR_PURPLE
-};
-
-
-
 /**
  * @brief Converte uma cor HSV normalizada para RGB565 de forma rápida.
  * @param h Matiz [0.0..1.0].
@@ -70,7 +95,7 @@ const uint16_t colors[amountColors] = { ///< Tabela de cores RGB565 padronizadas
  * @param v Valor (brilho) [0.0..1.0].
  * @return Cor no formato RGB565.
  */
-uint16_t hsvToRgb565Fast(float h, float s, float v) {
+inline uint16_t hsvToRgb565Fast(float h, float s, float v) {
   float r, g, b;
   int i = int(h * 6.0f);
   float f = h * 6.0f - i;
@@ -98,7 +123,7 @@ uint16_t hsvToRgb565Fast(float h, float s, float v) {
  * @param color565 Cor no formato RGB565.
  * @return Estrutura HSV com h, s, v em [0.0..1.0].
  */
-HSV_t rgb565ToHsv(uint16_t color565) {
+inline HSV_t rgb565ToHsv(uint16_t color565) {
   // Extrai os canais RGB
   uint8_t r = (color565 >> 11) & 0x1F; // 5 bits
   uint8_t g = (color565 >> 5)  & 0x3F; // 6 bits
@@ -144,7 +169,7 @@ HSV_t rgb565ToHsv(uint16_t color565) {
  * @return Ponteiro para array dinâmico de `numTons` elementos RGB565, ou nullptr.
  * @note O chamador deve liberar com `delete[]`.
  */
-uint16_t* gerarDegradeHSV(float h, int numTons) {
+inline uint16_t* gerarDegradeHSV(float h, int numTons) {
   if (numTons <= 0) return nullptr;
 
   uint16_t* tons = new uint16_t[numTons];
@@ -167,7 +192,7 @@ uint16_t* gerarDegradeHSV(float h, int numTons) {
  * @return Ponteiro para array dinâmico de `numTons` elementos RGB565, ou nullptr.
  * @note O chamador deve liberar com `delete[]`.
  */
-uint16_t* blendColors(uint16_t startColor, uint16_t endColor, int numTons) {
+inline uint16_t* blendColors(uint16_t startColor, uint16_t endColor, int numTons) {
   if (numTons < 2) return nullptr;
 
   uint16_t* out = new uint16_t[numTons];
@@ -208,7 +233,7 @@ uint16_t* blendColors(uint16_t startColor, uint16_t endColor, int numTons) {
  *        - 1.0 → retorna branco puro (0xFFFF).
  * @return Cor clareada no formato RGB565.
  */
-uint16_t lighten565(uint16_t color, float value) {
+inline uint16_t lighten565(uint16_t color, float value) {
   if (value <= 0.0f) return color;   // sem alteração
   if (value >= 1.0f) return 0xFFFF;  // branco puro
 
@@ -232,7 +257,7 @@ uint16_t lighten565(uint16_t color, float value) {
  *        - 1.0 → retorna preto (0x0000).
  * @return Cor escurecida no formato RGB565.
  */
-uint16_t darken565(uint16_t color, float value) {
+inline uint16_t darken565(uint16_t color, float value) {
   if (value <= 0.0f) return color;   // sem alteração
   if (value >= 1.0f) return 0x0000;  // preto puro
 
@@ -245,5 +270,6 @@ uint16_t darken565(uint16_t color, float value) {
   // Mantém a saturação e matiz originais
   return hsvToRgb565Fast(hsv.h, hsv.s, hsv.v);
 }
+
 
 #endif

@@ -54,6 +54,9 @@ private:
   uint8_t m_offset; ///< Offset para posicionar elementos dentro da caixa de spin.
   TextBound_t m_lastArea; ///< Última área da caixa de spin.
   SpinBoxConfig m_config; ///< Estrutura contendo configuração da caixa de spin.
+  Rect_t m_buttonSize;
+  Rect_t m_textAreaSize;
+  const GFXfont* m_font;  ///< Ponteiro para a fonte usada na caixa de spin.
   
   void cleanupMemory();
   void start();

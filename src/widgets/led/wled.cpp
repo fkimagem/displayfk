@@ -150,8 +150,13 @@ bool Led::validateConfig(const LedConfig& config) {
 void Led::updateGradient() {
   // Create gradient from bright to dim
   uint16_t baseColor = m_config.colorOn;
+  //uint16_t whiteColor = CFK_WHITE;
+
+  //m_colorLightGradient = blendColors(baseColor, whiteColor, 0.5);
+
   for (uint8_t i = 0; i < m_colorLightGradientSize; i++) {
-    m_colorLightGradient[i] = WidgetBase::lightenToWhite565(baseColor, 0.08*i);
+    //m_colorLightGradient[i] = WidgetBase::lightenToWhite565(baseColor, 0.08*i);
+    m_colorLightGradient[i] = lighten565(baseColor, 0.2*i);
   }
 }
 

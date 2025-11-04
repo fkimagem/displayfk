@@ -132,6 +132,7 @@ void RectButton::redraw() {
                                     5, bgColor); // top botao
   WidgetBase::objTFT->drawRoundRect(m_xPos + 5, m_yPos + 5, m_config.width - 10, m_config.height - 10,
                                     5, baseBorder); // borda top botao
+
 }
 
 /**

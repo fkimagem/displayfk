@@ -71,9 +71,11 @@ bool RadioGroup::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   CHECK_LOADED_BOOL
   CHECK_DEBOUNCE_CLICK_BOOL
 
+  int offset_radius = 5;
+
   for (int16_t i = 0; i < m_config.amount; i++) {
     radio_t r = m_buttons[i];
-    bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, r.x, r.y, m_config.radius, m_config.radius);
+    bool inBounds = POINT_IN_CIRCLE(*_xTouch, *_yTouch, r.x, r.y, m_config.radius + offset_radius);
     if(inBounds) {
       m_clickedId = r.id;
       m_shouldRedraw = true;

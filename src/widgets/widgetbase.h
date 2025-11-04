@@ -11,6 +11,8 @@
 #include "../extras/wutils.h"
 #include "widgetsetup.h"
 
+#include "../extras/color.h"
+
 #if defined(DISP_DEFAULT)
 #include <Arduino_GFX_Library.h>
 #elif defined(DISP_PCD8544)
@@ -416,10 +418,10 @@ public:
   static uint16_t backgroundColor;         ///< Cor de fundo para os widgets.
   
 
-  static uint16_t lightenColor565(unsigned short color, float factor);
-  static uint16_t lightenToWhite565(uint16_t color, float factor);
-  static uint16_t darkenColor565(unsigned short color, float factor);
-  static uint16_t blendColors(uint16_t color1, uint16_t color2, float factor);
+  //static uint16_t lightenColor565(unsigned short color, float factor);
+  //static uint16_t lightenToWhite565(uint16_t color, float factor);
+  //static uint16_t darkenColor565(unsigned short color, float factor);
+  //static uint16_t blendColors(uint16_t color1, uint16_t color2, float factor);
 
 #if defined(DISP_DEFAULT)
   static Arduino_GFX *objTFT; ///< Ponteiro para o objeto de display Arduino GFX.

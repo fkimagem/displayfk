@@ -90,18 +90,24 @@ void Thermometer::redraw()
   
 
   uint32_t heightFill = map(m_currentValue, m_config.minValue, m_config.maxValue, 0, m_fillArea.height);
-  uint32_t diffHeight = m_fillArea.height - heightFill;
-  int startY = m_fillArea.y + (m_fillArea.height - heightFill);
+  uint32_t heightErase = m_fillArea.height - heightFill;
+
+  int startY = m_fillArea.y + heightErase;
+
+  //WidgetBase::objTFT->fillRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, m_fillArea.height, m_config.backgroundColor);     // area do widget
+  //WidgetBase::objTFT->fillRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, heightFill, m_config.filledColor);     // area do widget
+
+  // WidgetBase::objTFT->fillRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, m_fillArea.height, 0xf800);     // area do widget
 
 
-    if(m_currentValue < m_lastValue){
-      WidgetBase::objTFT->fillRoundRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, diffHeight, 0, m_config.backgroundColor);     // area do widget
-    }else{
-      WidgetBase::objTFT->fillRoundRect(m_fillArea.x, startY, m_fillArea.width, heightFill, 0, m_config.filledColor);     // area do widget
-    }
+  if(m_currentValue < m_lastValue){
+    WidgetBase::objTFT->fillRoundRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, heightErase, 0, m_config.backgroundColor);     // area do widget
+  }else{
+    WidgetBase::objTFT->fillRoundRect(m_fillArea.x, startY, m_fillArea.width, heightFill, 0, m_config.filledColor);     // area do widget
+  }
 
   if(m_config.subtitle){
-    m_config.subtitle->setTextFloat(m_lastValue, m_config.decimalPlaces);
+    m_config.subtitle->setTextFloat(m_currentValue, m_config.decimalPlaces);
   }
 
   m_lastValue = m_currentValue;
@@ -186,13 +192,14 @@ void Thermometer::drawBackground()
     WidgetBase::objTFT->drawCircle(m_bulb.x, m_bulb.y, m_bulb.radius, CFK_BLACK); // desenha a borda do bulb
 	
 	int amountSpace = 10;
-	int space = m_fillArea.height / amountSpace;
+	float space = m_fillArea.height / (float)amountSpace;
 	
 	int offset = 2;
 	int size = 3;
 	for(auto i = 0; i <= amountSpace;i++){
 		int y = m_fillArea.y + i * space;
-		WidgetBase::objTFT->drawLine(m_fillArea.x - offset, y, m_fillArea.x - (offset + size), y, m_config.markColor);
+    uint8_t thickness = i % 5 == 0 ? 2*size : size;
+		WidgetBase::objTFT->drawFastHLine(m_fillArea.x - (size + offset), y, thickness, m_config.markColor);
 	}
 }
 
@@ -223,7 +230,8 @@ void Thermometer::setup(uint16_t _width, uint16_t _height, uint16_t _filledColor
  // m_filledColor = _filledColor;
   for(uint8_t i = 0; i < m_colorLightGradientSize; i++)
   {
-    m_colorLightGradient[i] = WidgetBase::lightenToWhite565(m_config.filledColor, 0.08*i);
+    //m_colorLightGradient[i] = WidgetBase::lightenToWhite565(m_config.filledColor, 0.08*i);
+    m_colorLightGradient[i] = lighten565(m_config.filledColor, 0.1*i);
   }
   //m_vmin = _vmin;
   //m_vmax = _vmax;

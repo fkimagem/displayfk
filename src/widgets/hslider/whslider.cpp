@@ -278,6 +278,7 @@ void HSlider::setup(const HSliderConfig &config) {
 
   // Assign the configuration structure
   m_config = config;
+  m_callback = config.callback;
 
   start();
 

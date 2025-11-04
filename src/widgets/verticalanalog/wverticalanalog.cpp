@@ -119,7 +119,7 @@ void VAnalog::drawBackground()
 
   
 
-  uint16_t intervaloMarca = round(m_drawArea.height / (m_config.steps));
+  float intervaloMarca = (m_drawArea.height / (float)(m_config.steps));
 
   for (uint16_t i = 0; i <= m_config.steps; i++)
   {
@@ -176,6 +176,8 @@ void VAnalog::redraw()
   clearArrow();
   drawArrow();
   drawText();
+
+
   m_lastValue = m_currentValue;
   
   #endif
