@@ -15,18 +15,18 @@ void TAMC_GT911::begin(uint8_t _addr) {
   reset();
 }
 void TAMC_GT911::reset() {
-  pinMode(pinInt, OUTPUT);
-  pinMode(pinRst, OUTPUT);
-  digitalWrite(pinInt, 0);
-  digitalWrite(pinRst, 0);
+  if(pinInt > 0){pinMode(pinInt, OUTPUT);}
+  if(pinRst > 0){pinMode(pinRst, OUTPUT);}
+  if(pinInt > 0){digitalWrite(pinInt, 0);}
+  if(pinRst > 0){digitalWrite(pinRst, 0);}
   delay(10);
-  digitalWrite(pinInt, addr==GT911_ADDR2);
+  if(pinInt > 0){digitalWrite(pinInt, addr==GT911_ADDR2);}
   delay(1);
-  digitalWrite(pinRst, 1);
+  if(pinRst > 0){digitalWrite(pinRst, 1);}
   delay(5);
-  digitalWrite(pinInt, 0);
+  if(pinInt > 0){digitalWrite(pinInt, 0);}
   delay(50);
-  pinMode(pinInt, INPUT);
+  if(pinInt > 0){pinMode(pinInt, INPUT);}
   // attachInterrupt(pinInt, TAMC_GT911::onInterrupt, RISING);
   delay(50);
   readBlockData(configBuf, GT911_CONFIG_START, GT911_CONFIG_SIZE);
@@ -76,7 +76,7 @@ void TAMC_GT911::setResolution(uint16_t _width, uint16_t _height) {
 // }
 void TAMC_GT911::read(void) {
   #if defined(LOG_GT911)
-    Serial.println("TAMC_GT911::read");
+    //Serial.println("TAMC_GT911::read");
   #endif
   uint8_t data[7];
   uint8_t id;
@@ -89,11 +89,11 @@ void TAMC_GT911::read(void) {
   isLargeDetect = pointInfo >> 6 & 1;
   touches = pointInfo & 0xF;
   #if defined(LOG_GT911)
-  Serial.print("bufferStatus: ");Serial.println(bufferStatus);
-  Serial.print("largeDetect: ");Serial.println(isLargeDetect);
-  Serial.print("proximityValid: ");Serial.println(proximityValid);
-  Serial.print("haveKey: ");Serial.println(haveKey);
-  Serial.print("touches: ");Serial.println(touches);
+  //Serial.print("bufferStatus: ");Serial.println(bufferStatus);
+  //Serial.print("largeDetect: ");Serial.println(isLargeDetect);
+  //Serial.print("proximityValid: ");Serial.println(proximityValid);
+  //Serial.print("haveKey: ");Serial.println(haveKey);
+  //Serial.print("touches: ");Serial.println(touches);
   #endif
   isTouched = touches > 0;
   if (bufferStatus == 1 && isTouched) {
@@ -111,12 +111,33 @@ TP_Point TAMC_GT911::readPoint(uint8_t *data) {
   uint16_t y = data[3] + (data[4] << 8);
   uint16_t size = data[5] + (data[6] << 8);
 
+  // Print x,y
+  #if defined(LOG_GT911)
+  Serial.print(" x: ");Serial.print(x);
+  Serial.print(" y: ");Serial.print(y);
+
+  // print savedX, savedY
+  Serial.print(" savedX: ");Serial.print(m_savedX);
+  Serial.print(" savedY: ");Serial.print(m_savedY);
+
+  // print width, height
+  Serial.print(" width: ");Serial.print(width);
+  Serial.print(" height: ");Serial.println(height);
+  Serial.println(' ');
+  #endif
+
   // Corrigir resolução antes da rotação
   x = map(x, 0, m_savedX, 0, width);   // Ajustar para 800
   y = map(y, 0, m_savedY, 0, height);  // Ajustar para 480
 
+  // print x,y
+  #if defined(LOG_GT911)
+  Serial.print(" x: ");Serial.print(x);
+  Serial.print(" y: ");Serial.println(y);
+  #endif
 
-  switch (rotation){
+
+  /*switch (rotation){
     case ROTATION_NORMAL:
       x = width - x;
       y = height - y;
@@ -137,7 +158,7 @@ TP_Point TAMC_GT911::readPoint(uint8_t *data) {
       break;
     default:
       break;
-  }
+  }*/
   return TP_Point(id, x, y, size);
 }
 void TAMC_GT911::writeByteData(uint16_t reg, uint8_t val) {
@@ -168,13 +189,37 @@ void TAMC_GT911::writeBlockData(uint16_t reg, uint8_t *val, uint8_t size) {
   Wire.endTransmission();
 }
 void TAMC_GT911::readBlockData(uint8_t *buf, uint16_t reg, uint8_t size) {
-  Wire.beginTransmission(addr);
+  /*Wire.beginTransmission(addr);
   Wire.write(highByte(reg));
   Wire.write(lowByte(reg));
   Wire.endTransmission();
   Wire.requestFrom(addr, size);
   for (uint8_t i=0; i<size; i++) {
     buf[i] = Wire.read();
+  }*/
+ const uint8_t CHUNK_SIZE = 64;  // máximo seguro para ESP32-P4 I²C FIFO
+  uint8_t remaining = size;
+  uint16_t currentReg = reg;
+  uint8_t index = 0;
+
+  while (remaining > 0) {
+    uint8_t chunk = remaining > CHUNK_SIZE ? CHUNK_SIZE : remaining;
+
+    // Envia endereço inicial de leitura
+    Wire.beginTransmission(addr);
+    Wire.write(highByte(currentReg));
+    Wire.write(lowByte(currentReg));
+    Wire.endTransmission(false);  // não finaliza o I²C (repeated start)
+
+    // Solicita o bloco parcial
+    Wire.requestFrom((int)addr, (int)chunk);
+    for (uint8_t i = 0; i < chunk && Wire.available(); i++) {
+      buf[index++] = Wire.read();
+    }
+
+    // Avança ponteiro
+    currentReg += chunk;
+    remaining -= chunk;
   }
 }
 TP_Point::TP_Point(void) {
