@@ -12,7 +12,7 @@ const char* TextButton::TAG = "TextButton";
  */
 TextButton::TextButton(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_config{} {
-
+      m_offsetMargin = 10;
       m_config = {.width = 0, .height = 0, .radius = 0, .backgroundColor = 0, .textColor = 0, .text = "", .callback = nullptr};
       ESP_LOGD(TAG, "TextButton created at (%d, %d) on screen %d", _x, _y, _screen);
     }

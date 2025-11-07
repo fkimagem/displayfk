@@ -1,6 +1,9 @@
 #ifndef _GSL3680_TOUCH_H
 #define _GSL3680_TOUCH_H
+
+
 #include <stdio.h>
+#include <stdint.h>
 
 class GSL3680_touch
 {

@@ -75,6 +75,7 @@
 #elif defined(ARDUINO)
 #include <esp_task_wdt.h>
 #endif
+#include "extras/check_version.h"
 
 #include "widgets/widgetbase.h"
 
@@ -359,7 +360,7 @@ public:
     bool startKeyboardsSafe();
     bool createTimerSafe();
     bool createSemaphoreSafe();
-    bool setCheckboxSafe(CheckBox *array[], uint8_t amount);
+    
     char* allocateStringSafe(const char* caller);
     void deallocateStringSafe(char* str);
     bool startSDSafe(uint8_t pinCS, SPIClass *spiShared, int hz);
@@ -394,6 +395,7 @@ public:
     void changeWTD();
 
 #ifdef DFK_CHECKBOX
+    bool setCheckboxSafe(CheckBox *array[], uint8_t amount);
     void setCheckbox(CheckBox *array[], uint8_t amount);
 #endif
 

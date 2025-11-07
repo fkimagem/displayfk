@@ -2,7 +2,8 @@
 #include "TAMC_GT911.h"
 #include <Wire.h>
 
-#define LOG_GT911 1
+//#define LOG_GT911 1
+//#define OLD_GT911 1
 
 TAMC_GT911::TAMC_GT911(uint8_t _sda, uint8_t _scl, uint8_t _int, uint8_t _rst, uint16_t _width, uint16_t _height) :
   pinSda(_sda), pinScl(_scl), pinInt(_int), pinRst(_rst), width(_width), height(_height) {
@@ -189,14 +190,16 @@ void TAMC_GT911::writeBlockData(uint16_t reg, uint8_t *val, uint8_t size) {
   Wire.endTransmission();
 }
 void TAMC_GT911::readBlockData(uint8_t *buf, uint16_t reg, uint8_t size) {
-  /*Wire.beginTransmission(addr);
+  #if defined(OLD_GT911)
+  Wire.beginTransmission(addr);
   Wire.write(highByte(reg));
   Wire.write(lowByte(reg));
   Wire.endTransmission();
   Wire.requestFrom(addr, size);
   for (uint8_t i=0; i<size; i++) {
     buf[i] = Wire.read();
-  }*/
+  }
+ #else
  const uint8_t CHUNK_SIZE = 64;  // máximo seguro para ESP32-P4 I²C FIFO
   uint8_t remaining = size;
   uint16_t currentReg = reg;
@@ -221,6 +224,7 @@ void TAMC_GT911::readBlockData(uint8_t *buf, uint16_t reg, uint8_t size) {
     currentReg += chunk;
     remaining -= chunk;
   }
+  #endif
 }
 TP_Point::TP_Point(void) {
   id = x = y = size = 0;

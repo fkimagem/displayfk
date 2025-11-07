@@ -3537,8 +3537,12 @@ bool DisplayFK::startKeyboardsSafe() {
     // Rollback on failure
     if (!success) {
         ESP_LOGE(TAG, "Keyboard initialization failed, cleaning up");
+        #if defined(DFK_TEXTBOX)
         keyboard.reset();
+        #endif
+        #if defined(DFK_NUMBERBOX)
         numpad.reset();
+        #endif
     }
     
     return success;
@@ -3621,6 +3625,7 @@ bool DisplayFK::createSemaphoreSafe() {
  * @param amount Number of checkboxes
  * @return true if successful, false otherwise
  */
+ #if defined(DFK_CHECKBOX)
 bool DisplayFK::setCheckboxSafe(CheckBox *array[], uint8_t amount) {
     if (m_checkboxConfigured) {
         ESP_LOGW(TAG, "Checkbox already configured");
@@ -3656,6 +3661,7 @@ bool DisplayFK::setCheckboxSafe(CheckBox *array[], uint8_t amount) {
         return false;
     }
 }
+#endif
 
 /**
  * @brief Safe string allocation without exceptions

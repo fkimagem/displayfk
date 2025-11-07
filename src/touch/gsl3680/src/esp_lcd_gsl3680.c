@@ -1,3 +1,9 @@
+#if defined(ESP_ARDUINO_VERSION_MAJOR) && defined(ESP_ARDUINO_VERSION_MINOR)
+    #if ESP_ARDUINO_VERSION_MAJOR < 3 || (ESP_ARDUINO_VERSION_MAJOR == 3 && ESP_ARDUINO_VERSION_MINOR < 3)
+        #error "GSL3680_touch requer ESP Arduino Core versao 3.3.0 ou superior. Versao atual incompativel."
+    #endif
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include "freertos/FreeRTOS.h"
@@ -7,7 +13,9 @@
 #include "esp_log.h"
 #include "esp_check.h"
 #include "driver/gpio.h"
+#if defined(ESP_ARDUINO_VERSION_OK)
 #include "driver/i2c_master.h"
+#endif
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_touch.h"
 #include "esp_lcd_gsl3680.h"
