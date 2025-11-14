@@ -1,4 +1,5 @@
 #include "displayfk.h"
+#include <memory>
 
 
 
@@ -1483,7 +1484,7 @@ void DisplayFK::freeLoopTask()
 void DisplayFK::startKeyboards(){
     #ifdef DFK_TEXTBOX
         if (!keyboard) {
-            keyboard = std::make_unique<WKeyboard>();
+            keyboard = std::unique_ptr<WKeyboard>(new WKeyboard());
             if (keyboard) {
                 keyboard->setup();
             } else {
@@ -1493,7 +1494,7 @@ void DisplayFK::startKeyboards(){
     #endif
     #ifdef DFK_NUMBERBOX
         if (!numpad) {
-            numpad = std::make_unique<Numpad>();
+            numpad = std::unique_ptr<Numpad>(new Numpad());
             if (numpad) {
                 numpad->setup();
             } else {
@@ -1686,7 +1687,7 @@ void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = std::make_unique<TouchScreen>();
+        touchExterno = std::unique_ptr<TouchScreen>(new TouchScreen());
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
@@ -1703,7 +1704,7 @@ void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = std::make_unique<TouchScreen>();
+        touchExterno = std::unique_ptr<TouchScreen>(new TouchScreen());
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
@@ -1721,7 +1722,7 @@ void DisplayFK::startTouchFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, int
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = std::make_unique<TouchScreen>();
+        touchExterno = std::unique_ptr<TouchScreen>(new TouchScreen());
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
@@ -1739,7 +1740,7 @@ void DisplayFK::startTouchFT6336(uint16_t w, uint16_t h, uint8_t _rotation, int8
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = std::make_unique<TouchScreen>();
+        touchExterno = std::unique_ptr<TouchScreen>(new TouchScreen());
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
@@ -1775,7 +1776,7 @@ void DisplayFK::startTouchGT911(uint16_t w, uint16_t h, uint8_t _rotation, int8_
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = std::make_unique<TouchScreen>();
+        touchExterno = std::unique_ptr<TouchScreen>(new TouchScreen());
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
@@ -1793,7 +1794,7 @@ void DisplayFK::startTouchGSL3680(uint16_t w, uint16_t h, uint8_t _rotation, int
     m_rotationScreen = _rotation;
     m_heightScreen = h;
     if(!touchExterno){
-        touchExterno = std::make_unique<TouchScreen>();
+        touchExterno = std::unique_ptr<TouchScreen>(new TouchScreen());
         if (touchExterno)
         {
             touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
@@ -2540,6 +2541,11 @@ void DisplayFK::processImageTouch(uint16_t xTouch, uint16_t yTouch) {
     }
     
         for (uint32_t indice = 0; indice < qtdImage; indice++) {
+            if (arrayImage[indice] == nullptr) {
+                ESP_LOGE(TAG, "Image pointer is null");
+                continue;
+            }
+
             if (!arrayImage[indice]->showingMyScreen()) continue;
 
             if (arrayImage[indice]->detectTouch(&xTouch, &yTouch)) {
@@ -3501,7 +3507,7 @@ bool DisplayFK::startKeyboardsSafe() {
     #ifdef DFK_TEXTBOX
     if (!keyboard) {
         // Use nothrow allocation
-        keyboard = std::unique_ptr<WKeyboard>(new(std::nothrow) WKeyboard());
+        keyboard = std::unique_ptr<WKeyboard>(new WKeyboard());
         if (!keyboard) {
             ESP_LOGE(TAG, "Memory allocation failed for keyboard");
             success = false;

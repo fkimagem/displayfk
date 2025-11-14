@@ -94,7 +94,7 @@ void CircularBar::setValue(int newValue) {
   CHECK_LOADED_VOID
   
   m_lastValue = m_value;
-  m_value = newValue;
+  m_value = constrain(newValue, m_config.minValue, m_config.maxValue);
   m_shouldRedraw = true;
   
   ESP_LOGD(TAG, "CircularBar value set to: %d", newValue);

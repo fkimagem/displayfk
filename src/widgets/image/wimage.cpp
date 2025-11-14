@@ -421,6 +421,7 @@ void Image::setupFromFile(ImageFromFileConfig &config) {
 
     m_loaded = true;
     m_shouldRedraw = true;
+    m_initialized = true;
     
     ESP_LOGD(TAG, "Image setup from file completed at (%d, %d) - %dx%d from %s", 
              m_xPos, m_yPos, m_config.width, m_config.height, config.path);
@@ -559,6 +560,15 @@ void Image::printMetrics() const {
   ESP_LOGI(TAG, "  Average: %.2f", m_metrics.getAverageRotationTime());
   ESP_LOGI(TAG, "  Maximum: %u", m_metrics.maxRotationTime);
   ESP_LOGI(TAG, "  Total: %u", m_metrics.totalRotationTime);
+  ESP_LOGI(TAG, "");
+  // print m_loaded
+  ESP_LOGI(TAG, "Loaded: %d", m_loaded);
+  // print m_shouldRedraw
+  ESP_LOGI(TAG, "Should Redraw: %d", m_shouldRedraw);
+  // print m_visible
+  ESP_LOGI(TAG, "Visible: %d", m_visible);
+  // print m_initialized
+  ESP_LOGI(TAG, "Initialized: %d", m_initialized);
   ESP_LOGI(TAG, "=====================================");
 }
 
