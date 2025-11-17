@@ -13,10 +13,12 @@
 #include <Arduino.h>
 
 #include "../../user_setup.h"
-#include "check_touch.h"
+
 
 #include <cstdint>
 #include "../extras/baseTypes.h"
+
+#include "check_touch.h"
 
   #if defined(TOUCH_XPT2046)
     #pragma message("Using XPT2046 touch driver")
@@ -30,6 +32,8 @@
     #pragma message("Using GT911 touch driver")
   #elif defined(TOUCH_GSL3680)
     #pragma message("Using GSL3680 touch driver")
+  #elif defined(TOUCH_CST820)
+    #pragma message("Using CST820 touch driver")
   #else
     #pragma message("No touch driver selected")
   #endif
@@ -51,6 +55,8 @@
   #elif defined(TOUCH_GSL3680)
     //#include <Wire.h>
     #include "gsl3680/src/gsl3680_touch.h"
+  #elif defined(TOUCH_CST820)
+    #include "cst820/cst820.h"
   #endif
 
 
@@ -128,6 +134,10 @@ private:
   #elif defined(TOUCH_GSL3680)
   GSL3680_touch *m_ts = nullptr;
   int8_t m_pinSCL = 0, m_pinSDA = 0, m_pinINT = 0, m_pinRST = 0;
+
+  #elif defined(TOUCH_CST820)
+ CST820 *m_ts = nullptr;
+int8_t m_pinSCL = 0, m_pinSDA = 0, m_pinINT = 0, m_pinRST = 0;
   #else
   //
   #endif
@@ -198,16 +208,16 @@ public:
   void showSetup();
 
   #elif defined(TOUCH_CST816)
-
   void startAsCST816(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST);
 
   #elif defined(TOUCH_GT911)
-
   void startAsGT911(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST);
 
   #elif defined(TOUCH_GSL3680)
-
   void startAsGSL3680(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST);
+
+  #elif defined(TOUCH_CST820)
+  void startAsCST820(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST);
 
   #endif
 };

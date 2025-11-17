@@ -90,6 +90,19 @@ void TouchScreen::startAsGSL3680(uint16_t w, uint16_t h, uint8_t _rotation, uint
   touch_init();
   log_d("Starting gsl3680 touch panel driver");
 }
+
+#elif defined(TOUCH_CST820)
+void TouchScreen::startAsCST820(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST)
+{
+  m_ts = new CST820(pinSDA, pinSCL, pinRST, pinINT);
+  this->setDimension(w, h, _rotation);
+  m_pinSCL = pinSCL;
+  m_pinSDA = pinSDA;
+  m_pinINT = pinINT;
+  m_pinRST = pinRST;
+  touch_init();
+  log_d("Starting cst820 touch panel driver");
+}
 #endif
 
 uint16_t TouchScreen::getWidthScreen()
@@ -254,6 +267,9 @@ void TouchScreen::touch_init()
 #elif defined(TOUCH_GSL3680)
   m_ts->begin();
   m_ts->set_rotation(m_rotation);
+
+  #elif defined(TOUCH_CST820)
+  m_ts->begin();
 #endif
 }
 
@@ -326,6 +342,8 @@ bool TouchScreen::touch_has_signal()
 #elif defined(TOUCH_FT6336)
   tp = m_ts->scan();
   return tp.touch_count > 0;
+#elif defined(TOUCH_CST820)
+  return true;
 #else
   return false;
 #endif
@@ -642,74 +660,29 @@ bool TouchScreen::touch_touched()
   sy = map(yToMap, startY, endY, 0, m_heightScreen - 1);
   
 
-  /*switch (m_rotation & 3) // 0,1,2,3
-  {
-  case 0: // Portrait   (0°)
-    if(m_invertXAxis){
-
-      showMap("X", m_x1, m_x0);
-
-      sx = map(rx, m_x1, m_x0, 0, m_widthScreen - 1);
-    }else{
-
-      showMap("X", m_x0, m_x1);
-
-      sx = map(rx, m_x0, m_x1, 0, m_widthScreen - 1);
-    }
-
-    if(m_invertYAxis){
-      showMap("Y", m_y1, m_y0);
-      sy = map(ry, m_y1, m_y0, 0, m_heightScreen - 1);
-    }else{
-      showMap("Y", m_y0, m_y1);
-      sy = map(ry, m_y0, m_y1, 0, m_heightScreen - 1);
-    }
-    
-    
-    break;
-
-  case 1: // Landscape  (90°)
-    if(m_invertXAxis){
-      showMap("X", m_y1, m_y0);
-      sx = map(ry, m_y1, m_y0, 0, m_widthScreen - 1);
-    }else{
-      showMap("X", m_y0, m_y1);
-      sx = map(ry, m_y0, m_y1, 0, m_widthScreen - 1);
-    }
-
-
-    if(m_invertYAxis){
-      showMap("Y", m_x0, m_x1);
-      sy = map(rx, m_x0, m_x1, 0, m_heightScreen - 1);
-    }else{
-      showMap("Y", m_x1, m_x0);
-      sy = map(rx, m_x1, m_x0, 0, m_heightScreen - 1);
-    }
-    
-    
-    break;
-
-  case 2: // Portrait   (180°)
-    sx = map(rx, m_x0, m_x1, 0, m_widthScreen - 1);
-    sy = map(ry, m_y1, m_y0, 0, m_heightScreen - 1);
-    break;
-
-  default: // Landscape  (270°)
-    sx = map(ry, m_y1, m_y0, 0, m_widthScreen - 1);
-    sy = map(rx, m_x1, m_x0, 0, m_heightScreen - 1);
-    break;
-  }*/
-
   /* Garante que nada extrapole os limites físicos do display */
   m_touch_last_x = constrain(sx, 0, m_widthScreen - 1);
   m_touch_last_y = constrain(sy, 0, m_heightScreen - 1);
   m_touch_last_z = -1; // pressão fixa ou não usada
 
   return true;
+
+#elif defined(TOUCH_CST820)
+
+  uint16_t touchX, touchY;
+  uint8_t gesture;
+  bool touched = m_ts->getTouch(&touchX, &touchY, &gesture);
+  
+  m_touch_last_x = touchX;
+  m_touch_last_y = touchY;
+  m_touch_last_z = -1;
+  m_gesture = gesture;
+
+
+  return touched;
 #else
   return false;
 #endif
-
 #endif
 }
 
@@ -1136,7 +1109,7 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
  * @param size Size of the star.
  * @param color Color of the star.
  */
-#if defined(TOUCH_XPT2046) && HAS_TOUCH
+#if defined(TOUCH_XPT2046) && defined(HAS_TOUCH)
 
 CalibrationPoint_t TouchScreen::getMinPoint(CalibrationPoint_t pontos[4])
 {

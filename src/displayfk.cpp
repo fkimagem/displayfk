@@ -1806,6 +1806,24 @@ void DisplayFK::startTouchGSL3680(uint16_t w, uint16_t h, uint8_t _rotation, int
         }
     }
 }
+#elif defined (TOUCH_CST820)
+void DisplayFK::startTouchCST820(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST){
+    m_widthScreen = w;
+    m_rotationScreen = _rotation;
+    m_heightScreen = h;
+    if(!touchExterno){
+        touchExterno = std::unique_ptr<TouchScreen>(new TouchScreen());
+        if (touchExterno)
+        {
+            touchExterno->setTouchCorners(m_x0, m_x1, m_y0, m_y1);
+            touchExterno->setInvertAxis(m_invertXAxis, m_invertYAxis);
+            touchExterno->setSwapAxis(m_swapAxis);
+            touchExterno->startAsCST820(w, h, _rotation, pinSDA, pinSCL, pinINT, pinRST);
+        } else {
+            ESP_LOGE(TAG, "Failed to allocate memory for TouchScreen");
+        }
+    }
+}
 #endif
 
 #endif

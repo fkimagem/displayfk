@@ -50,7 +50,8 @@
 //#define DISP_SSD1306
 //#define DISP_U8G2
 //#define TOUCH_FT6236U
-#define TOUCH_FT6336	
+//#define TOUCH_FT6336	
+#define TOUCH_CST820
 //#define TOUCH_XPT2046
 //#define TOUCH_GT911	
 //#define TOUCH_GSL3680
