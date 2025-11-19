@@ -119,7 +119,10 @@ void TextButton::redraw() {
   WidgetBase::objTFT->setFont(m_config.fontFamily);
   // WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
   // WidgetBase::objTFT->setFont(getBestRobotoBold(m_config.width - (2 * m_offsetMargin), m_config.height - (2 * m_offsetMargin), m_config.text));
-  printText(m_config.text, m_xPos + m_config.width / 2, m_yPos + (m_config.height / 2), MC_DATUM);
+  int middleX = m_xPos + m_config.width / 2;
+  int middleY = m_yPos + m_config.height / 2;
+  // draw circle in the middle of the button
+  printText(m_config.text, middleX, middleY, MC_DATUM);
 
   updateFont(FontType::UNLOAD);
 }

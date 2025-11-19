@@ -529,7 +529,7 @@ void WidgetBase::recalculateTextPosition(const char *_texto, uint16_t *_x, uint1
     static const int16_t OFFSET_PADDING_Y = 6;
     
     // Obtém as dimensões do texto
-    TextBound_t area;
+    /*TextBound_t area;
     objTFT->getTextBounds(_texto, 0, 0, &area.x, &area.y, &area.width, &area.height);
 
     // Calcula os offsets baseados no datum
@@ -577,7 +577,51 @@ void WidgetBase::recalculateTextPosition(const char *_texto, uint16_t *_x, uint1
 
     // Aplica os offsets
     *_x += xOffset;
-    *_y += yOffset;
+    *_y += yOffset;*/
+    // Pega a área real ocupada pelo texto
+    TextBound_t a;
+    objTFT->getTextBounds(_texto, 0, 0, &a.x, &a.y, &a.width, &a.height);
+
+    int16_t xo = *_x; 
+    int16_t yo = *_y;
+
+    // Ajuste horizontal
+    switch (_datum) {
+        case TL_DATUM: case ML_DATUM: case BL_DATUM: case L_BASELINE:
+            xo = *_x - a.x;
+            break;
+
+        case TC_DATUM: case MC_DATUM: case BC_DATUM: case C_BASELINE:
+            xo = *_x - (a.x + a.width / 2);
+            break;
+
+        case TR_DATUM: case MR_DATUM: case BR_DATUM: case R_BASELINE:
+            xo = *_x - (a.x + a.width);
+            break;
+    }
+
+    // Ajuste vertical
+    switch (_datum) {
+        case TL_DATUM: case TC_DATUM: case TR_DATUM:
+            yo = *_y - a.y;
+            break;
+
+        case ML_DATUM: case MC_DATUM: case MR_DATUM:
+            yo = *_y - (a.y + a.height / 2);
+            break;
+
+        case BL_DATUM: case BC_DATUM: case BR_DATUM:
+            yo = *_y - (a.y + a.height);
+            break;
+
+        case L_BASELINE: case C_BASELINE: case R_BASELINE:
+            // baseline já está em a.y
+            yo = *_y - 0;  
+            break;
+    }
+
+    *_x = xo;
+    *_y = yo;
 }
 
 /**
