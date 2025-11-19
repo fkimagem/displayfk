@@ -6,15 +6,15 @@
 // #define DFK_SD
 // Defines for font and files
 #define FORMAT_SPIFFS_IF_FAILED false
-const int DISPLAY_W = 240;
-const int DISPLAY_H = 320;
+const int DISPLAY_W = 320;
+const int DISPLAY_H = 240;
 const int DISP_FREQUENCY = 27000000;
 const int TOUCH_MAP_X0 = 0;
 const int TOUCH_MAP_X1 = 240;
 const int TOUCH_MAP_Y0 = 0;
 const int TOUCH_MAP_Y1 = 320;
-const bool TOUCH_SWAP_XY = false;
-const bool TOUCH_INVERT_X = false;
+const bool TOUCH_SWAP_XY = true;
+const bool TOUCH_INVERT_X = true;
 const bool TOUCH_INVERT_Y = false;
 const int DISP_MOSI = 13;
 const int DISP_MISO = 12;
@@ -38,7 +38,7 @@ SPIClass spi_shared(HSPI);
 #endif
 Arduino_DataBus *bus = nullptr;
 Arduino_GFX *tft = nullptr;
-uint8_t rotationScreen = 0; // This value can be changed depending of orientation of your screen
+uint8_t rotationScreen = 3; // This value can be changed depending of orientation of your screen
 DisplayFK myDisplay;
 // Create global objects. Constructor is: xPos, yPos and indexScreen
 void setup(){

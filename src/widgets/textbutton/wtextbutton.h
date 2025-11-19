@@ -13,6 +13,7 @@ struct TextButtonConfig {
   uint16_t backgroundColor;  ///< Cor exibida quando o botão está pressionado.
   uint16_t textColor;     ///< Cor do texto exibido no botão.
   const char* text;       ///< Texto para exibir no botão.
+  const GFXfont* fontFamily; ///< Ponteiro para a fonte usada para o texto.
   functionCB_t callback;  ///< Função callback para executar quando o botão é pressionado.
 };
 

@@ -9,6 +9,7 @@ A classe `TextButton` é um widget interativo que exibe um botão com texto pers
 - 🔘 Botão com texto personalizável
 - 🎨 Cores de fundo e texto configuráveis
 - 📐 Dimensões e raio de bordas arredondadas configuráveis
+- 🔤 Fontes personalizáveis (GFXfont)
 - 🔔 Callback para ações de clique
 - 👆 Suporte a toque para ativação
 - 🔒 Pode ser habilitado/desabilitado
@@ -32,6 +33,7 @@ struct TextButtonConfig {
   uint16_t backgroundColor; // Cor de fundo do botão
   uint16_t textColor;     // Cor do texto
   const char* text;       // Texto a exibir
+  const GFXfont* fontFamily; // Ponteiro para a fonte usada para o texto
   functionCB_t callback;  // Função callback
 };
 ```
@@ -181,6 +183,7 @@ void loadWidgets() {
         .backgroundColor = CFK_COLOR01,
         .textColor = CFK_WHITE,
         .text = "OK",
+        .fontFamily = &RobotoBold10pt7b,
         .callback = botao1_cb
     };
     botao1.setup(configBotao1);
@@ -193,6 +196,7 @@ void loadWidgets() {
         .backgroundColor = CFK_COLOR02,
         .textColor = CFK_BLACK,
         .text = "Cancelar",
+        .fontFamily = &RobotoBold12pt7b,
         .callback = botao2_cb
     };
     botao2.setup(configBotao2);
@@ -275,6 +279,7 @@ void setup() {
         .backgroundColor = CFK_GREEN,
         .textColor = CFK_WHITE,
         .text = "Salvar",
+        .fontFamily = &RobotoBold10pt7b,
         .callback = salvar_callback
     };
     botaoSalvar.setup(configSalvar);
@@ -287,6 +292,7 @@ void setup() {
         .backgroundColor = CFK_RED,
         .textColor = CFK_WHITE,
         .text = "Excluir",
+        .fontFamily = &RobotoBold10pt7b,
         .callback = excluir_callback
     };
     botaoExcluir.setup(configExcluir);
@@ -331,11 +337,13 @@ void excluir_callback() {
 - Azul para ações neutras
 - Considere o tema claro/escuro
 
-### 🔔 Textos
+### 🔔 Textos e Fontes
 - Use textos curtos e claros
 - Evite textos muito longos
 - Considere o espaço disponível
-- Use fontes apropriadas para o tamanho
+- Use fontes apropriadas para o tamanho do botão
+- Configure `fontFamily` com ponteiro para fonte GFXfont (ex: `&RobotoBold10pt7b`)
+- Fontes maiores podem não caber em botões pequenos
 
 ### ⚡ Performance
 - Redesenho apenas quando necessário
@@ -353,7 +361,7 @@ void excluir_callback() {
 - Bordas arredondadas para aparência moderna
 - Cores adaptadas ao modo claro/escuro
 - Texto centralizado automaticamente
-- Fonte otimizada para o espaço
+- Fonte configurável através de fontFamily
 
 ### 🔒 Controle
 - Pode ser habilitado/desabilitado
@@ -397,7 +405,7 @@ O TextButton renderiza assim:
 2. **Texto:**
    - Texto centralizado no botão
    - Cor definida por textColor
-   - Fonte otimizada para o espaço disponível
+   - Fonte definida por fontFamily (ponteiro para GFXfont)
 
 3. **Adaptação ao Tema:**
    - Cores ajustadas automaticamente
@@ -429,8 +437,10 @@ O TextButton renderiza assim:
 ### Texto não aparece
 - Verifique se o texto foi configurado
 - Confirme textColor contrasta com backgroundColor
-- Verifique dimensões adequadas
+- Verifique se fontFamily foi configurado corretamente
+- Verifique dimensões adequadas para a fonte escolhida
 - Teste com texto mais simples
+- Certifique-se de que a fonte está incluída no projeto
 
 ### Visual incorreto
 - Verifique cores configuradas

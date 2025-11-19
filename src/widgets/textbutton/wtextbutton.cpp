@@ -116,13 +116,10 @@ void TextButton::redraw() {
 
   WidgetBase::objTFT->setTextColor(m_config.textColor);
 
+  WidgetBase::objTFT->setFont(m_config.fontFamily);
   // WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
-  WidgetBase::objTFT->setFont(getBestRobotoBold(
-      m_config.width - (2 * m_offsetMargin), m_config.height - (2 * m_offsetMargin), m_config.text));
+  // WidgetBase::objTFT->setFont(getBestRobotoBold(m_config.width - (2 * m_offsetMargin), m_config.height - (2 * m_offsetMargin), m_config.text));
   printText(m_config.text, m_xPos + m_config.width / 2, m_yPos + (m_config.height / 2), MC_DATUM);
-  // showOrigin(CFK_RED);
-  // WidgetBase::objTFT->drawCircle(m_xPos + width/2, m_yPos + (height / 2), 4,
-  // CFK_WHITE);
 
   updateFont(FontType::UNLOAD);
 }

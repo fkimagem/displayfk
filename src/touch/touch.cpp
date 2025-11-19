@@ -672,9 +672,32 @@ bool TouchScreen::touch_touched()
   uint16_t touchX, touchY;
   uint8_t gesture;
   bool touched = m_ts->getTouch(&touchX, &touchY, &gesture);
-  
-  m_touch_last_x = touchX;
-  m_touch_last_y = touchY;
+
+  if(m_swapAxis){
+    if(m_invertXAxis){
+      m_touch_last_x = map(touchY, m_y0, m_y1, m_widthScreen, 0);
+    }else{
+      m_touch_last_x = map(touchY, m_y0, m_y1, 0, m_widthScreen);
+    }
+
+    if(m_invertYAxis){
+      m_touch_last_y = map(touchX, m_x0, m_x1, m_heightScreen, 0);
+    }else{
+      m_touch_last_y = map(touchX, m_x0, m_x1, 0, m_heightScreen);
+    }
+  }else{
+    if(m_invertXAxis){
+      m_touch_last_x = m_x1 - touchX;
+    }else{
+      m_touch_last_x = touchX;
+    }
+
+    if(m_invertYAxis){
+      m_touch_last_y = m_y1 - touchY;
+    }else{
+      m_touch_last_y = touchY;
+    }
+  }
   m_touch_last_z = -1;
   m_gesture = gesture;
 
