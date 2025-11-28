@@ -18,7 +18,7 @@ Led::Led(uint16_t _x, uint16_t _y, uint8_t _screen)
       m_initialized(false)
 {
   // Initialize with default config
-  m_config = {.radius = 10, .colorOn = CFK_RED, .colorOff = 0};
+  m_config = {.radius = 10, .colorOn = CFK_RED, .colorOff = 0, .initialState = false};
   
   // Initialize gradient array
   for (uint8_t i = 0; i < m_colorLightGradientSize; i++) {
@@ -154,10 +154,16 @@ void Led::updateGradient() {
 
   //m_colorLightGradient = blendColors(baseColor, whiteColor, 0.5);
 
+  uint16_t* cores = blendColorsRGB(baseColor, 0xFFFF, m_colorLightGradientSize);
+
   for (uint8_t i = 0; i < m_colorLightGradientSize; i++) {
     //m_colorLightGradient[i] = WidgetBase::lightenToWhite565(baseColor, 0.08*i);
-    m_colorLightGradient[i] = lighten565(baseColor, 0.2*i);
+    // m_colorLightGradient[i] = lighten565(baseColor, 0.2*i);
+    //m_colorLightGradient[i] = blendColors(baseColor, 0xFFFF, m_colorLightGradientSize);
+    m_colorLightGradient[i] = cores[i];
   }
+
+  delete[] cores;
 }
 
 /**
@@ -232,10 +238,7 @@ void Led::redraw() {
   CHECK_USINGKEYBOARD_VOID
   CHECK_CURRENTSCREEN_VOID
   CHECK_DEBOUNCE_REDRAW_VOID
-
-  if (!m_shouldRedraw) {
-    return;
-  }
+  CHECK_SHOULDREDRAW_VOID
 
   m_shouldRedraw = false;
   
@@ -295,6 +298,8 @@ void Led::setup(const LedConfig& config) {
 
   // Assign the configuration structure
   m_config = config;
+
+  m_status = m_config.initialState;
   
   // Update gradient if needed
   updateGradient();
@@ -325,4 +330,10 @@ void Led::hide() {
   m_visible = false;
   m_shouldRedraw = true;
   ESP_LOGD(TAG, "Led hidden at (%d, %d)", m_xPos, m_yPos);
+}
+
+void Led::setColor(uint16_t color) {
+  m_config.colorOn = color;
+  updateGradient();
+  m_shouldRedraw = true;
 }

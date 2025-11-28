@@ -99,6 +99,7 @@ bool SpinBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
     increaseValue();
   }
 
+  setPressed(true);  // Mark widget as pressed
   m_myTime = millis();
   m_shouldRedraw = true;
 

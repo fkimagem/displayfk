@@ -225,6 +225,43 @@ inline uint16_t* blendColors(uint16_t startColor, uint16_t endColor, int numTons
 }
 
 /**
+ * @brief Gera um blend linear em RGB entre duas cores RGB565.
+ * @param c1 Cor inicial em RGB565.
+ * @param c2 Cor final em RGB565.
+ * @param numTons Número de tons a gerar (>=2).
+ * @return Ponteiro para array dinâmico de `numTons` elementos RGB565, ou nullptr.
+*/
+inline uint16_t *blendColorsRGB(uint16_t c1, uint16_t c2, int numTons) {
+  if (numTons < 2) return 0;
+
+  uint16_t* out = new uint16_t[numTons];
+
+  // Extrair RGB dos dois
+  auto extract = [](uint16_t c, uint8_t &r, uint8_t &g, uint8_t &b) {
+    r = ((c >> 11) & 0x1F) << 3;
+    g = ((c >> 5) & 0x3F) << 2;
+    b = (c & 0x1F) << 3;
+  };
+
+  uint8_t r1, g1, b1, r2, g2, b2;
+  extract(c1, r1, g1, b1);
+  extract(c2, r2, g2, b2);
+
+  for (int i = 0; i < numTons; i++) {
+    float t = (float)i / (numTons - 1);
+
+    uint8_t r = r1 + (r2 - r1) * t;
+    uint8_t g = g1 + (g2 - g1) * t;
+    uint8_t b = b1 + (b2 - b1) * t;
+
+    out[i] = rgbTo565(r, g, b);
+  }
+
+  return out;
+}
+
+
+/**
  * @brief Clareia uma cor RGB565 em direção ao branco.
  * 
  * @param color Cor original no formato RGB565.

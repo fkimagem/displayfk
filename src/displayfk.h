@@ -85,6 +85,8 @@
 #include "freertos/queue.h"
 #include <freertos/semphr.h>
 
+
+#if defined(CONFIG_IDF_TARGET_ESP32P4)
 static const lcd_init_cmd_t st7701_init_operations[] = {
     // {cmd, { data }, data_size, delay_ms}
     {0xFF, (uint8_t[]){0x77, 0x01, 0x00, 0x00, 0x13}, 5, 0},
@@ -127,7 +129,7 @@ static const lcd_init_cmd_t st7701_init_operations[] = {
     {0x11, (uint8_t[]){0x00}, 1, 120},  // Sleep Out - delay de 120ms
     {0x29, (uint8_t[]){0x00}, 1, 20},   // Display On - delay de 20ms
 };
-
+#endif
 /**
  * @brief Maximum length for a single log line
  */
@@ -315,6 +317,10 @@ enum class TouchSwipeDirection
     LEFT = 3,
     RIGHT = 4
 };
+
+// Descomentar a linha abaixo para habilitar o recurso onRelease
+// Quando comentado, todo o código de rastreamento de touch é desabilitado
+#define ENABLE_ON_RELEASE
 
 /// @brief Represents the main display framework class, managing various widget types, SD card functionality, and touch input.
 class DisplayFK
@@ -579,6 +585,13 @@ private:
     CoordPoint_t pressPoint = {x: 0, y: 0};
     CoordPoint_t releasePoint = {x: 0, y: 0};
 
+#ifdef ENABLE_ON_RELEASE
+    // Touch tracking for onRelease functionality
+    WidgetBase* m_touchedWidgets[5];      ///< Array of widgets currently being touched
+    uint8_t m_touchedWidgetsCount;        ///< Number of widgets in the touched array
+    bool m_trackingTouch;                 ///< Flag indicating if we're tracking touch
+#endif
+
 #if defined(DFK_TOUCHAREA)
     uint8_t qtdTouchArea = 0;             ///< Number of TouchArea widgets.
     TouchArea **arrayTouchArea = nullptr; ///< Array of TouchArea widgets.
@@ -726,23 +739,32 @@ private:
     void processLogBuffer();
     void processTouchEvent(uint16_t xTouch, uint16_t yTouch, int zPressure, uint8_t gesture);
     void processTouchStatus(bool hasTouch, uint16_t xTouch, uint16_t yTouch);
-    void processTouchableWidgets(uint16_t xTouch, uint16_t yTouch);
+    void processTouchableWidgets(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
     void updateWidgets();
     void processCallback();
 
     // Touch processing functions
-    void processCheckboxTouch(uint16_t xTouch, uint16_t yTouch);
-    void processCircleButtonTouch(uint16_t xTouch, uint16_t yTouch);
-    void processHSliderTouch(uint16_t xTouch, uint16_t yTouch);
-    void processRadioGroupTouch(uint16_t xTouch, uint16_t yTouch);
-    void processRectButtonTouch(uint16_t xTouch, uint16_t yTouch);
-    void processImageTouch(uint16_t xTouch, uint16_t yTouch);
-    void processSpinboxTouch(uint16_t xTouch, uint16_t yTouch);
-    void processToggleTouch(uint16_t xTouch, uint16_t yTouch);
-    void processTextButtonTouch(uint16_t xTouch, uint16_t yTouch);
-    void processTextBoxTouch(uint16_t xTouch, uint16_t yTouch);
-    void processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch);
-    void processEmptyAreaTouch(uint16_t xTouch, uint16_t yTouch);
+    void processCheckboxTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processCircleButtonTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processHSliderTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processRadioGroupTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processRectButtonTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processImageTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processSpinboxTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processToggleTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processTextButtonTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processTextBoxTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processEmptyAreaTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+
+#ifdef ENABLE_ON_RELEASE
+    // Touch tracking helper methods
+    void addTouchedWidget(WidgetBase* widget);
+    void removeTouchedWidget(WidgetBase* widget);
+    bool isWidgetInTouchedArray(WidgetBase* widget) const;
+    void checkWidgetsStillTouched(uint16_t xTouch, uint16_t yTouch);
+    void clearTouchedWidgets(bool callOnRelease = true);
+#endif
 
     // Widget update functions
     void updateCircularBar();

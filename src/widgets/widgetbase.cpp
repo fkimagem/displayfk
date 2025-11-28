@@ -179,6 +179,7 @@ WidgetBase::WidgetBase(uint16_t _x, uint16_t _y, uint8_t _screen)
     , m_enabled(true)
     , m_initialized(false)
     , m_shouldRedraw(false)
+    , m_isPressed(false)
     , m_locked(false)
     , m_myTime(0)
     , m_callback(nullptr)
@@ -202,6 +203,7 @@ WidgetBase::~WidgetBase()
     m_loaded = false;
     m_initialized = false;
     m_shouldRedraw = false;
+    m_isPressed = false;
 }
 
 // Pure virtual methods - must be implemented by derived classes
@@ -210,6 +212,32 @@ WidgetBase::~WidgetBase()
 bool WidgetBase::showingMyScreen()
 {
     return WidgetBase::currentScreen == m_screen;
+}
+
+/**
+ * @brief Sets the pressed state of the widget
+ * @param pressed True if widget is being pressed, false otherwise
+ */
+void WidgetBase::setPressed(bool pressed) {
+    m_isPressed = pressed;
+    if (pressed) {
+        ESP_LOGD(TAG, "Widget marked as pressed at (%d, %d)", m_xPos, m_yPos);
+    } else {
+        ESP_LOGD(TAG, "Widget marked as not pressed at (%d, %d)", m_xPos, m_yPos);
+    }
+}
+
+/**
+ * @brief Default implementation of onRelease
+ * @details This method is called when touch is released or leaves the widget area.
+ *          Default implementation sets m_isPressed to false.
+ *          Derived widgets should call WidgetBase::onRelease() first if overriding,
+ *          then set m_shouldRedraw = true if visual update is needed.
+ */
+void WidgetBase::onRelease() {
+    // Default implementation: reset pressed state
+    m_isPressed = false;
+    ESP_LOGD(TAG, "Widget released at (%d, %d)", m_xPos, m_yPos);
 }
 
 /**

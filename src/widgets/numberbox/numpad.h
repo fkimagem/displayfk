@@ -64,6 +64,19 @@ public:
 
   void show() override;
   void hide() override;
+  
+  // Internal onRelease system for key visual feedback
+  struct KeyState {
+    bool isPressed;      ///< True if a key is currently pressed
+    uint16_t row;        ///< Row index of pressed key
+    uint16_t col;        ///< Column index of pressed key
+  };
+  
+  // Public methods for external access
+  bool isKeyPressed() const { return m_pressedKey.isPressed; }
+  const KeyState& getPressedKey() const { return m_pressedKey; }
+  bool isPointInKey(uint16_t xTouch, uint16_t yTouch, const KeyState& keyState);
+  void releaseKey();
 
 private:
   static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
@@ -93,6 +106,12 @@ private:
   void addLetter(char c);
   void removeLetter();
   void cleanupMemory();
+  
+  KeyState m_pressedKey; ///< State of currently pressed key
+  
+  void drawSingleKey(uint16_t row, uint16_t col, bool isPressed);
+  void pressKey(uint16_t row, uint16_t col);
+  
 };
 
 #endif

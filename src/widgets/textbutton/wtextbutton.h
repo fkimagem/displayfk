@@ -31,6 +31,7 @@ public:
   ~TextButton();
   
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
+  void onRelease() override;
   functionCB_t getCallbackFunc() override;
   void redraw() override;
   void forceUpdate() override;
@@ -51,10 +52,10 @@ private:
   const char* m_text; ///< Texto exibido no botão.
   bool m_enabled; ///< Indica se o botão está criado ou desabilitado.
   TextButtonConfig m_config; ///< Estrutura contendo configuração do botão de texto.
+  uint16_t m_pressedColor = 0; ///< Cor de fundo do botão quando pressionado.
   
   void cleanupMemory();
   void start();
-  void setup(uint16_t _width, uint16_t _height, uint16_t _radius, uint16_t _pressedColor, uint16_t _textColor, const char* _text, functionCB_t _cb);
 };
 
 #endif

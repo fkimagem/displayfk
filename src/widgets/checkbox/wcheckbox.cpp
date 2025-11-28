@@ -85,6 +85,7 @@ bool CheckBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 
   if (inBouds) {
     m_myTime = millis();
+    setPressed(true);  // Mark widget as pressed
     changeState();
     m_shouldRedraw = true;
     ESP_LOGD(TAG, "CheckBox touched at (%d, %d), new status: %s", 

@@ -448,6 +448,7 @@ public:
   virtual void hide() = 0;
   virtual void forceUpdate() = 0;
   virtual void redraw() = 0;
+  virtual void onRelease();  ///< Called when touch is released or leaves widget area
   
   bool showingMyScreen();
   
@@ -476,6 +477,7 @@ protected:
   bool m_enabled;        ///< True se o widget está habilitado.
   bool m_initialized;   ///< True se o widget está propriamente inicializado.
   bool m_shouldRedraw;   ///< Flag indicando se o widget deve ser redesenhado.
+  bool m_isPressed;          ///< True when widget is currently being touched/pressed
   bool m_locked;        ///< True se o widget está bloqueado (previne interação).
   unsigned long m_myTime;   ///< Timestamp para manipulação de funções relacionadas a tempo (debounce, etc).
   functionCB_t m_callback; ///< Função callback para executar quando o widget é clicado.
@@ -488,6 +490,13 @@ protected:
 #endif
 
   void updateFont(FontType _f);
+
+  /**
+   * @brief Marks widget as pressed
+   * @param pressed True if widget is being pressed, false otherwise
+   * @details Called internally when touch is detected. Sets m_isPressed to true.
+   */
+  void setPressed(bool pressed);
 
 #if defined(USING_GRAPHIC_LIB)
   void printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t _datum, TextBound_t &lastTextBoud, uint16_t _colorPadding);

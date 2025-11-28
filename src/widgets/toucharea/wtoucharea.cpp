@@ -52,6 +52,7 @@ bool TouchArea::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_config.width, m_config.height);
   if(inBounds) {
     m_myTime = millis();
+    setPressed(true);  // Mark widget as pressed
   }
 
   return inBounds;

@@ -12,6 +12,7 @@ struct LedConfig {
   uint16_t radius; ///< Raio do LED em pixels. Recomendado: 5-50.
   uint16_t colorOn; ///< Cor RGB565 exibida quando o LED está ligado.
   uint16_t colorOff; ///< Cor RGB565 exibida quando o LED está desligado (opcional, 0 = automático).
+  bool initialState; ///< Estado inicial do LED (true = ligado, false = desligado).
 };
 
 /// @brief Widget de LED com tamanho e cor personalizáveis.
@@ -37,6 +38,7 @@ public:
   void drawBackground();
   void setState(bool newValue);
   bool getState() const;
+  void setColor(uint16_t color);
 
 private:
   static const char* TAG; ///< Tag estática para identificação em logs do ESP32.

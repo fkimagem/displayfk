@@ -40,6 +40,8 @@ GSL3680_touch::GSL3680_touch(int8_t sda_pin, int8_t scl_pin, int8_t rst_pin, int
     _int = int_pin;
     ESP_LOGD(TAG, "Constructor GSL3680_touch");
     Serial.println("Constructor GSL3680_touch");
+    #else
+    ESP_LOGE(TAG, "GSL3680_touch not supported. Constructor not called");
     #endif
 }
 
@@ -84,6 +86,8 @@ void GSL3680_touch::begin()
 
     ESP_LOGD(TAG, "Initialize touch controller gsl3680");
     ESP_ERROR_CHECK(esp_lcd_touch_new_i2c_gsl3680(tp_io_handle, &tp_cfg, &tp));
+    #else
+    ESP_LOGE(TAG, "GSL3680_touch not supported. begin() not called");
     #endif
 }
 
@@ -95,6 +99,7 @@ bool GSL3680_touch::getTouch(uint16_t *x, uint16_t *y)
 
     return touchpad_pressed;
     #else
+    ESP_LOGE(TAG, "GSL3680_touch not supported. getTouch() not called");
     return false;
     #endif
 }
@@ -123,5 +128,7 @@ switch(r){
         esp_lcd_touch_set_mirror_y(tp, true);
         break;
     }
+    #else
+    ESP_LOGE(TAG, "GSL3680_touch not supported. set_rotation() not called");
     #endif
 }

@@ -4,6 +4,9 @@
 // TouchScreen *TouchScreen::m_instance = nullptr;
 #endif
 
+
+const char *TouchScreen::TAG = "TouchScreen";
+
 TouchScreen::TouchScreen()
 {
   log_d("TouchScreen constructor");
@@ -230,6 +233,7 @@ void TouchScreen::touch(TPoint p, TEvent e)
  */
 void TouchScreen::touch_init()
 {
+  ESP_LOGD(TAG, "touch_init");
 #if defined(TOUCH_GT911)
   m_ts->begin();
   m_ts->setRotation(m_rotation);
@@ -316,6 +320,8 @@ void TouchScreen::setDimension(uint16_t _widthScreen, uint16_t _heightScreen, ui
   m_heightScreen = _heightScreen;
   m_rotation = _rotation;
   m_startedTouch = true;
+  // log dimension of touch
+  ESP_LOGD(TAG, "Touch screen dimension: %d x %d", m_widthScreen, m_heightScreen);
 }
 
 /**
@@ -732,6 +738,8 @@ bool TouchScreen::touch_released()
 #elif defined(TOUCH_XPT2046)
   return true;
 #elif defined(TOUCH_FT6236U)
+  return true;
+#elif defined(TOUCH_GSL3680)
   return true;
 
 #else
@@ -1559,6 +1567,7 @@ bool TouchScreen::getTouch(uint16_t *xTouch, uint16_t *yTouch, int *zPressure)
       (*xTouch) = m_touch_last_x;
       (*yTouch) = m_touch_last_y;
       (*zPressure) = m_touch_last_z;
+      ESP_LOGD(TAG, "getTouch: xTouch: %d, yTouch: %d, zPressure: %d", m_touch_last_x, m_touch_last_y, m_touch_last_z);
       // Serial.println("Return true");
       return true;
     }

@@ -30,7 +30,7 @@ struct CheckBoxConfig {
   uint16_t uncheckedColor;   // Cor quando desmarcado (0 = automático baseado no modo)
   CheckBoxWeight weight;     // Espessura da marca (LIGHT, MEDIUM, HEAVY)
   functionCB_t callback;     // Ponteiro para função callback
-音乐};
+};
 ```
 
 ### CheckBoxWeight (enum)

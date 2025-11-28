@@ -15,6 +15,8 @@ A classe `Led` é um widget visual que exibe um LED na tela com efeito de brilho
 - 🔗 Integra-se automaticamente com o sistema DisplayFK
 - 🌓 Suporte a modo claro/escuro
 - 🔄 Estados ligado/desligado
+- 🎛️ Estado inicial configurável via `initialState`
+- 🌈 Mudança de cor dinâmica via `setColor()`
 
 ---
 
@@ -29,6 +31,7 @@ struct LedConfig {
   uint16_t radius;     // Raio do LED em pixels (recomendado: 5-50)
   uint16_t colorOn;    // Cor RGB565 quando ligado
   uint16_t colorOff;   // Cor RGB565 quando desligado (0 = automático)
+  bool initialState;   // Estado inicial do LED (true = ligado, false = desligado)
 };
 ```
 
@@ -70,9 +73,21 @@ Configura o LED com os parâmetros especificados. **Este método deve ser chamad
 **Parâmetros:**
 - `config`: Estrutura `LedConfig` com as configurações
 
+**Parâmetros:**
+- `config`: Estrutura `LedConfig` com as configurações
+  - `radius`: Raio do LED em pixels (recomendado: 5-50)
+  - `colorOn`: Cor RGB565 quando ligado
+  - `colorOff`: Cor RGB565 quando desligado (0 = automático baseado no modo claro/escuro)
+  - `initialState`: Estado inicial do LED (true = ligado, false = desligado)
+
 **Validações automáticas:**
 - Raio deve ser maior que zero
 - Aviso se raio é muito grande (> 50 pixels)
+
+**Comportamento:**
+- O LED é inicializado com o estado especificado em `initialState`
+- O gradiente de cor é calculado automaticamente baseado em `colorOn`
+- Se `colorOff` for 0, a cor será calculada automaticamente baseada no modo claro/escuro
 
 ### getState()
 
@@ -101,6 +116,22 @@ Define o estado do LED e atualiza o visual automaticamente.
 - Marca para redesenho apenas se o estado mudar
 - Atualiza gradiente de cor quando ligado
 - Registra evento no log do ESP32
+
+### setColor()
+
+```cpp
+void setColor(uint16_t color)
+```
+
+Altera a cor do LED quando ligado dinamicamente, sem necessidade de reconfigurar todo o widget.
+
+**Parâmetros:**
+- `color`: Nova cor RGB565 para o estado ligado
+
+**Características:**
+- Atualiza o gradiente de cor automaticamente
+- Marca para redesenho imediato
+- Útil para mudar a cor do LED em tempo de execução
 
 ### drawBackground()
 
@@ -137,8 +168,8 @@ Estes métodos são chamados internamente:
 - `forceUpdate()`: Força atualização
 - `getCallbackFunc()`: Retorna função callback
 - `validateConfig()`: Valida configuração
-- `updateGradient()`: Atualiza gradiente de cor
-- `getOffColor()`: Obtém cor para estado desligado
+- `updateGradient()`: Atualiza gradiente de cor usando `lighten565()` com fator progressivo
+- `getOffColor()`: Obtém cor para estado desligado (automático se colorOff = 0)
 - `getBackgroundColor()`: Obtém cor de fundo
 - `cleanupMemory()`: Limpa memória (não usado para LED)
 
@@ -193,7 +224,8 @@ void loadWidgets() {
     LedConfig configLed = {
         .radius = 16,
         .colorOn = CFK_COLOR11,
-        .colorOff = CFK_BLACK
+        .colorOff = CFK_BLACK,
+        .initialState = false  // Inicia desligado
     };
     led.setup(configLed);
     
@@ -216,7 +248,7 @@ void loadWidgets() {
 ```cpp
 void screen0() {
     tft->fillScreen(CFK_WHITE);
-    WidgetBase::backgroundColor = CFK GenesisITE;
+    WidgetBase::backgroundColor = CFK_WHITE;
     
     // Desenhar todos os widgets na tela 0
     myDisplay.drawWidgetsOnScreen(0);
@@ -238,20 +270,27 @@ void loop() {
     // Verificar estado
     bool estáLigado = led.getState();
     
+    // Alterar cor dinamicamente
+    led.setColor(CFK_GREEN);  // Muda para verde
+    led.setState(true);
+    
+    delay(1000);
+    
+    led.setColor(CFK_RED);    // Muda para vermelho
     delay(1000);
 }
 ```
 
 ---
 
-## 📝 Exemplo Completo€
+## 📝 Exemplo Completo
 
 ```cpp
 #include <displayfk.h>
 
 DisplayFK myDisplay;
-Arduino_ЯataBus *bus = nullptr;
-Arduino_GFX *gfx butterfly;
+Arduino_DataBus *bus = nullptr;
+Arduino_GFX *gfx = nullptr;
 
 // Criar LEDs
 Led ledVermelho(100, 100, 0);
@@ -262,11 +301,11 @@ const uint8_t qtdLed = 3;
 Led *arrayLed[qtdLed] = {&ledVermelho, &ledVerde, &ledAzul};
 
 void setup() {
-    Serial.begin(115200 foot);
+    Serial.begin(115200);
     
     // Inicializar display
     bus = new Arduino_ESP32SPI(/* ... */);
-    gfx = new Arduino_ST7789(/* fireplace.*/);
+    gfx = new Arduino_ST7789(/* ... */);
     gfx->begin();
     
     myDisplay.setDrawObject(gfx);
@@ -275,7 +314,8 @@ void setup() {
     LedConfig configVermelho = {
         .radius = 15,
         .colorOn = CFK_RED,
-        .colorOff = CFK_BLACK
+        .colorOff = CFK_BLACK,
+        .initialState = false
     };
     ledVermelho.setup(configVermelho);
     
@@ -283,7 +323,8 @@ void setup() {
     LedConfig configVerde = {
         .radius = 15,
         .colorOn = CFK_GREEN,
-        .colorOff = CFK_BLACK
+        .colorOff = CFK_BLACK,
+        .initialState = false
     };
     ledVerde.setup(configVerde);
     
@@ -291,7 +332,8 @@ void setup() {
     LedConfig configAzul = {
         .radius = 15,
         .colorOn = CFK_BLUE,
-        .colorOff = CFK_BLACK
+        .colorOff = CFK_BLACK,
+        .initialState = false
     };
     ledAzul.setup(configAzul);
     
@@ -326,7 +368,7 @@ void loop() {
 void minhaTela() {
     gfx->fillScreen(CFK_WHITE);
     WidgetBase::backgroundColor = CFK_WHITE;
-ธรรมชาติ myDisplay.drawWidgetsOnScreen(0);
+    myDisplay.drawWidgetsOnScreen(0);
 }
 ```
 
@@ -355,6 +397,7 @@ void minhaTela() {
 - Renderização eficiente com círculos preenchidos
 - Raio muito grande pode impactar performance
 - Redesenho apenas quando estado muda
+- Logs do ESP32 disponíveis via ESP_LOG (nível DEBUG) para depuração
 
 ### 👥 Usabilidade
 - Use LEDs para indicar estados importantes
@@ -374,8 +417,10 @@ void minhaTela() {
 - 5 círculos concêntricos desenhados
 - Cada círculo menor que o anterior (4 pixels)
 - Offset de 2 pixels para efeito 3D
-- Gradiente calculado dinamicamente
+- Gradiente calculado dinamicamente usando `lighten565()`
+- Fator de clareamento: 0.2 * índice do círculo (0.0 a 0.8)
 - Cores mais claras no centro, mais escuras nas bordas
+- Gradiente baseado em conversão HSV para melhor qualidade visual
 
 ---
 
@@ -442,6 +487,7 @@ O `Led` é renderizado em duas camadas:
 - Confirme que setup() foi chamado
 - Verifique se o LED está visível
 - Certifique-se de que o widget está habilitado
+- Use `setColor()` para alterar a cor dinamicamente sem reconfigurar
 
 ### Efeito de brilho não aparece
 - Verifique se o LED está realmente ligado
@@ -460,6 +506,8 @@ O `Led` é renderizado em duas camadas:
 - Verifique contraste com o fundo
 - Considere o modo claro/escuro
 - Teste diferentes combinações de cores
+- O estado inicial pode ser configurado via `initialState` na estrutura `LedConfig`
+- Use `setColor()` para mudar a cor em tempo de execução
 
 ---
 

@@ -22,7 +22,7 @@ struct VerticalAnalogConfig {
 };
 
 /// @brief Representa um widget de display analógico vertical usado para visualizar valores numéricos em uma escala vertical.
-/// @details Esta classe herda de @ref WidgetBase e fornece funcional一章 completa para criar e gerenciar
+/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar
 ///          displays analógicos verticais na tela. O VAnalog desenha uma escala vertical com marcações,
 ///          uma seta indicadora que move baseada no valor atual, e opcionalmente exibe o valor numérico.
 ///          O widget pode ser configurado com diferentes tamanhos, cores, faixas de valores e número de divisões.

@@ -48,13 +48,13 @@ const Key_t Numpad::m_pad[NCOLS][NROWS] = {
  *          O teclado não será funcional até que setup() seja chamado.
  */
 Numpad::Numpad(uint16_t _x, uint16_t _y, uint8_t _screen)
-    : WidgetBase(_x, _y, _screen), m_config{} {}
+    : WidgetBase(_x, _y, _screen), m_config{}, m_pressedKey{false, 0, 0} {}
 
 /**
  * @brief Construtor padrão para a classe Numpad.
  * @details Inicializa um Numpad na posição (0,0) na tela 0.
  */
-Numpad::Numpad() : WidgetBase(0, 0, 0), m_config{} {}
+Numpad::Numpad() : WidgetBase(0, 0, 0), m_config{}, m_pressedKey{false, 0, 0} {}
 
 /**
  * @brief Destrutor da classe Numpad.
@@ -135,6 +135,15 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
     uint16_t yIndexClick = constrain(aux_yIndexClick, 0, Numpad::aRows - 1);
 
     const Key_t letter = m_pad[yIndexClick][xIndexClick];
+    
+    // Verifica se é tecla vazia antes de marcar como pressionada
+    if (letter.type == PressedKeyType::EMPTY || letter.label[0] == '\0') {
+      ESP_LOGD(TAG, "Empty key. None action.");
+      return false;
+    }
+    
+    // Marca tecla como pressionada e atualiza visual
+    pressKey(yIndexClick, xIndexClick);
 
     if (letter.type == PressedKeyType::INVERT_VALUE) {
       ESP_LOGD(TAG, "Invert value");
@@ -143,6 +152,8 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
       m_content.setString(v);
 
       drawKeys(false, true);
+      // Libera tecla após processar (teclas especiais retornam imediatamente)
+      releaseKey();
       (*pressedKey) = PressedKeyType::INVERT_VALUE;
       return true;
     }
@@ -154,6 +165,8 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
       m_content.setString(v);
 
       drawKeys(false, true);
+      // Libera tecla após processar (teclas especiais retornam imediatamente)
+      releaseKey();
       (*pressedKey) = PressedKeyType::DECREMENT;
       return true;
     }
@@ -165,18 +178,13 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
       m_content.setString(v);
 
       drawKeys(false, true);
+      // Libera tecla após processar (teclas especiais retornam imediatamente)
+      releaseKey();
       (*pressedKey) = PressedKeyType::INCREMENT;
       return true;
     }
 
-    // const char *letter = m_pad[yIndexClick][xIndexClick];
-
-    if (letter.label[0] == '\0') {
-      ESP_LOGD(TAG, "Empty key. None action.");
-      return false;
-    }
-
-    ESP_LOGD(TAG, "Index clicked: %d, %d = %s", xIndexClick, yIndexClick, letter);
+    ESP_LOGD(TAG, "Index clicked: %d, %d = %s", xIndexClick, yIndexClick, letter.label);
 
     switch (letter.type) {
     case PressedKeyType::NUMBER:
@@ -453,6 +461,9 @@ void Numpad::open(NumberBox *_field) {
  *          - Limpa fonte da tela
  */
 void Numpad::close() {
+  // Libera tecla pressionada antes de fechar
+  releaseKey();
+  
 #if defined(DISP_DEFAULT)
   WidgetBase::objTFT->setFont((GFXfont *)0);
 #endif
@@ -510,4 +521,105 @@ void Numpad::forceUpdate() { m_shouldRedraw = true; }
  */
 void Numpad::redraw() {
   drawKeys(false, false);
+}
+
+/**
+ * @brief Desenha uma única tecla do Numpad
+ * @param row Linha da tecla (0-3)
+ * @param col Coluna da tecla (0-3)
+ * @param isPressed Se true, desenha com borda destacada (efeito pressionado)
+ * @details Redesenha apenas a tecla especificada com feedback visual quando pressionada
+ */
+void Numpad::drawSingleKey(uint16_t row, uint16_t col, bool isPressed) {
+  CHECK_TFT_VOID
+  CHECK_LOADED_VOID
+  
+  const Key_t letter = m_pad[row][col];
+  
+  if (letter.type == PressedKeyType::EMPTY) {
+    return;  // Não desenha teclas vazias
+  }
+  
+  uint16_t keyScale = 1;
+  const int key_width = m_keyW * keyScale + (2 * (keyScale - 1));
+  const int key_height = m_keyH;
+  const int key_x = m_xPos + ((m_keyW + 2) * col);
+  const int key_y = m_yPos + ((m_keyH + 2) * row);
+  const int key_round = 4;
+  
+  // Desenha fundo da tecla
+  WidgetBase::objTFT->fillRoundRect(key_x, key_y, key_width, key_height,
+                                    key_round, Numpad::m_keyColor);
+  
+  // Desenha borda (destaque quando pressionada)
+  uint16_t borderColor = isPressed ? CFK_WHITE : Numpad::m_letterColor;
+  uint8_t borderWeight = isPressed ? 5 : 1;
+  
+  for(uint8_t i = 0; i < borderWeight; i++) {
+    WidgetBase::objTFT->drawRoundRect(key_x + i, key_y + i, 
+                                      key_width - 2*i, key_height - 2*i, 
+                                      key_round, borderColor);
+  }
+  
+  // Desenha texto da tecla
+  WidgetBase::objTFT->setFont(m_fontKeys);
+  WidgetBase::objTFT->setTextColor(Numpad::m_letterColor);
+  uint16_t xCenter = key_x + key_width / 2;
+  uint16_t yCenter = key_y + key_height / 2;
+  printText(letter.label, xCenter, yCenter, MC_DATUM);
+}
+
+/**
+ * @brief Marca uma tecla como pressionada e atualiza visual
+ * @param row Linha da tecla
+ * @param col Coluna da tecla
+ * @details Libera tecla anterior (se houver) e marca nova tecla como pressionada
+ */
+void Numpad::pressKey(uint16_t row, uint16_t col) {
+  // Libera tecla anterior se houver
+  if (m_pressedKey.isPressed) {
+    drawSingleKey(m_pressedKey.row, m_pressedKey.col, false);
+  }
+  
+  // Marca nova tecla como pressionada
+  m_pressedKey.isPressed = true;
+  m_pressedKey.row = row;
+  m_pressedKey.col = col;
+  
+  // Desenha tecla com efeito pressionado
+  drawSingleKey(row, col, true);
+  
+  ESP_LOGD(TAG, "Key pressed at row=%d, col=%d", row, col);
+}
+
+/**
+ * @brief Libera a tecla pressionada e atualiza visual
+ * @details Remove efeito visual de pressionado da tecla atual
+ */
+void Numpad::releaseKey() {
+  if (m_pressedKey.isPressed) {
+    drawSingleKey(m_pressedKey.row, m_pressedKey.col, false);
+    m_pressedKey.isPressed = false;
+    ESP_LOGD(TAG, "Key released at row=%d, col=%d", m_pressedKey.row, m_pressedKey.col);
+  }
+}
+
+/**
+ * @brief Verifica se coordenada de touch está dentro de uma tecla
+ * @param xTouch Coordenada X do touch
+ * @param yTouch Coordenada Y do touch
+ * @param keyState Estado da tecla a verificar
+ * @return True se touch está dentro da tecla, false caso contrário
+ */
+bool Numpad::isPointInKey(uint16_t xTouch, uint16_t yTouch, const KeyState& keyState) {
+  if (!keyState.isPressed) {
+    return false;
+  }
+  
+  const int key_x = m_xPos + ((m_keyW + 2) * keyState.col);
+  const int key_y = m_yPos + ((m_keyH + 2) * keyState.row);
+  const int key_width = m_keyW;
+  const int key_height = m_keyH;
+  
+  return POINT_IN_RECT(xTouch, yTouch, key_x, key_y, key_width, key_height);
 }

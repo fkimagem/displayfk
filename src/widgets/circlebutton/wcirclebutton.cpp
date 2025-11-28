@@ -61,6 +61,7 @@ bool CircleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 
   if (inBounds) {
     m_myTime = millis();
+    setPressed(true);  // Mark widget as pressed
     changeState();
     m_shouldRedraw = true;
     ESP_LOGD(TAG, "CircleButton touched at (%d, %d), new status: %s", 

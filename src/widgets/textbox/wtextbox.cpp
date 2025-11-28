@@ -63,6 +63,7 @@ bool TextBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 
   if ((*_xTouch > m_xPos) && (*_xTouch < xMax) && (*_yTouch > m_yPos) &&
       (*_yTouch < yMax) && WidgetBase::usingKeyboard == false) {
+    setPressed(true);  // Mark widget as pressed
     WidgetBase::usingKeyboard = true;
     ESP_LOGD(TAG, "Open keyboard");
 

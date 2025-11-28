@@ -71,6 +71,7 @@ bool NumberBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 
   if (inBounds) {
     m_myTime = millis();
+    setPressed(true);  // Mark widget as pressed
     WidgetBase::usingKeyboard = true;
     ESP_LOGD(TAG, "Open keyboard");
     return true;

@@ -132,14 +132,6 @@ void hide()
 
 Oculta o botão.
 
-### onClick()
-
-```cpp
-void onClick()
-```
-
-Simula um clique no botão programaticamente (executa o callback).
-
 ---
 
 ## 🔒 Métodos Privados (Apenas para Referência)
@@ -261,7 +253,7 @@ void loop() {
         } else if (comando == '2') {
             toggle2.setStatus(!toggle2.getStatus());
         } else if (comando == '3') {
-            toggle1.onClick(); // Simula clique programático
+            toggle1.changeState(); // Alterna estado programaticamente
         }
     }
     

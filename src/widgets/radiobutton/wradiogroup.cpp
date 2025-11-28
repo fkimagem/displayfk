@@ -78,6 +78,7 @@ bool RadioGroup::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
     bool inBounds = POINT_IN_CIRCLE(*_xTouch, *_yTouch, r.x, r.y, m_config.radius + offset_radius);
     if(inBounds) {
       m_clickedId = r.id;
+      setPressed(true);  // Mark widget as pressed
       m_shouldRedraw = true;
       m_myTime = millis();
       return true;

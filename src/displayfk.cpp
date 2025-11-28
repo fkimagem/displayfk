@@ -2,7 +2,7 @@
 #include <memory>
 
 
-
+#define MIN_LOOPTASK_TIME_LOG 20
 
 #define RESET_WDT {if(m_enableWTD){esp_task_wdt_reset();}};
 
@@ -1067,6 +1067,15 @@ DisplayFK::DisplayFK()
     releasePoint.x = 0;
     releasePoint.y = 0;
     
+#ifdef ENABLE_ON_RELEASE
+    // Initialize touch tracking
+    m_touchedWidgetsCount = 0;
+    m_trackingTouch = false;
+    for (uint8_t i = 0; i < 5; i++) {
+        m_touchedWidgets[i] = nullptr;
+    }
+#endif
+    
     // Initialize fonts (static members)
     #if defined(USING_GRAPHIC_LIB)
     WidgetBase::fontBold = const_cast<GFXfont *>(&RobotoBold5pt7b);
@@ -2032,6 +2041,7 @@ void DisplayFK::drawWidgetsOnScreen(const uint8_t currentScreenIndex)
     {
         for ( uint32_t indice = 0; indice < (qtdTextButton); indice++)
         {
+            arrayTextButton[indice]->forceUpdate();
             arrayTextButton[indice]->redraw();
         }
     }
@@ -2267,6 +2277,7 @@ void DisplayFK::processCallback(){
     functionCB_t cb;
     int ret = xQueueReceive(WidgetBase::xFilaCallback, &cb, pdMS_TO_TICKS(1));
     if(ret == pdPASS && cb != nullptr){
+        ESP_LOGD(TAG, "Processing callback, cb exists: %i", cb != nullptr);
         cb();
     }
 }
@@ -2337,8 +2348,14 @@ void DisplayFK::processTouchEvent(uint16_t xTouch, uint16_t yTouch, int zPressur
     
     if (WidgetBase::usingKeyboard) return;
 
-    // Process other touchable widgets
+#ifdef ENABLE_ON_RELEASE
+    // When ENABLE_ON_RELEASE is enabled, widgets are already processed in processTouchStatus()
+    // during TOUCH_DOWN state, so we don't need to process again here
+    // This prevents double processing
+#else
+    // Process other touchable widgets (only when ENABLE_ON_RELEASE is disabled)
     processTouchableWidgets(xTouch, yTouch);
+#endif
 }
 
 void DisplayFK::processTouchStatus(bool hasTouch, uint16_t xTouch, uint16_t yTouch){
@@ -2350,6 +2367,13 @@ void DisplayFK::processTouchStatus(bool hasTouch, uint16_t xTouch, uint16_t yTou
         m_lastTouchState = TouchEventType::TOUCH_UP;
     }else if(!hasTouch && m_lastTouchState == TouchEventType::TOUCH_UP){
         m_lastTouchState = TouchEventType::NONE;
+        
+#ifdef ENABLE_ON_RELEASE
+        // Ensure array is cleared when no touch
+        if (m_touchedWidgetsCount > 0) {
+            clearTouchedWidgets(false);  // Don't call onRelease, just clear
+        }
+#endif
     }
 
     if(m_lastTouchState == TouchEventType::TOUCH_DOWN){
@@ -2358,6 +2382,17 @@ void DisplayFK::processTouchStatus(bool hasTouch, uint16_t xTouch, uint16_t yTou
         pressPoint.y = yTouch;
         releasePoint.x = xTouch;
         releasePoint.y = yTouch;
+
+#ifdef ENABLE_ON_RELEASE
+        // Clear previous touched widgets and start tracking
+        clearTouchedWidgets(true);  // Call onRelease for previous widgets
+        m_trackingTouch = true;
+        // Process widgets in collect mode to populate array
+        processTouchableWidgets(xTouch, yTouch, true);  // collectMode = true
+#else
+        // Comportamento antigo: processar sem modo de coleta
+        processTouchableWidgets(xTouch, yTouch, false);
+#endif
 
     }else if(m_lastTouchState == TouchEventType::TOUCH_UP){
         Serial.println("---------------------- SOLTEI");
@@ -2382,10 +2417,24 @@ void DisplayFK::processTouchStatus(bool hasTouch, uint16_t xTouch, uint16_t yTou
         }
         Serial.printf("Swipe direction: %i\n", (int)m_lastTouchSwipeDirection);
 
+#ifdef ENABLE_ON_RELEASE
+        // Call onRelease for all tracked widgets and clear array
+        if (m_trackingTouch) {
+            clearTouchedWidgets(true);  // Call onRelease for all widgets
+        }
+#endif
+
     }else if(m_lastTouchState == TouchEventType::TOUCH_HOLD){
         releasePoint.x = xTouch;
         releasePoint.y = yTouch;
         //Serial.println("---------------------- APERTANDO");
+        
+#ifdef ENABLE_ON_RELEASE
+        // Check if widgets are still being touched
+        if (m_trackingTouch && m_touchedWidgetsCount > 0) {
+            checkWidgetsStillTouched(xTouch, yTouch);
+        }
+#endif
     }
 }
 
@@ -2393,30 +2442,32 @@ void DisplayFK::processTouchStatus(bool hasTouch, uint16_t xTouch, uint16_t yTou
  * @brief Processes touchable widgets
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processTouchableWidgets(uint16_t xTouch, uint16_t yTouch) {
-    ESP_LOGD(TAG, "Processing touchable widgets");
+void DisplayFK::processTouchableWidgets(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
+    ESP_LOGD(TAG, "Processing touchable widgets (collectMode: %s)", collectMode ? "true" : "false");
     // Process each type of touchable widget
-    processCheckboxTouch(xTouch, yTouch);
-    processCircleButtonTouch(xTouch, yTouch);
-    processHSliderTouch(xTouch, yTouch);
-    processRadioGroupTouch(xTouch, yTouch);
-    processRectButtonTouch(xTouch, yTouch);
-    processImageTouch(xTouch, yTouch);
-    processSpinboxTouch(xTouch, yTouch);
-    processToggleTouch(xTouch, yTouch);
-    processTextButtonTouch(xTouch, yTouch);
-    processTextBoxTouch(xTouch, yTouch);
-    processNumberBoxTouch(xTouch, yTouch);
-    processEmptyAreaTouch(xTouch, yTouch);
+    processCheckboxTouch(xTouch, yTouch, collectMode);
+    processCircleButtonTouch(xTouch, yTouch, collectMode);
+    processHSliderTouch(xTouch, yTouch, collectMode);
+    processRadioGroupTouch(xTouch, yTouch, collectMode);
+    processRectButtonTouch(xTouch, yTouch, collectMode);
+    processImageTouch(xTouch, yTouch, collectMode);
+    processSpinboxTouch(xTouch, yTouch, collectMode);
+    processToggleTouch(xTouch, yTouch, collectMode);
+    processTextButtonTouch(xTouch, yTouch, collectMode);
+    processTextBoxTouch(xTouch, yTouch, collectMode);
+    processNumberBoxTouch(xTouch, yTouch, collectMode);
+    processEmptyAreaTouch(xTouch, yTouch, collectMode);
 }
 
 /**
  * @brief Processes touch in empty area
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processEmptyAreaTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processEmptyAreaTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #if defined(DFK_TOUCHAREA)
     if(!m_touchAreaConfigured || !arrayTouchArea){
         return;
@@ -2426,18 +2477,167 @@ void DisplayFK::processEmptyAreaTouch(uint16_t xTouch, uint16_t yTouch) {
             if (arrayTouchArea[indice]->detectTouch(&xTouch, &yTouch)) {
                 functionCB_t cb = arrayTouchArea[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-                return;
+                
+#ifdef ENABLE_ON_RELEASE
+                if (collectMode) {
+                    addTouchedWidget(arrayTouchArea[indice]);
+                }
+#endif
+                
+                if (!collectMode) {
+                    return;
+                }
             }
         }
 #endif
 }
 
+#ifdef ENABLE_ON_RELEASE
+/**
+ * @brief Adds a widget to the touched widgets array
+ * @param widget Pointer to the widget to add
+ * @details Only adds if widget is not already in array and array has space
+ */
+void DisplayFK::addTouchedWidget(WidgetBase* widget) {
+    if (!widget) return;
+    
+    // Check if widget is already in array
+    if (isWidgetInTouchedArray(widget)) return;
+    
+    // Check if array has space
+    if (m_touchedWidgetsCount >= 5) {
+        ESP_LOGW(TAG, "Touched widgets array is full, cannot add more widgets");
+        return;
+    }
+    
+    // Add widget to array
+    m_touchedWidgets[m_touchedWidgetsCount] = widget;
+    m_touchedWidgetsCount++;
+    ESP_LOGD(TAG, "Added widget to touched array, count: %u", m_touchedWidgetsCount);
+}
+
+/**
+ * @brief Removes a widget from the touched widgets array
+ * @param widget Pointer to the widget to remove
+ * @details Calls onRelease() before removing, which sets m_isPressed = false
+ *          and m_shouldRedraw = true (if widget overrides onRelease)
+ */
+void DisplayFK::removeTouchedWidget(WidgetBase* widget) {
+    if (!widget) return;
+    
+    // Find widget in array
+    for (uint8_t i = 0; i < m_touchedWidgetsCount; i++) {
+        if (m_touchedWidgets[i] == widget) {
+            // Call onRelease before removing
+            // This will set m_isPressed = false and m_shouldRedraw = true
+            widget->onRelease();
+            
+            // Shift remaining widgets left
+            for (uint8_t j = i; j < m_touchedWidgetsCount - 1; j++) {
+                m_touchedWidgets[j] = m_touchedWidgets[j + 1];
+            }
+            
+            // Clear last position and decrement count
+            m_touchedWidgets[m_touchedWidgetsCount - 1] = nullptr;
+            m_touchedWidgetsCount--;
+            
+            ESP_LOGD(TAG, "Removed widget from touched array, count: %u", m_touchedWidgetsCount);
+            return;
+        }
+    }
+}
+
+/**
+ * @brief Checks if a widget is in the touched widgets array
+ * @param widget Pointer to the widget to check
+ * @return true if widget is in array, false otherwise
+ */
+bool DisplayFK::isWidgetInTouchedArray(WidgetBase* widget) const {
+    if (!widget) return false;
+    
+    for (uint8_t i = 0; i < m_touchedWidgetsCount; i++) {
+        if (m_touchedWidgets[i] == widget) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * @brief Checks if widgets in array are still being touched
+ * @param xTouch Current touch X coordinate
+ * @param yTouch Current touch Y coordinate
+ * @details Removes widgets from array if touch is no longer within their bounds
+ */
+void DisplayFK::checkWidgetsStillTouched(uint16_t xTouch, uint16_t yTouch) {
+    // Create a temporary array to avoid modifying while iterating
+    WidgetBase* widgetsToCheck[5];
+    uint8_t count = m_touchedWidgetsCount;
+    
+    // Copy current array
+    for (uint8_t i = 0; i < count; i++) {
+        widgetsToCheck[i] = m_touchedWidgets[i];
+    }
+    
+    // Check each widget
+    for (uint8_t i = 0; i < count; i++) {
+        WidgetBase* widget = widgetsToCheck[i];
+        if (!widget) continue;
+        
+        // Check if widget is still valid
+        if (!widget->showingMyScreen() || !widget->isEnabled()) {
+            removeTouchedWidget(widget);
+            continue;
+        }
+        
+        // Check if touch is still within widget bounds
+        // Use detectTouch to check bounds (simplified approach)
+        uint16_t testX = xTouch;
+        uint16_t testY = yTouch;
+        
+        bool stillTouched = widget->detectTouch(&testX, &testY);
+        
+        if (!stillTouched) {
+            removeTouchedWidget(widget);
+        }
+    }
+}
+
+/**
+ * @brief Clears all widgets from touched array
+ * @param callOnRelease If true, calls onRelease() for each widget before clearing
+ * @details When callOnRelease is true, onRelease() is called for each widget,
+ *          which sets m_isPressed = false and m_shouldRedraw = true (if overridden)
+ */
+void DisplayFK::clearTouchedWidgets(bool callOnRelease) {
+    if (callOnRelease) {
+        // Call onRelease for all widgets
+        // This will set m_isPressed = false and m_shouldRedraw = true for each
+        for (uint8_t i = 0; i < m_touchedWidgetsCount; i++) {
+            if (m_touchedWidgets[i]) {
+                m_touchedWidgets[i]->onRelease();
+            }
+        }
+    }
+    
+    // Clear array
+    for (uint8_t i = 0; i < m_touchedWidgetsCount; i++) {
+        m_touchedWidgets[i] = nullptr;
+    }
+    
+    m_touchedWidgetsCount = 0;
+    m_trackingTouch = false;
+    ESP_LOGD(TAG, "Cleared touched widgets array");
+}
+#endif
+
 /**
  * @brief Processes touch in checkbox (optimized for current screen)
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processCheckboxTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processCheckboxTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #ifdef DFK_CHECKBOX
     if(!m_checkboxConfigured || !arrayCheckbox){
         return;
@@ -2450,7 +2650,19 @@ void DisplayFK::processCheckboxTouch(uint16_t xTouch, uint16_t yTouch) {
         if (arrayCheckbox[indice]->detectTouch(&xTouch, &yTouch)) {
             functionCB_t cb = arrayCheckbox[indice]->getCallbackFunc();
             WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-            return;
+            
+#ifdef ENABLE_ON_RELEASE
+            // Add to touched widgets array if in collect mode
+            if (collectMode) {
+                addTouchedWidget(arrayCheckbox[indice]);
+            }
+#endif
+            
+            // Return early only if not in collect mode
+            if (!collectMode) {
+                return;
+            }
+            // In collect mode, continue to find other widgets
         }
     }
 #endif
@@ -2460,8 +2672,9 @@ void DisplayFK::processCheckboxTouch(uint16_t xTouch, uint16_t yTouch) {
  * @brief Processes touch in circle button
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processCircleButtonTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processCircleButtonTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #ifdef DFK_CIRCLEBTN
     if(!m_circleButtonConfigured || !arrayCircleBtn){
         return;
@@ -2473,7 +2686,16 @@ void DisplayFK::processCircleButtonTouch(uint16_t xTouch, uint16_t yTouch) {
             if (arrayCircleBtn[indice]->detectTouch(&xTouch, &yTouch)) {
                 functionCB_t cb = arrayCircleBtn[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-                return;
+                
+#ifdef ENABLE_ON_RELEASE
+                if (collectMode) {
+                    addTouchedWidget(arrayCircleBtn[indice]);
+                }
+#endif
+                
+                if (!collectMode) {
+                    return;
+                }
             }
         }
 #endif
@@ -2483,8 +2705,9 @@ void DisplayFK::processCircleButtonTouch(uint16_t xTouch, uint16_t yTouch) {
  * @brief Processes touch in horizontal slider (optimized for current screen)
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processHSliderTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processHSliderTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #ifdef DFK_HSLIDER
     if(!m_hSliderConfigured || !arrayHSlider){
         return;
@@ -2497,7 +2720,16 @@ void DisplayFK::processHSliderTouch(uint16_t xTouch, uint16_t yTouch) {
         if (arrayHSlider[indice]->detectTouch(&xTouch, &yTouch)) {
             functionCB_t cb = arrayHSlider[indice]->getCallbackFunc();
             WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-            return;
+            
+#ifdef ENABLE_ON_RELEASE
+            if (collectMode) {
+                addTouchedWidget(arrayHSlider[indice]);
+            }
+#endif
+            
+            if (!collectMode) {
+                return;
+            }
         }
     }
 #endif
@@ -2507,8 +2739,9 @@ void DisplayFK::processHSliderTouch(uint16_t xTouch, uint16_t yTouch) {
  * @brief Processes touch in radio button group
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processRadioGroupTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processRadioGroupTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #ifdef DFK_RADIO
     if(!m_radioGroupConfigured || !arrayRadioGroup){
         return;
@@ -2518,7 +2751,16 @@ void DisplayFK::processRadioGroupTouch(uint16_t xTouch, uint16_t yTouch) {
             if (arrayRadioGroup[indice]->detectTouch(&xTouch, &yTouch)) {
                 functionCB_t cb = arrayRadioGroup[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-                return;
+                
+#ifdef ENABLE_ON_RELEASE
+                if (collectMode) {
+                    addTouchedWidget(arrayRadioGroup[indice]);
+                }
+#endif
+                
+                if (!collectMode) {
+                    return;
+                }
             }
         }
 #endif
@@ -2528,8 +2770,9 @@ void DisplayFK::processRadioGroupTouch(uint16_t xTouch, uint16_t yTouch) {
  * @brief Processes touch in rectangular button
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processRectButtonTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processRectButtonTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #ifdef DFK_RECTBTN
     if(!m_rectButtonConfigured || !arrayRectBtn){
         return;
@@ -2541,7 +2784,16 @@ void DisplayFK::processRectButtonTouch(uint16_t xTouch, uint16_t yTouch) {
             if (arrayRectBtn[indice]->detectTouch(&xTouch, &yTouch)) {
                 functionCB_t cb = arrayRectBtn[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-                return;
+                
+#ifdef ENABLE_ON_RELEASE
+                if (collectMode) {
+                    addTouchedWidget(arrayRectBtn[indice]);
+                }
+#endif
+                
+                if (!collectMode) {
+                    return;
+                }
             }
         }
 #endif
@@ -2551,8 +2803,9 @@ void DisplayFK::processRectButtonTouch(uint16_t xTouch, uint16_t yTouch) {
  * @brief Processes touch in image
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processImageTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processImageTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #ifdef DFK_IMAGE
     if(!m_imageConfigured || !arrayImage){
         return;
@@ -2569,7 +2822,16 @@ void DisplayFK::processImageTouch(uint16_t xTouch, uint16_t yTouch) {
             if (arrayImage[indice]->detectTouch(&xTouch, &yTouch)) {
                 functionCB_t cb = arrayImage[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-                return;
+                
+#ifdef ENABLE_ON_RELEASE
+                if (collectMode) {
+                    addTouchedWidget(arrayImage[indice]);
+                }
+#endif
+                
+                if (!collectMode) {
+                    return;
+                }
             }
         }
 #endif
@@ -2579,8 +2841,9 @@ void DisplayFK::processImageTouch(uint16_t xTouch, uint16_t yTouch) {
  * @brief Processes touch in spin box
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processSpinboxTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processSpinboxTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #ifdef DFK_SPINBOX
     if(!m_spinboxConfigured || !arraySpinbox){
         return;
@@ -2592,7 +2855,16 @@ void DisplayFK::processSpinboxTouch(uint16_t xTouch, uint16_t yTouch) {
             if (arraySpinbox[indice]->detectTouch(&xTouch, &yTouch)) {
                 functionCB_t cb = arraySpinbox[indice]->getCallbackFunc();
                 WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-                return;
+                
+#ifdef ENABLE_ON_RELEASE
+                if (collectMode) {
+                    addTouchedWidget(arraySpinbox[indice]);
+                }
+#endif
+                
+                if (!collectMode) {
+                    return;
+                }
             }
         }
     
@@ -2603,8 +2875,9 @@ void DisplayFK::processSpinboxTouch(uint16_t xTouch, uint16_t yTouch) {
  * @brief Processes touch in toggle button (optimized for current screen)
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processToggleTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processToggleTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #ifdef DFK_TOGGLE
     if(!m_toggleConfigured || !arrayToggleBtn){
         return;
@@ -2617,7 +2890,16 @@ void DisplayFK::processToggleTouch(uint16_t xTouch, uint16_t yTouch) {
         if (arrayToggleBtn[indice]->detectTouch(&xTouch, &yTouch)) {
             functionCB_t cb = arrayToggleBtn[indice]->getCallbackFunc();
             WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-            return;
+            
+#ifdef ENABLE_ON_RELEASE
+            if (collectMode) {
+                addTouchedWidget(arrayToggleBtn[indice]);
+            }
+#endif
+            
+            if (!collectMode) {
+                return;
+            }
         }
     }
 #endif
@@ -2627,8 +2909,9 @@ void DisplayFK::processToggleTouch(uint16_t xTouch, uint16_t yTouch) {
  * @brief Processes touch in text button
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processTextButtonTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processTextButtonTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #ifdef DFK_TEXTBUTTON
     if(!m_textButtonConfigured || !arrayTextButton){
         return;
@@ -2640,7 +2923,15 @@ void DisplayFK::processTextButtonTouch(uint16_t xTouch, uint16_t yTouch) {
         if (arrayTextButton[indice]->detectTouch(&xTouch, &yTouch)) {
             functionCB_t cb = arrayTextButton[indice]->getCallbackFunc();
             WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-            return;
+            
+#ifdef ENABLE_ON_RELEASE
+            if (collectMode) {
+                addTouchedWidget(arrayTextButton[indice]);
+            }
+#endif
+            
+            // Note: This function doesn't return early by design
+            // Continue processing even if not in collect mode
         }
     }
 #endif
@@ -2650,8 +2941,9 @@ void DisplayFK::processTextButtonTouch(uint16_t xTouch, uint16_t yTouch) {
  * @brief Processes touch in text box
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #ifdef DFK_TEXTBOX
     if(!m_textboxConfigured || !arrayTextBox || !keyboard){
         return;
@@ -2668,6 +2960,11 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
             if (!arrayTextBox[indice]->showingMyScreen()) continue;
 
             if (arrayTextBox[indice]->detectTouch(&xTouch, &yTouch)) {
+#ifdef ENABLE_ON_RELEASE
+                if (collectMode) {
+                    addTouchedWidget(arrayTextBox[indice]);
+                }
+#endif
                 keyboard->open(arrayTextBox[indice]);
                 PressedKeyType pressedKey = PressedKeyType::NONE;
 
@@ -2698,8 +2995,9 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch) {
  * @brief Processes touch in number box
  * @param xTouch Touch X position
  * @param yTouch Touch Y position
+ * @param collectMode If true, collects all widgets without early return
  */
-void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
+void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode) {
 #ifdef DFK_NUMBERBOX
         if(!m_numberboxConfigured || !arrayNumberbox || !numpad){
             return;
@@ -2717,25 +3015,52 @@ void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch) {
             if (!arrayNumberbox[indice]->showingMyScreen()) continue;
 
             if (arrayNumberbox[indice]->detectTouch(&xTouch, &yTouch)) {
+#ifdef ENABLE_ON_RELEASE
+                if (collectMode) {
+                    addTouchedWidget(arrayNumberbox[indice]);
+                }
+#endif
                 numpad->open(arrayNumberbox[indice]);
                 PressedKeyType pressedKey = PressedKeyType::NONE;
+                bool lastTouchState = false;  // Track previous touch state
 
                 while (WidgetBase::usingKeyboard) {
                     uint16_t internal_xTouch = 0;
                     uint16_t internal_yTouch = 0;
                     int internal_zPressure = 0;
                     bool hasTouch = touchExterno && (touchExterno->getTouch(&internal_xTouch, &internal_yTouch, &internal_zPressure));
-                    if (hasTouch && numpad->detectTouch(&internal_xTouch, &internal_yTouch, &pressedKey)) {
-                        if (pressedKey == PressedKeyType::RETURN) {
-                            if (numpad->m_field && numpad->m_field->parentScreen) {
-                                WidgetBase::loadScreen = numpad->m_field->parentScreen;
+                    
+                    // Check if touch was released (was touching, now not)
+                    if (lastTouchState && !hasTouch) {
+                        // Touch was released - call internal onRelease
+                        numpad->releaseKey();
+                    }
+                    
+                    if (hasTouch) {
+                        // Check if touch moved outside current pressed key
+                        if (numpad->isKeyPressed()) {
+                            const Numpad::KeyState& pressedKey = numpad->getPressedKey();
+                            if (!numpad->isPointInKey(internal_xTouch, internal_yTouch, pressedKey)) {
+                                // Touch moved outside pressed key - release it
+                                numpad->releaseKey();
                             }
-                            numpad->close();
-                            functionCB_t cb = arrayNumberbox[indice]->getCallbackFunc();
-                            WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
-                            return;
+                        }
+                        
+                        // Detect new key press
+                        if (numpad->detectTouch(&internal_xTouch, &internal_yTouch, &pressedKey)) {
+                            if (pressedKey == PressedKeyType::RETURN) {
+                                if (numpad->m_field && numpad->m_field->parentScreen) {
+                                    WidgetBase::loadScreen = numpad->m_field->parentScreen;
+                                }
+                                numpad->close();
+                                functionCB_t cb = arrayNumberbox[indice]->getCallbackFunc();
+                                WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
+                                return;
+                            }
                         }
                     }
+                    
+                    lastTouchState = hasTouch;  // Update touch state
 					RESET_WDT
                     vTaskDelay(pdMS_TO_TICKS(10));
                 }
@@ -2765,7 +3090,7 @@ void DisplayFK::updateWidgets() {
     updateRectButton();
     updateToggle();
     updateImage();
-    //updateTextButton();
+    updateTextButton();
     updateSpinbox();
     updateNumberBox();
     updateTextBox();
@@ -2808,6 +3133,8 @@ void DisplayFK::setDrawObject(U8G2 *objTFT){
  */
 void DisplayFK::loopTask() {
 
+    //ESP_LOGD(TAG, "Loop task started");
+
     uint32_t startTime = millis();
     bool semaphoreAcquired = false;
 
@@ -2840,7 +3167,7 @@ void DisplayFK::loopTask() {
     // Process screen loading
     if (WidgetBase::loadScreen) {
         m_lastScreen = WidgetBase::loadScreen;
-        log_d("Loading screen on taskloop");
+        ESP_LOGD(TAG, "Loading screen on taskloop");
         WidgetBase::loadScreen();
         WidgetBase::loadScreen = nullptr;
         vTaskDelay(pdMS_TO_TICKS(5));
@@ -2883,6 +3210,8 @@ if(touchExterno){
     if (hasTouch) {
         
         processTouchEvent(xTouch, yTouch, zPressure, gesture);
+    }else{
+        //ESP_LOGD(TAG, "No touch detected");
     }
 #endif
 
@@ -2897,8 +3226,8 @@ if(touchExterno){
     // Calculate and log execution time
     startTime = millis() - startTime;
     
-    if(startTime > 20){
-        Serial.printf("Time to loopTask: %lu ms\n", startTime);
+    if(startTime >= MIN_LOOPTASK_TIME_LOG){
+        ESP_LOGD(TAG, "loopTask finished: %lu ms\n", startTime);
     }
 
     //vTaskDelay(pdMS_TO_TICKS(1));

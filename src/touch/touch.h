@@ -84,7 +84,7 @@ typedef struct
 class TouchScreen
 {
 private:
-
+static const char *TAG; ///< Tag estática para identificação em logs do ESP32.
   // Private for each touch controller
   #if defined(TOUCH_XPT2046)
   XPT2046 *m_ts = nullptr;

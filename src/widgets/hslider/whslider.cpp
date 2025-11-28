@@ -93,6 +93,7 @@ bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   #endif
 
   if (detected) {
+    setPressed(true);  // Mark widget as pressed
     ESP_LOGD(TAG, "HSlider touched at (%d, %d), value: %d", *_xTouch, *_yTouch, m_value);
   }
 

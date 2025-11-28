@@ -526,25 +526,29 @@ void loadWidgets(){
     LedConfig configLed0 = {
             .radius = 16,
             .colorOn = CFK_COLOR11,
-            .colorOff = CFK_GREY3
+            .colorOff = CFK_GREY3,
+            .initialState = false
         };
     led.setup(configLed0);
     LedConfig configLed1 = {
             .radius = 16,
             .colorOn = CFK_COLOR11,
-            .colorOff = CFK_GREY3
+            .colorOff = CFK_GREY3,
+            .initialState = false
         };
     led1.setup(configLed1);
     LedConfig configLed2 = {
             .radius = 16,
             .colorOn = CFK_COLOR11,
-            .colorOff = CFK_GREY3
+            .colorOff = CFK_GREY3,
+            .initialState = false
         };
     led2.setup(configLed2);
     LedConfig configLed3 = {
             .radius = 16,
             .colorOn = CFK_COLOR11,
-            .colorOff = CFK_GREY3
+            .colorOff = CFK_GREY3,
+            .initialState = false
         };
     led3.setup(configLed3);
     myDisplay.setLed(arrayLed,qtdLed);
@@ -729,7 +733,8 @@ rectbutton.setup(configRectButton0);
             .minValue = 0,
             .maxValue = 100,
             .round = 6,
-            .orientation = Orientation::VERTICAL
+            .orientation = Orientation::VERTICAL,
+            .subtitle = nullptr
         };
     vbar.setup(configVBar0);
     VerticalBarConfig configVBar1 = {
@@ -739,7 +744,8 @@ rectbutton.setup(configRectButton0);
             .minValue = 0,
             .maxValue = 100,
             .round = 6,
-            .orientation = Orientation::VERTICAL
+            .orientation = Orientation::VERTICAL,
+            .subtitle = nullptr
         };
     vbar1.setup(configVBar1);
     VerticalBarConfig configVBar2 = {
@@ -749,7 +755,8 @@ rectbutton.setup(configRectButton0);
             .minValue = 0,
             .maxValue = 100,
             .round = 6,
-            .orientation = Orientation::VERTICAL
+            .orientation = Orientation::VERTICAL,
+            .subtitle = nullptr
         };
     vbar2.setup(configVBar2);
     VerticalBarConfig configVBar3 = {
@@ -759,7 +766,8 @@ rectbutton.setup(configRectButton0);
             .minValue = 0,
             .maxValue = 100,
             .round = 6,
-            .orientation = Orientation::VERTICAL
+            .orientation = Orientation::VERTICAL,
+            .subtitle = nullptr
         };
     vbar3.setup(configVBar3);
     VerticalBarConfig configVBar4 = {
@@ -769,7 +777,8 @@ rectbutton.setup(configRectButton0);
             .minValue = 0,
             .maxValue = 100,
             .round = 6,
-            .orientation = Orientation::VERTICAL
+            .orientation = Orientation::VERTICAL,
+            .subtitle = nullptr
         };
     vbar4.setup(configVBar4);
     VerticalBarConfig configVBar5 = {
@@ -779,7 +788,8 @@ rectbutton.setup(configRectButton0);
             .minValue = 0,
             .maxValue = 100,
             .round = 6,
-            .orientation = Orientation::VERTICAL
+            .orientation = Orientation::VERTICAL,
+            .subtitle = nullptr
         };
     vbar5.setup(configVBar5);
     VerticalBarConfig configVBar6 = {
@@ -789,7 +799,8 @@ rectbutton.setup(configRectButton0);
             .minValue = 0,
             .maxValue = 100,
             .round = 6,
-            .orientation = Orientation::VERTICAL
+            .orientation = Orientation::VERTICAL,
+            .subtitle = nullptr
         };
     vbar6.setup(configVBar6);
     myDisplay.setVBar(arrayVbar,qtdVBar);
