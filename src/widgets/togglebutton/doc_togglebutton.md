@@ -208,7 +208,7 @@ void loadWidgets() {
     toggle2.setup(configToggle2);
     
     // Registrar no DisplayFK
-    myDisplay.setTogglebutton(arrayTogglebutton, qtdTogglebutton);
+    myDisplay.setToggle(arrayTogglebutton, qtdTogglebutton);
 }
 ```
 
@@ -307,7 +307,7 @@ void setup() {
     };
     bluetoothToggle.setup(configBluetooth);
     
-    myDisplay.setTogglebutton(arrayTogglebutton, qtdTogglebutton);
+    myDisplay.setToggle(arrayTogglebutton, qtdTogglebutton);
     myDisplay.loadScreen(minhaTela);
     myDisplay.createTask(false, 3);
 }
@@ -463,7 +463,7 @@ O ToggleButton renderiza assim:
 - Verifique se chamou `setup()` após criar
 - Confirme valores de width e height > 0
 - Verifique se está na tela correta
-- Chame `myDisplay.setTogglebutton()`
+- Chame `myDisplay.setToggle()`
 
 ### Toque não funciona
 - Verifique se o usuário tocou dentro da área

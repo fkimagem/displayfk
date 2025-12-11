@@ -2,6 +2,7 @@
 #define WVERTICALBAR
 
 #include "../widgetbase.h"
+#include "../label/wlabel.h" // Para ponteiro Label
 
 /// @brief Estrutura de configuração para o VBar.
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar uma barra vertical.
@@ -14,6 +15,7 @@ struct VerticalBarConfig {
   int maxValue;                ///< Valor máximo da faixa da barra.
   int round; ///< Raio para os cantos arredondados da barra.
   Orientation orientation; ///< Orientação da barra (vertical ou horizontal).
+  Label* subtitle;
 };
 
 /// @brief Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de uma faixa especificada.

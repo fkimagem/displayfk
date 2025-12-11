@@ -125,6 +125,10 @@ void VBar::redraw()
 
   }
 
+  if(m_config.subtitle){
+    m_config.subtitle->setTextInt(m_currentValue);
+  }
+
   
   m_lastValue = m_currentValue;
   m_shouldRedraw = false;

@@ -11,6 +11,7 @@ A classe `VBar` é um widget que exibe valores numéricos como uma barra vertica
 - 📏 Cantos arredondados configuráveis
 - 📈 Faixa de valores configurável (min/max)
 - 🔄 Suporte a orientação vertical e horizontal
+- 🔢 Integração opcional com Label para exibir valor numérico
 - 👁️ Pode ser mostrado/ocultado dinamicamente
 - 🔗 Integra-se automaticamente com o sistema DisplayFK
 
@@ -31,6 +32,7 @@ struct VerticalBarConfig {
   int maxValue;           // Valor máximo da faixa
   int round;             // Raio para cantos arredondados
   Orientation orientation; // VERTICAL ou HORIZONTAL
+  Label* subtitle;        // Ponteiro para Label opcional para exibir o valor
 };
 ```
 
@@ -171,7 +173,8 @@ void loadWidgets() {
         .minValue = 0,
         .maxValue = 100,
         .round = 5,
-        .orientation = Orientation::VERTICAL
+        .orientation = Orientation::VERTICAL,
+        .subtitle = nullptr  // Opcional: ponteiro para Label para exibir valor
     };
     barra1.setup(configBarra1);
     barra1.drawBackground();
@@ -184,7 +187,8 @@ void loadWidgets() {
         .minValue = 0,
         .maxValue = 100,
         .round = 10,
-        .orientation = Orientation::HORIZONTAL
+        .orientation = Orientation::HORIZONTAL,
+        .subtitle = nullptr  // Opcional: ponteiro para Label para exibir valor
     };
     barra2.setup(configBarra2);
     barra2.drawBackground();
@@ -232,12 +236,16 @@ DisplayFK myDisplay;
 Arduino_DataBus *bus = nullptr;
 Arduino_GFX *gfx = nullptr;
 
-// Criar barras
+// Criar barras e labels
 VBar bateria(50, 50, 0);
 VBar progresso(50, 120, 0);
+Label labelBateria(85, 100, 0);  // Label para exibir valor da bateria
 
 const uint8_t qtdVBar = 2;
 VBar *arrayVBar[qtdVBar] = {&bateria, &progresso};
+
+const uint8_t qtdLabel = 1;
+Label *arrayLabel[qtdLabel] = {&labelBateria};
 
 void setup() {
     Serial.begin(115200);
@@ -249,7 +257,17 @@ void setup() {
     
     myDisplay.setDrawObject(gfx);
     
-    // Configurar Barra de Bateria (Vertical)
+    // Configurar Label para exibir valor da bateria
+    LabelConfig configLabelBateria = {
+        .text = "0",
+        .fontFamily = &RobotoRegular10pt7b,
+        .datum = TL_DATUM,
+        .fontColor = CFK_BLACK,
+        .backgroundColor = CFK_WHITE
+    };
+    labelBateria.setup(configLabelBateria);
+    
+    // Configurar Barra de Bateria (Vertical) com Label
     VerticalBarConfig configBateria = {
         .width = 30,
         .height = 100,
@@ -257,10 +275,14 @@ void setup() {
         .minValue = 0,
         .maxValue = 100,
         .round = 5,
-        .orientation = Orientation::VERTICAL
+        .orientation = Orientation::VERTICAL,
+        .subtitle = &labelBateria  // Label para exibir valor automaticamente
     };
     bateria.setup(configBateria);
     bateria.drawBackground();
+    
+    // Registrar widgets
+    myDisplay.setLabel(arrayLabel, qtdLabel);
     
     // Configurar Barra de Progresso (Horizontal)
     VerticalBarConfig configProgresso = {
@@ -270,7 +292,8 @@ void setup() {
         .minValue = 0,
         .maxValue = 100,
         .round = 10,
-        .orientation = Orientation::HORIZONTAL
+        .orientation = Orientation::HORIZONTAL,
+        .subtitle = nullptr  // Opcional: ponteiro para Label para exibir valor
     };
     progresso.setup(configProgresso);
     progresso.drawBackground();
@@ -279,6 +302,8 @@ void setup() {
     myDisplay.loadScreen(minhaTela);
     myDisplay.createTask(false, 3);
 }
+
+// Nota: O Label será atualizado automaticamente quando setValue() for chamado
 
 void loop() {
     // Simular nível de bateria
@@ -342,6 +367,7 @@ void minhaTela() {
 - Preenchimento proporcional automático
 - Suporta valores negativos
 - Faixa configurável
+- Integração com Label: se `subtitle` for configurado, o valor é exibido automaticamente no Label
 
 ---
 
@@ -390,6 +416,11 @@ O VBar renderiza em camadas:
    - Apaga área se valor diminuiu
    - Mantém preenchimento se valor aumentou
 
+5. **Label (subtitle):**
+   - Se configurado, atualiza automaticamente o Label com o valor atual
+   - Usa `setTextInt()` para atualizar o texto do Label
+   - Atualização ocorre a cada redesenho
+
 ---
 
 ## 🔧 Solução de Problemas
@@ -417,6 +448,12 @@ O VBar renderiza em camadas:
 - Confirme que orientação está correta
 - Teste com diferentes valores
 - Verifique dimensões da barra
+
+### Label não atualiza
+- Verifique se `subtitle` foi configurado corretamente
+- Confirme que o Label foi configurado antes do VBar
+- Verifique se o Label está visível
+- Teste com `subtitle->setTextInt()` manualmente
 
 ---
 

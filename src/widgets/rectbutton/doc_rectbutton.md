@@ -209,7 +209,7 @@ void loadWidgets() {
     botao2.setup(configBotao2);
     
     // Registrar no DisplayFK
-    myDisplay.setRectbutton(arrayRectbutton, qtdRectbutton);
+    myDisplay.setRectButton(arrayRectbutton, qtdRectbutton);
 }
 ```
 
@@ -302,7 +302,7 @@ void setup() {
     };
     botaoDesligar.setup(configDesligar);
     
-    myDisplay.setRectbutton(arrayRectbutton, qtdRectbutton);
+    myDisplay.setRectButton(arrayRectbutton, qtdRectbutton);
     myDisplay.loadScreen(minhaTela);
     myDisplay.createTask(false, 3);
 }
@@ -431,7 +431,7 @@ O RectButton renderiza em camadas:
 - Verifique se chamou `setup()` após criar
 - Confirme valores de width e height > 0
 - Verifique se está na tela correta
-- Chame `myDisplay.setRectbutton()`
+- Chame `myDisplay.setRectButton()`
 
 ### Toque não funciona
 - Verifique se o usuário tocou dentro da área

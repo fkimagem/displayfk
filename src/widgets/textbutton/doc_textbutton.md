@@ -202,7 +202,7 @@ void loadWidgets() {
     botao2.setup(configBotao2);
     
     // Registrar no DisplayFK
-    myDisplay.setTextbutton(arrayTextbutton, qtdTextbutton);
+    myDisplay.setTextButton(arrayTextbutton, qtdTextbutton);
 }
 ```
 
@@ -297,7 +297,7 @@ void setup() {
     };
     botaoExcluir.setup(configExcluir);
     
-    myDisplay.setTextbutton(arrayTextbutton, qtdTextbutton);
+    myDisplay.setTextButton(arrayTextbutton, qtdTextbutton);
     myDisplay.loadScreen(minhaTela);
     myDisplay.createTask(false, 3);
 }
@@ -420,7 +420,7 @@ O TextButton renderiza assim:
 - Verifique se chamou `setup()` após criar
 - Confirme valores de width e height > 0
 - Verifique se está na tela correta
-- Chame `myDisplay.setTextbutton()`
+- Chame `myDisplay.setTextButton()`
 
 ### Toque não funciona
 - Verifique se o usuário tocou dentro da área

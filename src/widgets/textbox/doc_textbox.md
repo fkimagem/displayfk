@@ -2,19 +2,19 @@
 
 ## Visão Geral
 
-A classe `TextBox` é um widget interativo que exibe e permite edição de texto através de um teclado virtual. Ele herda de `WidgetBase` e trabalha em conjunto com `Keyboard` para fornecer uma interface completa de entrada de texto.
+A classe `TextBox` é um widget interativo que exibe e permite edição de texto através de um teclado virtual. Ele herda de `WidgetBase` e trabalha em conjunto com `WKeyboard` para fornecer uma interface completa de entrada de texto.
 
 ### Características Principais
 
 - 📝 Exibe e edita texto (string)
-- ⌨️ Permite edição via teclado virtual (Keyboard)
+- ⌨️ Permite edição via teclado virtual (WKeyboard)
 - 🎨 Cores e fontes personalizáveis
 - 📐 Dimensões configuráveis
 - 🔔 Callback para mudanças de texto
 - 👆 Suporte a toque para abrir teclado
 - 💾 Texto armazenado como CharString
 - 👁️ Pode ser mostrado/ocultado dinamicamente
-- 🔗 Integra-se com Keyboard automaticamente
+- 🔗 Integra-se com WKeyboard automaticamente
 - 🌓 Suporte a modo claro/escuro
 
 ---
@@ -123,7 +123,7 @@ Oculta o TextBox.
 
 Estes métodos são chamados internamente:
 
-- `detectTouch()`: Detecta toque e abre Keyboard
+- `detectTouch()`: Detecta toque e abre WKeyboard
 - `redraw()`: Redesenha o TextBox
 - `forceUpdate()`: Força atualização
 - `getCallbackFunc()`: Retorna callback
@@ -144,10 +144,10 @@ Estes métodos são chamados internamente:
 ```cpp
 DisplayFK myDisplay;
 
-// Configurar cores do Keyboard (usado pelo TextBox)
-Keyboard::m_backgroundColor = CFK_GREY3;
-Keyboard::m_letterColor = CFK_BLACK;
-Keyboard::m_keyColor = CFK_GREY13;
+// Configurar cores do WKeyboard (usado pelo TextBox)
+WKeyboard::m_backgroundColor = CFK_GREY3;
+WKeyboard::m_letterColor = CFK_BLACK;
+WKeyboard::m_keyColor = CFK_GREY13;
 ```
 
 ### 📝 Passo 3: Declarar Objetos Globais
@@ -244,10 +244,10 @@ DisplayFK myDisplay;
 Arduino_DataBus *bus = nullptr;
 Arduino_GFX *gfx = nullptr;
 
-// Configurar cores do Keyboard
-Keyboard::m_backgroundColor = CFK_GREY3;
-Keyboard::m_letterColor = CFK_BLACK;
-Keyboard::m_keyColor = CFK_GREY13;
+// Configurar cores do WKeyboard
+WKeyboard::m_backgroundColor = CFK_GREY3;
+WKeyboard::m_letterColor = CFK_BLACK;
+WKeyboard::m_keyColor = CFK_GREY13;
 
 // Criar TextBox
 TextBox meuTexto(100, 100, 0);
@@ -314,22 +314,22 @@ void texto_callback() {
 - Considere o tema claro/escuro
 - Borda usa letterColor
 
-### 🔔 Integração com Keyboard
-- Keyboard abre automaticamente ao tocar no TextBox
-- Configure cores globais do Keyboard antes de usar TextBox
-- O Keyboard aplica o texto automaticamente ao fechar
+### 🔔 Integração com WKeyboard
+- WKeyboard abre automaticamente ao tocar no TextBox
+- Configure cores globais do WKeyboard antes de usar TextBox
+- O WKeyboard aplica o texto automaticamente ao fechar
 - funcPtr deve apontar para função da tela pai
 
 ### ⚡ Performance
 - Armazenamento interno eficiente com CharString
 - Redesenho apenas quando necessário
-- Integração otimizada com Keyboard
+- Integração otimizada com WKeyboard
 - Formatação inteligente do texto
 
 ### 👥 Usabilidade
 - Tamanho adequado para fácil toque
 - Texto exibido com formatação inteligente
-- Preview no Keyboard mostra texto em tempo real
+- Preview no WKeyboard mostra texto em tempo real
 - Callback executa quando texto é confirmado
 
 ### 🎨 Display
@@ -342,7 +342,7 @@ void texto_callback() {
 - Suporta strings de qualquer tamanho
 - Formatação automática para caber no espaço
 - Conversão interna para CharString
-- Validação pelo Keyboard
+- Validação pelo WKeyboard
 
 ---
 
@@ -361,7 +361,7 @@ A classe `TextBox` herda métodos de `WidgetBase`:
 
 O `TextBox` integra-se com o sistema DisplayFK:
 
-1. **Keyboard:** Abre automaticamente ao tocar
+1. **WKeyboard:** Abre automaticamente ao tocar
 2. **Callback:** Executado quando texto é confirmado
 3. **Screen:** FuncPtr aponta para função da tela pai
 4. **Gerenciamento:** Controlado pelo loop principal
@@ -398,14 +398,14 @@ O TextBox renderiza assim:
 - Verifique se está na tela correta
 - Chame `myDisplay.setTextbox()`
 
-### Keyboard não abre
+### WKeyboard não abre
 - Verifique se o usuário tocou no TextBox
 - Confirme que funcPtr foi configurado corretamente
 - Verifique logs para erros
 - Teste com touch inicializado
 
 ### Texto não é aplicado
-- Verifique se usuário pressionou OK no Keyboard
+- Verifique se usuário pressionou OK no WKeyboard
 - Confirme que callback está configurado
 - Verifique logs para erros
 - Teste com texto simples
@@ -427,7 +427,7 @@ O TextBox renderiza assim:
 ## 📚 Referências
 
 - **Classe Base:** `WidgetBase` (src/widgets/widgetbase.h)
-- **Keyboard:** `Keyboard` (src/widgets/textbox/wkeyboard.h)
+- **WKeyboard:** `WKeyboard` (src/widgets/textbox/wkeyboard.h)
 - **DisplayFK Principal:** `DisplayFK` (src/displayfk.h)
 - **Cores Padrão:** Definidas em displayfk.h
 - **Fontes:** src/fonts/RobotoRegular/
