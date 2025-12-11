@@ -39,10 +39,6 @@ static const int XPT2046_ZLIMIT = 350;  // Z limit
   /// @return A status byte indicating the result of the touch input read.
   uint8_t getInput();
 
-  /// @brief Reads touch input values (x, y, and z coordinates) using Bodmer method.
-  /// @return A status byte indicating the result of the touch input read.
-  uint8_t getInputBodmer();
-
   /// @brief Start transaction and turn CS pin LOW
   void beginTouchCommunication();
 

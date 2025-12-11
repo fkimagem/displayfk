@@ -4,11 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#if defined(ESP_ARDUINO_VERSION_MAJOR) && defined(ESP_ARDUINO_VERSION_MINOR)
-    #if ESP_ARDUINO_VERSION_MAJOR < 3 || (ESP_ARDUINO_VERSION_MAJOR == 3 && ESP_ARDUINO_VERSION_MINOR < 3)
-        #error "GSL3680_touch requer ESP Arduino Core versao 3.3.0 ou superior. Versao atual incompativel."
-    #endif
-#endif
+
+ #if defined(ESP_ARDUINO_VERSION_OK)
 
 #include <stdlib.h>
 #include "freertos/FreeRTOS.h"
@@ -240,3 +237,4 @@ esp_err_t esp_lcd_touch_register_interrupt_callback(esp_lcd_touch_handle_t tp, e
 
     return ESP_OK;
 }
+#endif

@@ -9,7 +9,7 @@ const char *TouchScreen::TAG = "TouchScreen";
 
 TouchScreen::TouchScreen()
 {
-  log_d("TouchScreen constructor");
+  ESP_LOGD(TAG, "TouchScreen constructor");
 }
 
 #if defined(TOUCH_XPT2046)
@@ -29,7 +29,7 @@ void TouchScreen::startAsXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, uint
     digitalWrite(m_pinCS, HIGH);
   }
   touch_init();
-  log_d("Starting xpt2046 touch panel driver");
+  ESP_LOGD(TAG, "Starting xpt2046 touch panel driver");
 }
 #elif defined(TOUCH_FT6236U)
 void TouchScreen::startAsFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST)
@@ -151,17 +151,7 @@ void TouchScreen::setTouchCorners(int x0, int x1, int y0, int y1)
   m_x1 = x1;
   m_y1 = y1;
 
-  // print Range X
-    Serial.print("X0: ");
-    Serial.print(m_x0);
-    Serial.print(" X1: ");
-    Serial.println(m_x1);
-  
-  // print Range Y
-    Serial.print("Y0: ");
-    Serial.print(m_y0);
-    Serial.print(" Y1: ");
-    Serial.println(m_y1);
+  ESP_LOGD(TAG, "X0: %d X1: %d Y0: %d Y1: %d", m_x0, m_x1, m_y0, m_y1);
   
 }
 
@@ -205,24 +195,24 @@ void TouchScreen::touch(TPoint p, TEvent e)
   switch (e)
   {
   case TEvent::Tap:
-    Serial.println("Tap");
+    ESP_LOGD(TAG, "Tap");
     m_touch_touched_flag = true;
     m_touch_released_flag = true;
     break;
   case TEvent::DragStart:
-    Serial.println("DragStart");
+    ESP_LOGD(TAG, "DragStart");
     m_touch_touched_flag = true;
     break;
   case TEvent::DragMove:
-    Serial.println("DragMove");
+    ESP_LOGD(TAG, "DragMove");
     m_touch_touched_flag = true;
     break;
   case TEvent::DragEnd:
-    Serial.println("DragEnd");
+    ESP_LOGD(TAG, "DragEnd");
     m_touch_released_flag = true;
     break;
   default:
-    Serial.println("UNKNOWN");
+    ESP_LOGD(TAG, "UNKNOWN");
     break;
   }
 }
@@ -257,11 +247,11 @@ void TouchScreen::touch_init()
 #elif defined(TOUCH_FT6236U)
   if (!m_ts->begin(40, m_pinSDA, m_pinSCL)) // 40 in this case represents the sensitivity. Try higer or lower for better response.
   {
-    Serial.println("Unable to start the capacitive touchscreen.");
+    ESP_LOGD(TAG, "Unable to start the capacitive touchscreen.");
   }
   else
   {
-    Serial.println("Touch initialized.");
+    ESP_LOGD(TAG, "Touch initialized.");
   }
 #elif defined(TOUCH_CST816)
   m_ts->begin();
@@ -356,13 +346,7 @@ bool TouchScreen::touch_has_signal()
 }
 
 void TouchScreen::showMap(const String& axis, int16_t minValue, int16_t maxValue){
-  Serial.print("Axis: ");
-  Serial.print(axis);
-  Serial.print(" (");
-  Serial.print(minValue);
-  Serial.print(" - ");
-  Serial.print(maxValue);
-  Serial.println(")");
+  ESP_LOGD(TAG, "Axis: %s (%d - %d)", axis.c_str(), minValue, maxValue);
 }
 
 /**
@@ -375,21 +359,7 @@ bool TouchScreen::touch_touched()
   return false;
 #else
 
-#if defined(TOUCH_FT6236)
-  if (m_touch_touched_flag)
-  {
-    m_touch_touched_flag = false;
-    // touch_last_x = 0;
-    // touch_last_y = 0;
-    Serial.printf("Clicou %i x %i\n", m_touch_last_x, m_touch_last_y);
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-
-#elif defined(TOUCH_GSL3680)
+#if defined(TOUCH_GSL3680)
   uint16_t touchX, touchY;
   bool touched = m_ts->getTouch(&touchX, &touchY);
   m_touch_last_x = touchX;
@@ -402,6 +372,11 @@ bool TouchScreen::touch_touched()
   if (m_ts->isTouched)
   {
     m_touch_last_z = -1;
+
+    ESP_LOGD(TAG, "Touch raw: %d, %d", m_ts->points[0].x, m_ts->points[0].y);
+
+
+
     if(!m_swapAxis){
 
       if(m_invertXAxis){
@@ -431,32 +406,6 @@ bool TouchScreen::touch_touched()
       }
       
     }
-    
-
-    /*if(m_swapAxis){
-      if (m_invertXAxis)
-      {
-        m_touch_last_x = map(m_ts->points[0].x, m_x0, m_x1, m_widthScreen - 1, 0);
-      }
-      else
-      {
-        m_touch_last_x = map(m_ts->points[0].x, m_x0, m_x1, 0, m_widthScreen - 1);
-      }
-
-      if (m_invertYAxis)
-      {
-        m_touch_last_y = map(m_ts->points[0].y, m_y0, m_y1, m_heightScreen - 1, 0);
-      }
-      else
-      {
-        m_touch_last_y = map(m_ts->points[0].y, m_y0, m_y1, 0, m_heightScreen - 1);
-      }
-
-      return true;
-    }
-
-    m_touch_last_x = m_ts->points[0].x;
-    m_touch_last_y = m_ts->points[0].y;*/
 
     return true;
   }
@@ -475,7 +424,7 @@ bool TouchScreen::touch_touched()
   uint8_t touchDetect = touchAmount;
   // bool validTouch = false;
 
-  while (m_ts->getInputBodmer() && touchDetect > 0)
+  while (m_ts->getInput() && touchDetect > 0)
   {
     xTouch += m_ts->x;
     yTouch += m_ts->y;
@@ -500,7 +449,7 @@ bool TouchScreen::touch_touched()
 
     if (m_logMessages)
     {
-      Serial.printf("Raw xyz[%i\t%i\t%i]\n", xTouch, yTouch, zTouch);
+      ESP_LOGD(TAG, "Raw xyz[%i\t%i\t%i]\n", xTouch, yTouch, zTouch);
     }
     ScreenPoint_t toque = touchToTelaPonto0e2(xTouch, yTouch);
 
@@ -522,7 +471,7 @@ bool TouchScreen::touch_touched()
     TS_Point p = m_ts->getPoint();
 
     // Print coordinates to the serial output
-    // Serial.printf("X: %i, Y: %i\n", p.x, p.y);
+    // ESP_LOGD(TAG, "X: %i, Y: %i\n", p.x, p.y);
     if (m_swapAxis)
     {
       m_touch_last_x = map(p.y, m_x0, m_x1, 0, m_widthScreen - 1);
@@ -562,13 +511,7 @@ bool TouchScreen::touch_touched()
   if (!touched)
     return false;
 
-  /*
-  Example
-  tp = ft6336u.scan();
-  char tempString[128];
-  sprintf(tempString, "FT6336U TD Count %d / TD1 (%d, %4d, %4d) / TD2 (%d, %4d, %4d)\n", tp.touch_count, tp.tp[0].status, tp.tp[0].x, tp.tp[0].y, tp.tp[1].status, tp.tp[1].x, tp.tp[1].y);
-  Serial.print(tempString);
-  */
+
 
   TouchStatusEnum status0 = (tp.tp[0].status);
   TouchStatusEnum status1 = (tp.tp[1].status);
@@ -786,24 +729,12 @@ void TouchScreen::setCalibration(CalibrationPoint_t *array)
   }
   m_calibMatrix = new CalibrationPoint_t[4];
   memcpy(m_calibMatrix, array, sizeof(array) * sizeof(CalibrationPoint_t));
-  // Serial.printf("Tamanho array %u", sizeof(array) * sizeof(CalibrationPoint_t));
+  // ESP_LOGD(TAG, "Tamanho array %u", sizeof(array) * sizeof(CalibrationPoint_t));
 
   for (size_t i = 0; i < 5; i++)
   {
     // calibMatrix[i] = array[i];
   }
-
-  /*Serial.println("Array base");
-  for (uint8_t i = 0; i < 4; i++)
-  {
-    Serial.printf("Tela: %i x %i = Touch: %i x %i\n", array[i].xScreen, array[i].yScreen, array[i].xTouch, array[i].yTouch);
-  }
-
-  Serial.println("Set Calibration data");
-  for (uint8_t i = 0; i < 4; i++)
-  {
-    Serial.printf("Tela: %i x %i = Touch: %i x %i\n", calibMatrix[i].xScreen, calibMatrix[i].yScreen, calibMatrix[i].xTouch, calibMatrix[i].yTouch);
-  }*/
 }
 #endif
 /**
@@ -820,12 +751,12 @@ void TouchScreen::calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg,
 
   if (!m_objTFT)
   {
-    Serial.println("Display not defined");
+    ESP_LOGD(TAG, "Display not defined");
     return;
   }
   else
   {
-    Serial.println("Obj display definido");
+    ESP_LOGD(TAG, "Obj display definido");
     m_objTFT->fillScreen(0xffff);
   }
 
@@ -852,7 +783,7 @@ void TouchScreen::calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg,
       m_objTFT->fillCircle(x, y, size / 2, color_bg);
       if (m_logMessages)
       {
-        Serial.printf("Ponto %i: %i x %i\n", j, x, y);
+        ESP_LOGD(TAG, "Ponto %i: %i x %i", j, x, y);
       }
     }
 
@@ -864,17 +795,17 @@ void TouchScreen::calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg,
     // Aguarde o usuário tocar no ponto
     if (m_logMessages)
     {
-      Serial.printf("Calibrando ponto %d\n", i);
+      ESP_LOGD(TAG, "Calibrando ponto %d", i);
     }
     for (uint8_t j = 0; j < 8; j++) // Média de 8 leituras para cada ponto
     {
-      while (!m_ts->getInputBodmer())
+      while (!m_ts->getInput())
         ; // Aguarde até detectar o toque
       values[i * 2] += m_ts->x;
       values[i * 2 + 1] += m_ts->y;
       if (m_logMessages)
       {
-        Serial.printf("{%d\t%d\t%d}\n", m_ts->x, m_ts->y, m_ts->z);
+        ESP_LOGD(TAG, "Ponto %d: %d, %d", i, m_ts->x, m_ts->y);
       }
     }
 
@@ -882,7 +813,7 @@ void TouchScreen::calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg,
     values[i * 2 + 1] /= 8;
     if (m_logMessages)
     {
-      Serial.printf("Calibrado ponto %d => %d, %d\n", i, values[i * 2], values[i * 2 + 1]);
+      ESP_LOGD(TAG, "Calibrado Ponto %d: %d, %d", i, values[i * 2], values[i * 2 + 1]);
     }
 
     m_objTFT->fillCircle(points[i][0], points[i][1], size, color_bg); // Apaga o ponto de toque com a cor de fundo
@@ -932,8 +863,8 @@ void TouchScreen::calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg,
   }
   if (m_logMessages)
   {
-    Serial.println("Calibração concluída:");
-    Serial.printf("x0: %d, x1: %d, y0: %d, y1: %d\n", m_touchCalibration_x0, m_touchCalibration_x1, m_touchCalibration_y0, m_touchCalibration_y1);
+    ESP_LOGD(TAG, "Calibração concluída:");
+    ESP_LOGD(TAG, "x0: %d, x1: %d, y0: %d, y1: %d\n", m_touchCalibration_x0, m_touchCalibration_x1, m_touchCalibration_y0, m_touchCalibration_y1);
   }
 }
 #endif
@@ -953,18 +884,18 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
 
   if (!m_objTFT)
   {
-    Serial.println("Display not defined");
+    ESP_LOGD(TAG, "Display not defined");
     return;
   }
   else
   {
-    Serial.println("Obj display definido");
+    ESP_LOGD(TAG, "Obj display definido");
     m_objTFT->fillScreen(0xffff);
-    Serial.println(m_objTFT->width());
+    ESP_LOGD(TAG, "Width: %i", m_objTFT->width());
   }
   // uint16_t x_tmp, y_tmp;
 
-  Serial.printf("Width: %i, Height: %i\n", m_widthScreen, m_heightScreen);
+  ESP_LOGD(TAG, "Width: %i, Height: %i", m_widthScreen, m_heightScreen);
 
   points[0].xScreen = rectScreen->x;
   points[0].yScreen = rectScreen->y;
@@ -1017,7 +948,7 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
 
     if (m_logMessages)
     {
-      Serial.printf("Calibration point %i: %i, %i\n", i, currentPoint.xScreen, currentPoint.yScreen);
+      ESP_LOGD(TAG, "Calibration point %i: %i, %i\n", i, currentPoint.xScreen, currentPoint.yScreen);
     }
 
     // drawStar(points[i].xScreen, points[i].yScreen, sizeMarker, color_bg);
@@ -1039,17 +970,17 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
 
     for (uint8_t j = 0; j < captureCount; j++)
     {
-      while (!m_ts->getInputBodmer())
+      while (!m_ts->getInput())
         ;
       if (m_logMessages)
       {
-        Serial.printf("%i, %i\n", m_ts->x, m_ts->y);
+        ESP_LOGD(TAG, "%i, %i\n", m_ts->x, m_ts->y);
       }
       points[i].xTouch += m_ts->x;
       points[i].yTouch += m_ts->y;
       if (m_logMessages)
       {
-        Serial.printf("{%i\t%i\t%i}\n", m_ts->x, m_ts->y, m_ts->z);
+        ESP_LOGD(TAG, "{%i\t%i\t%i}\n", m_ts->x, m_ts->y, m_ts->z);
       }
     }
     points[i].xTouch /= captureCount;
@@ -1062,7 +993,7 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
 
     if (m_logMessages)
     {
-      Serial.printf("Calibrado %i => %i, %i\n", i, points[i].xTouch, points[i].yTouch);
+      ESP_LOGD(TAG, "Calibrado %i => %i, %i\n", i, points[i].xTouch, points[i].yTouch);
     }
     m_objTFT->setCursor(rectScreen->width / 2, rectScreen->height / 2);
     m_objTFT->fillScreen(0xffff);
@@ -1079,7 +1010,7 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
   {
     if (m_logMessages)
     {
-      Serial.printf("Tela: %i x %i = Touch: %i x %i\n", points[i].xScreen, points[i].yScreen, points[i].xTouch, points[i].yTouch);
+      ESP_LOGD(TAG, "Tela: %i x %i = Touch: %i x %i\n", points[i].xScreen, points[i].yScreen, points[i].xTouch, points[i].yTouch);
     }
     mediaX += points[i].xTouch;
     mediaY += points[i].yTouch;
@@ -1127,10 +1058,10 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
   // Mostra o retangulo touch normatizado
   for (uint8_t i = 0; i < length; i++)
   {
-    Serial.printf("Normatized Tela: %i x %i = Touch: %i x %i\n", points[i].xScreen, points[i].yScreen, points[i].xTouch, points[i].yTouch);
+    ESP_LOGD(TAG, "Normatized Tela: %i x %i = Touch: %i x %i", points[i].xScreen, points[i].yScreen, points[i].xTouch, points[i].yTouch);
   }
 
-  Serial.println("Terminou");
+  ESP_LOGD(TAG, "Terminou");
 }
 #endif
 /**
@@ -1199,9 +1130,7 @@ int TouchScreen::mapTouch(int val, int in_min, int in_max, int out_min, int out_
 
   if (m_logMessages)
   {
-    Serial.printf(
-        "mapTouch: val=%d, in_min=%d, in_max=%d, out_min=%d, out_max=%d -> result=%d\n",
-        val, in_min, in_max, out_min, out_max, result);
+    ESP_LOGD(TAG, "mapTouch: val=%d, in_min=%d, in_max=%d, out_min=%d, out_max=%d -> result=%d",val, in_min, in_max, out_min, out_max, result);
   }
 
   return result;
@@ -1218,8 +1147,8 @@ ScreenPoint_t TouchScreen::touchToTelaPonto0e2(int16_t xTouch, int16_t yTouch)
 
   if (m_logMessages)
   {
-    Serial.printf("Ponto 0: (%d,%d) = (%d,%d)\n", p0.xScreen, p0.yScreen, p0.xTouch, p0.yTouch);
-    Serial.printf("Ponto 2: (%d,%d) = (%d,%d)\n", p2.xScreen, p2.yScreen, p2.xTouch, p2.yTouch);
+    ESP_LOGD(TAG, "Ponto 0: (%d,%d) = (%d,%d)", p0.xScreen, p0.yScreen, p0.xTouch, p0.yTouch);
+    ESP_LOGD(TAG, "Ponto 2: (%d,%d) = (%d,%d)", p2.xScreen, p2.yScreen, p2.xTouch, p2.yTouch);
   }
 
   if (m_swapAxis)
@@ -1266,14 +1195,14 @@ ScreenPoint_t TouchScreen::getScreenPosition(int16_t xTouch, int16_t yTouch)
     return screenPos;
   if (m_logMessages)
   {
-    Serial.printf("Get screen position for xTouch: %i and yTouch: %i\n", xTouch, yTouch);
+    ESP_LOGD(TAG, "Get screen position for xTouch: %i and yTouch: %i\n", xTouch, yTouch);
   }
   CalibrationPoint_t cornerMin = getMinPoint(m_calibMatrix);
   CalibrationPoint_t cornerMax = getMaxPoint(m_calibMatrix);
 
   if (m_logMessages)
   {
-    Serial.printf("Ponto minimo: %i x %i e ponto maximo: %i x %i\n", cornerMin.xTouch, cornerMin.yTouch, cornerMax.xTouch, cornerMax.yTouch);
+    ESP_LOGD(TAG, "Ponto minimo: %i x %i e ponto maximo: %i x %i\n", cornerMin.xTouch, cornerMin.yTouch, cornerMax.xTouch, cornerMax.yTouch);
   }
   xTouch = constrain(xTouch, cornerMin.xTouch, cornerMax.xTouch);
   yTouch = constrain(yTouch, cornerMin.yTouch, cornerMax.yTouch);
@@ -1335,8 +1264,8 @@ ScreenPoint_t TouchScreen::getScreenPosition(int16_t xTouch, int16_t yTouch)
   screenPos.y = map(yMapVal, yMapFrom, yMapTo, 0, m_heightScreen);
   if (m_logMessages)
   {
-    Serial.printf("Mapped x: %i from [%i → %i] to [0 → %i] = %i\n", xMapVal, xMapFrom, xMapTo, m_widthScreen, screenPos.x);
-    Serial.printf("Mapped y: %i from [%i → %i] to [0 → %i] = %i\n", yMapVal, yMapFrom, yMapTo, m_heightScreen, screenPos.y);
+    ESP_LOGD(TAG, "Mapped x: %i from [%i → %i] to [0 → %i] = %i\n", xMapVal, xMapFrom, xMapTo, m_widthScreen, screenPos.x);
+    ESP_LOGD(TAG, "Mapped y: %i from [%i → %i] to [0 → %i] = %i\n", yMapVal, yMapFrom, yMapTo, m_heightScreen, screenPos.y);
   }
   return screenPos;
 }
@@ -1355,14 +1284,14 @@ void TouchScreen::calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32
 
   if (!m_objTFT)
   {
-    Serial.println("Display not defined");
+    ESP_LOGD(TAG, "Display not defined");
     return;
   }
   else
   {
-    Serial.println("Obj display definido");
+    ESP_LOGD(TAG, "Obj display definido");
     m_objTFT->fillScreen(0xffff);
-    Serial.println(m_objTFT->width());
+    ESP_LOGD(TAG, "Width: %i", m_objTFT->width());
   }
   // uint16_t x_tmp, y_tmp;
 
@@ -1407,29 +1336,29 @@ void TouchScreen::calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32
     m_objTFT->fillCircle(m_widthScreen / 2, m_heightScreen / 2, 20, 0x07c0);
     if (m_logMessages)
     {
-      Serial.printf("Calibrando %i\n", i);
+      ESP_LOGD(TAG, "Calibrando %i\n", i);
     }
     for (uint8_t j = 0; j < 8; j++)
     {
       // Use a lower detect threshold as corners tend to be less sensitive
-      while (!m_ts->getInputBodmer())
+      while (!m_ts->getInput())
         ;
       if (m_logMessages)
       {
-        Serial.printf("%i, %i\n", m_ts->x, m_ts->y);
+        ESP_LOGD(TAG, "%i, %i\n", m_ts->x, m_ts->y);
       }
       values[i * 2] += m_ts->x;
       values[i * 2 + 1] += m_ts->y;
       if (m_logMessages)
       {
-        Serial.printf("{%i\t%i\t%i}\n", m_ts->x, m_ts->y, m_ts->z);
+        ESP_LOGD(TAG, "{%i\t%i\t%i}\n", m_ts->x, m_ts->y, m_ts->z);
       }
     }
     values[i * 2] /= 8;
     values[i * 2 + 1] /= 8;
     if (m_logMessages)
     {
-      Serial.printf("Calibrado %i => %i, %i\n", i, values[i * 2], values[i * 2 + 1]);
+      ESP_LOGD(TAG, "Calibrado %i => %i, %i\n", i, values[i * 2], values[i * 2 + 1]);
     }
     m_objTFT->fillCircle(m_widthScreen / 2, m_heightScreen / 2, 20, 0xf800);
     delay(2000);
@@ -1462,14 +1391,6 @@ void TouchScreen::calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32
       Serial.print("\t");
     }
   }
-
-  /*Serial.print("\n");
-  Serial.println("Calibrated values before");
-  Serial.println(touchCalibration_x0);
-  Serial.println(touchCalibration_x1);
-  Serial.println(touchCalibration_y0);
-  Serial.println(touchCalibration_y1);
-  Serial.println("-----------------");*/
 
   // in addition, the touch screen axis could be in the opposite direction of the TFT axis
   m_touchCalibration_invert_x = false;
@@ -1504,12 +1425,9 @@ void TouchScreen::calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32
 
   if (m_logMessages)
   {
-    Serial.println("Calibrated values");
-    Serial.println(m_touchCalibration_x0);
-    Serial.println(m_touchCalibration_x1);
-    Serial.println(m_touchCalibration_y0);
-    Serial.println(m_touchCalibration_y1);
-    Serial.println("-----------------");
+    ESP_LOGD(TAG, "Calibrated values");
+    ESP_LOGD(TAG, "%i, %i, %i, %i", m_touchCalibration_x0, m_touchCalibration_x1, m_touchCalibration_y0, m_touchCalibration_y1);
+    ESP_LOGD(TAG, "-----------------");
   }
 
   // export parameters, if pointer valid
@@ -1520,17 +1438,10 @@ void TouchScreen::calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32
     parameters[2] = m_touchCalibration_y0;
     parameters[3] = m_touchCalibration_y1;
     parameters[4] = m_touchCalibration_rotate | (m_touchCalibration_invert_x << 1) | (m_touchCalibration_invert_y << 2);
-    /*Serial.println("Calibrated parameter values");
-    Serial.println(parameters[0]);
-    Serial.println(parameters[1]);
-    Serial.println(parameters[2]);
-    Serial.println(parameters[3]);
-    Serial.println(parameters[4]);
-    Serial.println("-----------------");*/
   }
   else
   {
-    Serial.println("No parameter to calibrate");
+    ESP_LOGD(TAG, "No parameter to calibrate");
   }
 }
 
@@ -1568,7 +1479,6 @@ bool TouchScreen::getTouch(uint16_t *xTouch, uint16_t *yTouch, int *zPressure)
       (*yTouch) = m_touch_last_y;
       (*zPressure) = m_touch_last_z;
       ESP_LOGD(TAG, "getTouch: xTouch: %d, yTouch: %d, zPressure: %d", m_touch_last_x, m_touch_last_y, m_touch_last_z);
-      // Serial.println("Return true");
       return true;
     }
   }

@@ -1677,10 +1677,10 @@ void DisplayFK::startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int
         return;
     }
     
-    if (!validateFrequency(displayFrequency)) {
+    /*if (!validateFrequency(displayFrequency)) {
         ESP_LOGE(TAG, "Invalid display frequency: %d Hz", displayFrequency);
         return;
-    }
+    }*/
     
     if (!_sharedSPI) {
         ESP_LOGE(TAG, "SPI interface not provided");
@@ -3295,7 +3295,7 @@ void DisplayFK::disableTouchLog(){
 /**
  * @brief Checks and performs touch calibration
  */
-void DisplayFK::checkCalibration() const
+void DisplayFK::checkCalibration()
 {
 #if defined(HAS_TOUCH)
     if (!WidgetBase::objTFT)
@@ -3419,7 +3419,7 @@ void DisplayFK::checkCalibration() const
 /**
  * @brief Forces a new touch calibration
  */
-void DisplayFK::recalibrate() const
+void DisplayFK::recalibrate()
 {
     m_configs.begin("iniciais", false);
     // bool jaCalibrado = configs.getBool("jaCalibrado", false);

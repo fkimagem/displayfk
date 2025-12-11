@@ -12,48 +12,7 @@ XPT2046::XPT2046(uint8_t cs)
 }
 
 
-
 uint8_t XPT2046::getInput()
-{
-    if (!configured)
-    {
-#if defined(LOGXPT)
-        Serial.println("SPI and CS PIN not configured for touch XPT2046");
-#endif
-        return 0;
-    }
-    else
-    {
-#if defined(LOGXPT)
-        //Serial.print("Reading XPT\t");
-#endif
-    }
-
-    //touchspi->setFrequency(XPT2046_SPISPEED);
-    beginTouchCommunication();
-    touchspi->transfer(0xB1);
-    int16_t z1 = touchspi->transfer16(0xC1) >> 3;
-    int16_t z2 = touchspi->transfer16(0x91) >> 3;
-    x = touchspi->transfer16(0xD0) >> 3;
-    y = touchspi->transfer16(0) >> 3;
-    endTouchCommunication();
-    z = z1 + 4095 - z2;
-
-#if defined(LOGXPT)
-    //Serial.println("OK");
-#endif
-
-    if (z > XPT2046::XPT2046_ZLIMIT)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-uint8_t XPT2046::getInputBodmer()
 {
 
     if (!configured)
@@ -146,7 +105,9 @@ void XPT2046::endTouchCommunication()
 void XPT2046::begin(SPIClass* sharedSPI, int spispeed, int defaultspispeed)
 {
     bool newSPI = (sharedSPI == nullptr);
-    XPT2046::DEFAULT_SPISPEED = defaultspispeed;
+    if(defaultspispeed > 0){
+        XPT2046::DEFAULT_SPISPEED = defaultspispeed;
+    }
     XPT2046::XPT2046_SPISPEED = spispeed;
 
     if (sharedSPI)
@@ -201,7 +162,7 @@ void XPT2046::begin(SPIClass* sharedSPI, int spispeed, int defaultspispeed)
         digitalWrite(_cs, HIGH);
         configured = true;
 
-        getInputBodmer();
+        getInput();
     }
 }
 

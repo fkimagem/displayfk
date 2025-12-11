@@ -11,6 +11,8 @@
 
 #pragma once
 
+#if defined(ESP_ARDUINO_VERSION_OK)
+
 #if defined(ESP_ARDUINO_VERSION_MAJOR) && defined(ESP_ARDUINO_VERSION_MINOR)
     #if ESP_ARDUINO_VERSION_MAJOR < 3 || (ESP_ARDUINO_VERSION_MAJOR == 3 && ESP_ARDUINO_VERSION_MINOR < 3)
         #error "GSL3680_touch requer ESP Arduino Core versao 3.3.0 ou superior. Versao atual incompativel."
@@ -25,9 +27,13 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#if defined(ESP_ARDUINO_VERSION_OK)
 
 #define CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS     (1)
 #define CONFIG_ESP_LCD_TOUCH_MAX_POINTS     (5)
@@ -370,6 +376,8 @@ esp_err_t esp_lcd_touch_del(esp_lcd_touch_handle_t tp);
  *      - ESP_OK on success
  */
 esp_err_t esp_lcd_touch_register_interrupt_callback(esp_lcd_touch_handle_t tp, esp_lcd_touch_interrupt_callback_t callback);
+
+#endif
 
 #ifdef __cplusplus
 }

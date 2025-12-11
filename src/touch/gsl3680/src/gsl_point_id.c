@@ -14,11 +14,8 @@
  * General Public License for more details.
  *
  */
-#if defined(ESP_ARDUINO_VERSION_MAJOR) && defined(ESP_ARDUINO_VERSION_MINOR)
-    #if ESP_ARDUINO_VERSION_MAJOR < 3 || (ESP_ARDUINO_VERSION_MAJOR == 3 && ESP_ARDUINO_VERSION_MINOR < 3)
-        #error "GSL3680_touch requer ESP Arduino Core versao 3.3.0 ou superior. Versao atual incompativel."
-    #endif
-#endif
+
+ #if defined(ESP_ARDUINO_VERSION_OK)
 
 // #include "bsp/lcd_gsl3680.h"
 #include "gsl_point_id.h"
@@ -3205,3 +3202,4 @@ void gsl_alg_id_main(struct gsl_touch_info *cinfo)
 	PointReport(cinfo);
 }
 
+#endif

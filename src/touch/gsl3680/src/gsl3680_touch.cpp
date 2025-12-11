@@ -9,11 +9,13 @@
 
 #if defined(ESP_ARDUINO_VERSION_OK)
 #include "driver/i2c_master.h"  // Driver NOVO
-#endif
-
 #include "esp_lcd_touch.h"
 #include "esp_lcd_gsl3680.h"
+#endif
+
 #include "gsl3680_touch.h"
+
+
 #include <Arduino.h>
 
 #define CONFIG_LCD_HRES 800

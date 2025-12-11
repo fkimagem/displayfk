@@ -416,8 +416,8 @@ public:
 
 #if defined(HAS_TOUCH)
 #if defined(TOUCH_XPT2046)
-    void checkCalibration() const;
-    void recalibrate() const;
+    void checkCalibration();
+    void recalibrate();
 #endif
 
     void startTouch(uint16_t w, uint16_t h, uint8_t _rotation, SPIClass *_sharedSPI);
@@ -426,8 +426,8 @@ public:
     void setSwapAxis(bool swap);
 
 #if defined(TOUCH_XPT2046)
-    void startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS);
-    void startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSclk, int8_t pinMosi, int8_t pinMiso, int8_t pinCS, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS);
+    void startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency = 0, int displayPinCS = 0);
+    void startTouchXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSclk, int8_t pinMosi, int8_t pinMiso, int8_t pinCS, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency = 0, int displayPinCS = -1);
 #elif defined(TOUCH_FT6236U)
     void startTouchFT6236U(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, uint8_t pinINT, int8_t pinRST);
 #elif defined(TOUCH_FT6336)

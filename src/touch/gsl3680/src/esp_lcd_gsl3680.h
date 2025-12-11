@@ -1,6 +1,8 @@
 #ifndef _LCD_GSL3680_H
 #define _LCD_GSL3680_H
 
+#if defined(ESP_ARDUINO_VERSION_OK)
+
 #if defined(ESP_ARDUINO_VERSION_MAJOR) && defined(ESP_ARDUINO_VERSION_MINOR)
     #if ESP_ARDUINO_VERSION_MAJOR < 3 || (ESP_ARDUINO_VERSION_MAJOR == 3 && ESP_ARDUINO_VERSION_MINOR < 3)
         #error "GSL3680_touch requer ESP Arduino Core versao 3.3.0 ou superior. Versao atual incompativel."
@@ -4696,7 +4698,7 @@ static const struct fw_data GSLX680_FW[] = {
 
 };
 
-
+#endif
 
 #endif
 
