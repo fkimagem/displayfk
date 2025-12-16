@@ -32,6 +32,89 @@ void Thermometer::cleanupMemory() {
     ESP_LOGD(TAG, "Thermometer memory cleanup completed");
 }
 
+
+/** @brief Ordena os valores mínimo e máximo para o widget Thermometer
+ * @details Ordena os valores mínimo e máximo para o widget Thermometer
+ * @return void
+ */
+void Thermometer::sortValues()
+{
+  if (m_config.minValue > m_config.maxValue)
+  {
+    int temp = m_config.minValue;
+    m_config.minValue = m_config.maxValue;
+    m_config.maxValue = temp;
+  }
+}
+
+
+/** @brief Define o valor mínimo e máximo para o widget Thermometer
+ * @details Define o valor mínimo e máximo para o widget Thermometer
+ * @param newMinValue Valor mínimo
+ * @param newMaxValue Valor máximo
+ * @return void
+ */
+void Thermometer::setScale(int newMinValue, int newMaxValue)
+{
+  m_config.minValue = newMinValue;
+  m_config.maxValue = newMaxValue;
+  sortValues();
+  m_currentValue = constrain(m_currentValue, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+
+/** @brief Define o valor mínimo para o widget Thermometer
+ * @details Define o valor mínimo para o widget Thermometer
+ * @param newValue Valor mínimo
+ * @return void
+ */
+void Thermometer::setMinValue(int newValue)
+{
+  m_config.minValue = newValue;
+  sortValues();
+  m_currentValue = constrain(m_currentValue, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+
+/** @brief Define o valor máximo para o widget Thermometer
+ * @details Define o valor máximo para o widget Thermometer
+ * @param newValue Valor máximo
+ * @return void
+ */
+void Thermometer::setMaxValue(int newValue)
+{
+  m_config.maxValue = newValue;
+  sortValues();
+  m_currentValue = constrain(m_currentValue, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+
+/** @brief Recupera o valor mínimo para o widget Thermometer
+ * @details Recupera o valor mínimo para o widget Thermometer
+ * @return Valor mínimo
+ */
+int Thermometer::getMinValue()
+{
+  return m_config.minValue;
+}
+
+
+/** @brief Recupera o valor máximo para o widget Thermometer
+ * @details Recupera o valor máximo para o widget Thermometer
+ * @return Valor máximo
+ */
+int Thermometer::getMaxValue()
+{
+  return m_config.maxValue;
+}
+
+
 /**
  * @brief Detecta um toque no widget Thermometer.
  * @param _xTouch Ponteiro para a coordenada X do toque.
@@ -94,13 +177,12 @@ void Thermometer::redraw()
 
   int startY = m_fillArea.y + heightErase;
 
-  //WidgetBase::objTFT->fillRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, m_fillArea.height, m_config.backgroundColor);     // area do widget
-  //WidgetBase::objTFT->fillRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, heightFill, m_config.filledColor);     // area do widget
+  if(m_changedScale){
+    WidgetBase::objTFT->fillRoundRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, m_fillArea.height, 0, m_config.backgroundColor);     // area do widget
+  }
 
-  // WidgetBase::objTFT->fillRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, m_fillArea.height, 0xf800);     // area do widget
 
-
-  if(m_currentValue < m_lastValue){
+  if(m_currentValue < m_lastValue && !m_changedScale){
     WidgetBase::objTFT->fillRoundRect(m_fillArea.x, m_fillArea.y, m_fillArea.width, heightErase, 0, m_config.backgroundColor);     // area do widget
   }else{
     WidgetBase::objTFT->fillRoundRect(m_fillArea.x, startY, m_fillArea.width, heightFill, 0, m_config.filledColor);     // area do widget
@@ -108,6 +190,10 @@ void Thermometer::redraw()
 
   if(m_config.subtitle){
     m_config.subtitle->setTextFloat(m_currentValue, m_config.decimalPlaces);
+  }
+
+  if(m_changedScale){
+    m_changedScale = false;
   }
 
   m_lastValue = m_currentValue;

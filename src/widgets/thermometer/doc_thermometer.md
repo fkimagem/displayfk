@@ -76,6 +76,14 @@ Configura o termômetro. **Este método deve ser chamado após a criação do ob
 **Parâmetros:**
 - `config`: Estrutura `ThermometerConfig` com as configurações
 
+**Características:**
+- Valida se o widget já está carregado (evita reconfiguração)
+- Calcula gradiente de cor para efeito de luz no bulbo
+- Configura Label com unidade de medida se `subtitle` for fornecido
+- Define valor inicial como `minValue`
+- Valida dimensões (altura mínima de 20 pixels)
+- Marca o widget como carregado e inicializado
+
 ### drawBackground()
 
 ```cpp
@@ -83,6 +91,15 @@ void drawBackground()
 ```
 
 Desenha o fundo do termômetro (bulbo, tubo, marcas). **Este método deve ser chamado uma vez após setup().**
+
+**Características:**
+- Desenha retângulo de fundo com bordas arredondadas
+- Calcula e desenha tubo de vidro central
+- Desenha bulbo na base com gradiente de cor para efeito de luz
+- Desenha marcações graduadas no lado do tubo (10 divisões)
+- Marcações maiores a cada 5 divisões
+- Calcula áreas de preenchimento e vidro
+- Deve ser chamado antes de usar `setValue()`
 
 ### setValue()
 
@@ -94,6 +111,87 @@ Define o valor atual do termômetro.
 
 **Parâmetros:**
 - `newValue`: Novo valor (será limitado entre minValue e maxValue)
+
+**Características:**
+- Aceita valores do tipo `float` para precisão decimal
+- Restringe valor usando `constrain()` dentro da faixa min/max
+- Marca para redesenho automático
+- Atualiza Label automaticamente se `subtitle` estiver configurado
+
+### setMinValue()
+
+```cpp
+void setMinValue(int newValue)
+```
+
+Define o valor mínimo da faixa do termômetro.
+
+**Parâmetros:**
+- `newValue`: Novo valor mínimo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo do termômetro
+- Ativa flag interna `m_changedScale` que força limpeza completa antes de redesenhar
+
+### setMaxValue()
+
+```cpp
+void setMaxValue(int newValue)
+```
+
+Define o valor máximo da faixa do termômetro.
+
+**Parâmetros:**
+- `newValue`: Novo valor máximo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo do termômetro
+- Ativa flag interna `m_changedScale` que força limpeza completa antes de redesenhar
+
+### getMinValue()
+
+```cpp
+int getMinValue()
+```
+
+Retorna o valor mínimo atual da faixa do termômetro.
+
+**Retorno:**
+- Valor mínimo configurado
+
+### getMaxValue()
+
+```cpp
+int getMaxValue()
+```
+
+Retorna o valor máximo atual da faixa do termômetro.
+
+**Retorno:**
+- Valor máximo configurado
+
+### setScale()
+
+```cpp
+void setScale(int newMinValue, int newMaxValue)
+```
+
+Define simultaneamente os valores mínimo e máximo da faixa do termômetro.
+
+**Parâmetros:**
+- `newMinValue`: Novo valor mínimo
+- `newMaxValue`: Novo valor máximo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo do termômetro
+- Ativa flag interna `m_changedScale` que força limpeza completa antes de redesenhar
+- Útil para mudanças dinâmicas de escala
 
 ### show()
 
@@ -118,11 +216,26 @@ Oculta o termômetro.
 Estes métodos são chamados internamente:
 
 - `detectTouch()`: Não processa eventos de toque
-- `redraw()`: Redesenha o termômetro
+- `redraw()`: Redesenha o termômetro com otimização de atualização incremental
 - `forceUpdate()`: Força atualização
 - `getCallbackFunc()`: Retorna callback
-- `cleanupMemory()`: Limpa memória
-- `start()`: Inicializa configurações
+- `cleanupMemory()`: Limpa memória (Thermometer não usa alocação dinâmica)
+- `start()`: Inicializa configurações e valida dimensões (altura mínima de 20 pixels)
+- `sortValues()`: Ordena valores min/max se necessário (chamado automaticamente)
+- `setup(uint16_t, uint16_t, uint16_t, int, int)`: Método interno de configuração (sobrecarga)
+
+### Membros Privados
+
+- `m_currentValue`: Valor atual representado (tipo `float` para precisão decimal)
+- `m_lastValue`: Último valor representado (usado para otimização de redesenho)
+- `m_bulb`: Estrutura `Circle_t` representando o bulbo do termômetro
+- `m_fillArea`: Estrutura `Rect_t` representando a área preenchida do termômetro
+- `m_glassArea`: Estrutura `Rect_t` representando a área de vidro do termômetro
+- `m_colorLightGradient`: Array de 5 cores para efeito de gradiente no bulbo
+- `m_border`: Tamanho da borda ao redor do termômetro (5 pixels)
+- `m_config`: Estrutura contendo configuração completa do termômetro
+- `m_shouldRedraw`: Flag indicando se o termômetro deve ser redesenhado
+- `m_changedScale`: Flag que indica quando a escala foi alterada (força redesenho completo)
 
 ---
 
@@ -326,14 +439,20 @@ void minhaTela() {
 ### 🔢 Valores e Faixas
 - Configure faixa adequada (minValue a maxValue)
 - Use valores realistas para temperatura
+- Faixa configurável dinamicamente com `setMinValue()`, `setMaxValue()` ou `setScale()`
+- Consulta de valores com `getMinValue()` e `getMaxValue()`
+- Ordenação automática de valores min/max
 - Label opcional para exibição numérica
 - Unidade de medida clara (°C, °F, etc.)
+- Suporta valores decimais (tipo `float`)
 
 ### ⚡ Performance
 - Redesenho apenas quando valor muda
-- Fundo desenhado uma vez apenas
-- Atualização eficiente do preenchimento
-- Label atualizado automaticamente
+- Fundo desenhado uma vez apenas (chame `drawBackground()` uma vez)
+- Atualização eficiente do preenchimento (apenas diferença entre valores)
+- Label atualizado automaticamente com `setTextFloat()`
+- Gradiente de cor calculado uma vez durante setup()
+- Mudanças de escala redesenham completamente o termômetro
 
 ### 👥 Usabilidade
 - Posicione Label próximo ao termômetro
@@ -392,19 +511,38 @@ O Thermometer renderiza em camadas:
    - Fundo com backgroundColor
 
 3. **Bulbo:**
-   - Círculo na base
-   - Gradiente de cor para efeito de luz
-   - Borda definida
+   - Círculo na base do termômetro
+   - Gradiente de cor com 5 camadas para efeito de luz realista
+   - Cores calculadas usando `lighten565()` baseado em `filledColor`
+   - Borda preta definida
+   - Posicionado na base do termômetro
 
 4. **Marcações:**
-   - Linhas graduadas no lado do tubo
-   - Cor definida por markColor
-   - Espaçamento uniforme
+   - 10 divisões uniformes ao longo do tubo
+   - Linhas menores a cada divisão
+   - Linhas maiores (2x espessura) a cada 5 divisões
+   - Cor definida por `markColor`
+   - Posicionadas no lado esquerdo do tubo
+   - Espaçamento calculado proporcionalmente à altura do tubo
 
 5. **Preenchimento:**
    - Área proporcional ao valor
    - Cor definida por filledColor
    - Atualizada apenas quando valor muda
+   - Limpeza eficiente quando valor diminui
+   - Quando `m_changedScale` é true, limpa toda a área antes de redesenhar
+
+6. **Label (subtitle):**
+   - Se configurado, atualiza automaticamente com o valor atual
+   - Usa `setTextFloat()` para atualizar o texto com casas decimais
+   - Unidade de medida configurada via `unit` e aplicada como sufixo
+   - Atualização ocorre a cada redesenho
+
+7. **Otimizações:**
+   - Usa `m_lastValue` para calcular apenas a diferença a ser redesenhada
+   - Flag `m_changedScale` força redesenho completo quando a escala muda
+   - Validações de estado antes de renderizar (TFT, visibilidade, tela atual, etc.)
+   - Gradiente de cor calculado uma vez durante setup()
 
 ---
 
@@ -439,6 +577,15 @@ O Thermometer renderiza em camadas:
 - Confirme que valores estão na faixa
 - Teste com diferentes faixas
 - Verifique proporção width/height
+- Use `setScale()` para alterar min/max simultaneamente
+- Valores são ordenados automaticamente se min > max
+- O termômetro é redesenhado completamente quando a escala muda
+
+### Mudança de escala não funciona
+- Use `setScale()` para alterar min/max simultaneamente
+- Ou use `setMinValue()` e `setMaxValue()` separadamente
+- Valores são ordenados automaticamente se min > max
+- O termômetro é redesenhado completamente quando a escala muda
 
 ---
 

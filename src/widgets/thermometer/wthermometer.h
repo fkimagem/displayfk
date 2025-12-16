@@ -42,6 +42,11 @@ public:
   void drawBackground();
   void setup(const ThermometerConfig& config);
   void setValue(float newValue);
+  void setMinValue(int newValue);
+  void setMaxValue(int newValue);
+  int getMinValue();
+  int getMaxValue();
+  void setScale(int newMinValue, int newMaxValue);
   
   void show() override;
   void hide() override;
@@ -63,6 +68,8 @@ private:
   void cleanupMemory();
   void start();
   void setup(uint16_t _width, uint16_t _height, uint16_t _filledColor, int _vmin, int _vmax);
+  void sortValues();
+  bool m_changedScale = false;
 };
 
 #endif
