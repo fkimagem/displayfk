@@ -53,6 +53,83 @@ functionCB_t VAnalog::getCallbackFunc()
   return m_callback;
 }
 
+
+/** @brief Ordena os valores mínimo e máximo para o widget VAnalog
+ * @details Ordena os valores mínimo e máximo para o widget VAnalog
+ * @return void
+ */
+void VAnalog::sortValues()
+{
+  if (m_config.minValue > m_config.maxValue)
+  {
+    int temp = m_config.minValue;
+    m_config.minValue = m_config.maxValue;
+    m_config.maxValue = temp;
+  }
+}
+
+/** @brief Define o valor mínimo e máximo para o widget VAnalog
+ * @details Define o valor mínimo e máximo para o widget VAnalog
+ * @param newMinValue Valor mínimo
+ * @param newMaxValue Valor máximo
+ * @return void
+ */
+void VAnalog::setScale(int newMinValue, int newMaxValue)
+{
+  m_config.minValue = newMinValue;
+  m_config.maxValue = newMaxValue;
+  sortValues();
+  m_currentValue = constrain(m_currentValue, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+/** @brief Define o valor mínimo para o widget VAnalog
+ * @details Define o valor mínimo para o widget VAnalog
+ * @param newValue Valor mínimo
+ * @return void
+ */
+void VAnalog::setMinValue(int newValue)
+{
+  m_config.minValue = newValue;
+  sortValues();
+  m_currentValue = constrain(m_currentValue, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+/** @brief Define o valor máximo para o widget VAnalog
+ * @details Define o valor máximo para o widget VAnalog
+ * @param newValue Valor máximo
+ * @return void
+ */
+void VAnalog::setMaxValue(int newValue)
+{
+  m_config.maxValue = newValue;
+  sortValues();
+  m_currentValue = constrain(m_currentValue, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+/** @brief Recupera o valor mínimo para o widget VAnalog
+ * @details Recupera o valor mínimo para o widget VAnalog
+ * @return Valor mínimo
+ */
+int VAnalog::getMinValue()
+{
+  return m_config.minValue;
+}
+
+/** @brief Recupera o valor máximo para o widget VAnalog
+ * @details Recupera o valor máximo para o widget VAnalog
+ * @return Valor máximo
+ */
+int VAnalog::getMaxValue()
+{
+  return m_config.maxValue;
+}
+
 /**
  * @brief Inicia o widget VAnalog.
  * @details Configura dimensões, preenchimento e área de desenho para o display analógico:
@@ -173,46 +250,23 @@ void VAnalog::redraw()
 
   #if defined(DISP_DEFAULT)
   
-  clearArrow();
+  if(!m_changedScale){
+    clearArrow();
+  }else{
+    WidgetBase::objTFT->fillRect(m_arrowArea.x, m_arrowArea.y, m_arrowArea.width, m_arrowArea.height, m_config.backgroundColor);
+  }
+  
   drawArrow();
   drawText();
+
+  if(m_changedScale){
+    m_changedScale = false;
+  }
 
 
   m_lastValue = m_currentValue;
   
   #endif
- /* #if defined(DISP_DEFAULT)
-  ////Serial.println(WidgetBase::usingKeyboard);
-  if (m_updateText)
-  {
-    WidgetBase::objTFT->setFont(&RobotoRegular10pt7b);
-  }
-
-  m_lastValue = m_currentValue;
-  WidgetBase::objTFT->fillTriangle(m_xPos + 2, m_lastYArrow - 3, m_xPos + 15, m_lastYArrow, m_xPos + 2, m_lastYArrow + 3, m_config.backgroundColor);
-  uint32_t vatual = m_currentValue - m_config.minValue;
-  float total = m_config.maxValue - m_config.minValue;
-  float porcentagem = (vatual / total) * m_drawArea;
-  uint32_t yMarca = m_yPos + m_paddingDraw + m_drawArea - porcentagem;
-  m_lastYArrow = yMarca;
-
-  WidgetBase::objTFT->fillTriangle(m_xPos + 2, yMarca - 3, m_xPos + 15, yMarca, m_xPos + 2, yMarca + 3, m_config.arrowColor);
-
-  // WidgetBase::objTFT->drawCentreString("0", m_xPos, yPos - 20, 2);
-  if (m_updateText)
-  {
-    WidgetBase::objTFT->setTextColor(m_config.textColor);
-    WidgetBase::objTFT->setFont(&RobotoRegular5pt7b);
-    TextBound_t textBg;
-    textBg.x = m_xPos + 2;
-    textBg.y = m_yPos + m_config.height - 2 - m_paddingDraw - m_padding;
-    textBg.width = m_config.width - 4;
-    textBg.height = m_paddingDraw + m_padding;
-    WidgetBase::objTFT->fillRect(textBg.x, textBg.y, textBg.width, textBg.height, m_config.backgroundColor);
-    printText(String(m_currentValue).c_str(), m_xPos + (m_config.width / 2), m_yPos + m_config.height - m_paddingDraw, BC_DATUM);
-  }
-  m_shouldRedraw = false;
-  #endif*/
 }
 
 /**

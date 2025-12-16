@@ -95,6 +95,81 @@ Define o valor atual e se deve exibir o texto numérico.
 - `newValue`: Novo valor (será limitado entre minValue e maxValue)
 - `_viewValue`: true para exibir texto numérico, false caso contrário
 
+### setMinValue()
+
+```cpp
+void setMinValue(int newValue)
+```
+
+Define o valor mínimo da escala do display analógico.
+
+**Parâmetros:**
+- `newValue`: Novo valor mínimo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo do display
+- Ativa flag interna `m_changedScale` que força limpeza completa da área da seta antes de redesenhar
+
+### setMaxValue()
+
+```cpp
+void setMaxValue(int newValue)
+```
+
+Define o valor máximo da escala do display analógico.
+
+**Parâmetros:**
+- `newValue`: Novo valor máximo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo do display
+- Ativa flag interna `m_changedScale` que força limpeza completa da área da seta antes de redesenhar
+
+### getMinValue()
+
+```cpp
+int getMinValue()
+```
+
+Retorna o valor mínimo atual da escala.
+
+**Retorno:**
+- Valor mínimo configurado
+
+### getMaxValue()
+
+```cpp
+int getMaxValue()
+```
+
+Retorna o valor máximo atual da escala.
+
+**Retorno:**
+- Valor máximo configurado
+
+### setScale()
+
+```cpp
+void setScale(int newMinValue, int newMaxValue)
+```
+
+Define simultaneamente os valores mínimo e máximo da escala.
+
+**Parâmetros:**
+- `newMinValue`: Novo valor mínimo
+- `newMaxValue`: Novo valor máximo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo do display
+- Ativa flag interna `m_changedScale` que força limpeza completa da área da seta antes de redesenhar
+- Útil para mudanças dinâmicas de escala
+
 ### show()
 
 ```cpp
@@ -122,11 +197,25 @@ Estes métodos são chamados internamente:
 - `forceUpdate()`: Força atualização
 - `getCallbackFunc()`: Retorna callback
 - `cleanupMemory()`: Limpa memória
-- `start()`: Inicializa configurações e calcula áreas
-- `calculateArrowVerticalPosition()`: Calcula posição da seta
-- `drawArrow()`: Desenha a seta indicadora
-- `clearArrow()`: Limpa a seta anterior
-- `drawText()`: Desenha o texto numérico
+- `start()`: Inicializa configurações e calcula áreas (largura e altura mínimas de 40 pixels)
+- `calculateArrowVerticalPosition()`: Calcula posição vertical da seta baseada no valor
+- `drawArrow()`: Desenha a seta indicadora triangular
+- `clearArrow()`: Limpa a seta anterior (apaga triângulo com cor de fundo)
+- `drawText()`: Desenha o texto numérico na área de texto
+- `sortValues()`: Ordena valores min/max se necessário (chamado automaticamente)
+
+### Membros Privados
+
+- `m_currentValue`: Valor atual exibido na escala
+- `m_lastValue`: Último valor exibido (usado para otimização de redesenho)
+- `m_updateText`: Flag indicando se o texto precisa ser atualizado
+- `m_margin`: Estrutura de margens (top: 2, bottom: 2, left: 2, right: 2 pixels)
+- `m_arrowSize`: Tamanho da seta (6 pixels)
+- `m_drawArea`: Área retangular para desenhar a escala analógica
+- `m_arrowArea`: Área retangular para desenhar a seta indicadora
+- `m_textArea`: Área retangular para desenhar o texto numérico
+- `m_config`: Estrutura de configuração do VAnalog
+- `m_changedScale`: Flag que indica quando a escala foi alterada (força redesenho completo)
 
 ---
 
@@ -361,7 +450,9 @@ void minhaTela() {
 - Valores limitados automaticamente
 - Texto atualizado automaticamente
 - Seta move proporcionalmente
-- Faixa configurável
+- Faixa configurável dinamicamente com `setMinValue()`, `setMaxValue()` ou `setScale()`
+- Consulta de valores com `getMinValue()` e `getMaxValue()`
+- Ordenação automática de valores min/max
 
 ---
 
@@ -415,9 +506,16 @@ O VAnalog renderiza em áreas otimizadas:
    - Fonte RobotoRegular5pt7b
 
 5. **Margens (m_margin):**
-   - Espaçamento interno configurável
+   - Espaçamento interno configurável (2 pixels em todos os lados)
    - Separação entre áreas
    - Layout otimizado
+
+6. **Otimizações:**
+   - Usa `m_lastValue` para limpar apenas a seta anterior
+   - Flag `m_changedScale` força redesenho completo da área da seta quando a escala muda
+   - Flag `m_updateText` controla se o texto precisa ser atualizado
+   - Áreas pré-calculadas (`m_drawArea`, `m_arrowArea`, `m_textArea`) para renderização eficiente
+   - Validações de estado antes de renderizar
 
 ---
 
@@ -452,6 +550,8 @@ O VAnalog renderiza em áreas otimizadas:
 - Confirme que steps está adequado
 - Teste com diferentes faixas
 - Verifique proporção height/steps
+- Use `setScale()` para alterar min/max simultaneamente
+- Valores são ordenados automaticamente se min > max
 
 ### Seta não se move
 - Verifique se valor está mudando

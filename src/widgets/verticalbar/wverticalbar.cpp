@@ -1,6 +1,6 @@
 #include "wverticalbar.h"
 
-const char* VBar::TAG = "[VBar]";
+const char *VBar::TAG = "[VBar]";
 
 /**
  * @brief Construtor do widget VBar.
@@ -17,7 +17,8 @@ VBar::VBar(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _scre
  * @brief Limpa recursos alocados pelo VBar.
  * @details Desaloca memória dinâmica e remove referências a objetos.
  */
-void VBar::cleanupMemory() {
+void VBar::cleanupMemory()
+{
   // VBar não aloca memória dinâmica no momento
 }
 
@@ -85,7 +86,7 @@ void VBar::redraw()
   CHECK_USINGKEYBOARD_VOID
   CHECK_LOADED_VOID
   CHECK_SHOULDREDRAW_VOID
-  
+
   int innerX = m_xPos + 1;
   int innerY = m_yPos + 1;
   int innerHeight = m_config.height - 2;
@@ -94,45 +95,129 @@ void VBar::redraw()
   int minWidth = m_config.round;
   int innerRound = m_config.round > 0 ? m_config.round - 1 : m_config.round;
 
-  if(m_config.orientation == Orientation::VERTICAL){
-	
-	uint32_t proportionalHeight = map(m_currentValue, m_config.minValue, m_config.maxValue, minHeight, innerHeight);
-	
-	if(m_currentValue < m_lastValue){
-		uint32_t clearArea = map(m_config.maxValue - m_currentValue, m_config.minValue, m_config.maxValue, minHeight, innerHeight);
-		WidgetBase::objTFT->fillRoundRect(innerX, innerY, innerWidth, clearArea, innerRound, CFK_GREY11); // fundo total
-		
-	}
+  if (m_config.orientation == Orientation::VERTICAL)
+  {
+    uint32_t clearArea = 0;
+    //uint32_t colorArea = map(m_currentValue, m_config.minValue, m_config.maxValue, minHeight, innerHeight);
+    //uint32_t emptyArea = map(m_config.maxValue - m_currentValue, m_config.minValue, m_config.maxValue, minHeight, innerHeight);
 
+    if (m_currentValue < m_lastValue)
+    {
+      clearArea = map(m_config.maxValue - m_currentValue + m_config.minValue, m_config.minValue, m_config.maxValue, minHeight, innerHeight);
+    }
     
+    if(m_changedScale){
+      clearArea = innerHeight;
+    }
+
+    if(clearArea > 0){
+      WidgetBase::objTFT->fillRoundRect(innerX, innerY, innerWidth, clearArea, innerRound, CFK_GREY11); // fundo total
+    }
+
+    uint32_t proportionalHeight = map(m_currentValue, m_config.minValue, m_config.maxValue, minHeight, innerHeight);
     WidgetBase::objTFT->fillRoundRect(innerX, innerY + (innerHeight - proportionalHeight), innerWidth, proportionalHeight, innerRound, m_config.filledColor); // cor fill
-    //WidgetBase::objTFT->drawRoundRect(innerX, innerY + (innerHeight - proportionalHeight), innerWidth, proportionalHeight, innerRound, CFK_BLACK);   // borda fill
+  }
+  else if (m_config.orientation == Orientation::HORIZONTAL)
+  {
+    uint32_t clearArea = 0;
+    uint32_t xValue = 0;
 
-  }else if(m_config.orientation == Orientation::HORIZONTAL){
-	  
-	  if(m_currentValue < m_lastValue){
-		uint32_t clearArea = map(m_config.maxValue - m_currentValue, m_config.minValue, m_config.maxValue, minWidth, innerWidth);
-		uint32_t xValue = map(m_currentValue, m_config.minValue, m_config.maxValue, innerX, innerX + innerWidth);
-		
-		WidgetBase::objTFT->fillRoundRect(xValue, innerY, clearArea, innerHeight, innerRound, CFK_GREY11); // fundo total
-		
-	}
+    if (m_currentValue < m_lastValue)
+    {
+      clearArea = map(m_config.maxValue - m_currentValue + m_config.minValue, m_config.minValue, m_config.maxValue, minWidth, innerWidth);
+      xValue = map(m_currentValue, m_config.minValue, m_config.maxValue, innerX, innerX + innerWidth);
+    }
+    
+    if(m_changedScale){
+      clearArea = innerWidth;
+      xValue = innerX;
+    }
 
-    uint32_t proportionalWidth = map(m_currentValue, m_config.minValue, m_config.maxValue, minWidth, innerWidth); // O +1 é para tirar a borda da contagem
+    if(clearArea > 0){
+      WidgetBase::objTFT->fillRoundRect(xValue, innerY, clearArea, innerHeight, innerRound, CFK_GREY11); // fundo total
+    }
+
+    uint32_t proportionalWidth = map(m_currentValue, m_config.minValue, m_config.maxValue, minWidth, innerWidth);        // O +1 é para tirar a borda da contagem
     WidgetBase::objTFT->fillRoundRect(innerX, innerY, proportionalWidth, innerHeight, innerRound, m_config.filledColor); // cor fill
-	
-    //WidgetBase::objTFT->drawRoundRect(xPos, yPos, m_width, m_height, m_round,CFK_BLACK);   // borda fill
-
   }
 
-  if(m_config.subtitle){
+  if (m_config.subtitle)
+  {
     m_config.subtitle->setTextInt(m_currentValue);
   }
 
-  
+  if(m_changedScale){
+    m_changedScale = false;
+  }
+
   m_lastValue = m_currentValue;
   m_shouldRedraw = false;
 }
+
+/** @brief Define o valor mínimo para o widget VBar
+ * @details Define o valor mínimo para o widget VBar e marca para redesenho
+ * @param newValue Novo valor para definir
+ */
+void VBar::setMinValue(uint32_t newValue)
+{
+  m_config.minValue = newValue;
+  sortValues();
+  m_currentValue = constrain(m_currentValue, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+/** @brief Define o valor máximo para o widget VBar
+ * @details Define o valor máximo para o widget VBar e marca para redesenho
+ * @param newValue Novo valor para definir
+ */
+void VBar::setMaxValue(uint32_t newValue)
+{
+  m_config.maxValue = newValue;
+  sortValues();
+  m_currentValue = constrain(m_currentValue, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+void VBar::sortValues()
+{
+  if (m_config.minValue > m_config.maxValue)
+  {
+    uint32_t temp = m_config.minValue;
+    m_config.minValue = m_config.maxValue;
+    m_config.maxValue = temp;
+  }
+}
+
+void VBar::setScale(uint32_t newMinValue, uint32_t newMaxValue)
+{
+  m_config.minValue = newMinValue;
+  m_config.maxValue = newMaxValue;
+  sortValues();
+  m_currentValue = constrain(m_currentValue, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+/** @brief Recupera o valor mínimo para o widget VBar
+ * @details Recupera o valor mínimo para o widget VBar
+ * @return Valor mínimo
+ */
+uint32_t VBar::getMinValue()
+{
+  return m_config.minValue;
+}
+
+/** @brief Recupera o valor máximo para o widget VBar
+ * @details Recupera o valor máximo para o widget VBar
+ * @return Valor máximo
+ */
+uint32_t VBar::getMaxValue()
+{
+  return m_config.maxValue;
+}
+
 
 /**
  * @brief Inicia o widget VBar.
@@ -172,16 +257,15 @@ void VBar::drawBackground()
   CHECK_LOADED_VOID
   CHECK_SHOULDREDRAW_VOID
   WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.round, CFK_GREY11); // fundo total
-  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.round, CFK_BLACK);     // borda total
+  WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.round, CFK_BLACK);  // borda total
 }
-
 
 /**
  * @brief Configura o VBar com parâmetros definidos em uma estrutura de configuração.
  * @param config Estrutura @ref VerticalBarConfig contendo os parâmetros de configuração.
  * @details Chama método setup() com parâmetros individuais da configuração.
  */
-void VBar::setup(const VerticalBarConfig& config)
+void VBar::setup(const VerticalBarConfig &config)
 {
   if (!WidgetBase::objTFT)
   {
@@ -205,8 +289,8 @@ void VBar::setup(const VerticalBarConfig& config)
  */
 void VBar::show()
 {
-    m_visible = true;
-    m_shouldRedraw = true;
+  m_visible = true;
+  m_shouldRedraw = true;
 }
 
 /**
@@ -215,6 +299,6 @@ void VBar::show()
  */
 void VBar::hide()
 {
-    m_visible = false;
-    m_shouldRedraw = true;
+  m_visible = false;
+  m_shouldRedraw = true;
 }

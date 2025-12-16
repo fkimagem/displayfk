@@ -1,7 +1,7 @@
 #include "wcircularbar.h"
 #include <esp_log.h>
 
-const char* CircularBar::TAG = "CircularBar";
+const char *CircularBar::TAG = "CircularBar";
 
 /**
  * @brief Construtor da classe CircularBar.
@@ -9,26 +9,38 @@ const char* CircularBar::TAG = "CircularBar";
  * @param _y Coordenada Y da posição central da barra na tela.
  * @param _screen Identificador da tela onde a barra será exibida.
  * @details Inicializa a barra circular com valores padrão: raio 0, faixa 0-100,
- *          ângulos 0-360°, espessura 10 pixels, cores padrão, exibição de valor habilitada.
- *          A barra deve ser configurada com setup() antes de ser exibida.
+ *          ângulos 0-360°, espessura 10 pixels, cores padrão, exibição de valor
+ * habilitada. A barra deve ser configurada com setup() antes de ser exibida.
  */
 CircularBar::CircularBar(uint16_t _x, uint16_t _y, uint8_t _screen)
-    : WidgetBase(_x, _y, _screen), m_lastValue(0), m_value(0)
-{
-    m_config = {.radius = 0, .minValue = 0, .maxValue = 100, .startAngle = 0, .endAngle = 360, 
-                .thickness = 10, .color = 0, .backgroundColor = 0, .textColor = 0, 
-                .backgroundText = 0, .showValue = true, .inverted = false};
-    ESP_LOGD(TAG, "CircularBar created at (%d, %d) on screen %d", _x, _y, _screen);
+    : WidgetBase(_x, _y, _screen), m_lastValue(0), m_value(0) {
+  m_config = {.radius = 0,
+              .minValue = 0,
+              .maxValue = 100,
+              .startAngle = 0,
+              .endAngle = 360,
+              .thickness = 10,
+              .color = 0,
+              .backgroundColor = 0,
+              .textColor = 0,
+              .backgroundText = 0,
+              .showValue = true,
+              .inverted = false};
+  ESP_LOGD(TAG, "CircularBar created at (%d, %d) on screen %d", _x, _y,
+           _screen);
 }
 
 /**
  * @brief Destrutor da classe CircularBar.
- * @details Registra o evento no log do ESP32 e limpa o ponteiro da função callback.
- *          Todos os recursos são liberados automaticamente pela herança de @ref WidgetBase.
+ * @details Registra o evento no log do ESP32 e limpa o ponteiro da função
+ * callback. Todos os recursos são liberados automaticamente pela herança de
+ * @ref WidgetBase.
  */
 CircularBar::~CircularBar() {
-    ESP_LOGD(TAG, "CircularBar destroyed at (%d, %d)", m_xPos, m_yPos);
-    if (m_callback != nullptr) { m_callback = nullptr; }
+  ESP_LOGD(TAG, "CircularBar destroyed at (%d, %d)", m_xPos, m_yPos);
+  if (m_callback != nullptr) {
+    m_callback = nullptr;
+  }
 }
 
 /**
@@ -37,7 +49,8 @@ CircularBar::~CircularBar() {
  * @param _yTouch Ponteiro para a coordenada Y do toque na tela.
  * @return Sempre retorna False, pois CircularBar não processa eventos de toque.
  * @details Este widget é apenas visual e não responde a interações de toque.
- *          Os parâmetros são marcados como UNUSED para evitar avisos do compilador.
+ *          Os parâmetros são marcados como UNUSED para evitar avisos do
+ * compilador.
  */
 bool CircularBar::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   // CircularBar doesn't handle touch events
@@ -58,8 +71,8 @@ functionCB_t CircularBar::getCallbackFunc() { return m_callback; }
  * @brief Desenha o fundo do widget CircularBar.
  * @details Renderiza o arco de fundo da barra circular e inicializa a exibição.
  *          Este método deve ser chamado uma vez para configurar o fundo antes
- *          de usar setValue() para atualizar o valor. Apenas desenha se o widget
- *          está na tela atual e adequadamente carregado.
+ *          de usar setValue() para atualizar o valor. Apenas desenha se o
+ * widget está na tela atual e adequadamente carregado.
  */
 void CircularBar::drawBackground() {
   CHECK_TFT_VOID
@@ -69,16 +82,81 @@ void CircularBar::drawBackground() {
   CHECK_USINGKEYBOARD_VOID
   CHECK_CURRENTSCREEN_VOID
 
-
 #if defined(DISP_DEFAULT)
-uint8_t borderOffset = 1;
-  WidgetBase::objTFT->fillArc(m_xPos, m_yPos, m_config.radius + borderOffset,
-                              (m_config.radius - m_config.thickness - borderOffset),
-                              m_config.startAngle, m_config.endAngle, m_config.backgroundColor);
+  uint8_t borderOffset = 1;
+  WidgetBase::objTFT->fillArc(
+      m_xPos, m_yPos, m_config.radius + borderOffset,
+      (m_config.radius - m_config.thickness - borderOffset),
+      m_config.startAngle, m_config.endAngle, m_config.backgroundColor);
 #endif
   m_lastValue = m_config.minValue;
   redraw();
 }
+
+/** @brief Ordena os valores mínimo e máximo para o widget CircularBar
+ * @details Ordena os valores mínimo e máximo para o widget CircularBar
+ * @return void
+ */
+void CircularBar::sortValues() {
+  if (m_config.minValue > m_config.maxValue) {
+    int temp = m_config.minValue;
+    m_config.minValue = m_config.maxValue;
+    m_config.maxValue = temp;
+  }
+}
+
+/** @brief Define o valor mínimo e máximo para o widget CircularBar
+ * @details Define o valor mínimo e máximo para o widget CircularBar
+ * @param newMinValue Valor mínimo
+ * @param newMaxValue Valor máximo
+ * @return void
+ */
+void CircularBar::setScale(int newMinValue, int newMaxValue) {
+  m_config.minValue = newMinValue;
+  m_config.maxValue = newMaxValue;
+  sortValues();
+  m_value = constrain(m_value, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+/** @brief Define o valor mínimo para o widget CircularBar
+ * @details Define o valor mínimo para o widget CircularBar
+ * @param newValue Valor mínimo
+ * @return void
+ */
+void CircularBar::setMinValue(int newValue) {
+  m_config.minValue = newValue;
+  sortValues();
+  m_value = constrain(m_value, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+/** @brief Define o valor máximo para o widget CircularBar
+ * @details Define o valor máximo para o widget CircularBar
+ * @param newValue Valor máximo
+ * @return void
+ */
+void CircularBar::setMaxValue(int newValue) {
+  m_config.maxValue = newValue;
+  sortValues();
+  m_value = constrain(m_value, m_config.minValue, m_config.maxValue);
+  m_changedScale = true;
+  m_shouldRedraw = true;
+}
+
+/** @brief Recupera o valor mínimo para o widget CircularBar
+ * @details Recupera o valor mínimo para o widget CircularBar
+ * @return Valor mínimo
+ */
+int CircularBar::getMinValue() { return m_config.minValue; }
+
+/** @brief Recupera o valor máximo para o widget CircularBar
+ * @details Recupera o valor máximo para o widget CircularBar
+ * @return Valor máximo
+ */
+int CircularBar::getMaxValue() { return m_config.maxValue; }
 
 /**
  * @brief Define o valor atual do widget CircularBar.
@@ -88,29 +166,33 @@ uint8_t borderOffset = 1;
  *          - Define o novo valor em m_value
  *          - Marca o widget para redesenho
  *          - Registra o evento no log do ESP32
- *          O valor será mapeado proporcionalmente para o ângulo da barra na próxima chamada de redraw().
+ *          O valor será mapeado proporcionalmente para o ângulo da barra na
+ * próxima chamada de redraw().
  */
 void CircularBar::setValue(int newValue) {
   CHECK_LOADED_VOID
-  
+
   m_lastValue = m_value;
   m_value = constrain(newValue, m_config.minValue, m_config.maxValue);
   m_shouldRedraw = true;
-  
+
   ESP_LOGD(TAG, "CircularBar value set to: %d", newValue);
 }
 
 /**
- * @brief Redesenha o widget CircularBar na tela, atualizando sua aparência baseada no valor atual.
+ * @brief Redesenha o widget CircularBar na tela, atualizando sua aparência
+ * baseada no valor atual.
  * @details Este método é responsável por renderizar a barra circular na tela:
  *          - Verifica todas as condições necessárias para o redesenho
  *          - Mapeia o valor atual para ângulos usando a função map()
- *          - Desenha apenas a diferença entre o valor anterior e atual para eficiência
- *          - Usa fillArc() da biblioteca @ref Arduino_GFX_Library para o desenho
+ *          - Desenha apenas a diferença entre o valor anterior e atual para
+ * eficiência
+ *          - Usa fillArc() da biblioteca @ref Arduino_GFX_Library para o
+ * desenho
  *          - Exibe o valor atual no centro se showValue estiver habilitado
  *          - Aplica debounce para evitar redesenhos excessivos
- *          Apenas redesenha se a barra está visível, inicializada, carregada, na tela atual
- *          e a flag m_shouldRedraw está configurada como true.
+ *          Apenas redesenha se a barra está visível, inicializada, carregada,
+ * na tela atual e a flag m_shouldRedraw está configurada como true.
  */
 void CircularBar::redraw() {
   CHECK_TFT_VOID
@@ -126,47 +208,34 @@ void CircularBar::redraw() {
   CHECK_DEBOUNCE_REDRAW_VOID
 
   m_shouldRedraw = false;
+  int angleValue = map(m_value, m_config.minValue, m_config.maxValue,
+                       m_config.startAngle, m_config.endAngle);
+  int lastAngleValue = map(m_lastValue, m_config.minValue, m_config.maxValue,
+                           m_config.startAngle, m_config.endAngle);
 
-  int angleValue = map(m_value, m_config.minValue, m_config.maxValue, m_config.startAngle, m_config.endAngle);
-  int lastAngleValue =
-      map(m_lastValue, m_config.minValue, m_config.maxValue, m_config.startAngle, m_config.endAngle);
+  if (m_changedScale) {
+    lastAngleValue = 0;
+    WidgetBase::objTFT->fillArc(
+        m_xPos, m_yPos, m_config.radius, (m_config.radius - m_config.thickness),
+        m_config.startAngle, m_config.endAngle, m_config.backgroundColor);
+  }
 
-      /*
-  int xEnd = 0, xStart = 0, xCursor = 0, xLastCursor = 0;
-  int yEnd = 0, yStart = 0, yCursor = 0, yLastCursor = 0;
-
-  xStart =
-      (cos(m_startAngle * DEG_TO_RAD) * (m_radius - m_lineWeight / 2)) + xPos;
-  yStart =
-      (sin(m_startAngle * DEG_TO_RAD) * (m_radius - m_lineWeight / 2)) + yPos;
-
-  xEnd = (cos(m_endAngle * DEG_TO_RAD) * (m_radius - m_lineWeight / 2)) + xPos;
-  yEnd = (sin(m_endAngle * DEG_TO_RAD) * (m_radius - m_lineWeight / 2)) + yPos;
-
-  xCursor =
-      (cos(angleValue * DEG_TO_RAD) * (m_radius - m_lineWeight / 2)) + xPos;
-  yCursor =
-      (sin(angleValue * DEG_TO_RAD) * (m_radius - m_lineWeight / 2)) + yPos;
-
-  xLastCursor =
-      (cos(lastAngleValue * DEG_TO_RAD) * (m_radius - m_lineWeight / 2)) + xPos;
-  yLastCursor =
-      (sin(lastAngleValue * DEG_TO_RAD) * (m_radius - m_lineWeight / 2)) + yPos;
-*/
   uint16_t lastCursoColor = 0;
 
   // If the angle is 'going back' (decreasing)
   if (angleValue < lastAngleValue) {
-    WidgetBase::objTFT->fillArc(m_xPos, m_yPos, m_config.radius, (m_config.radius - m_config.thickness),
-                                angleValue, lastAngleValue,
-                                m_config.backgroundColor); // Paint the difference
+    WidgetBase::objTFT->fillArc(
+        m_xPos, m_yPos, m_config.radius, (m_config.radius - m_config.thickness),
+        angleValue, lastAngleValue,
+        m_config.backgroundColor); // Paint the difference
     lastCursoColor = m_config.backgroundColor;
   } else if (angleValue > lastAngleValue) {
-    WidgetBase::objTFT->fillArc(m_xPos, m_yPos, m_config.radius, (m_config.radius - m_config.thickness),
+    WidgetBase::objTFT->fillArc(m_xPos, m_yPos, m_config.radius,
+                                (m_config.radius - m_config.thickness),
                                 lastAngleValue, angleValue,
                                 m_config.color); // Paint the difference
     lastCursoColor = m_config.color;
-  }else{
+  } else {
     UNUSED(lastCursoColor);
   }
 
@@ -175,7 +244,8 @@ void CircularBar::redraw() {
   }
 
   if (m_config.showValue) {
-    WidgetBase::objTFT->fillCircle(m_xPos, m_yPos, (m_config.radius - m_config.thickness) - 5,
+    WidgetBase::objTFT->fillCircle(m_xPos, m_yPos,
+                                   (m_config.radius - m_config.thickness) - 5,
                                    m_config.backgroundText);
 
     char char_arr[100];
@@ -189,37 +259,45 @@ void CircularBar::redraw() {
     updateFont(FontType::UNLOAD);
   }
 #endif
+
+  if (m_changedScale) {
+    m_changedScale = false;
+  }
 }
 
 /**
  * @brief Força uma atualização imediata do CircularBar.
- * @details Define a flag m_shouldRedraw para true, forçando o redesenho da barra
- *          no próximo ciclo de atualização da tela. Útil para garantir que mudanças
- *          no valor sejam visíveis imediatamente.
+ * @details Define a flag m_shouldRedraw para true, forçando o redesenho da
+ * barra no próximo ciclo de atualização da tela. Útil para garantir que
+ * mudanças no valor sejam visíveis imediatamente.
  */
-void CircularBar::forceUpdate() { 
-  m_shouldRedraw = true; 
+void CircularBar::forceUpdate() {
+  m_shouldRedraw = true;
   ESP_LOGD(TAG, "CircularBar force update requested");
 }
 
-
 /**
- * @brief Configura o CircularBar com parâmetros definidos em uma estrutura de configuração.
- * @param config Estrutura @ref CircularBarConfig contendo os parâmetros de configuração da barra.
- * @details Este método deve ser chamado após criar o objeto para configurá-lo adequadamente:
+ * @brief Configura o CircularBar com parâmetros definidos em uma estrutura de
+ * configuração.
+ * @param config Estrutura @ref CircularBarConfig contendo os parâmetros de
+ * configuração da barra.
+ * @details Este método deve ser chamado após criar o objeto para configurá-lo
+ * adequadamente:
  *          - Copia todas as configurações para m_config
  *          - Valida e corrige valores min/max se necessário
  *          - Inicializa os valores atual e anterior com o valor mínimo
- *          - Desabilita exibição de valor se o raio for muito pequeno (< 20 pixels)
+ *          - Desabilita exibição de valor se o raio for muito pequeno (< 20
+ * pixels)
  *          - Marca o widget como inicializado e carregado
- *          - A barra não será exibida corretamente até que este método seja chamado
+ *          - A barra não será exibida corretamente até que este método seja
+ * chamado
  */
 void CircularBar::setup(const CircularBarConfig &config) {
   // Validate TFT object
   CHECK_TFT_VOID
-  
+
   m_config = config;
-  
+
   // Validate and swap min/max if needed
   if (m_config.maxValue < m_config.minValue) {
     int aux = m_config.minValue;
@@ -238,8 +316,8 @@ void CircularBar::setup(const CircularBarConfig &config) {
   m_shouldRedraw = true;
   m_loaded = true;
   m_initialized = true;
-  ESP_LOGD(TAG, "CircularBar setup completed at (%d, %d) with radius %d", 
-                m_xPos, m_yPos, m_config.radius);
+  ESP_LOGD(TAG, "CircularBar setup completed at (%d, %d) with radius %d",
+           m_xPos, m_yPos, m_config.radius);
 }
 
 /**

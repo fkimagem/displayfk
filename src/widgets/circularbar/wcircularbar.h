@@ -45,6 +45,11 @@ public:
   void setup(const CircularBarConfig& config);
   void drawBackground();
   void setValue(int newValue);
+  void setMinValue(int newValue);
+  void setMaxValue(int newValue);
+  int getMinValue();
+  int getMaxValue();
+  void setScale(int newMinValue, int newMaxValue);
 
 private:
   static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
@@ -53,6 +58,9 @@ private:
   int m_rotation; ///< Ângulo de rotação do gauge, onde 0 está no meio direito.
   TextBound_t m_lastArea; ///< Última área calculada para o rótulo.
   CircularBarConfig m_config; ///< Estrutura contendo configuração completa da barra circular.
+
+  bool m_changedScale = false;
+  void sortValues();
 
   void start();
 };

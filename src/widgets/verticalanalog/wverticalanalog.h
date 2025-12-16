@@ -40,6 +40,11 @@ public:
   void setup(const VerticalAnalogConfig& config);
   void show() override;
   void hide() override;
+  int getMinValue();
+  int getMaxValue();
+  void setScale(int newMinValue, int newMaxValue);
+  void setMinValue(int newValue);
+  void setMaxValue(int newValue);
 
 private:
   static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
@@ -61,6 +66,8 @@ private:
   void drawArrow();
   void clearArrow();
   void drawText();
+  void sortValues();
+  bool m_changedScale = false;
 };
 
 #endif

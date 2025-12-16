@@ -31,6 +31,11 @@ public:
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
   void setValue(uint32_t newValue);
+  void setMinValue(uint32_t newValue);
+  void setMaxValue(uint32_t newValue);
+  uint32_t getMinValue();
+  uint32_t getMaxValue();
+  void setScale(uint32_t newMinValue, uint32_t newMaxValue);
   void redraw() override;
   void forceUpdate() override;
   void drawBackground();
@@ -43,8 +48,11 @@ private:
   uint32_t m_currentValue; ///< Valor atual representado pela porção preenchida da barra.
   uint32_t m_lastValue; ///< Último valor representado pela porção preenchida da barra.
   VerticalBarConfig m_config; ///< Estrutura de configuração para o VBar.
+  void sortValues();
 
   void cleanupMemory();
   void start();
+
+  bool m_changedScale = false;
 };
 #endif

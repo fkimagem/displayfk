@@ -100,6 +100,81 @@ Define o valor atual da barra circular e marca para redesenho.
 - Marca o widget para redesenho automático
 - Registra o evento no log do ESP32
 
+### setMinValue()
+
+```cpp
+void setMinValue(int newValue)
+```
+
+Define o valor mínimo da faixa da barra circular.
+
+**Parâmetros:**
+- `newValue`: Novo valor mínimo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo da barra
+- Ativa flag interna `m_changedScale` que força limpeza completa do arco antes de redesenhar
+
+### setMaxValue()
+
+```cpp
+void setMaxValue(int newValue)
+```
+
+Define o valor máximo da faixa da barra circular.
+
+**Parâmetros:**
+- `newValue`: Novo valor máximo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo da barra
+- Ativa flag interna `m_changedScale` que força limpeza completa do arco antes de redesenhar
+
+### getMinValue()
+
+```cpp
+int getMinValue()
+```
+
+Retorna o valor mínimo atual da faixa da barra circular.
+
+**Retorno:**
+- Valor mínimo configurado
+
+### getMaxValue()
+
+```cpp
+int getMaxValue()
+```
+
+Retorna o valor máximo atual da faixa da barra circular.
+
+**Retorno:**
+- Valor máximo configurado
+
+### setScale()
+
+```cpp
+void setScale(int newMinValue, int newMaxValue)
+```
+
+Define simultaneamente os valores mínimo e máximo da faixa da barra circular.
+
+**Parâmetros:**
+- `newMinValue`: Novo valor mínimo
+- `newMaxValue`: Novo valor máximo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo da barra
+- Ativa flag interna `m_changedScale` que força limpeza completa do arco antes de redesenhar
+- Útil para mudanças dinâmicas de escala
+
 ### drawBackground()
 
 ```cpp
@@ -139,7 +214,17 @@ Estes métodos são chamados internamente e não precisam ser invocados diretame
 - `redraw()`: Redesenha a barra na tela com renderização eficiente
 - `forceUpdate()`: Força uma atualização imediata
 - `getCallbackFunc()`: Retorna a função callback
-- `start()`: Aplica validações e inicializações
+- `start()`: Aplica validações e inicializações (não implementado no código atual)
+- `sortValues()`: Ordena valores min/max se necessário (chamado automaticamente)
+
+### Membros Privados
+
+- `m_value`: Valor atual a ser exibido na barra
+- `m_lastValue`: Último valor representado (usado para otimização de redesenho incremental)
+- `m_rotation`: Ângulo de rotação do gauge (onde 0 está no meio direito)
+- `m_lastArea`: Última área calculada para o rótulo (usado para otimização de texto)
+- `m_config`: Estrutura contendo configuração completa da barra circular
+- `m_changedScale`: Flag que indica quando a escala foi alterada (força redesenho completo do arco)
 
 ---
 
@@ -353,6 +438,7 @@ void minhaTela() {
 - Desenha apenas a diferença entre valores
 - Evite atualizações muito frequentes
 - Use `drawBackground()` apenas uma vez
+- Mudanças de escala redesenham completamente a barra
 
 ### 👥 Usabilidade
 - Deixe espaço suficiente ao redor da barra
@@ -373,6 +459,12 @@ void minhaTela() {
 - **180°**: Esquerda (9 horas)
 - **270°**: Cima (12 horas)
 - **360°**: Volta completa
+
+### 🔔 Valores e Escala
+- Faixa configurável dinamicamente com `setMinValue()`, `setMaxValue()` ou `setScale()`
+- Consulta de valores com `getMinValue()` e `getMaxValue()`
+- Ordenação automática de valores min/max
+- Valores limitados automaticamente dentro da faixa
 
 ---
 
@@ -418,9 +510,11 @@ O `CircularBar` é renderizado em camadas:
    - Fonte RobotoBold10pt7b
 
 4. **Otimizações**:
-   - Desenha apenas a diferença entre valores
+   - Desenha apenas a diferença entre valores (usando `m_lastValue`)
+   - Flag `m_changedScale` força redesenho completo do arco quando a escala muda
    - Debounce para evitar redesenhos excessivos
-   - Validações de estado antes de renderizar
+   - Validações de estado antes de renderizar (TFT, visibilidade, inicialização, etc.)
+   - Usa `m_lastArea` para otimizar atualização do texto central
 
 ---
 
@@ -438,6 +532,12 @@ O `CircularBar` é renderizado em camadas:
 - Confirme que o valor está dentro da faixa min/max
 - Verifique se o widget está habilitado
 - Certifique-se de que `drawBackground()` foi chamado
+
+### Mudança de escala não funciona
+- Use `setScale()` para alterar min/max simultaneamente
+- Ou use `setMinValue()` e `setMaxValue()` separadamente
+- Valores são ordenados automaticamente se min > max
+- A barra é redesenhada completamente quando a escala muda
 
 ### Texto não aparece no centro
 - Verifique se `showValue = true` na configuração

@@ -93,6 +93,81 @@ Define o valor atual da barra.
 **Parâmetros:**
 - `newValue`: Novo valor (será limitado entre minValue e maxValue)
 
+### setMinValue()
+
+```cpp
+void setMinValue(uint32_t newValue)
+```
+
+Define o valor mínimo da faixa da barra.
+
+**Parâmetros:**
+- `newValue`: Novo valor mínimo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo da barra
+- Ativa flag interna `m_changedScale` que força limpeza completa antes de redesenhar
+
+### setMaxValue()
+
+```cpp
+void setMaxValue(uint32_t newValue)
+```
+
+Define o valor máximo da faixa da barra.
+
+**Parâmetros:**
+- `newValue`: Novo valor máximo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo da barra
+- Ativa flag interna `m_changedScale` que força limpeza completa antes de redesenhar
+
+### getMinValue()
+
+```cpp
+uint32_t getMinValue()
+```
+
+Retorna o valor mínimo atual da faixa da barra.
+
+**Retorno:**
+- Valor mínimo configurado
+
+### getMaxValue()
+
+```cpp
+uint32_t getMaxValue()
+```
+
+Retorna o valor máximo atual da faixa da barra.
+
+**Retorno:**
+- Valor máximo configurado
+
+### setScale()
+
+```cpp
+void setScale(uint32_t newMinValue, uint32_t newMaxValue)
+```
+
+Define simultaneamente os valores mínimo e máximo da faixa da barra.
+
+**Parâmetros:**
+- `newMinValue`: Novo valor mínimo
+- `newMaxValue`: Novo valor máximo
+
+**Características:**
+- Ordena automaticamente os valores se min > max
+- Ajusta o valor atual para ficar dentro da nova faixa
+- Marca para redesenho completo da barra
+- Ativa flag interna `m_changedScale` que força limpeza completa antes de redesenhar
+- Útil para mudanças dinâmicas de escala
+
 ### show()
 
 ```cpp
@@ -120,7 +195,15 @@ Estes métodos são chamados internamente:
 - `forceUpdate()`: Força atualização
 - `getCallbackFunc()`: Retorna callback
 - `cleanupMemory()`: Limpa memória
-- `start()`: Inicializa configurações
+- `start()`: Inicializa configurações e valida dimensões (largura e altura mínimas de 20 pixels)
+- `sortValues()`: Ordena valores min/max se necessário (chamado automaticamente)
+
+### Membros Privados
+
+- `m_currentValue`: Valor atual representado pela porção preenchida da barra
+- `m_lastValue`: Último valor representado (usado para otimização de redesenho)
+- `m_config`: Estrutura de configuração do VBar
+- `m_changedScale`: Flag que indica quando a escala foi alterada (força redesenho completo)
 
 ---
 
@@ -366,7 +449,9 @@ void minhaTela() {
 - Valores limitados automaticamente
 - Preenchimento proporcional automático
 - Suporta valores negativos
-- Faixa configurável
+- Faixa configurável dinamicamente com `setMinValue()`, `setMaxValue()` ou `setScale()`
+- Consulta de valores com `getMinValue()` e `getMaxValue()`
+- Ordenação automática de valores min/max
 - Integração com Label: se `subtitle` for configurado, o valor é exibido automaticamente no Label
 
 ---
@@ -415,11 +500,17 @@ O VBar renderiza em camadas:
 4. **Limpeza:**
    - Apaga área se valor diminuiu
    - Mantém preenchimento se valor aumentou
+   - Quando `m_changedScale` é true, limpa toda a área antes de redesenhar
 
 5. **Label (subtitle):**
    - Se configurado, atualiza automaticamente o Label com o valor atual
    - Usa `setTextInt()` para atualizar o texto do Label
    - Atualização ocorre a cada redesenho
+
+6. **Otimizações:**
+   - Usa `m_lastValue` para calcular apenas a diferença a ser redesenhada
+   - Flag `m_changedScale` força redesenho completo quando a escala muda
+   - Validações de estado antes de renderizar (TFT, visibilidade, tela atual, etc.)
 
 ---
 
@@ -436,6 +527,12 @@ O VBar renderiza em camadas:
 - Confirme que valor está na faixa min/max
 - Verifique logs para erros
 - Teste com valores extremos
+
+### Mudança de escala não funciona
+- Use `setScale()` para alterar min/max simultaneamente
+- Ou use `setMinValue()` e `setMaxValue()` separadamente
+- Valores são ordenados automaticamente se min > max
+- A barra é redesenhada completamente quando a escala muda
 
 ### Visual incorreto
 - Verifique cores configuradas
