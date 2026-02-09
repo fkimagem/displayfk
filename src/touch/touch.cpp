@@ -737,137 +737,7 @@ void TouchScreen::setCalibration(CalibrationPoint_t *array)
   }
 }
 #endif
-/**
- * @brief Calibrates the touch screen using 9 points.
- * @param parameters Array of calibration parameters.
- * @param color_fg Color of the foreground.
- * @param color_bg Color of the background.
- * @param size Size of the calibration points.
- */
-#if defined(HAS_TOUCH) && defined(TOUCH_XPT2046)
-void TouchScreen::calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg, uint32_t color_bg, uint8_t size)
-{
-  int16_t values[18] = {0}; // 9 pontos (x, y) = 18 valores
 
-  if (!m_objTFT)
-  {
-    ESP_LOGD(TAG, "Display not defined");
-    return;
-  }
-  else
-  {
-    ESP_LOGD(TAG, "Obj display definido");
-    m_objTFT->fillScreen(0xffff);
-  }
-
-  // Posições dos pontos de calibração: 9 pontos
-  int points[9][2] = {
-      {0, 0},                                  // canto superior esquerdo
-      {m_widthScreen - 1, 0},                  // canto superior direito
-      {0, m_heightScreen - 1},                 // canto inferior esquerdo
-      {m_widthScreen - 1, m_heightScreen - 1}, // canto inferior direito
-      {m_widthScreen / 2, 0},                  // meio superior
-      {m_widthScreen / 2, m_heightScreen - 1}, // meio inferior
-      {0, m_heightScreen / 2},                 // meio esquerdo
-      {m_widthScreen - 1, m_heightScreen / 2}, // meio direito
-      {m_widthScreen / 2, m_heightScreen / 2}  // centro
-  };
-
-  for (uint8_t i = 0; i < 9; i++)
-  {
-    for (int j = 0; j < 9; j++)
-    {
-      int x = points[j][0];
-      int y = points[j][1];
-
-      m_objTFT->fillCircle(x, y, size / 2, color_bg);
-      if (m_logMessages)
-      {
-        ESP_LOGD(TAG, "Ponto %i: %i x %i", j, x, y);
-      }
-    }
-
-    // Desenhe o quadrado vermelho com linhas cruzadas no ponto de calibração
-    int x = points[i][0];
-    int y = points[i][1];
-    m_objTFT->fillCircle(x, y, size / 3, color_fg);
-
-    // Aguarde o usuário tocar no ponto
-    if (m_logMessages)
-    {
-      ESP_LOGD(TAG, "Calibrando ponto %d", i);
-    }
-    for (uint8_t j = 0; j < 8; j++) // Média de 8 leituras para cada ponto
-    {
-      while (!m_ts->getInput())
-        ; // Aguarde até detectar o toque
-      values[i * 2] += m_ts->x;
-      values[i * 2 + 1] += m_ts->y;
-      if (m_logMessages)
-      {
-        ESP_LOGD(TAG, "Ponto %d: %d, %d", i, m_ts->x, m_ts->y);
-      }
-    }
-
-    values[i * 2] /= 8;
-    values[i * 2 + 1] /= 8;
-    if (m_logMessages)
-    {
-      ESP_LOGD(TAG, "Calibrado Ponto %d: %d, %d", i, values[i * 2], values[i * 2 + 1]);
-    }
-
-    m_objTFT->fillCircle(points[i][0], points[i][1], size, color_bg); // Apaga o ponto de toque com a cor de fundo
-    delay(2000);                                                      // Aguarda antes do próximo ponto
-  }
-
-  // Determina se há rotação entre os eixos de toque e da tela
-  m_touchCalibration_rotate = false;
-  if (abs(values[0] - values[1]) > abs(values[2] - values[3]))
-  {
-    m_touchCalibration_rotate = true;
-  }
-
-  // Determina os valores de x e y mínimos e máximos para o ajuste da calibração
-  m_touchCalibration_x0 = min(values[0], min(values[2], min(values[4], min(values[6], values[8]))));
-  m_touchCalibration_x1 = max(values[0], max(values[2], max(values[4], max(values[6], values[8]))));
-
-  m_touchCalibration_y0 = min(values[1], min(values[3], min(values[5], min(values[7], values[9]))));
-  m_touchCalibration_y1 = max(values[1], max(values[3], max(values[5], max(values[7], values[9]))));
-
-  // Detecta e ajusta a inversão dos eixos
-  m_touchCalibration_invert_x = m_touchCalibration_x0 > m_touchCalibration_x1;
-  m_touchCalibration_invert_y = m_touchCalibration_y0 > m_touchCalibration_y1;
-
-  if (m_touchCalibration_invert_x)
-  {
-    int temp = m_touchCalibration_x0;
-    m_touchCalibration_x0 = m_touchCalibration_x1;
-    m_touchCalibration_x1 = temp;
-  }
-
-  if (m_touchCalibration_invert_y)
-  {
-    int temp = m_touchCalibration_y0;
-    m_touchCalibration_y0 = m_touchCalibration_y1;
-    m_touchCalibration_y1 = temp;
-  }
-
-  // Exporta os parâmetros se o ponteiro for válido
-  if (parameters != NULL)
-  {
-    parameters[0] = m_touchCalibration_x0;
-    parameters[1] = m_touchCalibration_x1;
-    parameters[2] = m_touchCalibration_y0;
-    parameters[3] = m_touchCalibration_y1;
-    parameters[4] = m_touchCalibration_rotate | (m_touchCalibration_invert_x << 1) | (m_touchCalibration_invert_y << 2);
-  }
-  if (m_logMessages)
-  {
-    ESP_LOGD(TAG, "Calibração concluída:");
-    ESP_LOGD(TAG, "x0: %d, x1: %d, y0: %d, y1: %d\n", m_touchCalibration_x0, m_touchCalibration_x1, m_touchCalibration_y0, m_touchCalibration_y1);
-  }
-}
-#endif
 /**
  * @brief Calibrates the touch screen using a structure.
  * @param points Array of calibration points.
@@ -878,7 +748,7 @@ void TouchScreen::calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg,
  * @param sizeMarker Size of the marker.
  */
 #if defined(HAS_TOUCH) && defined(TOUCH_XPT2046)
-void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t length, Rect_t *rectScreen, uint32_t color_fg, uint32_t color_bg, uint8_t sizeMarker)
+void TouchScreen::calibrateTouchStruct(CalibrationPoint_t *points, uint8_t length, Rect_t *rectScreen, uint32_t color_fg, uint32_t color_bg, uint8_t sizeMarker)
 {
   // CalibrationPoint_t points[4];
 
@@ -918,6 +788,15 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
   points[3].yTouch = 0;
 
   uint8_t sizeSquare = 10;
+
+  const char* messageWaiting = "Waiting";
+  const char *messageClick = "Click on red square";
+
+  TextBound_t tbWaiting;
+  m_objTFT->getTextBounds(messageWaiting, 0, 0, &tbWaiting.x, &tbWaiting.y, &tbWaiting.width, &tbWaiting.height);
+
+  TextBound_t tbClick;
+  m_objTFT->getTextBounds(messageClick, 0, 0, &tbClick.x, &tbClick.y, &tbClick.width, &tbClick.height);
 
   for (auto i = 0; i < length; i++)
   {
@@ -959,11 +838,22 @@ void TouchScreen::calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t le
 
     const uint16_t margin = 20;
 
+    
+    
+
     m_objTFT->fillRect(rectScreen->x + margin, rectScreen->y + margin, rectScreen->width - 2 * margin, rectScreen->height - 2 * margin, 0xffff);
-    m_objTFT->setCursor(rectScreen->width / 2, rectScreen->height / 2);
     m_objTFT->setTextColor(0x0);
+
+    CoordPoint_t pointWaiting = {rectScreen->width / 2 - tbWaiting.width / 2, rectScreen->height / 2 - tbWaiting.height / 2};
+    CoordPoint_t pointClick = {rectScreen->width / 2 - tbClick.width / 2, rectScreen->height / 2 - tbClick.height / 2};
+
+
+    m_objTFT->setCursor(pointWaiting.x, pointWaiting.y);
     m_objTFT->print("Waiting");
-    m_objTFT->setCursor(rectScreen->width / 2 - 35, rectScreen->height / 2 + 12);
+
+    auto lineHeight = (int)round(tbWaiting.height * 1.6);
+
+    m_objTFT->setCursor(pointClick.x, pointClick.y + lineHeight);
     m_objTFT->print("Click on red square");
 
     const uint8_t captureCount = 8;

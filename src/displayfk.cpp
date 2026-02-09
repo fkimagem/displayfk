@@ -3367,10 +3367,9 @@ void DisplayFK::checkCalibration()
 
         // Executar calibração e teste de tela, reportar valores de calibração na tela
         // touchExterno->calibrateTouch(dadosDeCalibracao, corDaLinha, corFundoDaCaixa, tamanhoDaCaixa);
-        // touchExterno->calibrateTouch9Points(dadosDeCalibracao, corDaLinha, corFundoDaCaixa, tamanhoDaCaixa);
 
         
-        touchExterno->calibrateTouchEstrutura(dados, lengthCalibrationPoints, &rectScreen, corDoMarcador, corDoFundo, raioDoMarcador);
+        touchExterno->calibrateTouchStruct(dados, lengthCalibrationPoints, &rectScreen, corDoMarcador, corDoFundo, raioDoMarcador);
         m_configs.putBool("jaCalibrado", true); // Salva a flag de calibração prévia
         // configs.putBytes("calib", dados, sizeof(dados));
         Serial.printf("Total size struct: %u bytes\n", sizeof(CalibrationPoint_t));
@@ -3386,8 +3385,8 @@ void DisplayFK::checkCalibration()
                 Serial.printf("Calibrado Tela: %i x %i = Touch: %i x %i\n", dados[i].xScreen, dados[i].yScreen, dados[i].xTouch, dados[i].yTouch);
             }
         }
-        WidgetBase::objTFT->setCursor(widthScreen / 2 - retorno.width / 2, heightScreen / 4 - retorno.height / 2);
-        WidgetBase::objTFT->print("Calibrated");
+        //WidgetBase::objTFT->setCursor(widthScreen / 2 - retorno.width / 2, heightScreen / 4 - retorno.height / 2);
+        //WidgetBase::objTFT->print("Calibrated");
     }
     else
     {
@@ -3404,10 +3403,14 @@ void DisplayFK::checkCalibration()
 
     // WidgetBase::objTFT->setTouch(dadosDeCalibracao);
     WidgetBase::objTFT->fillScreen(0xffff);
-    WidgetBase::objTFT->setCursor(WidgetBase::objTFT->width() / 2, WidgetBase::objTFT->height() / 4);
+    const char* msg2 = "Calibration done";
+
+    TextBound_t boundsMsg2;
+    WidgetBase::objTFT->getTextBounds(msg2, 0, 0, &boundsMsg2.x, &boundsMsg2.y, &boundsMsg2.width, &boundsMsg2.height);
+
+
+    WidgetBase::objTFT->setCursor(WidgetBase::objTFT->width() / 2 - boundsMsg2.width / 2, WidgetBase::objTFT->height() / 2 - boundsMsg2.height / 2);
     WidgetBase::objTFT->print("Calibration done");
-    // WidgetBase::objTFT->setTextPadding(WidgetBase::objTFT->textWidth(msg));
-    // WidgetBase::objTFT->drawString(msg, WidgetBase::objTFT->width() / 2, WidgetBase::objTFT->height() / 2, 4);
     vTaskDelay(pdMS_TO_TICKS(1000));
     WidgetBase::objTFT->fillScreen(CFK_BLACK);
     WidgetBase::objTFT->setRotation(touchExterno->getRotation());

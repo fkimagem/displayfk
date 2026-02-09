@@ -187,8 +187,7 @@ public:
   CalibrationPoint_t getMaxPoint(CalibrationPoint_t pontos[4]);
   void startAsXPT2046(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSclk,uint8_t pinMosi, uint8_t pinMiso, uint8_t pinCS, SPIClass *_sharedSPI, Arduino_GFX *_objTFT, int touchFrequency, int displayFrequency, int displayPinCS);
   void calibrateTouch(uint16_t *parameters, uint32_t color_fg, uint32_t color_bg, uint8_t size);
-  void calibrateTouch9Points(uint16_t *parameters, uint32_t color_fg, uint32_t color_bg, uint8_t size);
-  void calibrateTouchEstrutura(CalibrationPoint_t *points, uint8_t length, Rect_t* rectScreen, uint32_t color_fg, uint32_t color_bg, uint8_t sizeMarker);
+  void calibrateTouchStruct(CalibrationPoint_t *points, uint8_t length, Rect_t* rectScreen, uint32_t color_fg, uint32_t color_bg, uint8_t sizeMarker);
   ScreenPoint_t getScreenPosition(int16_t xTouch, int16_t yTouch);
   ScreenPoint_t touchToTelaPonto0e2(int16_t xTouch, int16_t yTouch);
   int mapTouch(int val, int in_min, int in_max, int out_min, int out_max);

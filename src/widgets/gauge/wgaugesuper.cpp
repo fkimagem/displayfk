@@ -29,7 +29,7 @@ GaugeSuper::GaugeSuper(uint16_t _x, uint16_t _y, uint8_t _screen)
       m_distanceAgulhaArco(2), m_borderSize(5), m_availableWidth(0), m_availableHeight(0)
 {
   // Initialize m_config with default values
-  m_config = {.width = 0, .title = nullptr, .intervals = nullptr, .colors = nullptr, 
+  m_config = {.width = 0, .height = 0, .title = nullptr, .intervals = nullptr, .colors = nullptr, 
               .amountIntervals = 0, .minValue = 0, .maxValue = 100, .borderColor = CFK_BLACK,
               .textColor = CFK_BLACK, .backgroundColor = CFK_WHITE, .titleColor = CFK_NAVY,
               .needleColor = CFK_RED, .markersColor = CFK_BLACK, .showLabels = false
@@ -157,7 +157,8 @@ void GaugeSuper::start()
   m_origem.y = m_yPos + m_offsetYAgulha;
 
   // The 3 in borderSize is to have space for labels and top border
-  m_height = (m_radius - m_offsetYAgulha) + (3 * m_borderSize) + (m_textBoundForValue.height * 3);
+  // m_height = (m_radius - m_offsetYAgulha) + (3 * m_borderSize) + (m_textBoundForValue.height * 3);
+  m_height = m_config.height;
 
   
 

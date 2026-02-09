@@ -8,24 +8,28 @@
 
 /// @brief Estrutura de configuração para o GaugeSuper.
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar um gauge super.
-///          Deve ser preenchida e passada para o método setup().
+///          Deve ser preenchida e passada para o método setup(). Todos os campos são obrigatórios
+///          exceto title, intervals, colors e fontFamily que podem ser nullptr se não utilizados.
+/// @note Os arrays intervals e colors devem ter o mesmo tamanho especificado em amountIntervals.
+///       O valor de amountIntervals não pode exceder MAX_SERIES (10).
 struct GaugeConfig {
-  uint16_t width; ///< Largura do gauge em pixels.
-  const char* title; ///< Título exibido no gauge.
-  const int* intervals; ///< Array de valores dos intervalos.
-  const uint16_t* colors; ///< Array de cores correspondentes aos intervalos.
-  uint8_t amountIntervals; ///< Número de intervalos e cores.
-  int minValue; ///< Valor mínimo da faixa do gauge.
-  int maxValue; ///< Valor máximo da faixa do gauge.
-  uint16_t borderColor; ///< Cor da borda do gauge.
-  uint16_t textColor; ///< Cor para texto e exibição de valores.
-  uint16_t backgroundColor; ///< Cor de fundo do gauge.
-  uint16_t titleColor; ///< Cor do texto do título.
-  uint16_t needleColor; ///< Cor da agulha.
-  uint16_t markersColor; ///< Cor dos marcadores.
-  bool showLabels; ///< Flag para mostrar rótulos de texto dos intervalos.
+  uint16_t width; ///< Largura do gauge em pixels. Deve ser maior que 0. Define a largura total do retângulo do gauge.
+  uint16_t height; ///< Altura do gauge em pixels. Define a altura total do retângulo do gauge. Usado para calcular dimensões disponíveis.
+  const char* title; ///< Título exibido no gauge. Pode ser nullptr se não houver título. Máximo de MAX_TITLE_LENGTH (20) caracteres. Será truncado automaticamente se exceder.
+  const int* intervals; ///< Array de valores dos intervalos. Deve ser nullptr se amountIntervals for 0, caso contrário deve apontar para um array válido. Valores devem estar ordenados entre minValue e maxValue.
+  const uint16_t* colors; ///< Array de cores correspondentes aos intervalos (formato RGB565). Deve ter o mesmo tamanho de intervals. Deve ser nullptr se amountIntervals for 0, caso contrário deve apontar para um array válido.
+  uint8_t amountIntervals; ///< Número de intervalos e cores. Máximo de MAX_SERIES (10). Se 0, não haverá intervalos coloridos. Deve corresponder ao tamanho dos arrays intervals e colors.
+  int minValue; ///< Valor mínimo da faixa do gauge. Deve ser menor que maxValue. Se minValue >= maxValue, os valores serão trocados automaticamente.
+  int maxValue; ///< Valor máximo da faixa do gauge. Deve ser maior que minValue. Define o limite superior da faixa de valores exibida.
+  uint16_t borderColor; ///< Cor da borda do gauge (formato RGB565). Usada para desenhar as bordas do retângulo do gauge.
+  uint16_t textColor; ///< Cor para texto e exibição de valores (formato RGB565). Usada para renderizar o valor numérico exibido no centro do gauge.
+  uint16_t backgroundColor; ///< Cor de fundo do gauge (formato RGB565). Usada para preencher a área interna do gauge.
+  uint16_t titleColor; ///< Cor do texto do título (formato RGB565). Usada apenas se title não for nullptr.
+  uint16_t needleColor; ///< Cor da agulha (formato RGB565). Usada para desenhar a agulha que indica o valor atual.
+  uint16_t markersColor; ///< Cor dos marcadores (formato RGB565). Usada para desenhar os marcadores graduados no arco do gauge.
+  bool showLabels; ///< Flag para mostrar rótulos de texto dos intervalos. Se true, exibe os valores dos intervalos como rótulos no gauge. Requer fontFamily configurado.
   #if defined(USING_GRAPHIC_LIB)
-  const GFXfont* fontFamily; ///< Fonte usada para renderização de texto.
+  const GFXfont* fontFamily; ///< Fonte usada para renderização de texto. Pode ser nullptr para usar fonte padrão. Necessário se showLabels for true ou se houver título.
   #endif
 };
 

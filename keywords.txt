@@ -82,8 +82,7 @@ begin	KEYWORD2
 beginTouchCommunication	KEYWORD2
 blockLoopTask	KEYWORD2
 calibrateTouch	KEYWORD2
-calibrateTouch9Points	KEYWORD2
-calibrateTouchEstrutura	KEYWORD2
+calibrateTouchStruct	KEYWORD2
 changeState	KEYWORD2
 changeWTD	KEYWORD2
 checkCalibration	KEYWORD2
