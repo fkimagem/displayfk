@@ -313,10 +313,12 @@ void Image::draw() {
 
   // Apply rotation if angle is not zero
   if (m_config.angle != 0.0f) {
+    ESP_LOGD(TAG, "Drawing rotated image");
     drawRotatedImage();
   } else {
     // Draw without rotation
 #if defined(DISP_DEFAULT)
+ESP_LOGD(TAG, "Drawing 16bit RGB bitmap with mask");
     WidgetBase::objTFT->draw16bitRGBBitmapWithMask(
         m_xPos, m_yPos, m_config.pixels, m_config.maskAlpha, m_config.width, m_config.height);
 #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)

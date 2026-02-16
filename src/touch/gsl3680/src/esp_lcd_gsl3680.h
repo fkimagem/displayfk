@@ -1,6 +1,8 @@
 #ifndef _LCD_GSL3680_H
 #define _LCD_GSL3680_H
 
+#include "../../../extras/check_version.h"
+
 #if defined(ESP_ARDUINO_VERSION_OK)
 
 #if defined(ESP_ARDUINO_VERSION_MAJOR) && defined(ESP_ARDUINO_VERSION_MINOR)

@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include "../../../extras/check_version.h"
+
 #if defined(ESP_ARDUINO_VERSION_OK)
 
 #if defined(ESP_ARDUINO_VERSION_MAJOR) && defined(ESP_ARDUINO_VERSION_MINOR)

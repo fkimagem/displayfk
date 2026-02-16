@@ -44,7 +44,7 @@ constexpr uint16_t process_color(uint16_t val) {
 }
 #elif defined(DISP_PCD8544) || defined(DISP_SSD1306)
 constexpr uint16_t process_color(uint16_t val) {
-    return (val == 0x0000) ? 0x1 : 0x0;
+    return (val == 0xFFFF) ? 0x0 : 0x1;
 }
 #elif defined(DISP_U8G2)
 constexpr uint16_t process_color(uint16_t val) {

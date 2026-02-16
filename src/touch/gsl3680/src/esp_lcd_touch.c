@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
+#include "../../../extras/check_version.h"
 
  #if defined(ESP_ARDUINO_VERSION_OK)
 

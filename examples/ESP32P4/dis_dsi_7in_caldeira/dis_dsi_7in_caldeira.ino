@@ -363,6 +363,7 @@ void screen0(){
 void loadWidgets(){
     GaugeConfig configGauge0 = {
             .width = 445,
+            .height = 140,
             .title = "Pressurizador (Pa)",
             .intervals = range0,
             .colors = colors0,

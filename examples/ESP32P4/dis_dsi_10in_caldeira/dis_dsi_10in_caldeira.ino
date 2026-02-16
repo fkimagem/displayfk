@@ -421,6 +421,7 @@ void loadWidgets(){
 
     GaugeConfig configGauge0 = {
             .width = 428,
+            .height = 140,
             .title = "Pressao",
             .intervals = range0,
             .colors = colors0,

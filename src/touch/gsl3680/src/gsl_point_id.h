@@ -1,6 +1,8 @@
 #ifndef _GSL_POINT_ID_H
 #define _GSL_POINT_ID_H
 
+#include "../../../extras/check_version.h"
+
 #if defined(ESP_ARDUINO_VERSION_OK)
 
 #if defined(ESP_ARDUINO_VERSION_MAJOR) && defined(ESP_ARDUINO_VERSION_MINOR)

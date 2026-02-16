@@ -60,7 +60,7 @@ functionCB_t VBar::getCallbackFunc()
  *          - Restringe valor usando constrain() dentro da faixa min/max
  *          - Marca para redesenho
  */
-void VBar::setValue(uint32_t newValue)
+void VBar::setValue(int newValue)
 {
   m_currentValue = constrain(newValue, m_config.minValue, m_config.maxValue);
   // Serial.println("ajusta currentValue: " + String(currentValue));
@@ -158,7 +158,7 @@ void VBar::redraw()
  * @details Define o valor mínimo para o widget VBar e marca para redesenho
  * @param newValue Novo valor para definir
  */
-void VBar::setMinValue(uint32_t newValue)
+void VBar::setMinValue(int newValue)
 {
   m_config.minValue = newValue;
   sortValues();
@@ -171,7 +171,7 @@ void VBar::setMinValue(uint32_t newValue)
  * @details Define o valor máximo para o widget VBar e marca para redesenho
  * @param newValue Novo valor para definir
  */
-void VBar::setMaxValue(uint32_t newValue)
+void VBar::setMaxValue(int newValue)
 {
   m_config.maxValue = newValue;
   sortValues();
@@ -184,13 +184,13 @@ void VBar::sortValues()
 {
   if (m_config.minValue > m_config.maxValue)
   {
-    uint32_t temp = m_config.minValue;
+    int temp = m_config.minValue;
     m_config.minValue = m_config.maxValue;
     m_config.maxValue = temp;
   }
 }
 
-void VBar::setScale(uint32_t newMinValue, uint32_t newMaxValue)
+void VBar::setScale(int newMinValue, int newMaxValue)
 {
   m_config.minValue = newMinValue;
   m_config.maxValue = newMaxValue;
@@ -204,7 +204,7 @@ void VBar::setScale(uint32_t newMinValue, uint32_t newMaxValue)
  * @details Recupera o valor mínimo para o widget VBar
  * @return Valor mínimo
  */
-uint32_t VBar::getMinValue()
+int VBar::getMinValue()
 {
   return m_config.minValue;
 }
@@ -213,7 +213,7 @@ uint32_t VBar::getMinValue()
  * @details Recupera o valor máximo para o widget VBar
  * @return Valor máximo
  */
-uint32_t VBar::getMaxValue()
+int VBar::getMaxValue()
 {
   return m_config.maxValue;
 }

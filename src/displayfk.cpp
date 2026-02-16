@@ -3409,8 +3409,8 @@ void DisplayFK::checkCalibration()
     WidgetBase::objTFT->getTextBounds(msg2, 0, 0, &boundsMsg2.x, &boundsMsg2.y, &boundsMsg2.width, &boundsMsg2.height);
 
 
-    WidgetBase::objTFT->setCursor(WidgetBase::objTFT->width() / 2 - boundsMsg2.width / 2, WidgetBase::objTFT->height() / 2 - boundsMsg2.height / 2);
-    WidgetBase::objTFT->print("Calibration done");
+    WidgetBase::objTFT->setCursor(m_widthScreen / 2 - boundsMsg2.width / 2, m_heightScreen / 2 - boundsMsg2.height / 2);
+    WidgetBase::objTFT->print(msg2);
     vTaskDelay(pdMS_TO_TICKS(1000));
     WidgetBase::objTFT->fillScreen(CFK_BLACK);
     WidgetBase::objTFT->setRotation(touchExterno->getRotation());

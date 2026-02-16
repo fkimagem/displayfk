@@ -41,6 +41,7 @@ boolean FT6236::begin(uint8_t thresh, int8_t sda, int8_t scl)
     //Check if our chip has the correct Vendor ID
     if (readRegister8(FT6236_REG_VENDID) != FT6236_VENDID)
     {
+        ESP_LOGE("FT6236", "Vendor ID does not match");
         return false;
     }
     //Check if our chip has the correct Chip ID.
@@ -48,8 +49,11 @@ boolean FT6236::begin(uint8_t thresh, int8_t sda, int8_t scl)
     if ((id != FT6236_CHIPID) && (id != FT6236U_CHIPID) &&
       (id != FT6206_CHIPID))
     {
+        ESP_LOGE("FT6236", "Chip ID does not match");
         return false;
     }
+
+    ESP_LOGI("FT6236", "Found %s chip", id == FT6236_CHIPID ? "FT6236" : id == FT6236U_CHIPID ? "FT6236u" : "FT6206");
 
     return true;
 }

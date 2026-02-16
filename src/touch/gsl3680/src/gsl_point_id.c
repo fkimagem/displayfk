@@ -14,6 +14,7 @@
  * General Public License for more details.
  *
  */
+#include "../../../extras/check_version.h"
 
  #if defined(ESP_ARDUINO_VERSION_OK)
 

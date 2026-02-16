@@ -9,11 +9,6 @@
 #include "freertos/semphr.h"
 #include "../label/wlabel.h" // Para ponteiro Label
 
-typedef struct {
-  int currentValue;
-  int oldValue;
-} LineChartValue_t;
-
 /// @brief Estrutura de configuração para o LineChart.
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar um gráfico de linhas.
 ///          Deve ser preenchida e passada para o método setup().
@@ -28,7 +23,7 @@ struct LineChartConfig {
   uint16_t borderColor;          ///< Cor da borda do gráfico.
   uint16_t backgroundColor;      ///< Cor de fundo do gráfico.
   uint16_t textColor;            ///< Cor do texto exibido no gráfico.
-  uint16_t verticalDivision;     ///< Espaçamento entre linhas verticais da grade.
+  uint16_t verticalDivision;     ///< Quantidade de divisões verticais (linhas horizontais na grade).
   bool workInBackground;         ///< Flag para desenho em background.
   bool showZeroLine;             ///< Flag para mostrar a linha zero no gráfico.
   bool boldLine;                 ///< Flag para tornar a linha em negrito.
@@ -41,21 +36,22 @@ struct LineChartConfig {
 };
 
 /// @brief Widget de gráfico de linhas para plotar dados com múltiplas séries opcionais.
-/// @details Esta classe herda de @ref WidgetBase e fornece funcionalidade completa para criar e gerenciar 
-///          gráficos de linhas interativos na tela. O LineChart desenha um gráfico com múltiplas séries de dados,
-///          grade de referência, rótulos de valores e suporte a atualizações em tempo real. O widget pode ser
-///          configurado com diferentes tamanhos, faixas de valores, cores para cada série, grid, linhas em negrito,
-///          pontos nas linhas e pode exibir até 10 séries simultaneamente. O gráfico é totalmente funcional com
-///          suporte a mutex para acesso thread-safe e atualização de dados em background.
+/// @details
+///  - `push()` atualiza o buffer (ring buffer) de cada série, de forma O(1).
+///  - O task de desenho faz um "snapshot" do buffer sob mutex e desenha SEM segurar o mutex.
+///  - O apagamento é feito usando o "último desenhado", mantido pelo task de desenho.
+///  - Isso evita deadlock e reduz contenção entre tasks.
 class LineChart : public WidgetBase
 {
 public:
   static constexpr uint16_t SHOW_ALL = 9999; ///< Constante para mostrar todos os pontos (máximo 9999).
-  
+
   LineChart(uint16_t _x, uint16_t _y, uint8_t _screen);
   ~LineChart();
+
   bool detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) override;
   functionCB_t getCallbackFunc() override;
+
   void drawBackground();
   bool push(uint16_t serieIndex, int newValue);
   void redraw() override;
@@ -65,50 +61,80 @@ public:
   void hide() override;
 
 private:
-  static const char* TAG; ///< Tag estática para identificação em logs do ESP32.
-  static constexpr uint8_t MAX_SERIES = 10; ///< Número máximo de séries permitidas.
-  
-  uint8_t m_dotRadius; ///< Raio dos pontos na linha.
-  uint8_t m_minSpaceToShowDot; ///< Espaço mínimo entre pontos para mostrar os pontos.
-  uint32_t m_maxHeight; ///< Altura disponível para plotar.
-  uint32_t m_maxWidth; ///< Largura disponível para plotar.
-  uint16_t m_maxAmountValues; ///< Número máximo de valores para armazenar no gráfico.
-  uint16_t m_amountPoints; ///< Número atual de pontos no gráfico.
-  float m_spaceBetweenPoints; ///< Espaçamento calculado entre pontos.
-  int16_t m_leftPadding; ///< Padding esquerdo para área de plotagem.
-  uint8_t m_topBottomPadding; ///< Padding superior e inferior para área de plotagem.
-  int16_t m_aux; ///< Variável auxiliar para cálculos.
-  bool m_blocked; ///< Indica se o gráfico está atualmente bloqueado para atualizações.
-  uint16_t m_borderSize; ///< Tamanho da borda para o gráfico.
-  uint16_t m_availableWidth; ///< Largura disponível para área do gráfico.
-  uint16_t m_availableheight; ///< Altura disponível para área do gráfico.
-  uint16_t m_yTovmin; ///< Valor de mapeamento para Y mínimo.
-  uint16_t m_yTovmax; ///< Valor de mapeamento para Y máximo.
-  bool m_shouldRedraw; ///< Flag para indicar se o gráfico deve ser redesenhado.
-  bool m_valuesAllocated; ///< Rastreia se o array de valores foi alocado.
-  bool m_colorsSeriesAllocated; ///< Rastreia se o array de cores foi alocado.
-  LineChartValue_t** m_values; ///< Array 2D de valores para todas as séries.
-  uint16_t m_colorsSeries[10]; ///< Armazenamento interno para cores (cópia profunda).
-  Label* m_subtitles[10]; ///< Armazenamento interno para ponteiros de legenda.
-  SemaphoreHandle_t m_mutex; ///< Mutex para proteger acesso aos dados.
-  LineChartConfig m_config; ///< Configuração para o widget LineChart.
-  
+  static const char* TAG;
+  static constexpr uint8_t MAX_SERIES = 10;
+
+  uint8_t m_dotRadius;
+  uint8_t m_minSpaceToShowDot;
+  uint32_t m_maxHeight;
+  uint32_t m_maxWidth;
+  uint16_t m_maxAmountValues;
+  uint16_t m_amountPoints;
+  float m_spaceBetweenPoints;
+  int16_t m_leftPadding;
+  uint8_t m_topBottomPadding;
+  uint16_t m_borderSize;
+  uint16_t m_yTovmin;
+  uint16_t m_yTovmax;
+
+  /// @brief Sinaliza que houve atualização nos dados (setado em push()).
+  /// @note É um "dirty flag". O draw task pode limpar esta flag quando concluir um redraw
+  ///       para a versão capturada do buffer (ver m_dataVersion).
+  volatile bool m_shouldRedraw;
+
+  /// @brief Contador de versão dos dados (incrementado em push()).
+  /// @details Permite o draw task detectar se houve alterações durante o desenho
+  ///          e agendar um novo redraw.
+  volatile uint32_t m_dataVersion;
+
+  /// @brief Heads do ring buffer (por série): indica o próximo índice a ser escrito (0..m_amountPoints-1).
+  uint16_t m_headBySeries[MAX_SERIES];
+
+  /// @brief Buffer atual (ring) por série.
+  ///        A ordem lógica dos pontos é derivada de m_head (mais antigo -> mais novo).
+  int** m_ringValues;
+
+  /// @brief Snapshot usado para desenhar (linear, mais antigo -> mais novo), por série.
+  int** m_snapshotValues;
+
+  /// @brief Últimos valores desenhados (linear), por série. Usado para apagar a linha anterior.
+  int** m_lastDrawnValues;
+
+  uint16_t m_colorsSeries[MAX_SERIES];
+  Label* m_subtitles[MAX_SERIES];
+
+  SemaphoreHandle_t m_mutex;
+  LineChartConfig m_config;
+
+  // Lifecycle / memory
+  void initMutex();
+  void destroyMutex();
   void cleanupMemory();
   void clearColorsSeries();
   void clearSubtitles();
-  void clearValues();
+  void clearBuffers();
+
+  // Setup / validation
   bool validateConfig(const LineChartConfig& config);
-  void initMutex();
-  void destroyMutex();
   void start();
-  void resetArray();
-  void printValues(uint8_t serieIndex);
+
+  // Drawing helpers
   void drawGrid();
-  void clearPreviousValues();
   void drawMarkLineAt(int value);
-  void drawSerie(uint8_t serieIndex);
-  void drawAllSeries();
-  void copyCurrentValuesToOldValues();
+
+  void eraseSerieFromBuffer(uint8_t serieIndex, const int* values);
+  void drawSerieFromBuffer(uint8_t serieIndex, const int* values);
+
+  void eraseAllFromLastDrawn();
+  void drawAllFromSnapshot();
+
+  // Snapshot
+  /// @brief Copia o ring buffer para m_snapshotValues em ordem lógica (mais antigo -> mais novo).
+  /// @return versão capturada do buffer (m_dataVersion).
+  uint32_t snapshotUnderMutex();
+
+  // Debug
+  void printValues(uint8_t serieIndex);
 };
 
 #endif
