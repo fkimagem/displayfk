@@ -56,7 +56,9 @@ private:
   SpinBoxConfig m_config; ///< Estrutura contendo configuração da caixa de spin.
   Rect_t m_buttonSize;
   Rect_t m_textAreaSize;
+  #if defined(USING_GRAPHIC_LIB)
   const GFXfont* m_font;  ///< Ponteiro para a fonte usada na caixa de spin.
+  #endif
   
   void cleanupMemory();
   void start();

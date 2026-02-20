@@ -133,6 +133,8 @@ void SpinBox::redraw() {
 
   m_shouldRedraw = false;
 
+  #if defined(USING_GRAPHIC_LIB)
+
   //uint16_t btnW = m_config.height - (2 * m_offset);
   //uint16_t btnH = m_config.height - (2 * m_offset);
 
@@ -152,6 +154,8 @@ void SpinBox::redraw() {
             m_yPos + (m_config.height / 2) - 3, MC_DATUM, m_lastArea, m_config.color);
   updateFont(FontType::UNLOAD);
 
+  #endif
+
 }
 
 /**
@@ -170,6 +174,8 @@ void SpinBox::drawBackground() {
   CHECK_CURRENTSCREEN_VOID
   CHECK_USINGKEYBOARD_VOID
   CHECK_LOADED_VOID
+
+  #if defined(USING_GRAPHIC_LIB)
 
   // Fundo
   WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_radius,m_config.color);
@@ -212,6 +218,8 @@ void SpinBox::drawBackground() {
                                m_config.textColor);
 
   m_shouldRedraw = true;
+
+  #endif
 
 
   // WidgetBase::objTFT->fillCircle(btnRight.x, btnRight.y, 4, CFK_YELLOW);
@@ -265,11 +273,13 @@ void SpinBox::setup(const SpinBoxConfig &config) {
   int charCountMinValue = String(m_config.minValue).length();
   int charCountMaxValue = String(m_config.maxValue).length();
   
+  #if defined(USING_GRAPHIC_LIB)
   if (charCountMinValue > charCountMaxValue) {
     m_font = getBestRobotoBold(m_textAreaSize.width, m_textAreaSize.height, String(m_config.minValue).c_str());
   } else {
     m_font = getBestRobotoBold(m_textAreaSize.width, m_textAreaSize.height, String(m_config.maxValue).c_str());
   }
+  #endif
 
 
   m_currentValue = constrain(m_config.startValue, m_config.minValue, m_config.maxValue);

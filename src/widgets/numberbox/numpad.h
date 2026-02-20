@@ -97,6 +97,9 @@ private:
   Rect_t m_pontoPreview; ///< Área de preview para exibir a entrada.
   TextBound_t m_lastArea; ///< Última área calculada para o rótulo.
   NumpadConfig m_config; ///< Estrutura contendo configuração do Numpad.
+  CoordPoint_t m_backKeyPos = {0,0}; ///< Posição da tecla de retorno.
+
+  char m_previousContent[MAX_LENGTH_CSTR + 1];
   
   #if defined(USING_GRAPHIC_LIB)
   GFXfont *m_fontKeys; ///< Fonte para as teclas.
@@ -110,6 +113,7 @@ private:
   KeyState m_pressedKey; ///< State of currently pressed key
   
   void drawSingleKey(uint16_t row, uint16_t col, bool isPressed);
+  void drawBackKey(uint16_t x, uint16_t y);
   void pressKey(uint16_t row, uint16_t col);
   
 };

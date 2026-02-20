@@ -139,6 +139,7 @@ int VAnalog::getMaxValue()
  */
 void VAnalog::start()
 {
+  #if defined(USING_GRAPHIC_LIB)
   m_config.width = constrain(m_config.width, 40, WidgetBase::objTFT->width());
   m_config.height = constrain(m_config.height, 40, WidgetBase::objTFT->height());
   uint8_t offset = 3;
@@ -161,6 +162,7 @@ void VAnalog::start()
 
   m_currentValue = m_config.minValue;
   m_lastValue = m_currentValue;
+  #endif
 }
 
 /**
@@ -181,6 +183,8 @@ void VAnalog::drawBackground()
   CHECK_USINGKEYBOARD_VOID
   CHECK_SHOULDREDRAW_VOID
 
+  #if defined(USING_GRAPHIC_LIB)
+
   WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.backgroundColor); // Area do grafico lightBg
   WidgetBase::objTFT->drawRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.borderColor);                 // contorno darkBg
 
@@ -190,7 +194,6 @@ void VAnalog::drawBackground()
   // WidgetBase::objTFT->fillRect(m_arrowArea.x, m_arrowArea.y, m_arrowArea.width, m_arrowArea.height, CFK_BLUE);
 
 
-  #if defined(DISP_DEFAULT)
   ESP_LOGD(TAG, "Redraw background vanalog at %i,%i with %i x %i", m_xPos, m_yPos, m_config.width, m_config.height);
 
 
@@ -340,10 +343,12 @@ uint16_t VAnalog::calculateArrowVerticalPosition(uint16_t value)
  */
 void VAnalog::clearArrow()
 {
+  #if defined(USING_GRAPHIC_LIB)
   uint16_t y = calculateArrowVerticalPosition(m_lastValue);
   int offset = m_arrowSize / 2;
 
   WidgetBase::objTFT->fillTriangle(m_arrowArea.x, y - offset, m_arrowArea.x + m_arrowArea.width, y, m_arrowArea.x, y + offset, m_config.backgroundColor);
+  #endif
 }
 
 
@@ -354,10 +359,12 @@ void VAnalog::clearArrow()
 void VAnalog::drawArrow()
 {
 
+  #if defined(USING_GRAPHIC_LIB)
   uint16_t y = calculateArrowVerticalPosition(m_currentValue);
   int offset = m_arrowSize / 2;
 
   WidgetBase::objTFT->fillTriangle(m_arrowArea.x, y - offset, m_arrowArea.x + m_arrowArea.width, y, m_arrowArea.x, y + offset, m_config.arrowColor);
+  #endif
 }
 
 
@@ -367,8 +374,10 @@ void VAnalog::drawArrow()
  */
 void VAnalog::drawText()
 {
+  #if defined(USING_GRAPHIC_LIB)
   WidgetBase::objTFT->setTextColor(m_config.textColor);
   WidgetBase::objTFT->setFont(&RobotoRegular5pt7b);
   WidgetBase::objTFT->fillRect(m_textArea.x, m_textArea.y, m_textArea.width, m_textArea.height, m_config.backgroundColor);
   printText(String(m_currentValue).c_str(), m_textArea.x + (m_textArea.width / 2), m_textArea.y + (m_textArea.height / 2), MC_DATUM);
+  #endif
 }

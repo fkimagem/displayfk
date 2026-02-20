@@ -116,8 +116,17 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
   uint16_t yMax = m_yPos + m_availableHeight;
   (*pressedKey) = PressedKeyType::NONE;
 
+  if(!m_field){return false;}
+
   
   m_myTime = millis();
+
+  bool inBoundsBackKey = POINT_IN_RECT(*_xTouch, *_yTouch, m_backKeyPos.x, m_backKeyPos.y, m_keyW / 2, m_keyH / 2);
+  if(inBoundsBackKey){
+    (*pressedKey) = PressedKeyType::ESC;
+    m_content.setString(m_previousContent, true);
+    return true;
+  }
 
   bool inBounds = POINT_IN_RECT(*_xTouch, *_yTouch, m_xPos, m_yPos, m_availableWidth, m_availableHeight);
   if(inBounds) {
@@ -148,8 +157,8 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
     if (letter.type == PressedKeyType::INVERT_VALUE) {
       ESP_LOGD(TAG, "Invert value");
 
-      float v = m_content.toFloat() * -1;
-      m_content.setString(v);
+      double v = m_content.toDouble() * -1;
+      m_content.setStringDouble(v, m_field->getConfig().decimalPlaces);
 
       drawKeys(false, true);
       // Libera tecla após processar (teclas especiais retornam imediatamente)
@@ -160,9 +169,9 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
     if (letter.type == PressedKeyType::DECREMENT) {
       ESP_LOGD(TAG, "Decrement value");
 
-      float v = m_content.toFloat();
+      double v = m_content.toDouble();
       v--;
-      m_content.setString(v);
+      m_content.setStringDouble(v, m_field->getConfig().decimalPlaces);
 
       drawKeys(false, true);
       // Libera tecla após processar (teclas especiais retornam imediatamente)
@@ -173,9 +182,9 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
     if (letter.type == PressedKeyType::INCREMENT) {
       ESP_LOGD(TAG, "Increment value");
 
-      float v = m_content.toFloat();
+      double v = m_content.toDouble();
       v++;
-      m_content.setString(v);
+      m_content.setStringDouble(v, m_field->getConfig().decimalPlaces);
 
       drawKeys(false, true);
       // Libera tecla após processar (teclas especiais retornam imediatamente)
@@ -212,6 +221,24 @@ bool Numpad::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch,
   return retorno;
 }
 
+
+void Numpad::drawBackKey(uint16_t x, uint16_t y) {
+  CHECK_TFT_VOID
+  CHECK_LOADED_VOID
+
+  #if defined(USING_GRAPHIC_LIB)
+uint16_t keyW = m_keyW/2;
+uint16_t keyH = m_keyH/2;
+
+  WidgetBase::objTFT->fillRoundRect(x, y, keyW, keyH, 4, Numpad::m_keyColor);
+  WidgetBase::objTFT->drawRoundRect(x, y, keyW, keyH, 4, Numpad::m_letterColor);
+  uint16_t xCenter = x + keyW / 2;
+  uint16_t yCenter = y + keyH / 2;
+  WidgetBase::objTFT->setFont(&RobotoBold8pt7b);
+  printText("ESC", xCenter, yCenter, MC_DATUM);
+  #endif
+}
+
 /**
  * @brief Redesenha o Numpad na tela, atualizando sua aparência.
  * @param fullScreen Se true, redesenha toda a tela.
@@ -227,6 +254,8 @@ void Numpad::drawKeys(bool fullScreen, bool onlyContent) {
   CHECK_TFT_VOID
   CHECK_LOADED_VOID
   uint32_t startMillis = millis();
+
+  #if defined(USING_GRAPHIC_LIB)
 
   if (fullScreen) {
     WidgetBase::objTFT->fillScreen(Numpad::m_backgroundColor);
@@ -249,8 +278,10 @@ void Numpad::drawKeys(bool fullScreen, bool onlyContent) {
             m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM,
             m_lastArea, Numpad::m_backgroundColor);
 
-  WidgetBase::objTFT->setFont(m_fontKeys);
   WidgetBase::objTFT->setTextColor(Numpad::m_letterColor);
+  drawBackKey(m_backKeyPos.x, m_backKeyPos.y);
+
+  WidgetBase::objTFT->setFont(m_fontKeys);
 
   if (!onlyContent) {
     WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_availableWidth,
@@ -287,6 +318,8 @@ void Numpad::drawKeys(bool fullScreen, bool onlyContent) {
 
   uint32_t endMillis = millis();
   ESP_LOGD(TAG, "Numpad::redraw: %i ms", endMillis - startMillis);
+
+  #endif
 }
 
 /**
@@ -445,7 +478,10 @@ void Numpad::open(NumberBox *_field) {
                              // detecção, evitando apertar tecla assim que abre.
   m_field = _field;
   WidgetBase::usingKeyboard = true;
-  m_content = m_field->getValueChar();
+  m_content.setString(m_field->getValueChar(), true);
+  strncpy(m_previousContent, m_content.getString(), MAX_LENGTH_CSTR);
+  m_previousContent[MAX_LENGTH_CSTR] = '\0';
+
 #if defined(DISP_DEFAULT)
   WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
 #endif
@@ -468,9 +504,9 @@ void Numpad::close() {
   WidgetBase::objTFT->setFont((GFXfont *)0);
 #endif
   ESP_LOGD(TAG, "Value of content is: %s", m_content.getString());
-  ESP_LOGD(TAG, "Value of content is: %f", m_content.toFloat());
+  ESP_LOGD(TAG, "Value of content is: %f", m_content.toDouble());
 
-  m_field->setValue(m_content.toFloat());
+  m_field->setValue(m_content.toDouble());
 
   WidgetBase::usingKeyboard = false;
 }
@@ -533,6 +569,8 @@ void Numpad::redraw() {
 void Numpad::drawSingleKey(uint16_t row, uint16_t col, bool isPressed) {
   CHECK_TFT_VOID
   CHECK_LOADED_VOID
+
+  #if defined(USING_GRAPHIC_LIB)
   
   const Key_t letter = m_pad[row][col];
   
@@ -567,6 +605,8 @@ void Numpad::drawSingleKey(uint16_t row, uint16_t col, bool isPressed) {
   uint16_t xCenter = key_x + key_width / 2;
   uint16_t yCenter = key_y + key_height / 2;
   printText(letter.label, xCenter, yCenter, MC_DATUM);
+
+  #endif
 }
 
 /**

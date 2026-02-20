@@ -158,6 +158,13 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
     }
     m_myTime = millis();
 
+    bool inBoundsBackKey = POINT_IN_RECT(*_xTouch, *_yTouch, m_backKeyPos.x, m_backKeyPos.y, m_keyW / 2, m_keyH / 2);
+  if(inBoundsBackKey){
+    (*pressedKey) = PressedKeyType::ESC;
+    m_content.setString(m_previousContent, true);
+    return true;
+  }
+
     if ((*_xTouch > m_xPos) && (*_xTouch < xMax) && (*_yTouch > m_yPos) && (*_yTouch < yMax))
     {
         (*pressedKey) = PressedKeyType::LETTER;
@@ -241,6 +248,24 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
     #endif
 }
 
+void WKeyboard::drawBackKey(uint16_t x, uint16_t y) {
+    CHECK_TFT_VOID
+    CHECK_LOADED_VOID
+
+    #if defined(USING_GRAPHIC_LIB)
+  uint16_t keyW = m_keyW/2;
+  uint16_t keyH = m_keyH/2;
+  
+    WidgetBase::objTFT->fillRoundRect(x, y, keyW, keyH, 4, WKeyboard::m_keyColor);
+    WidgetBase::objTFT->drawRoundRect(x, y, keyW, keyH, 4, WKeyboard::m_letterColor);
+    uint16_t xCenter = x + keyW / 2;
+    uint16_t yCenter = y + keyH / 2;
+    WidgetBase::objTFT->setFont(&RobotoBold8pt7b);
+    printText("ESC", xCenter, yCenter, MC_DATUM);
+
+    #endif
+  }
+
 /**
  * @brief Redesenha o teclado na tela.
  * @param fullScreen Se true, redesenha a tela inteira; caso contrário, apenas o teclado.
@@ -250,7 +275,7 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
  */
 void WKeyboard::drawKeys(bool fullScreen, bool onlyContent)
 {
-    #if defined(DISP_DEFAULT)
+    #if defined(USING_GRAPHIC_LIB)
     if(!m_loaded){
         ESP_LOGW(TAG, "Keyboard not loaded");
         return;
@@ -272,8 +297,10 @@ void WKeyboard::drawKeys(bool fullScreen, bool onlyContent)
     printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, lastArea, WKeyboard::m_backgroundColor);
 
 
-    WidgetBase::objTFT->setFont(m_fontKeys);
     WidgetBase::objTFT->setTextColor(WKeyboard::m_letterColor);
+    drawBackKey(m_backKeyPos.x, m_backKeyPos.y);
+    
+    WidgetBase::objTFT->setFont(m_fontKeys);
     if (!onlyContent)
     {
         WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_availableWidth, m_availableHeight, WKeyboard::m_backgroundColor);
@@ -314,9 +341,10 @@ void WKeyboard::drawKeys(bool fullScreen, bool onlyContent)
     }
 
     // WidgetBase::objTFT->drawCircle(210, 160, 10, CFK_FUCHSIA);
-    #endif
+    
     uint32_t endMillis = millis();
     ESP_LOGD(TAG, "WKeyboard::redraw: %i ms", endMillis - startMillis);
+    #endif
 }
 
 /**
@@ -359,7 +387,7 @@ void WKeyboard::removeLetter()
 bool WKeyboard::setup()
 {
     CHECK_TFT_BOOL
-#if defined(DISP_DEFAULT)
+    #if defined(USING_GRAPHIC_LIB)
     if (!WidgetBase::objTFT)
     {
         ESP_LOGE(TAG, "TFT not defined on WidgetBase");
@@ -434,7 +462,9 @@ void WKeyboard::open(TextBox *_field)
     m_myTime = millis() + (TIMEOUT_CLICK * 3);// Espera o tempo de 3 clicks para iniciar a detecção, evitando apertar tecla assim que abre.
     m_field = _field;
     WidgetBase::usingKeyboard = true;
-    m_content = m_field->getValue();
+    m_content.setString(m_field->getValue(), true);
+    strncpy(m_previousContent, m_content.getString(), MAX_LENGTH_CSTR);
+    m_previousContent[MAX_LENGTH_CSTR] = '\0';
 #if defined(DISP_DEFAULT)
     if(m_keyH > 20){
         WidgetBase::objTFT->setFont(&RobotoBold10pt7b);

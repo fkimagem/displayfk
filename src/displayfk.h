@@ -86,7 +86,7 @@
 #include <freertos/semphr.h>
 
 
-#if defined(CONFIG_IDF_TARGET_ESP32P4)
+#if defined(CONFIG_IDF_TARGET_ESP32P4) && defined(DISP_DEFAULT)
 static const lcd_init_cmd_t st7701_init_operations[] = {
     // {cmd, { data }, data_size, delay_ms}
     {0xFF, (uint8_t[]){0x77, 0x01, 0x00, 0x00, 0x13}, 5, 0},

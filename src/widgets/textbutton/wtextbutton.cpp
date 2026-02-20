@@ -14,7 +14,11 @@ TextButton::TextButton(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_config{}
 {
   m_offsetMargin = 10;
+  #if defined(USING_GRAPHIC_LIB)
   m_config = {.width = 0, .height = 0, .radius = 0, .backgroundColor = 0, .textColor = 0, .text = "", .callback = nullptr};
+  #else
+  m_config = {.width = 0, .height = 0, .radius = 0, .backgroundColor = 0, .textColor = 0, .text = "", .callback = nullptr};
+  #endif
   ESP_LOGD(TAG, "TextButton created at (%d, %d) on screen %d", _x, _y, _screen);
 }
 
@@ -127,6 +131,8 @@ void TextButton::redraw()
 
   m_shouldRedraw = false;
 
+  #if defined(USING_GRAPHIC_LIB)
+
   ESP_LOGD(TAG, "Redrawing TextButton at (%d, %d)", m_xPos, m_yPos);
   // uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;
   // uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
@@ -158,6 +164,8 @@ void TextButton::redraw()
   printText(m_config.text, middleX, middleY, MC_DATUM);
 
   updateFont(FontType::UNLOAD);
+
+  #endif
 }
 
 /**

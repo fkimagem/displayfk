@@ -183,7 +183,7 @@ void TextBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
 
   m_letterColor = _letterColor;
   m_backgroundColor = _backgroundColor;
-  m_value = _startValue;
+  m_value.setString(_startValue, true);
   m_font = _font;
   m_callback = _cb;
 

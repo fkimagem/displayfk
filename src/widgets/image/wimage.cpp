@@ -261,7 +261,11 @@ void Image::drawBackground() {
     return;
   }
   
+  #if defined(USING_GRAPHIC_LIB)
   WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.backgroundColor);
+  #else
+  WidgetBase::objTFT->drawFrame(m_xPos, m_yPos, m_config.width, m_config.height);
+  #endif
   ESP_LOGD(TAG, "Background drawn: %dx%d at (%d,%d)", m_config.width, m_config.height, m_xPos, m_yPos);
 }
 
@@ -287,11 +291,17 @@ void Image::draw() {
 
   m_shouldRedraw = false;
 
+  
+
   // If not visible, draw background only
   if (!m_visible) {
     // Validate configuration before drawing background
     if (validateConfig()) {
+      #if defined(USING_GRAPHIC_LIB)
       WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.backgroundColor);
+      #else
+      WidgetBase::objTFT->drawFrame(m_xPos, m_yPos, m_config.width, m_config.height);
+      #endif
       ESP_LOGD(TAG, "Image hidden - background drawn: %dx%d", m_config.width, m_config.height);
     } else {
       ESP_LOGW(TAG, "Cannot draw background - invalid configuration");
@@ -629,9 +639,17 @@ void Image::drawRotatedImage() {
         // Draw pixel with rotation
         int screenX = m_xPos + x - rotatedWidth / 2 + m_config.width / 2;
         int screenY = m_yPos + y - rotatedHeight / 2 + m_config.height / 2;
+
+        #if defined(USING_GRAPHIC_LIB)
+
+        bool inBounds = screenX >= 0 && screenX < WidgetBase::objTFT->width() &&  screenY >= 0 && screenY < WidgetBase::objTFT->height();
+        #else
+        bool inBounds = screenX >= 0 && screenX < WidgetBase::objTFT->getDisplayWidth() &&  screenY >= 0 && screenY < WidgetBase::objTFT->getDisplayHeight();
+        #endif
         
-        if (screenX >= 0 && screenX < WidgetBase::objTFT->width() && 
-            screenY >= 0 && screenY < WidgetBase::objTFT->height()) {
+        if (inBounds) {
+
+
           
 #if defined(DISP_DEFAULT)
           uint16_t color = m_config.pixels[pixelIndex];
@@ -644,7 +662,12 @@ void Image::drawRotatedImage() {
 #elif defined(DISP_PCD8544) || defined(DISP_SSD1306) || defined(DISP_U8G2)
           uint8_t color = m_config.pixels[pixelIndex];
           if (color != 0) { // Only draw non-transparent pixels
+
+            #if defined(DISP_U8G2)
+            WidgetBase::objTFT->drawPixel(screenX, screenY);
+            #else
             WidgetBase::objTFT->drawPixel(screenX, screenY, color);
+            #endif
           }
 #endif
         }
@@ -676,6 +699,8 @@ void Image::drawRotatedImage() {
  *          - Considera bounding box para imagens rotacionadas
  */
 bool Image::validateConfig() {
+
+  #if defined(USING_GRAPHIC_LIB)
   // Validate basic configuration
   if (m_config.pixels == nullptr) {
     ESP_LOGE(TAG, "Image pixels are null");
@@ -750,6 +775,9 @@ bool Image::validateConfig() {
   ESP_LOGD(TAG, "Configuration validation passed: %dx%d at (%d,%d) angle=%.1f°", 
            m_config.width, m_config.height, m_xPos, m_yPos, m_config.angle);
   return true;
+  #else
+  return false;
+  #endif
 }
 
 /**

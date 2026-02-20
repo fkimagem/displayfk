@@ -170,7 +170,7 @@ void Thermometer::redraw()
   CHECK_LOADED_VOID
   CHECK_SHOULDREDRAW_VOID
   
-  
+  #if defined(USING_GRAPHIC_LIB)
 
   uint32_t heightFill = map(m_currentValue, m_config.minValue, m_config.maxValue, 0, m_fillArea.height);
   uint32_t heightErase = m_fillArea.height - heightFill;
@@ -198,6 +198,8 @@ void Thermometer::redraw()
 
   m_lastValue = m_currentValue;
   m_shouldRedraw = false;
+
+  #endif
 }
 
 /**
@@ -239,6 +241,8 @@ void Thermometer::drawBackground()
   CHECK_USINGKEYBOARD_VOID
   CHECK_LOADED_VOID
   CHECK_SHOULDREDRAW_VOID
+
+  #if defined(USING_GRAPHIC_LIB)
   int radius = (m_config.width / 2) - m_border;
 
   m_bulb.x = m_xPos + (m_config.width / 2);
@@ -287,6 +291,7 @@ void Thermometer::drawBackground()
     uint8_t thickness = i % 5 == 0 ? 2*size : size;
 		WidgetBase::objTFT->drawFastHLine(m_fillArea.x - (size + offset), y, thickness, m_config.markColor);
 	}
+  #endif
 }
 
 /**

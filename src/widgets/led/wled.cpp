@@ -241,6 +241,8 @@ void Led::redraw() {
   CHECK_SHOULDREDRAW_VOID
 
   m_shouldRedraw = false;
+
+  #if defined(DISP_DEFAULT)
   
   ESP_LOGD(TAG, "Redrawing Led at (%d, %d), status: %s", m_xPos, m_yPos, m_status ? "ON" : "OFF");
 
@@ -257,6 +259,8 @@ void Led::redraw() {
     // Draw off state
     WidgetBase::objTFT->fillCircle(m_xPos, m_yPos, m_config.radius - 1, getOffColor());
   }
+
+  #endif
 }
 
 /**

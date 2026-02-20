@@ -291,7 +291,7 @@ uint16_t CheckBox::getBorderColor() {
  *          Usa os pontos calculados em setup() para criar o desenho.
  */
 void CheckBox::drawCheckmark() {
-
+#if defined(DISP_DEFAULT)
   uint8_t weight = static_cast<uint8_t>(m_config.weight);
 
   if(weight >= (int)CheckBoxWeight::HEAVY) {
@@ -308,6 +308,7 @@ void CheckBox::drawCheckmark() {
   
   WidgetBase::objTFT->drawLine(m_topRightPoint.x, m_topRightPoint.y, m_bottomCenterPoint.x, m_bottomCenterPoint.y, CFK_WHITE);
   WidgetBase::objTFT->drawLine(m_bottomCenterPoint.x, m_bottomCenterPoint.y, m_middleLeftPoint.x, m_middleLeftPoint.y, CFK_WHITE);  
+#endif
 }
 
 /**
@@ -317,7 +318,7 @@ void CheckBox::drawCheckmark() {
  *          m_borderWidth. Usa a cor retornada por getBorderColor().
  */
 void CheckBox::drawBorder() {
-  
+  #if defined(DISP_DEFAULT)
   uint16_t borderColor = getBorderColor();
   
   // Draw border around the checkbox
@@ -326,6 +327,7 @@ void CheckBox::drawBorder() {
                                       m_config.size - 2*i, m_config.size - 2*i, 
                                       m_borderRadius, borderColor);
   }
+  #endif
 }
 
 // isInitialized() is inherited from WidgetBase

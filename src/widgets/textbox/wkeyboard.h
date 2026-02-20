@@ -82,6 +82,10 @@ private:
   TextBound_t lastArea; ///< Última área calculada para o texto.
   Rect_t m_pontoPreview; ///< Retângulo de preview para o ponto de toque.
   bool m_shouldRedraw; ///< Flag indicando se o WKeyboard deve ser redesenhado.
+  CoordPoint_t m_backKeyPos = {0,0}; ///< Posição da tecla de retorno.
+
+  void drawBackKey(uint16_t x, uint16_t y);
+  char m_previousContent[MAX_LENGTH_CSTR + 1]; ///< Conteúdo anterior para o teclado.
   
   #if defined(USING_GRAPHIC_LIB)
   GFXfont *m_fontKeys; ///< Fonte para as teclas.

@@ -2340,11 +2340,13 @@ void DisplayFK::processTouchEvent(uint16_t xTouch, uint16_t yTouch, int zPressur
     UNUSED(gesture);
     UNUSED(zPressure);
 
+    #if defined(USING_GRAPHIC_LIB)
     if(m_debugTouch){
         Serial.printf("Touch pressed at [%i, %i]\n", xTouch, yTouch);
         CHECK_TFT_VOID
         WidgetBase::objTFT->fillCircle(xTouch, yTouch, 2, CFK_FUCHSIA);
     }
+    #endif
     
     if (WidgetBase::usingKeyboard) return;
 
@@ -2975,11 +2977,14 @@ void DisplayFK::processTextBoxTouch(uint16_t xTouch, uint16_t yTouch, bool colle
                     
                     bool hasTouch = touchExterno && (touchExterno->getTouch(&internal_xTouch, &internal_yTouch, &internal_zPressure));
                     if (hasTouch && keyboard->detectTouch(&internal_xTouch, &internal_yTouch, &pressedKey)) {
-                        if (pressedKey == PressedKeyType::RETURN) {
+                        if (pressedKey == PressedKeyType::RETURN || pressedKey == PressedKeyType::ESC) {
                             WidgetBase::loadScreen = keyboard->m_field->parentScreen;
                             keyboard->close();
-                            functionCB_t cb = arrayTextBox[indice]->getCallbackFunc();
-                            WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
+                            
+                            if(pressedKey == PressedKeyType::RETURN){
+                                functionCB_t cb = arrayTextBox[indice]->getCallbackFunc();
+                                WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
+                            }
                             return;
                         }
                     }
@@ -3048,13 +3053,16 @@ void DisplayFK::processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch, bool col
                         
                         // Detect new key press
                         if (numpad->detectTouch(&internal_xTouch, &internal_yTouch, &pressedKey)) {
-                            if (pressedKey == PressedKeyType::RETURN) {
+                            if (pressedKey == PressedKeyType::RETURN || pressedKey == PressedKeyType::ESC) {
                                 if (numpad->m_field && numpad->m_field->parentScreen) {
                                     WidgetBase::loadScreen = numpad->m_field->parentScreen;
                                 }
                                 numpad->close();
-                                functionCB_t cb = arrayNumberbox[indice]->getCallbackFunc();
-                                WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
+                                
+                                if(pressedKey == PressedKeyType::RETURN){
+                                    functionCB_t cb = arrayNumberbox[indice]->getCallbackFunc();
+                                    WidgetBase::addCallback(cb, WidgetBase::CallbackOrigin::TOUCH);
+                                }
                                 return;
                             }
                         }

@@ -87,6 +87,8 @@ void VBar::redraw()
   CHECK_LOADED_VOID
   CHECK_SHOULDREDRAW_VOID
 
+  #if defined(USING_GRAPHIC_LIB)
+
   int innerX = m_xPos + 1;
   int innerY = m_yPos + 1;
   int innerHeight = m_config.height - 2;
@@ -152,6 +154,8 @@ void VBar::redraw()
 
   m_lastValue = m_currentValue;
   m_shouldRedraw = false;
+
+  #endif
 }
 
 /** @brief Define o valor mínimo para o widget VBar
@@ -256,8 +260,11 @@ void VBar::drawBackground()
   CHECK_USINGKEYBOARD_VOID
   CHECK_LOADED_VOID
   CHECK_SHOULDREDRAW_VOID
+
+  #if defined(USING_GRAPHIC_LIB)
   WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.round, CFK_GREY11); // fundo total
   WidgetBase::objTFT->drawRoundRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.round, CFK_BLACK);  // borda total
+  #endif
 }
 
 /**

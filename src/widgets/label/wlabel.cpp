@@ -21,7 +21,12 @@ m_lastArea{0, 0, 0, 0},
 m_fontSize(1),
 m_decimalPlaces(1)
 {
+  #if defined(USING_GRAPHIC_LIB)
   m_config = {.text = nullptr, .fontFamily = nullptr, .datum = 0, .fontColor = 0, .backgroundColor = 0, .prefix = nullptr, .suffix = nullptr};
+  #else
+  m_config = {.text = nullptr, .datum = 0, .fontColor = 0, .backgroundColor = 0, .prefix = nullptr, .suffix = nullptr};
+
+  #endif
   ESP_LOGD(TAG, "Label created at (%d, %d) on screen %d", _x, _y, _screen);
 }
 

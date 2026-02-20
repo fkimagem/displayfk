@@ -9,7 +9,7 @@ const char* NumberBox::TAG = "NumberBox";
  * @details Nota: Esta função usa um buffer estático, então seu valor de retorno é válido
  *          apenas até a próxima chamada.
  */
-String NumberBox::convertoToString(float f) {
+String NumberBox::convertoToString(double f) {
   return String(f);
 }
 
@@ -23,7 +23,9 @@ String NumberBox::convertoToString(float f) {
  */
 NumberBox::NumberBox(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_padding(3), m_shouldRedraw(true) {
-      m_config = {.width = 0, .height = 0, .letterColor = 0, .backgroundColor = 0, .startValue = 0, .font = nullptr, .funcPtr = nullptr, .callback = nullptr};
+      #if defined(USING_GRAPHIC_LIB)
+      m_config = {.width = 0, .height = 0, .letterColor = 0, .backgroundColor = 0, .startValue = 0, .decimalPlaces = 2, .font = nullptr, .funcPtr = nullptr, .callback = nullptr};
+      #endif
     }
 
 /**
@@ -106,6 +108,8 @@ void NumberBox::redraw() {
 
   m_shouldRedraw = false;
 
+  #if defined(USING_GRAPHIC_LIB)
+
   if (m_font) {
     WidgetBase::objTFT->setFont(m_font);
   } else {
@@ -135,6 +139,8 @@ void NumberBox::redraw() {
   printText(conteudo, m_xPos + m_padding, m_yPos + m_config.height / 2, ML_DATUM);
 
   updateFont(FontType::UNLOAD);
+
+  #endif
 }
 
 /**
@@ -190,7 +196,7 @@ void NumberBox::setup(uint16_t _width, uint16_t _height, uint16_t _letterColor,
 
   m_config.letterColor = _letterColor;
   m_config.backgroundColor = _backgroundColor;
-  m_value.setString(_startValue);
+  m_value.setStringDouble(_startValue, m_config.decimalPlaces);
 
   m_loaded = true;
 }
@@ -230,6 +236,7 @@ void NumberBox::setup(const NumberBoxConfig &config) {
   m_config.height = config.height;
   m_config.letterColor = config.letterColor;
   m_config.backgroundColor = config.backgroundColor;
+  m_config.decimalPlaces = config.decimalPlaces;
   
   #if defined(USING_GRAPHIC_LIB)
   m_config.font = config.font;
@@ -237,7 +244,7 @@ void NumberBox::setup(const NumberBoxConfig &config) {
   #endif
   
   // Set initial value
-  m_value.setString(config.startValue);
+  m_value.setStringDouble(config.startValue, config.decimalPlaces);
   
   m_loaded = true;
   ESP_LOGD(TAG, "NumberBox configured: %dx%d, value: %f", 
@@ -251,18 +258,18 @@ void NumberBox::setup(const NumberBoxConfig &config) {
  *          - Converte float para string usando setString()
  *          - Marca para redesenho usando forceUpdate()
  */
-void NumberBox::setValue(float str) {
-  m_value.setString(str);
+void NumberBox::setValue(double str) {
+  m_value.setStringDouble(str, m_config.decimalPlaces);
   ESP_LOGD(TAG, "Set value for numberbox: %s", m_value.getString());
   forceUpdate();
 }
 
 /**
  * @brief Recupera o valor numérico atual do NumberBox.
- * @return Valor numérico atual como float.
- * @details Converte a string interna para valor float usando toFloat().
+ * @return Valor numérico atual como double.
+ * @details Converte a string interna para valor double usando toDouble().
  */
-float NumberBox::getValue() { return m_value.toFloat(); }
+double NumberBox::getValue() { return m_value.toDouble(); }
 
 /**
  * @brief Recupera o valor numérico atual como string.

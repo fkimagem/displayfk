@@ -13,6 +13,7 @@ struct NumberBoxConfig {
   uint16_t letterColor;          ///< Cor para o texto exibindo o valor.
   uint16_t backgroundColor;      ///< Cor de fundo da caixa de número.
   float startValue;              ///< Valor numérico inicial para exibir.
+  uint8_t decimalPlaces;         ///< Número de casas decimais para exibir.
   #if defined(USING_GRAPHIC_LIB)
   const GFXfont* font;           ///< Fonte para usar no texto.
   #endif
@@ -42,13 +43,15 @@ public:
   void forceUpdate() override;
   
   void setup(const NumberBoxConfig& config);
-  void setValue(float str);
-  float getValue();
+  void setValue(double str);
+  double getValue();
   const char* getValueChar();
-  String convertoToString(float f);
+  String convertoToString(double f);
   
   void show() override;
   void hide() override;
+
+  NumberBoxConfig getConfig() { return m_config; }
 
 private:
   static const char* TAG; ///< Tag estática para identificação em logs do ESP32.

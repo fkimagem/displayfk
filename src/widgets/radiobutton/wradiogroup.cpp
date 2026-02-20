@@ -112,6 +112,8 @@ void RadioGroup::redraw() {
 
   m_shouldRedraw = false;
 
+  #if defined(DISP_DEFAULT)
+
   // uint16_t darkBg = WidgetBase::lightMode ? CFK_GREY3 : CFK_GREY11;
   uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
@@ -130,6 +132,8 @@ void RadioGroup::redraw() {
                                      baseBorder); // borda dentro
     }
   }
+
+  #endif
 }
 
 /**

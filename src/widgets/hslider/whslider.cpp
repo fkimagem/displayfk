@@ -199,6 +199,8 @@ void HSlider::redraw() {
 
   m_shouldRedraw = false;
 
+  #if defined(USING_GRAPHIC_LIB)
+
   uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
 
   // Clear previous position
@@ -229,6 +231,8 @@ void HSlider::redraw() {
                                  m_config.pressedColor); // slider center
 
   m_lastPos = m_currentPos;
+
+  #endif
 }
 
 /**
@@ -245,6 +249,8 @@ void HSlider::drawBackground() {
   CHECK_CURRENTSCREEN_VOID
   CHECK_LOADED_VOID
 
+  #if defined(USING_GRAPHIC_LIB)
+
   uint16_t baseBorder = WidgetBase::lightMode ? CFK_BLACK : CFK_WHITE;
 
   WidgetBase::objTFT->fillRoundRect(m_xPos, m_yPos, m_config.width, m_height, m_config.radius,
@@ -253,6 +259,8 @@ void HSlider::drawBackground() {
                                     baseBorder);
 
   redraw();
+
+  #endif
 }
 
 /**
