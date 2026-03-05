@@ -1,1 +1,3 @@
-#define DISP_U8G2	
+#define DISP_DEFAULT	
+#define TOUCH_FT6336
+#define HAS_TOUCH	

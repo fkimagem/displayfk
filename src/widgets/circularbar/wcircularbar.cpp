@@ -248,7 +248,7 @@ void CircularBar::redraw() {
                                    (m_config.radius - m_config.thickness) - 5,
                                    m_config.backgroundText);
 
-    char char_arr[100];
+    char char_arr[20];
     sprintf(char_arr, "%d", m_value);
 
     WidgetBase::objTFT->setTextColor(m_config.textColor);

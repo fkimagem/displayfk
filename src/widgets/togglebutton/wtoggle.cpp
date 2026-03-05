@@ -74,20 +74,6 @@ bool ToggleButton::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch)
 functionCB_t ToggleButton::getCallbackFunc() { return m_callback; }
 
 /**
- * @brief Recupera o estado atual de habilitado do botão.
- * @return True se o botão está habilitado, False caso contrário.
- * @details Consulta se o botão pode ser interagido ou não.
- */
-bool ToggleButton::getEnabled() { return m_enabled; }
-
-/**
- * @brief Define o estado de habilitado do botão.
- * @param newState True para habilitar o botão, False para desabilitá-lo.
- * @details Altera a capacidade do botão de responder a toques.
- */
-void ToggleButton::setEnabled(bool newState) { m_enabled = newState; }
-
-/**
  * @brief Altera o estado atual do botão (ligado ou desligado).
  * @details Inverte o estado atual do botão toggle:
  *          - Loga mudança de estado

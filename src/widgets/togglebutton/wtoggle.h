@@ -32,8 +32,6 @@ public:
   void forceUpdate() override;
   void setup(const ToggleButtonConfig& config);
   bool getStatus();
-  bool getEnabled();
-  void setEnabled(bool newState);
   void setStatus(bool status);
   void show() override;
   void hide() override;
