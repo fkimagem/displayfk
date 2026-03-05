@@ -1,9 +1,9 @@
 #include "wkeyboard.h"
 
-const char* WKeyboard::TAG = "[WKeyboard]";
+const char *WKeyboard::TAG = "[WKeyboard]";
 /**
  * @brief Lowercase alphabet layout for the keyboard.
- * 
+ *
  * The layout is organized in a grid with numbers on top and controls in strategic positions:
  * - Row 1: Numbers 1-0
  * - Row 2-4: Lowercase letters
@@ -20,31 +20,25 @@ uint16_t WKeyboard::m_backgroundColor = CFK_GREY3;
 uint16_t WKeyboard::m_letterColor = CFK_BLACK;
 uint16_t WKeyboard::m_keyColor = CFK_GREY13;
 
-    const Key_t WKeyboard::m_alphabet[AROWS][ACOLS] = {
+const Key_t WKeyboard::m_alphabet[AROWS][ACOLS] = {
     // Linha 0 - Números
-    {{"1", PressedKeyType::NUMBER}, {"2", PressedKeyType::NUMBER}, {"3", PressedKeyType::NUMBER}, {"4", PressedKeyType::NUMBER}, {"5", PressedKeyType::NUMBER},
-     {"6", PressedKeyType::NUMBER}, {"7", PressedKeyType::NUMBER}, {"8", PressedKeyType::NUMBER}, {"9", PressedKeyType::NUMBER}, {"0", PressedKeyType::NUMBER}},
+    {{"1", PressedKeyType::NUMBER}, {"2", PressedKeyType::NUMBER}, {"3", PressedKeyType::NUMBER}, {"4", PressedKeyType::NUMBER}, {"5", PressedKeyType::NUMBER}, {"6", PressedKeyType::NUMBER}, {"7", PressedKeyType::NUMBER}, {"8", PressedKeyType::NUMBER}, {"9", PressedKeyType::NUMBER}, {"0", PressedKeyType::NUMBER}},
 
     // Linha 1 - QWERTY topo
-    {{"q", PressedKeyType::LETTER}, {"w", PressedKeyType::LETTER}, {"e", PressedKeyType::LETTER}, {"r", PressedKeyType::LETTER}, {"t", PressedKeyType::LETTER},
-     {"y", PressedKeyType::LETTER}, {"u", PressedKeyType::LETTER}, {"i", PressedKeyType::LETTER}, {"o", PressedKeyType::LETTER}, {"p", PressedKeyType::LETTER}},
+    {{"q", PressedKeyType::LETTER}, {"w", PressedKeyType::LETTER}, {"e", PressedKeyType::LETTER}, {"r", PressedKeyType::LETTER}, {"t", PressedKeyType::LETTER}, {"y", PressedKeyType::LETTER}, {"u", PressedKeyType::LETTER}, {"i", PressedKeyType::LETTER}, {"o", PressedKeyType::LETTER}, {"p", PressedKeyType::LETTER}},
 
     // Linha 2 - QWERTY meio + DEL
-    {{"a", PressedKeyType::LETTER}, {"s", PressedKeyType::LETTER}, {"d", PressedKeyType::LETTER}, {"f", PressedKeyType::LETTER}, {"g", PressedKeyType::LETTER},
-     {"h", PressedKeyType::LETTER}, {"j", PressedKeyType::LETTER}, {"k", PressedKeyType::LETTER}, {"l", PressedKeyType::LETTER}, {"DEL", PressedKeyType::DEL}},
+    {{"a", PressedKeyType::LETTER}, {"s", PressedKeyType::LETTER}, {"d", PressedKeyType::LETTER}, {"f", PressedKeyType::LETTER}, {"g", PressedKeyType::LETTER}, {"h", PressedKeyType::LETTER}, {"j", PressedKeyType::LETTER}, {"k", PressedKeyType::LETTER}, {"l", PressedKeyType::LETTER}, {"DEL", PressedKeyType::DEL}},
 
     // Linha 3 - QWERTY base + espaço, nulo, caps
-    {{"z", PressedKeyType::LETTER}, {"x", PressedKeyType::LETTER}, {"c", PressedKeyType::LETTER}, {"v", PressedKeyType::LETTER}, {"b", PressedKeyType::LETTER},
-     {"n", PressedKeyType::LETTER}, {"m", PressedKeyType::LETTER}, {" ", PressedKeyType::CONTROL}, {"\0", PressedKeyType::EMPTY}, {"CAP", PressedKeyType::CAPS}},
+    {{"z", PressedKeyType::LETTER}, {"x", PressedKeyType::LETTER}, {"c", PressedKeyType::LETTER}, {"v", PressedKeyType::LETTER}, {"b", PressedKeyType::LETTER}, {"n", PressedKeyType::LETTER}, {"m", PressedKeyType::LETTER}, {" ", PressedKeyType::CONTROL}, {"\0", PressedKeyType::EMPTY}, {"CAP", PressedKeyType::CAPS}},
 
     // Linha 4 - Símbolos, limpar, ok
-    {{":", PressedKeyType::ANOTHER}, {",", PressedKeyType::ANOTHER}, {"+", PressedKeyType::SIGN}, {"-", PressedKeyType::SIGN}, {"*", PressedKeyType::SIGN},
-     {"/", PressedKeyType::SIGN}, {"=", PressedKeyType::SIGN}, {".", PressedKeyType::ANOTHER}, {"CLR", PressedKeyType::CLR}, {"OK", PressedKeyType::RETURN}}
-};
+    {{":", PressedKeyType::ANOTHER}, {",", PressedKeyType::ANOTHER}, {"+", PressedKeyType::SIGN}, {"-", PressedKeyType::SIGN}, {"*", PressedKeyType::SIGN}, {"/", PressedKeyType::SIGN}, {"=", PressedKeyType::SIGN}, {".", PressedKeyType::ANOTHER}, {"CLR", PressedKeyType::CLR}, {"OK", PressedKeyType::RETURN}}};
 
 /**
  * @brief Uppercase alphabet layout for the keyboard.
- * 
+ *
  * The layout is organized in a grid with special characters on top and controls in strategic positions:
  * - Row 1: Special characters
  * - Row 2-4: Uppercase letters
@@ -59,25 +53,19 @@ uint16_t WKeyboard::m_keyColor = CFK_GREY13;
 
 const Key_t WKeyboard::m_alphabetCap[AROWS][ACOLS] = {
     // Linha 0 - Símbolos especiais
-    {{"!", PressedKeyType::SIGN}, {"@", PressedKeyType::SIGN}, {"#", PressedKeyType::SIGN}, {"$", PressedKeyType::SIGN}, {"%", PressedKeyType::SIGN},
-     {"^", PressedKeyType::SIGN}, {"&", PressedKeyType::SIGN}, {"?", PressedKeyType::SIGN}, {"(", PressedKeyType::SIGN}, {")", PressedKeyType::SIGN}},
+    {{"!", PressedKeyType::SIGN}, {"@", PressedKeyType::SIGN}, {"#", PressedKeyType::SIGN}, {"$", PressedKeyType::SIGN}, {"%", PressedKeyType::SIGN}, {"^", PressedKeyType::SIGN}, {"&", PressedKeyType::SIGN}, {"?", PressedKeyType::SIGN}, {"(", PressedKeyType::SIGN}, {")", PressedKeyType::SIGN}},
 
     // Linha 1 - QWERTY topo maiúsculo
-    {{"Q", PressedKeyType::LETTER}, {"W", PressedKeyType::LETTER}, {"E", PressedKeyType::LETTER}, {"R", PressedKeyType::LETTER}, {"T", PressedKeyType::LETTER},
-     {"Y", PressedKeyType::LETTER}, {"U", PressedKeyType::LETTER}, {"I", PressedKeyType::LETTER}, {"O", PressedKeyType::LETTER}, {"P", PressedKeyType::LETTER}},
+    {{"Q", PressedKeyType::LETTER}, {"W", PressedKeyType::LETTER}, {"E", PressedKeyType::LETTER}, {"R", PressedKeyType::LETTER}, {"T", PressedKeyType::LETTER}, {"Y", PressedKeyType::LETTER}, {"U", PressedKeyType::LETTER}, {"I", PressedKeyType::LETTER}, {"O", PressedKeyType::LETTER}, {"P", PressedKeyType::LETTER}},
 
     // Linha 2 - QWERTY meio maiúsculo + DEL
-    {{"A", PressedKeyType::LETTER}, {"S", PressedKeyType::LETTER}, {"D", PressedKeyType::LETTER}, {"F", PressedKeyType::LETTER}, {"G", PressedKeyType::LETTER},
-     {"H", PressedKeyType::LETTER}, {"J", PressedKeyType::LETTER}, {"K", PressedKeyType::LETTER}, {"L", PressedKeyType::LETTER}, {"DEL", PressedKeyType::DEL}},
+    {{"A", PressedKeyType::LETTER}, {"S", PressedKeyType::LETTER}, {"D", PressedKeyType::LETTER}, {"F", PressedKeyType::LETTER}, {"G", PressedKeyType::LETTER}, {"H", PressedKeyType::LETTER}, {"J", PressedKeyType::LETTER}, {"K", PressedKeyType::LETTER}, {"L", PressedKeyType::LETTER}, {"DEL", PressedKeyType::DEL}},
 
     // Linha 3 - QWERTY base maiúsculo + chaves, caps
-    {{"Z", PressedKeyType::LETTER}, {"X", PressedKeyType::LETTER}, {"C", PressedKeyType::LETTER}, {"V", PressedKeyType::LETTER}, {"B", PressedKeyType::LETTER},
-     {"N", PressedKeyType::LETTER}, {"M", PressedKeyType::LETTER}, {"{", PressedKeyType::SIGN}, {"}", PressedKeyType::SIGN}, {"CAP", PressedKeyType::CAPS}},
+    {{"Z", PressedKeyType::LETTER}, {"X", PressedKeyType::LETTER}, {"C", PressedKeyType::LETTER}, {"V", PressedKeyType::LETTER}, {"B", PressedKeyType::LETTER}, {"N", PressedKeyType::LETTER}, {"M", PressedKeyType::LETTER}, {"{", PressedKeyType::SIGN}, {"}", PressedKeyType::SIGN}, {"CAP", PressedKeyType::CAPS}},
 
     // Linha 4 - Símbolos diversos, ok
-    {{"_", PressedKeyType::SIGN}, {"'", PressedKeyType::SIGN}, {":", PressedKeyType::SIGN}, {"<", PressedKeyType::SIGN}, {">", PressedKeyType::SIGN},
-     {";", PressedKeyType::SIGN}, {"~", PressedKeyType::SIGN}, {"[", PressedKeyType::SIGN}, {"]", PressedKeyType::SIGN}, {"OK", PressedKeyType::RETURN}}
-};
+    {{"_", PressedKeyType::SIGN}, {"'", PressedKeyType::SIGN}, {":", PressedKeyType::SIGN}, {"<", PressedKeyType::SIGN}, {">", PressedKeyType::SIGN}, {";", PressedKeyType::SIGN}, {"~", PressedKeyType::SIGN}, {"[", PressedKeyType::SIGN}, {"]", PressedKeyType::SIGN}, {"OK", PressedKeyType::RETURN}}};
 
 /**
  * @brief Constrói um widget WKeyboard em uma posição especificada em uma tela especificada.
@@ -89,7 +77,6 @@ const Key_t WKeyboard::m_alphabetCap[AROWS][ACOLS] = {
  */
 WKeyboard::WKeyboard(uint16_t _x, uint16_t _y, uint8_t _screen) : WidgetBase(_x, _y, _screen)
 {
-
 }
 
 /**
@@ -106,7 +93,6 @@ WKeyboard::WKeyboard() : WidgetBase(0, 0, 0)
  */
 WKeyboard::~WKeyboard()
 {
-    
 }
 
 /**
@@ -114,7 +100,7 @@ WKeyboard::~WKeyboard()
  * @param _xTouch Pointer to the X-coordinate of the touch.
  * @param _yTouch Pointer to the Y-coordinate of the touch.
  * @return True if the touch is within the keyboard area, otherwise false.
- * 
+ *
  * This base implementation always returns false as the actual detection
  * is performed by the specialized detectTouch method.
  */
@@ -139,14 +125,14 @@ functionCB_t WKeyboard::getCallbackFunc()
  * @param _yTouch Pointer to the Y-coordinate of the touch.
  * @param pressedKey Pointer to a variable to store the detected key type.
  * @return True if a key is detected and processed, otherwise false.
- * 
- * This method handles the core keyboard interaction by detecting which key 
+ *
+ * This method handles the core keyboard interaction by detecting which key
  * was pressed and performing the appropriate action (adding/removing characters,
  * toggling caps lock, etc.).
  */
 bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType *pressedKey)
 {
-    #if defined(HAS_TOUCH)
+#if defined(HAS_TOUCH)
     bool retorno = false;
     uint16_t xMax = m_xPos + m_availableWidth;
     uint16_t yMax = m_yPos + m_availableHeight;
@@ -159,11 +145,12 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
     m_myTime = millis();
 
     bool inBoundsBackKey = POINT_IN_RECT(*_xTouch, *_yTouch, m_backKeyPos.x, m_backKeyPos.y, m_keyW / 2, m_keyH / 2);
-  if(inBoundsBackKey){
-    (*pressedKey) = PressedKeyType::ESC;
-    m_content.setString(m_previousContent, true);
-    return true;
-  }
+    if (inBoundsBackKey)
+    {
+        (*pressedKey) = PressedKeyType::ESC;
+        m_content.setString(m_previousContent, true);
+        return true;
+    }
 
     if ((*_xTouch > m_xPos) && (*_xTouch < xMax) && (*_yTouch > m_yPos) && (*_yTouch < yMax))
     {
@@ -172,12 +159,12 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
         int16_t aux_xIndexClick = ((*_xTouch) - m_xPos) / (m_keyW + 2);
         int16_t aux_yIndexClick = ((*_yTouch) - m_yPos) / (m_keyH + 2);
 
-        uint16_t xIndexClick = constrain(aux_xIndexClick, 0, WKeyboard::aCols-1);
-        uint16_t yIndexClick = constrain(aux_yIndexClick, 0, WKeyboard::aRows-1);
+        uint16_t xIndexClick = constrain(aux_xIndexClick, 0, WKeyboard::aCols - 1);
+        uint16_t yIndexClick = constrain(aux_yIndexClick, 0, WKeyboard::aRows - 1);
 
         Key_t letter = m_capsLock ? (m_alphabetCap[yIndexClick][xIndexClick]) : (m_alphabet[yIndexClick][xIndexClick]);
 
-        //if (yIndexClick == 3 && xIndexClick == 9)
+        // if (yIndexClick == 3 && xIndexClick == 9)
         if (letter.type == PressedKeyType::CAPS)
         {
             m_capsLock = !m_capsLock;
@@ -187,7 +174,7 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
         }
 
         // const char *letter = (Keyboard::_alphabet[yIndexClick][xIndexClick]);
-        
+
         if (letter.type == PressedKeyType::EMPTY)
         {
             ESP_LOGD(TAG, "Empty key. Changing to previous one.");
@@ -243,28 +230,33 @@ bool WKeyboard::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch, PressedKeyType
     }
 
     return retorno;
-    #else
+#else
     return false;
-    #endif
+#endif
 }
 
-void WKeyboard::drawBackKey(uint16_t x, uint16_t y) {
+void WKeyboard::drawBackKey(uint16_t x, uint16_t y)
+{
     CHECK_TFT_VOID
     CHECK_LOADED_VOID
 
-    #if defined(USING_GRAPHIC_LIB)
-  uint16_t keyW = m_keyW/2;
-  uint16_t keyH = m_keyH/2;
-  
+#if defined(USING_GRAPHIC_LIB)
+    WidgetBase::objTFT->setFont(&RobotoBold8pt7b);
+    TextBound_t textBounds = WidgetBase::getTextBounds("ESC", 100, 100);
+    uint16_t keyPadding = 3;
+
+    uint16_t keyW = textBounds.width + keyPadding * 2;
+    uint16_t keyH = textBounds.height + keyPadding * 2;
+
     WidgetBase::objTFT->fillRoundRect(x, y, keyW, keyH, 4, WKeyboard::m_keyColor);
     WidgetBase::objTFT->drawRoundRect(x, y, keyW, keyH, 4, WKeyboard::m_letterColor);
     uint16_t xCenter = x + keyW / 2;
     uint16_t yCenter = y + keyH / 2;
-    WidgetBase::objTFT->setFont(&RobotoBold8pt7b);
+
     printText("ESC", xCenter, yCenter, MC_DATUM);
 
-    #endif
-  }
+#endif
+}
 
 /**
  * @brief Redesenha o teclado na tela.
@@ -275,17 +267,17 @@ void WKeyboard::drawBackKey(uint16_t x, uint16_t y) {
  */
 void WKeyboard::drawKeys(bool fullScreen, bool onlyContent)
 {
-    #if defined(USING_GRAPHIC_LIB)
-    if(!m_loaded){
+#if defined(USING_GRAPHIC_LIB)
+    if (!m_loaded)
+    {
         ESP_LOGW(TAG, "Keyboard not loaded");
         return;
     }
-    uint32_t startMillis = millis();
+    //uint32_t startMillis = millis();
     if (fullScreen)
     {
         WidgetBase::objTFT->fillScreen(WKeyboard::m_backgroundColor);
     }
-
 
     WidgetBase::objTFT->fillRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, WKeyboard::m_backgroundColor);
     WidgetBase::objTFT->drawRect(m_pontoPreview.x, m_pontoPreview.y, m_pontoPreview.width, m_pontoPreview.height, WKeyboard::m_keyColor);
@@ -293,18 +285,17 @@ void WKeyboard::drawKeys(bool fullScreen, bool onlyContent)
     WidgetBase::objTFT->setTextColor(WKeyboard::m_keyColor);
 
     WidgetBase::objTFT->setFont(m_fontPreview);
-    const char* conteudo = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width * 0.9, m_pontoPreview.height * 0.9);
+    const char *conteudo = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width * 0.9, m_pontoPreview.height * 0.9);
     printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, lastArea, WKeyboard::m_backgroundColor);
-
 
     WidgetBase::objTFT->setTextColor(WKeyboard::m_letterColor);
     drawBackKey(m_backKeyPos.x, m_backKeyPos.y);
-    
+
     WidgetBase::objTFT->setFont(m_fontKeys);
     if (!onlyContent)
     {
         WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_availableWidth, m_availableHeight, WKeyboard::m_backgroundColor);
-        //const float percentUtilArea = 0.9;
+        // const float percentUtilArea = 0.9;
 
         for (auto row = 0; row < WKeyboard::aRows; ++row)
         {
@@ -331,20 +322,20 @@ void WKeyboard::drawKeys(bool fullScreen, bool onlyContent)
                     uint16_t xCenter = key_x + key_width / 2;
                     uint16_t yCenter = key_y + key_height / 2;
 
-                    WidgetBase::objTFT->fillRoundRect(key_x, key_y,key_width , key_height, key_round, WKeyboard::m_keyColor);
+                    WidgetBase::objTFT->fillRoundRect(key_x, key_y, key_width, key_height, key_round, WKeyboard::m_keyColor);
                     WidgetBase::objTFT->drawRoundRect(key_x, key_y, key_width, key_height, key_round, WKeyboard::m_letterColor);
-                    
+
                     printText(letter.label, xCenter, yCenter, MC_DATUM);
                 }
             }
         }
     }
 
-    // WidgetBase::objTFT->drawCircle(210, 160, 10, CFK_FUCHSIA);
     
-    uint32_t endMillis = millis();
-    ESP_LOGD(TAG, "WKeyboard::redraw: %i ms", endMillis - startMillis);
-    #endif
+
+    //uint32_t endMillis = millis();
+    //ESP_LOGD(TAG, "WKeyboard::redraw: %i ms", endMillis - startMillis);
+#endif
 }
 
 /**
@@ -387,7 +378,7 @@ void WKeyboard::removeLetter()
 bool WKeyboard::setup()
 {
     CHECK_TFT_BOOL
-    #if defined(USING_GRAPHIC_LIB)
+#if defined(USING_GRAPHIC_LIB)
     if (!WidgetBase::objTFT)
     {
         ESP_LOGE(TAG, "TFT not defined on WidgetBase");
@@ -424,19 +415,19 @@ bool WKeyboard::setup()
     m_pontoPreview.x = m_screenW / 4;
     m_pontoPreview.y = 1;
     m_pontoPreview.height = (m_screenH * 0.2);
-    m_pontoPreview.width = m_screenW/2;
+    m_pontoPreview.width = m_screenW / 2;
 
     m_xPos = (m_screenW - m_availableWidth) / 2;
-    m_yPos = m_screenH -m_availableHeight;
+    m_yPos = m_screenH - m_availableHeight;
 
     float percentUtilArea = 0.9;
-    #if defined(USING_GRAPHIC_LIB)
-        m_fontKeys = const_cast<GFXfont*>(getBestRobotoBold(m_keyW * percentUtilArea, m_keyH * percentUtilArea, "CAP"));
-        m_fontPreview = m_fontKeys;// const_cast<GFXfont*>(getBestRobotoBold(m_pontoPreview.width * percentUtilArea, m_pontoPreview.height * percentUtilArea, "M"));
-    #endif
+#if defined(USING_GRAPHIC_LIB)
+    m_fontKeys = const_cast<GFXfont *>(getBestRobotoBold(m_keyW * percentUtilArea, m_keyH * percentUtilArea, "CAP"));
+    m_fontPreview = m_fontKeys; // const_cast<GFXfont*>(getBestRobotoBold(m_pontoPreview.width * percentUtilArea, m_pontoPreview.height * percentUtilArea, "M"));
+#endif
     m_capsLock = false;
     m_loaded = true;
-    #endif
+#endif
     return true;
 }
 
@@ -459,19 +450,22 @@ void WKeyboard::clear()
 void WKeyboard::open(TextBox *_field)
 {
     CHECK_TFT_VOID
-    m_myTime = millis() + (TIMEOUT_CLICK * 3);// Espera o tempo de 3 clicks para iniciar a detecção, evitando apertar tecla assim que abre.
+    m_myTime = millis() + (TIMEOUT_CLICK * 3); // Espera o tempo de 3 clicks para iniciar a detecção, evitando apertar tecla assim que abre.
     m_field = _field;
     WidgetBase::usingKeyboard = true;
     m_content.setString(m_field->getValue(), true);
     strncpy(m_previousContent, m_content.getString(), MAX_LENGTH_CSTR);
     m_previousContent[MAX_LENGTH_CSTR] = '\0';
 #if defined(DISP_DEFAULT)
-    if(m_keyH > 20){
+    if (m_keyH > 20)
+    {
         WidgetBase::objTFT->setFont(&RobotoBold10pt7b);
-    }else{
+    }
+    else
+    {
         WidgetBase::objTFT->setFont(&RobotoBold5pt7b);
     }
-    
+
 #endif
 
     drawKeys(true, false);
@@ -500,9 +494,12 @@ void WKeyboard::close()
  */
 void WKeyboard::insertChar(char c)
 {
-    if(WidgetBase::usingKeyboard){
+    if (WidgetBase::usingKeyboard)
+    {
         addLetter(c);
-    }else{
+    }
+    else
+    {
         ESP_LOGE(TAG, "Cant add char. Keyboard is not open");
     }
 }
@@ -534,7 +531,7 @@ void WKeyboard::hide()
 void WKeyboard::redraw()
 {
     drawKeys(false, false);
-}       
+}
 
 /**
  * @brief Força o WKeyboard a atualizar.

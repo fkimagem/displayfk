@@ -1,3 +1,3 @@
 #define DISP_DEFAULT	
-#define TOUCH_FT6336
+#define TOUCH_GT911
 #define HAS_TOUCH	

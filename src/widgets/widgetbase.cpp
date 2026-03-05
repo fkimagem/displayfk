@@ -554,7 +554,7 @@ void WidgetBase::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t
  */
 void WidgetBase::recalculateTextPosition(const char *_texto, uint16_t *_x, uint16_t *_y, uint8_t _datum)
 {
-    static const int16_t OFFSET_PADDING_Y = 6;
+    //static const int16_t OFFSET_PADDING_Y = 6;
     
     // Obtém as dimensões do texto
     /*TextBound_t area;
@@ -745,7 +745,7 @@ bool WidgetBase::isValidState() const {
 }
 
 bool WidgetBase::validateParameters() const {
-    return (m_xPos < screenWidth) && (m_yPos < screenHeight) && (m_screen >= 0);
+    return (m_xPos < screenWidth) && (m_yPos < screenHeight);// && (m_screen >= 0);
 }
 
 void WidgetBase::lock() {

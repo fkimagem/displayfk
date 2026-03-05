@@ -3144,7 +3144,7 @@ void DisplayFK::loopTask() {
     //ESP_LOGD(TAG, "Loop task started");
 
     uint32_t startTime = millis();
-    bool semaphoreAcquired = false;
+    //bool semaphoreAcquired = false;
 
     // Try to acquire the transaction semaphore with 10ms timeout
     if (!m_transactionSemaphore) {
@@ -3159,7 +3159,7 @@ void DisplayFK::loopTask() {
         return;
     }
     
-    semaphoreAcquired = true;
+    //semaphoreAcquired = true;
 
     if(m_runningTransaction){
         xSemaphoreGive(m_transactionSemaphore);
@@ -3169,7 +3169,7 @@ void DisplayFK::loopTask() {
     
     // Release the semaphore after checking - don't hold it during screen loading
     xSemaphoreGive(m_transactionSemaphore);
-    semaphoreAcquired = false;
+    //semaphoreAcquired = false;
     
     
     // Process screen loading
@@ -3826,15 +3826,18 @@ void DisplayFK::printStringPoolStats() const {
     
     if (activeAllocations > 0) {
         ESP_LOGW(TAG, "  WARNING: %u active allocations detected", activeAllocations);
-        
+#if (CORE_DEBUG_LEVEL >= 4)
         const StringAllocation_t* allocations = stringPool.getActiveAllocations();
         uint8_t count = stringPool.getActiveCount();
         
         for (uint8_t i = 0; i < count; i++) {
+            
             const StringAllocation_t* alloc = &allocations[i];
-            ESP_LOGD(TAG, "    Allocation %u: ptr=%p, caller=%s, timestamp=%u", 
-                     i, alloc->ptr, alloc->caller ? alloc->caller : "unknown", alloc->timestamp);
+            ESP_LOGD(TAG, "    Allocation %u: ptr=%p, caller=%s, timestamp=%u", i, alloc->ptr, alloc->caller ? alloc->caller : "unknown", alloc->timestamp);
+            
         }
+
+#endif
     }
 }
 
@@ -4246,10 +4249,10 @@ bool DisplayFK::validateArray(const void* array, uint8_t count) const {
         return false;
     }
     
-    if (count > 255) {
+    /*if (count > 255) {
         ESP_LOGE(TAG, "Array count too large: %d (max 255)", count);
         return false;
-    }
+    }*/
 
     // Validate all pointers in the array
     for (uint8_t i = 0; i < count; i++) {

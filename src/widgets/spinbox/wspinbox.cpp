@@ -80,7 +80,7 @@ bool SpinBox::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   uint16_t topY = m_yPos;
   // uint16_t bottomY = m_yPos + m_height;
 
-  Rect_t boundsAreaDecrement = {.x = m_xPos, .y = topY, .width = (uint16_t)(m_config.width / 2), .height = m_config.height};
+  Rect_t boundsAreaDecrement = {.x = static_cast<uint16_t>(m_xPos), .y = topY, .width = (uint16_t)(m_config.width / 2), .height = m_config.height}; // {.x = m_xPos, .y = topY, .width = (uint16_t)(m_config.width / 2), .height = m_config.height};
   Rect_t boundsAreaIncrement = {.x = (uint16_t)(m_xPos + (m_config.width / 2)), .y = topY, .width = (uint16_t)(m_config.width / 2),
                                 .height = m_config.height};
 

@@ -470,8 +470,8 @@ public:
 
 protected:
   bool m_visible;        ///< True se o widget está visível.
-  uint16_t m_xPos;              ///< Posição X do widget.
-  uint16_t m_yPos;              ///< Posição Y do widget.
+  int16_t m_xPos;              ///< Posição X do widget.
+  int16_t m_yPos;              ///< Posição Y do widget.
   uint8_t m_screen;             ///< Índice da tela para o widget.
   bool m_loaded;        ///< True se o widget foi inicializado.
   bool m_enabled;        ///< True se o widget está habilitado.

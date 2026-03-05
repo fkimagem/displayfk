@@ -20,6 +20,7 @@
 
 #include "check_touch.h"
 
+#if defined(DEBUG_DISPLAY_FK)
   #if defined(TOUCH_XPT2046)
     #pragma message("Using XPT2046 touch driver")
   #elif defined(TOUCH_FT6236U)
@@ -36,6 +37,7 @@
     #pragma message("Using CST820 touch driver")
   #else
     #pragma message("No touch driver selected")
+  #endif
   #endif
 
   // Include the touch library

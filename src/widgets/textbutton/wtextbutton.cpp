@@ -15,7 +15,7 @@ TextButton::TextButton(uint16_t _x, uint16_t _y, uint8_t _screen)
 {
   m_offsetMargin = 10;
   #if defined(USING_GRAPHIC_LIB)
-  m_config = {.width = 0, .height = 0, .radius = 0, .backgroundColor = 0, .textColor = 0, .text = "", .callback = nullptr};
+  m_config = {.width = 0, .height = 0, .radius = 0, .backgroundColor = 0, .textColor = 0, .text = "", .fontFamily = &RobotoBold10pt7b, .callback = nullptr};
   #else
   m_config = {.width = 0, .height = 0, .radius = 0, .backgroundColor = 0, .textColor = 0, .text = "", .callback = nullptr};
   #endif

@@ -34,14 +34,20 @@
   STR(ESP_ARDUINO_VERSION_MINOR) "." \
   STR(ESP_ARDUINO_VERSION_PATCH)
 
+#if defined(DEBUG_DISPLAY_FK)
 #pragma message("Usando versão ArduinoCore: " ARDUINO_CORE_VERSION_STR)
+#endif
 
 // Verificação de versão mínima
 #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3,3,0)
   #define ESP_ARDUINO_VERSION_OK
+  #if defined(DEBUG_DISPLAY_FK)
   #pragma message("Versão ArduinoCore OK.")
+  #endif
 #else
+  #if defined(DEBUG_DISPLAY_FK)
   #pragma message("Versão ArduinoCore incompatível com ESP32P4. Requer 3.3.0 ou superior.")
+  #endif
 #endif
 
 #endif // ESP_ARDUINO_VERSION
