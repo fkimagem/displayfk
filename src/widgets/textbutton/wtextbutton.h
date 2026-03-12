@@ -7,16 +7,16 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar um botão de texto.
 ///          Deve ser preenchida e passada para o método setup().
 struct TextButtonConfig {
+  const char* text;       ///< Texto para exibir no botão.
+  functionCB_t callback;  ///< Função callback para executar quando o botão é pressionado.
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* fontFamily; ///< Ponteiro para a fonte usada para o texto.
+  #endif
   uint16_t width;         ///< Largura do botão.
   uint16_t height;        ///< Altura do botão.
   uint16_t radius;        ///< Raio para os cantos arredondados do botão.
   uint16_t backgroundColor;  ///< Cor exibida quando o botão está pressionado.
   uint16_t textColor;     ///< Cor do texto exibido no botão.
-  const char* text;       ///< Texto para exibir no botão.
-  #if defined(USING_GRAPHIC_LIB)
-  const GFXfont* fontFamily; ///< Ponteiro para a fonte usada para o texto.
-  #endif
-  functionCB_t callback;  ///< Função callback para executar quando o botão é pressionado.
 };
 
 /// @brief Widget de botão com texto personalizável, cores e cantos arredondados.

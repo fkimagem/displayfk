@@ -173,23 +173,25 @@ void screen0(){
 void loadWidgets(){
 
     HSliderConfig configHSlider0 = {
-            .width = 331,
-            .pressedColor = CFK_COLOR03,
-            .backgroundColor = CFK_WHITE,
+            .callback = slider1_cb,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .radius = 18,
-            .callback = slider1_cb
+            .width = 331,
+            .pressedColor = CFK_COLOR03,
+            .backgroundColor = CFK_WHITE
         };
     slider1.setup(configHSlider0);
     HSliderConfig configHSlider1 = {
-            .width = 331,
-            .pressedColor = CFK_COLOR03,
-            .backgroundColor = CFK_WHITE,
+            .callback = slider1copy_cb,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .radius = 18,
-            .callback = slider1copy_cb
+            .width = 331,
+            .pressedColor = CFK_COLOR03,
+            .backgroundColor = CFK_WHITE
         };
     slider1copy.setup(configHSlider1);
     myDisplay.setHSlider(arrayHslider,qtdHSlider);
@@ -231,27 +233,27 @@ rectbutton1copy3.setup(configRectButton3);
 
 
     SpinBoxConfig configSpinBox0 = {
-            .width = 174,
-            .height = 57,
-            .step = 1,
+            .callback = spinbox1_cb,
             .minValue = 0,
             .maxValue = 100,
             .startValue = 50,
+            .width = 174,
+            .height = 57,
+            .step = 1,
             .color = CFK_GREY11,
-            .textColor = CFK_BLACK,
-            .callback = spinbox1_cb
+            .textColor = CFK_BLACK
         };
     spinbox1.setup(configSpinBox0);
     SpinBoxConfig configSpinBox1 = {
-            .width = 174,
-            .height = 57,
-            .step = 1,
+            .callback = spinbox1copy_cb,
             .minValue = 0,
             .maxValue = 100,
             .startValue = 50,
+            .width = 174,
+            .height = 57,
+            .step = 1,
             .color = CFK_GREY11,
-            .textColor = CFK_BLACK,
-            .callback = spinbox1copy_cb
+            .textColor = CFK_BLACK
         };
     spinbox1copy.setup(configSpinBox1);
     myDisplay.setSpinbox(arraySpinbox,qtdSpinbox);
@@ -275,93 +277,93 @@ rectbutton1copy3.setup(configRectButton3);
 
 
     VerticalBarConfig configVBar0 = {
-            .width = 32,
-            .height = 110,
-            .filledColor = CFK_COLOR01,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .round = 0,
             .orientation = Orientation::VERTICAL,
-            .subtitle = nullptr
+            .width = 32,
+            .height = 110,
+            .filledColor = CFK_COLOR01
         };
     vertbar1.setup(configVBar0);
     VerticalBarConfig configVBar1 = {
-            .width = 34,
-            .height = 112,
-            .filledColor = CFK_COLOR02,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .round = 0,
             .orientation = Orientation::VERTICAL,
-            .subtitle = nullptr
+            .width = 34,
+            .height = 112,
+            .filledColor = CFK_COLOR02
         };
     vertbar1copy.setup(configVBar1);
     VerticalBarConfig configVBar2 = {
-            .width = 34,
-            .height = 112,
-            .filledColor = CFK_COLOR03,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .round = 0,
             .orientation = Orientation::VERTICAL,
-            .subtitle = nullptr
+            .width = 34,
+            .height = 112,
+            .filledColor = CFK_COLOR03
         };
     vertbar1copy2.setup(configVBar2);
     VerticalBarConfig configVBar3 = {
-            .width = 34,
-            .height = 112,
-            .filledColor = CFK_COLOR04,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .round = 0,
             .orientation = Orientation::VERTICAL,
-            .subtitle = nullptr
+            .width = 34,
+            .height = 112,
+            .filledColor = CFK_COLOR04
         };
     vertbar1copy3.setup(configVBar3);
     myDisplay.setVBar(arrayVbar,qtdVBar);
 
 
     CircularBarConfig configCirculaBar0 = {
-            .radius = 56,
             .minValue = 0,
             .maxValue = 100,
+            .radius = 56,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 20,
             .color = CFK_COLOR27,
             .backgroundColor = CFK_BLACK,
             .textColor = CFK_BLACK,
             .backgroundText = CFK_GREY8,
+            .thickness = 20,
             .showValue = true,
             .inverted = false
         };
     circload1.setup(configCirculaBar0);
     CircularBarConfig configCirculaBar1 = {
-            .radius = 56,
             .minValue = 0,
             .maxValue = 100,
+            .radius = 56,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 20,
             .color = CFK_COLOR29,
             .backgroundColor = CFK_BLACK,
             .textColor = CFK_BLACK,
             .backgroundText = CFK_GREY8,
+            .thickness = 20,
             .showValue = true,
             .inverted = false
         };
     circload1copy.setup(configCirculaBar1);
     CircularBarConfig configCirculaBar2 = {
-            .radius = 56,
             .minValue = 0,
             .maxValue = 100,
+            .radius = 56,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 20,
             .color = CFK_COLOR31,
             .backgroundColor = CFK_BLACK,
             .textColor = CFK_BLACK,
             .backgroundText = CFK_GREY8,
+            .thickness = 20,
             .showValue = true,
             .inverted = false
         };
@@ -370,54 +372,54 @@ rectbutton1copy3.setup(configRectButton3);
 
 
     ThermometerConfig configThermometer0 = {
+            .subtitle = nullptr,
+            .unit = "C",
+            .minValue = 0,
+            .maxValue = 100,
             .width = 37,
             .height = 143,
             .filledColor = CFK_COLOR01,
             .backgroundColor = CFK_WHITE,
             .markColor = CFK_BLACK,
-            .minValue = 0,
-            .maxValue = 100,
-            .subtitle = nullptr,
-            .unit = "C",
             .decimalPlaces = 1
         };
     thermometer1.setup(configThermometer0);
     ThermometerConfig configThermometer1 = {
+            .subtitle = nullptr,
+            .unit = "C",
+            .minValue = 0,
+            .maxValue = 100,
             .width = 39,
             .height = 145,
             .filledColor = CFK_COLOR02,
             .backgroundColor = CFK_WHITE,
             .markColor = CFK_BLACK,
-            .minValue = 0,
-            .maxValue = 100,
-            .subtitle = nullptr,
-            .unit = "C",
             .decimalPlaces = 1
         };
     thermometer1copy.setup(configThermometer1);
     ThermometerConfig configThermometer2 = {
+            .subtitle = nullptr,
+            .unit = "C",
+            .minValue = 0,
+            .maxValue = 100,
             .width = 39,
             .height = 145,
             .filledColor = CFK_COLOR03,
             .backgroundColor = CFK_WHITE,
             .markColor = CFK_BLACK,
-            .minValue = 0,
-            .maxValue = 100,
-            .subtitle = nullptr,
-            .unit = "C",
             .decimalPlaces = 1
         };
     thermometer1copy2.setup(configThermometer2);
     ThermometerConfig configThermometer3 = {
+            .subtitle = nullptr,
+            .unit = "C",
+            .minValue = 0,
+            .maxValue = 100,
             .width = 39,
             .height = 145,
             .filledColor = CFK_COLOR04,
             .backgroundColor = CFK_WHITE,
             .markColor = CFK_BLACK,
-            .minValue = 0,
-            .maxValue = 100,
-            .subtitle = nullptr,
-            .unit = "C",
             .decimalPlaces = 1
         };
     thermometer1copy3.setup(configThermometer3);

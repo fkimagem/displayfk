@@ -8,15 +8,15 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar um termômetro.
 ///          Deve ser preenchida e passada para o método setup().
 struct ThermometerConfig {
+  Label* subtitle; ///< Ponteiro para um widget Label para exibir o valor do termômetro.
+  const char* unit; ///< Unidade de medida para o termômetro (ex: "°C", "°F").
+  int minValue;                ///< Valor mínimo da faixa do termômetro.
+  int maxValue;                ///< Valor máximo da faixa do termômetro.
   uint16_t width;          ///< Largura da exibição do termômetro.
   uint16_t height;         ///< Altura da exibição do termômetro.
   uint16_t filledColor;    ///< Cor usada para a porção preenchida do termômetro.
   uint16_t backgroundColor;///< Cor usada para o fundo do termômetro.
   uint16_t markColor; ///< Cor usada para as marcas no termômetro.
-  int minValue;                ///< Valor mínimo da faixa do termômetro.
-  int maxValue;                ///< Valor máximo da faixa do termômetro.
-  Label* subtitle; ///< Ponteiro para um widget Label para exibir o valor do termômetro.
-  const char* unit; ///< Unidade de medida para o termômetro (ex: "°C", "°F").
   uint8_t decimalPlaces; ///< Número de casas decimais para exibição do valor.
 };
 

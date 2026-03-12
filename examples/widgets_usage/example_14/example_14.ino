@@ -147,15 +147,15 @@ void screen0(){
 void loadWidgets(){
 
     SpinBoxConfig configSpinBox0 = {
-            .width = 216,
-            .height = 62,
-            .step = 1,
+            .callback = spinbox1_cb,
             .minValue = 0,
             .maxValue = 4095,
             .startValue = 50,
+            .width = 216,
+            .height = 62,
+            .step = 1,
             .color = CFK_COLOR19,
-            .textColor = CFK_BLACK,
-            .callback = spinbox1_cb
+            .textColor = CFK_BLACK
         };
     spinbox1.setup(configSpinBox0);
     myDisplay.setSpinbox(arraySpinbox,qtdSpinbox);

@@ -95,15 +95,15 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     SpinBoxConfig configSpinBox0 = {
-            .width = 184,
-            .height = 67,
-            .step = 1,
+            .callback = spinbox_cb,
             .minValue = 0,
             .maxValue = 255,
             .startValue = 54,
+            .width = 184,
+            .height = 67,
+            .step = 1,
             .color = CFK_COLOR01,
-            .textColor = CFK_BLACK,
-            .callback = spinbox_cb
+            .textColor = CFK_BLACK
         };
     spinbox.setup(configSpinBox0);
     myDisplay.setSpinbox(arraySpinbox,qtdSpinbox);

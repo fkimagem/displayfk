@@ -23,19 +23,20 @@ A classe `SpinBox` é um widget interativo que exibe uma caixa de spin com botõ
 
 ### SpinBoxConfig
 
-Estrutura que contém todos os parâmetros de configuração:
+Estrutura que contém todos os parâmetros de configuração  
+(reorganizada para melhor alinhamento em 32 bits):
 
 ```cpp
 struct SpinBoxConfig {
-  uint16_t width;         // Largura da caixa de spin
-  uint16_t height;        // Altura da caixa de spin
-  uint16_t step;          // Valor do passo para incrementos/decrementos
-  int minValue;           // Valor mínimo da faixa
-  int maxValue;           // Valor máximo da faixa
-  int startValue;         // Valor inicial
-  uint16_t color;         // Cor de fundo
-  uint16_t textColor;     // Cor do texto
-  functionCB_t callback;  // Função callback
+  functionCB_t callback;  // Função callback chamada quando o valor muda.
+  int minValue;           // Valor mínimo da faixa.
+  int maxValue;           // Valor máximo da faixa.
+  int startValue;         // Valor inicial exibido.
+  uint16_t width;         // Largura da caixa de spin.
+  uint16_t height;        // Altura da caixa de spin.
+  uint16_t step;          // Passo para incremento/decremento.
+  uint16_t color;         // Cor de fundo e bordas.
+  uint16_t textColor;     // Cor do texto.
 };
 ```
 
@@ -178,15 +179,15 @@ void setup() {
 void loadWidgets() {
     // Configurar SpinBox
     SpinBoxConfig configSpinBox = {
-        .width = 101,
-        .height = 25,
-        .step = 1,
-        .minValue = 0,
-        .maxValue = 100,
+        .callback  = spinbox_cb,
+        .minValue  = 0,
+        .maxValue  = 100,
         .startValue = 50,
-        .color = CFK_COLOR01,
-        .textColor = CFK_WHITE,
-        .callback = spinbox_cb
+        .width     = 101,
+        .height    = 25,
+        .step      = 1,
+        .color     = CFK_COLOR01,
+        .textColor = CFK_WHITE
     };
     spinbox.setup(configSpinBox);
     

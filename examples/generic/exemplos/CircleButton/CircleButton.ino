@@ -94,9 +94,9 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     CircleButtonConfig configCircleButton0 = {
+            .callback = cirbtn_cb,
             .radius = 20,
-            .pressedColor = CFK_COLOR01,
-            .callback = cirbtn_cb
+            .pressedColor = CFK_COLOR01
         };
 
     cirbtn.setup(configCircleButton0);

@@ -92,7 +92,7 @@ NumberBox *arrayNumberbox[qtdNumberbox] = {&numberbox};
 RadioGroup grupo1(0);
 const uint8_t qtdRadioGroup = 1;
 RadioGroup *arrayRadio[qtdRadioGroup] = {&grupo1};
-radio_t radiosOfGroup_grupo1[2] = {{278, 108, 1, CFK_COLOR28},{235, 110, 2, CFK_COLOR28}};
+radio_t radiosOfGroup_grupo1[2] = {{278, 108, CFK_COLOR28, 1},{235, 110, CFK_COLOR28, 2}};
 RectButton rectbutton(403, 19, 0);
 const uint8_t qtdRectBtn = 1;
 RectButton *arrayRectbtn[qtdRectBtn] = {&rectbutton};
@@ -326,13 +326,14 @@ void loadWidgets(){
     myDisplay.setGauge(arrayGauge,qtdGauge);
 
     HSliderConfig configHSlider0 = {
-            .width = 155,
-            .pressedColor = CFK_COLOR20,
-            .backgroundColor = CFK_COLOR22,
+            .callback = slider_cb,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .radius = 17,
-            .callback = slider_cb
+            .width = 155,
+            .pressedColor = CFK_COLOR20,
+            .backgroundColor = CFK_COLOR22
         };
     slider.setup(configHSlider0);
     myDisplay.setHSlider(arrayHslider,qtdHSlider);
@@ -378,24 +379,24 @@ void loadWidgets(){
     myDisplay.setLed(arrayLed,qtdLed);
 
     LineChartConfig configLineChart0 = {
-            .width = 500,
-            .height = 113,
+            .colorsSeries = colorsChart0,
+            .subtitles = seriesGrafico0,
+            .font = &RobotoRegular5pt7b,
             .minValue = 0,
             .maxValue = 100,
-            .amountSeries = qtdLinesChart0,
-            .colorsSeries = colorsChart0,
+            .width = 500,
+            .height = 113,
             .gridColor = CFK_COLOR01,
             .borderColor = CFK_BLACK,
             .backgroundColor = CFK_GREY4,
             .textColor = CFK_COLOR19,
             .verticalDivision = 10,
+            .maxPointsAmount = LineChart::SHOW_ALL,
+            .amountSeries = qtdLinesChart0,
             .workInBackground = false,
             .showZeroLine = true,
             .boldLine = false,
-            .showDots = false,
-            .maxPointsAmount = LineChart::SHOW_ALL,
-            .font = &RobotoRegular5pt7b,
-            .subtitles = seriesGrafico0
+            .showDots = false
         };
     linechart.setup(configLineChart0);
     myDisplay.setLineChart(arrayLinechart,qtdLineChart);

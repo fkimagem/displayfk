@@ -25,26 +25,28 @@ A classe `GaugeSuper` é um widget visual avançado que exibe um gauge semicircu
 
 ### GaugeConfig
 
-Estrutura que contém todos os parâmetros de configuração do gauge:
+Estrutura que contém todos os parâmetros de configuração do gauge (ordem conforme `wgaugesuper.h`):
 
 ```cpp
 struct GaugeConfig {
-  uint16_t width;                      // Largura do gauge em pixels (deve ser > 0)
-  uint16_t height;                     // Altura do gauge em pixels
-  const char* title;                   // Título exibido no gauge (máx 20 caracteres, pode ser nullptr)
-  const int* intervals;                // Array de valores dos intervalos (pode ser nullptr se amountIntervals = 0)
-  const uint16_t* colors;              // Array de cores para cada intervalo (pode ser nullptr se amountIntervals = 0)
-  uint8_t amountIntervals;             // Número de intervalos/cores (máx 10, 0 = sem intervalos)
-  int minValue;                        // Valor mínimo da faixa (deve ser < maxValue)
-  int maxValue;                        // Valor máximo da faixa (deve ser > minValue)
-  uint16_t borderColor;                // Cor RGB565 da borda
-  uint16_t textColor;                  // Cor RGB565 do texto e valores
-  uint16_t backgroundColor;            // Cor RGB565 de fundo
-  uint16_t titleColor;                 // Cor RGB565 do título
-  uint16_t needleColor;                // Cor RGB565 da agulha
-  uint16_t markersColor;               // Cor RGB565 dos marcadores
-  bool showLabels;                     // Flag para mostrar rótulos (requer fontFamily)
-  const GFXfont* fontFamily;          // Fonte para texto (pode ser nullptr, necessário se showLabels = true)
+  const char* title;                   // Título exibido no gauge (máx 20 caracteres, pode ser nullptr).
+  const int* intervals;                // Array de valores dos intervalos (nullptr se amountIntervals = 0).
+  const uint16_t* colors;              // Array de cores para cada intervalo (nullptr se amountIntervals = 0).
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* fontFamily;           // Fonte para texto (pode ser nullptr; necessário se showLabels = true).
+  #endif
+  int minValue;                        // Valor mínimo da faixa.
+  int maxValue;                        // Valor máximo da faixa.
+  uint16_t width;                      // Largura do gauge em pixels (deve ser > 0).
+  uint16_t height;                     // Altura do gauge em pixels.
+  uint16_t borderColor;                // Cor RGB565 da borda.
+  uint16_t textColor;                  // Cor RGB565 do texto e valores.
+  uint16_t backgroundColor;           // Cor RGB565 de fundo.
+  uint16_t titleColor;                 // Cor RGB565 do título.
+  uint16_t needleColor;                // Cor RGB565 da agulha.
+  uint16_t markersColor;               // Cor RGB565 dos marcadores.
+  uint8_t amountIntervals;             // Número de intervalos/cores (máx 10, 0 = sem intervalos).
+  bool showLabels;                     // Flag para mostrar rótulos (requer fontFamily).
 };
 ```
 
@@ -214,22 +216,22 @@ void setup() {
 void loadWidgets() {
     // Configurar gauge super
     GaugeConfig configGauge = {
-        .width = 205,
-        .height = 150,
         .title = "Titulo",
         .intervals = range0,
         .colors = colors0,
-        .amountIntervals = qtdIntervalG0,
+        .fontFamily = &RobotoBold10pt7b,
         .minValue = 0,
         .maxValue = 100,
+        .width = 205,
+        .height = 150,
         .borderColor = CFK_WHITE,
         .textColor = CFK_BLACK,
         .backgroundColor = CFK_WHITE,
         .titleColor = CFK_BLACK,
         .needleColor = CFK_RED,
         .markersColor = CFK_BLACK,
-        .showLabels = true,
-        .fontFamily = &RobotoBold10pt7b
+        .amountIntervals = qtdIntervalG0,
+        .showLabels = true
     };
     widget.setup(configGauge);
     
@@ -306,22 +308,22 @@ void setup() {
     
     // Configurar gauge
     GaugeConfig config = {
-        .width = 300,
-        .height = 200,
         .title = "Velocidade",
         .intervals = intervalos,
         .colors = cores,
-        .amountIntervals = qtdIntervalos,
+        .fontFamily = &RobotoBold10pt7b,
         .minValue = 0,
         .maxValue = 100,
+        .width = 300,
+        .height = 200,
         .borderColor = CFK_BLACK,
         .textColor = CFK_BLACK,
         .backgroundColor = CFK_WHITE,
         .titleColor = CFK_NAVY,
         .needleColor = CFK_RED,
         .markersColor = CFK_BLACK,
-        .showLabels = true,
-        .fontFamily = &RobotoBold10pt7b
+        .amountIntervals = qtdIntervalos,
+        .showLabels = true
     };
     meuGauge.setup(config);
     

@@ -95,16 +95,16 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     ImageFromFileConfig configImage0 = {
-            .source = SourceFile::SPIFFS,
             .path = "/Okpng.fki",
             .cb = okpng_cb,
+            .source = SourceFile::SPIFFS,
             .backgroundColor = CFK_GREY10
         };
     okpng.setup(configImage0);
     ImageFromFileConfig configImage1 = {
-            .source = SourceFile::SPIFFS,
             .path = "/Closepng.fki",
             .cb = closepng_cb,
+            .source = SourceFile::SPIFFS,
             .backgroundColor = CFK_GREY10
         };
     closepng.setup(configImage1);

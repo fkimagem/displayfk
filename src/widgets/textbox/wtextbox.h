@@ -8,16 +8,16 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar uma caixa de texto.
 ///          Deve ser preenchida e passada para o método setup().
 struct TextBoxConfig {
+  const char* startValue;    ///< Valor de texto inicial para exibir.
+  functionLoadScreen_t funcPtr; ///< Ponteiro de função para a função de carregamento da tela pai.
+  functionCB_t cb;           ///< Função callback para executar na interação.
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* font;       ///< Fonte para usar no texto.
+  #endif
   uint16_t width;            ///< Largura da caixa de texto.
   uint16_t height;           ///< Altura da caixa de texto.
   uint16_t letterColor;      ///< Cor do texto para exibir o valor.
   uint16_t backgroundColor;  ///< Cor de fundo da caixa de texto.
-  const char* startValue;    ///< Valor de texto inicial para exibir.
-  #if defined(USING_GRAPHIC_LIB)
-  const GFXfont* font;       ///< Fonte para usar no texto.
-  #endif
-  functionLoadScreen_t funcPtr; ///< Ponteiro de função para a função de carregamento da tela pai.
-  functionCB_t cb;           ///< Função callback para executar na interação.
 };
 
 /// @brief Widget de caixa de texto para exibir e editar texto.

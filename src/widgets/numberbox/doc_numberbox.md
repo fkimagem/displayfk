@@ -23,18 +23,22 @@ A classe `NumberBox` é um widget interativo que exibe e permite edição de val
 
 ### NumberBoxConfig
 
-Estrutura que contém todos os parâmetros de configuração:
+Estrutura que contém todos os parâmetros de configuração  
+(sincronizada com a definição em `wnumberbox.h`):
 
 ```cpp
 struct NumberBoxConfig {
-  uint16_t width;               // Largura da caixa em pixels
-  uint16_t height;              // Altura da caixa em pixels
-  uint16_t letterColor;         // Cor do texto
-  uint16_t backgroundColor;     // Cor de fundo
-  float startValue;             // Valor numérico inicial
-  const GFXfont* font;          // Fonte para o texto
-  functionLoadScreen_t funcPtr; // Ponteiro para função da tela pai
-  functionCB_t callback;        // Função callback
+  functionLoadScreen_t funcPtr;  // Ponteiro para função da tela pai (screen de retorno).
+  functionCB_t callback;         // Função callback chamada após edição/confirmar valor.
+#if defined(USING_GRAPHIC_LIB)
+  const GFXfont* font;           // Fonte usada para desenhar o valor.
+#endif
+  float startValue;              // Valor numérico inicial exibido.
+  uint16_t width;                // Largura da caixa em pixels.
+  uint16_t height;               // Altura da caixa em pixels.
+  uint16_t letterColor;          // Cor do texto.
+  uint16_t backgroundColor;      // Cor de fundo.
+  uint8_t decimalPlaces;         // Número de casas decimais a exibir.
 };
 ```
 
@@ -191,14 +195,15 @@ void setup() {
 void loadWidgets() {
     // Configurar NumberBox
     NumberBoxConfig configNumberBox = {
-        .width = 101,
-        .height = 25,
-        .letterColor = CFK_COLOR01,
+        .funcPtr        = screen0,
+        .callback       = numberbox_cb,
+        .font           = &RobotoRegular10pt7b,
+        .startValue     = 1234.56f,
+        .width          = 101,
+        .height         = 25,
+        .letterColor    = CFK_COLOR01,
         .backgroundColor = CFK_WHITE,
-        .startValue = 1234.56,
-        .font = &RobotoRegular10pt7b,
-        .funcPtr = screen0,
-        .callback = numberbox_cb
+        .decimalPlaces  = 2
     };
     numberbox.setup(configNumberBox);
     

@@ -166,27 +166,27 @@ void screen0(){
 void loadWidgets(){
 
     CheckBoxConfig configCheckbox0 = {
+            .callback = checkbox1_cb,
+            .weight = CheckBoxWeight::MEDIUM,
             .size = 21,
             .checkedColor = CFK_COLOR04,
-            .uncheckedColor = CFK_GREY10,
-            .weight = CheckBoxWeight::MEDIUM,
-            .callback = checkbox1_cb
+            .uncheckedColor = CFK_GREY10
         };
     checkbox1.setup(configCheckbox0);
     CheckBoxConfig configCheckbox1 = {
+            .callback = checkbox2_cb,
+            .weight = CheckBoxWeight::MEDIUM,
             .size = 21,
             .checkedColor = CFK_COLOR20,
-            .uncheckedColor = CFK_GREY10,
-            .weight = CheckBoxWeight::MEDIUM,
-            .callback = checkbox2_cb
+            .uncheckedColor = CFK_GREY10
         };
     checkbox2.setup(configCheckbox1);
     CheckBoxConfig configCheckbox2 = {
+            .callback = checkbox3_cb,
+            .weight = CheckBoxWeight::MEDIUM,
             .size = 21,
             .checkedColor = CFK_COLOR30,
-            .uncheckedColor = CFK_GREY10,
-            .weight = CheckBoxWeight::MEDIUM,
-            .callback = checkbox3_cb
+            .uncheckedColor = CFK_GREY10
         };
     checkbox3.setup(configCheckbox2);
     myDisplay.setCheckbox(arrayCheckbox,qtdCheckbox);

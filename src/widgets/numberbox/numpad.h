@@ -18,13 +18,13 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar um teclado numérico.
 ///          Deve ser preenchida e passada para o método setup().
 struct NumpadConfig {
-  uint16_t backgroundColor;      ///< Cor de fundo do Numpad.
-  uint16_t letterColor;          ///< Cor para o texto das teclas.
-  uint16_t keyColor;             ///< Cor de fundo das teclas.
   #if defined(USING_GRAPHIC_LIB)
   const GFXfont* fontKeys;       ///< Fonte para as teclas.
   const GFXfont* fontPreview;    ///< Fonte para a área de preview.
   #endif
+  uint16_t backgroundColor;      ///< Cor de fundo do Numpad.
+  uint16_t letterColor;          ///< Cor para o texto das teclas.
+  uint16_t keyColor;             ///< Cor de fundo das teclas.
 };
 
 /// @brief Widget de teclado numérico que permite entrada de números através de um teclado na tela.
@@ -67,9 +67,9 @@ public:
   
   // Internal onRelease system for key visual feedback
   struct KeyState {
-    bool isPressed;      ///< True if a key is currently pressed
     uint16_t row;        ///< Row index of pressed key
     uint16_t col;        ///< Column index of pressed key
+    bool isPressed;      ///< True if a key is currently pressed
   };
   
   // Public methods for external access

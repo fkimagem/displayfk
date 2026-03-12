@@ -25,11 +25,11 @@ Estrutura que contém todos os parâmetros de configuração do checkbox:
 
 ```cpp
 struct CheckBoxConfig {
-  uint16_t size;             // Tamanho do checkbox (largura = altura) em pixels
-  uint16_t checkedColor;     // Cor quando marcado (formato RGB565)
-  uint16_t uncheckedColor;   // Cor quando desmarcado (0 = automático baseado no modo)
-  CheckBoxWeight weight;     // Espessura da marca (LIGHT, MEDIUM, HEAVY)
-  functionCB_t callback;     // Ponteiro para função callback
+  functionCB_t callback;     // Callback executada quando o estado do checkbox muda.
+  CheckBoxWeight weight;    // Espessura da marca (LIGHT, MEDIUM, HEAVY).
+  uint16_t size;             // Tamanho do checkbox (largura = altura) em pixels.
+  uint16_t checkedColor;     // Cor quando marcado (formato RGB565).
+  uint16_t uncheckedColor;   // Cor quando desmarcado (0 = automático baseado no modo).
 };
 ```
 
@@ -225,20 +225,20 @@ void setup() {
 void loadWidgets() {
     // Configurar checkbox
     CheckBoxConfig configCheckbox = {
+        .callback = checkbox_cb,
+        .weight = CheckBoxWeight::MEDIUM,
         .size = 21,
         .checkedColor = CFK_COLOR28,
-        .uncheckedColor = CFK_GREY7,
-        .weight = CheckBoxWeight::MEDIUM,
-        .callback = checkbox_cb
+        .uncheckedColor = CFK_GREY7
     };
     checkbox.setup(configCheckbox);
     
     CheckBoxConfig configCheckbox1 = {
+        .callback = checkbox1_cb,
+        .weight = CheckBoxWeight::HEAVY,
         .size = 21,
         .checkedColor = CFK_COLOR03,
-        .uncheckedColor = CFK_GREY10,
-        .weight = CheckBoxWeight::HEAVY,
-        .callback = checkbox1_cb
+        .uncheckedColor = CFK_GREY10
     };
     checkbox1.setup(configCheckbox1);
     
@@ -329,11 +329,11 @@ void setup() {
     
     // Configurar checkbox
     CheckBoxConfig config = {
+        .callback = checkbox_callback,
+        .weight = CheckBoxWeight::MEDIUM,
         .size = 25,
         .checkedColor = CFK_COLOR28,
-        .uncheckedColor = 0,  // Automático
-        .weight = CheckBoxWeight::MEDIUM,
-        .callback = checkbox_callback
+        .uncheckedColor = 0  // Automático
     };
     meuCheckbox.setup(config);
     

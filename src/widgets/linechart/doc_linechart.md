@@ -24,28 +24,32 @@ A classe `LineChart` é um widget visual avançado que exibe gráficos de linhas
 
 ### LineChartConfig
 
-Estrutura que contém todos os parâmetros de configuração do gráfico:
+Estrutura que contém todos os parâmetros de configuração do gráfico.  
+Ela foi reorganizada para melhor alinhamento em 32 bits (veja também `STRUCT_ALIGNMENT.md`):
 
 ```cpp
 struct LineChartConfig {
-  uint16_t width;                // Largura do gráfico em pixels
-  uint16_t height;               // Altura do gráfico em pixels
-  int minValue;                  // Valor mínimo da faixa
-  int maxValue;                  // Valor máximo da faixa
-  uint8_t amountSeries;          // Número de séries (máx 10)
-  uint16_t* colorsSeries;        // Array de cores para cada série
-  uint16_t gridColor;            // Cor das linhas da grade
-  uint16_t borderColor;          // Cor da borda
-  uint16_t backgroundColor;      // Cor de fundo
-  uint16_t textColor;            // Cor do texto
-  uint16_t verticalDivision;     // Espaçamento entre linhas verticais
-  bool workInBackground;         // Flag para desenho em background
-  bool showZeroLine;             // Flag para mostrar linha zero
-  bool boldLine;                 // Flag para linha em negrito
-  bool showDots;                 // Flag para mostrar pontos
-  uint16_t maxPointsAmount;      // Número máximo de pontos
-  const GFXfont* font;           // Fonte para texto
-  Label** subtitles;             // Array de Labels para legenda
+  uint16_t* colorsSeries;        // Array de cores para cada série.
+  Label** subtitles;             // Array de ponteiros para Label para cada série (pode ser nullptr).
+#if defined(USING_GRAPHIC_LIB)
+  const GFXfont* font;           // Fonte usada para texto no gráfico.
+#endif
+  int minValue;                  // Valor mínimo para a faixa do gráfico (eixo Y).
+  int maxValue;                  // Valor máximo para a faixa do gráfico (eixo Y).
+  uint16_t width;                // Largura do gráfico em pixels.
+  uint16_t height;               // Altura do gráfico em pixels.
+  uint16_t gridColor;            // Cor das linhas da grade.
+  uint16_t borderColor;          // Cor da borda do gráfico.
+  uint16_t backgroundColor;      // Cor de fundo do gráfico.
+  uint16_t textColor;            // Cor do texto exibido no gráfico.
+  uint16_t verticalDivision;     // Quantidade de divisões verticais (linhas horizontais da grade).
+  uint16_t maxPointsAmount;      // Número máximo de pontos por série (use LineChart::SHOW_ALL para não limitar).
+  uint8_t amountSeries;          // Número de séries para plotar (máx. 10).
+  bool workInBackground;         // Se true, o gráfico é renderizado em background.
+  bool showZeroLine;             // Se true, desenha a linha de valor zero.
+  bool boldLine;                 // Se true, usa linhas mais espessas.
+  bool showDots;                 // Se true, desenha pontos nos valores.
+  // 3 bytes de padding no final (alinhamento da struct ao maior membro: 4 bytes)
 };
 ```
 
@@ -209,24 +213,24 @@ void setup() {
 void loadWidgets() {
     // Configurar gráfico de linhas
     LineChartConfig configLineChart = {
-        .width = 500,
-        .height = 113,
-        .minValue = 0,
-        .maxValue = 100,
-        .amountSeries = qtdLinesChart0,
         .colorsSeries = colorsChart0,
-        .gridColor = CFK_COLOR01,
+        .subtitles   = seriesGrafico0,
+        .font        = &RobotoRegular5pt7b,
+        .minValue    = 0,
+        .maxValue    = 100,
+        .width       = 500,
+        .height      = 113,
+        .gridColor   = CFK_COLOR01,
         .borderColor = CFK_BLACK,
         .backgroundColor = CFK_GREY4,
-        .textColor = CFK_COLOR19,
+        .textColor   = CFK_COLOR19,
         .verticalDivision = 10,
+        .maxPointsAmount  = LineChart::SHOW_ALL,
+        .amountSeries     = qtdLinesChart0,
         .workInBackground = false,
-        .showZeroLine = true,
-        .boldLine = false,
-        .showDots = false,
-        .maxPointsAmount = LineChart::SHOW_ALL,
-        .font = &RobotoRegular5pt7b,
-        .subtitles = seriesGrafico0
+        .showZeroLine     = true,
+        .boldLine         = false,
+        .showDots         = false
     };
     linechart.setup(configLineChart);
     

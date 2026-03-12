@@ -12,12 +12,12 @@ const char* RadioGroup::TAG = "RadioGroup";
 RadioGroup::RadioGroup(uint8_t _screen)
     : WidgetBase(0, 0, _screen), m_shouldRedraw(true), m_config{} {
       m_config = {
-        .group = 0,
-        .radius = 0,
-        .amount = 0,
         .buttons = nullptr,
-        .defaultClickedId = 0,
-        .callback = nullptr
+        .callback = nullptr,
+        .radius = 0,
+        .group = 0,
+        .amount = 0,
+        .defaultClickedId = 0
       };
     }
 

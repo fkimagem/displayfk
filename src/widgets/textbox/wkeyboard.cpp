@@ -285,8 +285,12 @@ void WKeyboard::drawKeys(bool fullScreen, bool onlyContent)
     WidgetBase::objTFT->setTextColor(WKeyboard::m_keyColor);
 
     WidgetBase::objTFT->setFont(m_fontPreview);
-    const char *conteudo = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width * 0.9, m_pontoPreview.height * 0.9);
-    printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, lastArea, WKeyboard::m_backgroundColor);
+    char conteudo[256];
+
+    int n = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width * 0.9, m_pontoPreview.height * 0.9, conteudo, sizeof(conteudo));
+    if(n > 0){
+        printText(conteudo, m_pontoPreview.x + 2, m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM, lastArea, WKeyboard::m_backgroundColor);
+    }
 
     WidgetBase::objTFT->setTextColor(WKeyboard::m_letterColor);
     drawBackKey(m_backKeyPos.x, m_backKeyPos.y);

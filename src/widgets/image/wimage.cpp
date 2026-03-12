@@ -21,12 +21,12 @@ Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen)
         //initialize m_config with default values
         m_config = {
           .pixels = nullptr,
-          .width = 0,
-          .height = 0,
           .maskAlpha = nullptr,
           .cb = nullptr,
-          .backgroundColor = 0,
-          .angle = 0.0f
+          .angle = 0.0f,
+          .width = 0,
+          .height = 0,
+          .backgroundColor = 0
         };
 }
 

@@ -640,13 +640,12 @@ void loop(){
 
 void drawStripe(int x, int y,  uint16_t cor1, uint16_t cor2, uint8_t levels){
     int tamanho = 20;
-    uint16_t *cores = blendColorsRGB(cor1, cor2, levels);
+    uint16_t cores[levels];
+    blendColorsRGB(cor1, cor2, levels, cores, levels);
 
     for (uint8_t i = 0; i < levels; i++) {
         tft->fillRect(x + (i * tamanho), y, tamanho, tamanho, cores[i]);
     }
-
-    delete[] cores;
 }
 void screen0(){
     tft->fillScreen(CFK_GREY3);
@@ -696,32 +695,32 @@ void screen0(){
 void loadWidgets(){
     LabelConfig configLabel0 = {
             .text = "Mensagens",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular8pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR12,
-            .backgroundColor = CFK_GREY4,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY4
         };
     txtlog.setup(configLabel0);
     LabelConfig configLabel1 = {
             .text = "temp",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular8pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR12,
-            .backgroundColor = CFK_GREY4,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY4
         };
     txttemp.setup(configLabel1);
     LabelConfig configLabel2 = {
             .text = "umidade",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular8pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR12,
-            .backgroundColor = CFK_GREY4,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY4
         };
     txtumidade.setup(configLabel2);
     myDisplay.setLabel(arrayLabel,qtdLabel);
@@ -743,26 +742,26 @@ void loadWidgets(){
     myDisplay.setLed(arrayLed,qtdLed);
 
     TextButtonConfig configTextButton0 = {
+            .text = "Enviar texto",
+            .callback = btntexto_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 162,
             .height = 36,
             .radius = 10,
             .backgroundColor = CFK_COLOR08,
-            .textColor = CFK_BLACK,
-            .text = "Enviar texto",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btntexto_cb
+            .textColor = CFK_BLACK
         };
 
     btntexto.setup(configTextButton0);
     TextButtonConfig configTextButton1 = {
+            .text = "Enviar struct",
+            .callback = btnstruct1_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 164,
             .height = 38,
             .radius = 10,
             .backgroundColor = CFK_COLOR15,
-            .textColor = CFK_BLACK,
-            .text = "Enviar struct",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btnstruct1_cb
+            .textColor = CFK_BLACK
         };
 
     btnstruct1.setup(configTextButton1);

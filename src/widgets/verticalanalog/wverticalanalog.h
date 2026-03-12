@@ -10,15 +10,15 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar um display analógico vertical.
 ///          Deve ser preenchida e passada para o método setup().
 struct VerticalAnalogConfig {
-  uint16_t width;           ///< Largura do display VAnalog.
-  uint16_t height;          ///< Altura do display VAnalog.
   int minValue;                 ///< Valor mínimo da escala.
   int maxValue;                 ///< Valor máximo da escala.
-  uint8_t steps;            ///< Número de divisões na escala.
+  uint16_t width;           ///< Largura do display VAnalog.
+  uint16_t height;          ///< Altura do display VAnalog.
   uint16_t arrowColor;      ///< Cor da seta marcadora.
   uint16_t textColor;       ///< Cor do texto de exibição.
   uint16_t backgroundColor; ///< Cor de fundo do display.
   uint16_t borderColor;     ///< Cor da borda do display.
+  uint8_t steps;            ///< Número de divisões na escala.
 };
 
 /// @brief Representa um widget de display analógico vertical usado para visualizar valores numéricos em uma escala vertical.

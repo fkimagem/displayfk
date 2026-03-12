@@ -93,9 +93,9 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     CheckBoxConfig configCheckbox0 = {
+            .callback = checkbox_cb,
             .size = 21,
-            .checkedColor = CFK_COLOR01,
-            .callback = checkbox_cb
+            .checkedColor = CFK_COLOR01
         };
     checkbox.setup(configCheckbox0);
     myDisplay.setCheckbox(arrayCheckbox,qtdCheckbox);

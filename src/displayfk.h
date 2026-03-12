@@ -433,7 +433,7 @@ public:
 #elif defined(TOUCH_FT6336)
     void startTouchFT6336(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST);
 #elif defined(TOUCH_CST816)
-    void startTouchCST816(uint16_t w, uint16_t h, uint8_t _rotation, uintint8_t8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST);
+    void startTouchCST816(uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST);
 #elif defined(TOUCH_GT911)
     void startTouchGT911(uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST);
 #elif defined(TOUCH_GSL3680)

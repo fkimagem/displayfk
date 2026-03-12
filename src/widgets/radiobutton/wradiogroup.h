@@ -8,20 +8,20 @@ struct radio_t
 {
   uint16_t x; ///< Coordenada X do botão de rádio.
   uint16_t y; ///< Coordenada Y do botão de rádio.
-  uint8_t id; ///< Identificador do botão de rádio dentro do grupo.
   uint16_t color; ///< Cor do botão de rádio.
+  uint8_t id; ///< Identificador do botão de rádio dentro do grupo.
 };
 
 /// @brief Estrutura de configuração para o RadioGroup.
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar um grupo de botões de rádio.
 ///          Deve ser preenchida e passada para o método setup().
 struct RadioGroupConfig {
-  uint8_t group;               ///< Identificador do grupo para os botões de rádio.
-  uint16_t radius;             ///< Raio de cada botão de rádio.
-  uint8_t amount;              ///< Número de botões de rádio no grupo.
   const radio_t* buttons;      ///< Ponteiro para um array definindo os botões de rádio.
-  uint8_t defaultClickedId;    ///< ID do botão de rádio a ser selecionado por padrão.
   functionCB_t callback;       ///< Função callback para executar na mudança de seleção.
+  uint16_t radius;             ///< Raio de cada botão de rádio.
+  uint8_t group;               ///< Identificador do grupo para os botões de rádio.
+  uint8_t amount;              ///< Número de botões de rádio no grupo.
+  uint8_t defaultClickedId;    ///< ID do botão de rádio a ser selecionado por padrão.
 };
 
 /// @brief Widget de grupo de botões de rádio que permite seleção de uma opção dentro do grupo.

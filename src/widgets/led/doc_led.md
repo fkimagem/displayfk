@@ -24,14 +24,14 @@ A classe `Led` é um widget visual que exibe um LED na tela com efeito de brilho
 
 ### LedConfig
 
-Estrutura que contém todos os parâmetros de configuração do LED:
+Estrutura que contém todos os parâmetros de configuração do LED (ordem conforme `wled.h`):
 
 ```cpp
 struct LedConfig {
-  uint16_t radius;     // Raio do LED em pixels (recomendado: 5-50)
-  uint16_t colorOn;    // Cor RGB565 quando ligado
-  uint16_t colorOff;   // Cor RGB565 quando desligado (0 = automático)
-  bool initialState;   // Estado inicial do LED (true = ligado, false = desligado)
+  uint16_t radius;     // Raio do LED em pixels (recomendado: 5-50).
+  uint16_t colorOn;    // Cor RGB565 quando ligado.
+  uint16_t colorOff;   // Cor RGB565 quando desligado (0 = automático).
+  bool initialState;   // Estado inicial do LED (true = ligado, false = desligado).
 };
 ```
 

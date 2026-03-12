@@ -94,12 +94,13 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     HSliderConfig configHSlider0 = {
-            .width = 271,
-            .pressedColor = CFK_COLOR01,
+            .callback = slider_cb,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 255,
             .radius = 26,
-            .callback = slider_cb
+            .width = 271,
+            .pressedColor = CFK_COLOR01
         };
     slider.setup(configHSlider0);
     myDisplay.setHSlider(arrayHslider,qtdHSlider);

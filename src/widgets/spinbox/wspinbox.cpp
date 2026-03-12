@@ -37,7 +37,7 @@ void SpinBox::increaseValue() {
 SpinBox::SpinBox(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen){
 
-      m_config = {.width = 0, .height = 0, .step = 0, .minValue = 0, .maxValue = 0, .startValue = 0, .color = 0, .textColor = 0, .callback = nullptr};
+      m_config = {.callback = nullptr, .minValue = 0, .maxValue = 0, .startValue = 0, .width = 0, .height = 0, .step = 0, .color = 0, .textColor = 0};
       m_offset = 10;
       ESP_LOGD(TAG, "SpinBox created at (%d, %d) on screen %d", _x, _y, _screen);
     }

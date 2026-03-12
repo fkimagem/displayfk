@@ -8,17 +8,17 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar uma caixa de número.
 ///          Deve ser preenchida e passada para o método setup().
 struct NumberBoxConfig {
+  functionLoadScreen_t funcPtr;  ///< Ponteiro de função para a função de carregamento da tela pai.
+  functionCB_t callback;         ///< Função callback para executar na interação.
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* font;           ///< Fonte para usar no texto.
+  #endif
+  float startValue;              ///< Valor numérico inicial para exibir.
   uint16_t width;                ///< Largura da caixa de número.
   uint16_t height;               ///< Altura da caixa de número.
   uint16_t letterColor;          ///< Cor para o texto exibindo o valor.
   uint16_t backgroundColor;      ///< Cor de fundo da caixa de número.
-  float startValue;              ///< Valor numérico inicial para exibir.
   uint8_t decimalPlaces;         ///< Número de casas decimais para exibir.
-  #if defined(USING_GRAPHIC_LIB)
-  const GFXfont* font;           ///< Fonte para usar no texto.
-  #endif
-  functionLoadScreen_t funcPtr;  ///< Ponteiro de função para a função de carregamento da tela pai.
-  functionCB_t callback;         ///< Função callback para executar na interação.
 };
 
 /// @brief Widget de caixa de número para exibir e editar valores numéricos.
@@ -46,7 +46,7 @@ public:
   void setValue(double str);
   double getValue();
   const char* getValueChar();
-  String convertoToString(double f);
+  void convertoToString(double f, char* buf, size_t bufSize);
   
   void show() override;
   void hide() override;

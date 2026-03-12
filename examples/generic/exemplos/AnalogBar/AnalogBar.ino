@@ -95,15 +95,15 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     VerticalAnalogConfig configVAnalog0 = {
-            .width = 41,
-            .height = 149,
             .minValue = 0,
             .maxValue = 4095,
-            .steps = 10,
+            .width = 41,
+            .height = 149,
             .arrowColor = CFK_COLOR01,
             .textColor = CFK_BLACK,
             .backgroundColor = CFK_WHITE,
-            .borderColor = CFK_BLACK
+            .borderColor = CFK_BLACK,
+            .steps = 10
         };
     vertalog.setup(configVAnalog0);
     myDisplay.setVAnalog(arrayVanalog,qtdVAnalog);

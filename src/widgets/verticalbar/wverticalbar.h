@@ -8,14 +8,14 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar uma barra vertical.
 ///          Deve ser preenchida e passada para o método setup().
 struct VerticalBarConfig {
-  uint16_t width;          ///< Largura da exibição do VBar.
-  uint16_t height;         ///< Altura da exibição do VBar.
-  uint16_t filledColor;    ///< Cor usada para a porção preenchida da barra.
+  Label* subtitle;
   int minValue;                ///< Valor mínimo da faixa da barra.
   int maxValue;                ///< Valor máximo da faixa da barra.
   int round; ///< Raio para os cantos arredondados da barra.
   Orientation orientation; ///< Orientação da barra (vertical ou horizontal).
-  Label* subtitle;
+  uint16_t width;          ///< Largura da exibição do VBar.
+  uint16_t height;         ///< Altura da exibição do VBar.
+  uint16_t filledColor;    ///< Cor usada para a porção preenchida da barra.
 };
 
 /// @brief Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de uma faixa especificada.

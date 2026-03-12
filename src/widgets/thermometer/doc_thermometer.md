@@ -21,20 +21,20 @@ A classe `Thermometer` é um widget visual que exibe um termômetro vertical com
 
 ### ThermometerConfig
 
-Estrutura que contém todos os parâmetros de configuração:
+Estrutura que contém todos os parâmetros de configuração (ordem conforme `wthermometer.h`):
 
 ```cpp
 struct ThermometerConfig {
-  uint16_t width;          // Largura do termômetro
-  uint16_t height;         // Altura do termômetro
-  uint16_t filledColor;    // Cor da porção preenchida
-  uint16_t backgroundColor; // Cor de fundo
-  uint16_t markColor;      // Cor das marcas graduadas
-  int minValue;            // Valor mínimo da faixa
-  int maxValue;            // Valor máximo da faixa
-  Label* subtitle;         // Ponteiro para Label (opcional)
-  const char* unit;        // Unidade de medida (ex: "°C", "°F")
-  uint8_t decimalPlaces;  // Casas decimais para exibição
+  Label* subtitle;         // Ponteiro para Label para exibir o valor (pode ser nullptr).
+  const char* unit;        // Unidade de medida (ex: "°C", "°F").
+  int minValue;            // Valor mínimo da faixa.
+  int maxValue;            // Valor máximo da faixa.
+  uint16_t width;          // Largura do termômetro em pixels.
+  uint16_t height;         // Altura do termômetro em pixels.
+  uint16_t filledColor;    // Cor da porção preenchida.
+  uint16_t backgroundColor;// Cor de fundo.
+  uint16_t markColor;      // Cor das marcas graduadas.
+  uint8_t decimalPlaces;   // Casas decimais para exibição.
 };
 ```
 
@@ -285,26 +285,26 @@ void loadWidgets() {
     // Configurar Label
     LabelConfig configLabel = {
         .text = "0",
+        .prefix = "",
+        .suffix = "°C",
         .fontFamily = &RobotoRegular10pt7b,
         .datum = MC_DATUM,
         .fontColor = CFK_BLACK,
-        .backgroundColor = CFK_WHITE,
-        .prefix = "",
-        .suffix = "°C"
+        .backgroundColor = CFK_WHITE
     };
     temperaturaLabel.setup(configLabel);
     
     // Configurar Thermometer
     ThermometerConfig configThermometer = {
+        .subtitle = &temperaturaLabel,
+        .unit = "°C",
+        .minValue = 0,
+        .maxValue = 100,
         .width = 60,
         .height = 150,
         .filledColor = CFK_RED,
         .backgroundColor = CFK_WHITE,
         .markColor = CFK_BLACK,
-        .minValue = 0,
-        .maxValue = 100,
-        .subtitle = &temperaturaLabel,
-        .unit = "°C",
         .decimalPlaces = 1
     };
     thermometer.setup(configThermometer);
@@ -376,26 +376,26 @@ void setup() {
     // Configurar Label
     LabelConfig configLabel = {
         .text = "0",
+        .prefix = "",
+        .suffix = "°C",
         .fontFamily = &RobotoRegular10pt7b,
         .datum = MC_DATUM,
         .fontColor = CFK_BLACK,
-        .backgroundColor = CFK_WHITE,
-        .prefix = "",
-        .suffix = "°C"
+        .backgroundColor = CFK_WHITE
     };
     tempLabel.setup(configLabel);
     
     // Configurar Thermometer
     ThermometerConfig config = {
+        .subtitle = &tempLabel,
+        .unit = "°C",
+        .minValue = 0,
+        .maxValue = 50,
         .width = 80,
         .height = 200,
         .filledColor = CFK_RED,
         .backgroundColor = CFK_WHITE,
         .markColor = CFK_BLACK,
-        .minValue = 0,
-        .maxValue = 50,
-        .subtitle = &tempLabel,
-        .unit = "°C",
         .decimalPlaces = 1
     };
     termometro.setup(config);

@@ -21,18 +21,18 @@ A classe `VBar` é um widget que exibe valores numéricos como uma barra vertica
 
 ### VerticalBarConfig
 
-Estrutura que contém todos os parâmetros de configuração:
+Estrutura que contém todos os parâmetros de configuração (ordem conforme `wverticalbar.h`):
 
 ```cpp
 struct VerticalBarConfig {
-  uint16_t width;         // Largura da barra
-  uint16_t height;        // Altura da barra
-  uint16_t filledColor;   // Cor da porção preenchida
-  int minValue;           // Valor mínimo da faixa
-  int maxValue;           // Valor máximo da faixa
-  int round;             // Raio para cantos arredondados
-  Orientation orientation; // VERTICAL ou HORIZONTAL
-  Label* subtitle;        // Ponteiro para Label opcional para exibir o valor
+  Label* subtitle;           // Ponteiro para Label opcional para exibir o valor (pode ser nullptr).
+  int minValue;              // Valor mínimo da faixa.
+  int maxValue;              // Valor máximo da faixa.
+  int round;                 // Raio para cantos arredondados.
+  Orientation orientation;   // VERTICAL ou HORIZONTAL.
+  uint16_t width;            // Largura da barra em pixels.
+  uint16_t height;           // Altura da barra em pixels.
+  uint16_t filledColor;      // Cor da porção preenchida.
 };
 ```
 
@@ -250,28 +250,28 @@ void setup() {
 void loadWidgets() {
     // Configurar Barra Vertical
     VerticalBarConfig configBarra1 = {
-        .width = 30,
-        .height = 150,
-        .filledColor = CFK_GREEN,
+        .subtitle = nullptr,
         .minValue = 0,
         .maxValue = 100,
         .round = 5,
         .orientation = Orientation::VERTICAL,
-        .subtitle = nullptr  // Opcional: ponteiro para Label para exibir valor
+        .width = 30,
+        .height = 150,
+        .filledColor = CFK_GREEN
     };
     barra1.setup(configBarra1);
     barra1.drawBackground();
     
     // Configurar Barra Horizontal
     VerticalBarConfig configBarra2 = {
-        .width = 150,
-        .height = 30,
-        .filledColor = CFK_BLUE,
+        .subtitle = nullptr,
         .minValue = 0,
         .maxValue = 100,
         .round = 10,
         .orientation = Orientation::HORIZONTAL,
-        .subtitle = nullptr  // Opcional: ponteiro para Label para exibir valor
+        .width = 150,
+        .height = 30,
+        .filledColor = CFK_BLUE
     };
     barra2.setup(configBarra2);
     barra2.drawBackground();
@@ -343,6 +343,8 @@ void setup() {
     // Configurar Label para exibir valor da bateria
     LabelConfig configLabelBateria = {
         .text = "0",
+        .prefix = "",
+        .suffix = "",
         .fontFamily = &RobotoRegular10pt7b,
         .datum = TL_DATUM,
         .fontColor = CFK_BLACK,
@@ -352,14 +354,14 @@ void setup() {
     
     // Configurar Barra de Bateria (Vertical) com Label
     VerticalBarConfig configBateria = {
-        .width = 30,
-        .height = 100,
-        .filledColor = CFK_GREEN,
+        .subtitle = &labelBateria,
         .minValue = 0,
         .maxValue = 100,
         .round = 5,
         .orientation = Orientation::VERTICAL,
-        .subtitle = &labelBateria  // Label para exibir valor automaticamente
+        .width = 30,
+        .height = 100,
+        .filledColor = CFK_GREEN
     };
     bateria.setup(configBateria);
     bateria.drawBackground();
@@ -369,14 +371,14 @@ void setup() {
     
     // Configurar Barra de Progresso (Horizontal)
     VerticalBarConfig configProgresso = {
-        .width = 200,
-        .height = 20,
-        .filledColor = CFK_BLUE,
+        .subtitle = nullptr,
         .minValue = 0,
         .maxValue = 100,
         .round = 10,
         .orientation = Orientation::HORIZONTAL,
-        .subtitle = nullptr  // Opcional: ponteiro para Label para exibir valor
+        .width = 200,
+        .height = 20,
+        .filledColor = CFK_BLUE
     };
     progresso.setup(configProgresso);
     progresso.drawBackground();

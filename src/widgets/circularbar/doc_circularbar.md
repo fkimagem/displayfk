@@ -22,22 +22,22 @@ A classe `CircularBar` é um widget visual que exibe um valor como um arco circu
 
 ### CircularBarConfig
 
-Estrutura que contém todos os parâmetros de configuração da barra circular:
+Estrutura que contém todos os parâmetros de configuração da barra circular (ordem conforme `wcircularbar.h`):
 
 ```cpp
 struct CircularBarConfig {
-  uint16_t radius;           // Raio da barra circular em pixels
-  int minValue;              // Valor mínimo da faixa da barra
-  int maxValue;              // Valor máximo da faixa da barra
-  uint16_t startAngle;       // Ângulo inicial da barra em graus (0-360)
-  uint16_t endAngle;         // Ângulo final da barra em graus (0-360)
-  uint8_t thickness;         // Espessura da linha da barra em pixels
-  uint16_t color;            // Cor RGB565 da barra quando preenchida
-  uint16_t backgroundColor;  // Cor RGB565 de fundo da barra
-  uint16_t textColor;        // Cor RGB565 do texto do valor
-  uint16_t backgroundText;   // Cor RGB565 do fundo da área do texto
-  bool showValue;            // Flag para mostrar/ocultar o valor no centro
-  bool inverted;             // Flag para direção invertida de preenchimento
+  int minValue;              // Valor mínimo da faixa da barra.
+  int maxValue;              // Valor máximo da faixa da barra.
+  uint16_t radius;           // Raio da barra circular em pixels.
+  uint16_t startAngle;       // Ângulo inicial da barra em graus (0-360).
+  uint16_t endAngle;         // Ângulo final da barra em graus (0-360).
+  uint16_t color;            // Cor RGB565 da barra quando preenchida.
+  uint16_t backgroundColor;  // Cor RGB565 de fundo da barra.
+  uint16_t textColor;        // Cor RGB565 do texto do valor.
+  uint16_t backgroundText;   // Cor RGB565 do fundo da área do texto.
+  uint8_t thickness;         // Espessura da linha da barra em pixels.
+  bool showValue;            // Flag para mostrar/ocultar o valor no centro.
+  bool inverted;             // Flag para direção invertida de preenchimento.
 };
 ```
 
@@ -277,16 +277,16 @@ void setup() {
 void loadWidgets() {
     // Configurar barra circular
     CircularBarConfig configCirculaBar = {
-        .radius = 40,
         .minValue = 0,
         .maxValue = 100,
+        .radius = 40,
         .startAngle = 0,
         .endAngle = 360,
-        .thickness = 10,
         .color = CFK_COLOR09,
         .backgroundColor = CFK_WHITE,
         .textColor = CFK_BLACK,
         .backgroundText = CFK_WHITE,
+        .thickness = 10,
         .showValue = true,
         .inverted = false
     };

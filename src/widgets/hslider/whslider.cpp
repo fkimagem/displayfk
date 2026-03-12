@@ -21,7 +21,7 @@ HSlider::HSlider(uint16_t _x, uint16_t _y, uint8_t _screen)
       m_value(0)
 {
   // Initialize with default config
-  m_config = {.width = 0, .pressedColor = 0, .backgroundColor = 0, .minValue = 0, .maxValue = 0, .radius = 0, .callback = nullptr};
+  m_config = {.callback = nullptr, .subtitle = nullptr, .minValue = 0, .maxValue = 0, .radius = 0, .width = 0, .pressedColor = 0, .backgroundColor = 0};
   
   ESP_LOGD(TAG, "HSlider created at (%d, %d) on screen %d", _x, _y, _screen);
 }
@@ -63,6 +63,7 @@ bool HSlider::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
   CHECK_ENABLED_BOOL
   CHECK_LOCKED_BOOL
   CHECK_POINTER_TOUCH_NULL_BOOL
+  CHECK_DEBOUNCE_FAST_REDRAW_BOOL
 
   bool detected = false;
 
@@ -193,13 +194,16 @@ void HSlider::redraw() {
   CHECK_LOADED_VOID
   CHECK_USINGKEYBOARD_VOID
   CHECK_CURRENTSCREEN_VOID
-  CHECK_DEBOUNCE_FAST_REDRAW_VOID
+  //CHECK_DEBOUNCE_FAST_REDRAW_VOID
   CHECK_SHOULDREDRAW_VOID
 
 
   m_shouldRedraw = false;
 
   #if defined(USING_GRAPHIC_LIB)
+
+
+  Serial.println("HSlider redraw");
 
   uint16_t lightBg = WidgetBase::lightMode ? CFK_GREY11 : CFK_GREY3;
 
@@ -231,6 +235,11 @@ void HSlider::redraw() {
                                  m_config.pressedColor); // slider center
 
   m_lastPos = m_currentPos;
+
+  if (m_config.subtitle)
+  {
+    m_config.subtitle->setTextInt(m_value);
+  }
 
   #endif
 }

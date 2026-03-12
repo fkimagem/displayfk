@@ -98,21 +98,21 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     GaugeConfig configGauge0 = {
-            .width = 220,
             .title = "Title",
             .intervals = range0,
             .colors = colors0,
-            .amountIntervals = qtdIntervalG0,
+            .fontFamily = &RobotoBold10pt7b,
             .minValue = 0,
             .maxValue = 4095,
+            .width = 220,
             .borderColor = CFK_COLOR01,
             .textColor = CFK_BLACK,
             .backgroundColor = CFK_WHITE,
             .titleColor = CFK_BLACK,
             .needleColor = CFK_RED,
             .markersColor = CFK_BLACK,
-            .showLabels = true,
-            .fontFamily = &RobotoBold10pt7b
+            .amountIntervals = qtdIntervalG0,
+            .showLabels = true
         };
     widget.setup(configGauge0);
     myDisplay.setGauge(arrayGauge,qtdGauge);

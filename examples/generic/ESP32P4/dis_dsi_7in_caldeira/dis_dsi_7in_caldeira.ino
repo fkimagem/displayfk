@@ -362,234 +362,234 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     GaugeConfig configGauge0 = {
-            .width = 445,
-            .height = 140,
             .title = "Pressurizador (Pa)",
             .intervals = range0,
             .colors = colors0,
-            .amountIntervals = qtdIntervalG0,
+            .fontFamily = &RobotoBold10pt7b,
             .minValue = 0,
             .maxValue = 100,
+            .width = 445,
+            .height = 140,
             .borderColor = CFK_GREY2,
             .textColor = CFK_WHITE,
             .backgroundColor = CFK_GREY5,
             .titleColor = CFK_WHITE,
             .needleColor = CFK_RED,
             .markersColor = CFK_BLACK,
-            .showLabels = true,
-            .fontFamily = &RobotoBold10pt7b
+            .amountIntervals = qtdIntervalG0,
+            .showLabels = true
         };
     widget.setup(configGauge0);
     myDisplay.setGauge(arrayGauge,qtdGauge);
 
     LabelConfig configLabel0 = {
             .text = "Term 1",
+            .prefix = "",
+            .suffix = "C",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR03,
-            .backgroundColor = CFK_GREY4,
-            .prefix = "",
-            .suffix = "C"
+            .backgroundColor = CFK_GREY4
         };
     term1.setup(configLabel0);
     LabelConfig configLabel1 = {
             .text = "Term 1",
+            .prefix = "",
+            .suffix = "C",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR05,
-            .backgroundColor = CFK_GREY4,
-            .prefix = "",
-            .suffix = "C"
+            .backgroundColor = CFK_GREY4
         };
     term11.setup(configLabel1);
     LabelConfig configLabel2 = {
             .text = "Term 1",
+            .prefix = "",
+            .suffix = "C",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR10,
-            .backgroundColor = CFK_GREY4,
-            .prefix = "",
-            .suffix = "C"
+            .backgroundColor = CFK_GREY4
         };
     term12.setup(configLabel2);
     LabelConfig configLabel3 = {
             .text = "Term 1",
+            .prefix = "",
+            .suffix = "C",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR19,
-            .backgroundColor = CFK_GREY4,
-            .prefix = "",
-            .suffix = "C"
+            .backgroundColor = CFK_GREY4
         };
     term13.setup(configLabel3);
     myDisplay.setLabel(arrayLabel,qtdLabel);
 
     LineChartConfig configLineChart0 = {
-            .width = 439,
-            .height = 129,
+            .colorsSeries = colorsChart0,
+            .subtitles = nullptr,
+            .font = &RobotoRegular5pt7b,
             .minValue = 0,
             .maxValue = 100,
-            .amountSeries = qtdLinesChart0,
-            .colorsSeries = colorsChart0,
+            .width = 439,
+            .height = 129,
             .gridColor = CFK_BLACK,
             .borderColor = CFK_BLACK,
             .backgroundColor = CFK_GREY3,
             .textColor = CFK_WHITE,
             .verticalDivision = 10,
+            .maxPointsAmount = LineChart::SHOW_ALL,
+            .amountSeries = qtdLinesChart0,
             .workInBackground = false,
             .showZeroLine = true,
             .boldLine = false,
-            .showDots = false,
-            .maxPointsAmount = LineChart::SHOW_ALL,
-            .font = &RobotoRegular5pt7b,
-            .subtitles = nullptr
+            .showDots = false
         };
     linechart.setup(configLineChart0);
     myDisplay.setLineChart(arrayLinechart,qtdLineChart);
 
     RectButtonConfig configRectButton0 = {
+            .callback = rectbutton_cb,
             .width = 53,
             .height = 70,
-            .pressedColor = CFK_COLOR09,
-            .callback = rectbutton_cb
+            .pressedColor = CFK_COLOR09
         };
 rectbutton.setup(configRectButton0);
     RectButtonConfig configRectButton1 = {
+            .callback = rectbutton1_cb,
             .width = 53,
             .height = 70,
-            .pressedColor = CFK_COLOR09,
-            .callback = rectbutton1_cb
+            .pressedColor = CFK_COLOR09
         };
 rectbutton1.setup(configRectButton1);
     RectButtonConfig configRectButton2 = {
+            .callback = rectbutton2_cb,
             .width = 53,
             .height = 70,
-            .pressedColor = CFK_COLOR09,
-            .callback = rectbutton2_cb
+            .pressedColor = CFK_COLOR09
         };
 rectbutton2.setup(configRectButton2);
     RectButtonConfig configRectButton3 = {
+            .callback = rectbutton3_cb,
             .width = 53,
             .height = 73,
-            .pressedColor = CFK_COLOR09,
-            .callback = rectbutton3_cb
+            .pressedColor = CFK_COLOR09
         };
 rectbutton3.setup(configRectButton3);
     myDisplay.setRectButton(arrayRectbtn,qtdRectBtn);
 
     SpinBoxConfig configSpinBox0 = {
-            .width = 183,
-            .height = 59,
-            .step = 1,
+            .callback = spinbox_cb,
             .minValue = 0,
             .maxValue = 100,
             .startValue = 51,
+            .width = 183,
+            .height = 59,
+            .step = 1,
             .color = CFK_COLOR14,
-            .textColor = CFK_BLACK,
-            .callback = spinbox_cb
+            .textColor = CFK_BLACK
         };
     spinbox.setup(configSpinBox0);
     myDisplay.setSpinbox(arraySpinbox,qtdSpinbox);
 
     TextButtonConfig configTextButton0 = {
+            .text = "Config",
+            .callback = textbutton_cb,
             .width = 111,
             .height = 37,
             .radius = 10,
             .backgroundColor = CFK_COLOR31,
-            .textColor = CFK_WHITE,
-            .text = "Config",
-            .callback = textbutton_cb
+            .textColor = CFK_WHITE
         };
 
     textbutton.setup(configTextButton0);
     TextButtonConfig configTextButton1 = {
+            .text = "Desl. tela",
+            .callback = textbutton1_cb,
             .width = 109,
             .height = 37,
             .radius = 10,
             .backgroundColor = CFK_GREY3,
-            .textColor = CFK_WHITE,
-            .text = "Desl. tela",
-            .callback = textbutton1_cb
+            .textColor = CFK_WHITE
         };
 
     textbutton1.setup(configTextButton1);
     myDisplay.setTextButton(arrayTextButton,qtdTextButton);
 
     ToggleButtonConfig configToggle0 = {
+            .callback = toggle_cb,
             .width = 64,
             .height = 32,
-            .pressedColor = CFK_COLOR13,
-            .callback = toggle_cb
+            .pressedColor = CFK_COLOR13
         };
     toggle.setup(configToggle0);
     ToggleButtonConfig configToggle1 = {
+            .callback = toggle1_cb,
             .width = 64,
             .height = 32,
-            .pressedColor = CFK_COLOR15,
-            .callback = toggle1_cb
+            .pressedColor = CFK_COLOR15
         };
     toggle1.setup(configToggle1);
     ToggleButtonConfig configToggle2 = {
+            .callback = toggle2_cb,
             .width = 64,
             .height = 32,
-            .pressedColor = CFK_COLOR17,
-            .callback = toggle2_cb
+            .pressedColor = CFK_COLOR17
         };
     toggle2.setup(configToggle2);
     myDisplay.setToggle(arrayTogglebtn,qtdToggleBtn);
 
     ImageFromPixelsConfig configImage0 = {
             .pixels = iClosepngPixels,
-            .width = iClosepngW,
-            .height = iClosepngH,
             .maskAlpha = iClosepngMask,
             .cb = closepng_cb,
+            .width = iClosepngW,
+            .height = iClosepngH,
             .backgroundColor = CFK_GREY3
         };
     closepng.setupFromPixels(configImage0);
     myDisplay.setImage(arrayImagem,qtdImagem);
 
     CircularBarConfig configCirculaBar0 = {
-            .radius = 100,
             .minValue = 0,
             .maxValue = 100,
+            .radius = 100,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 10,
             .color = CFK_COLOR01,
             .backgroundColor = CFK_GREY5,
             .textColor = CFK_BLACK,
             .backgroundText = CFK_GREY4,
+            .thickness = 10,
             .showValue = false,
             .inverted = false
         };
     circload.setup(configCirculaBar0);
     CircularBarConfig configCirculaBar1 = {
-            .radius = 85,
             .minValue = 0,
             .maxValue = 100,
+            .radius = 85,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 10,
             .color = CFK_COLOR05,
             .backgroundColor = CFK_GREY5,
             .textColor = CFK_BLACK,
             .backgroundText = CFK_GREY4,
+            .thickness = 10,
             .showValue = false,
             .inverted = false
         };
     circload1.setup(configCirculaBar1);
     CircularBarConfig configCirculaBar2 = {
-            .radius = 70,
             .minValue = 0,
             .maxValue = 100,
+            .radius = 70,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 10,
             .color = CFK_COLOR10,
             .backgroundColor = CFK_GREY5,
             .textColor = CFK_BLACK,
             .backgroundText = CFK_GREY4,
+            .thickness = 10,
             .showValue = false,
             .inverted = false
         };
@@ -597,54 +597,54 @@ rectbutton3.setup(configRectButton3);
     myDisplay.setCircularBar(arrayCircularbar,qtdCircBar);
 
     ThermometerConfig configThermometer0 = {
+            .subtitle = &term1,
+            .unit = "C",
+            .minValue = 0,
+            .maxValue = 100,
             .width = 38,
             .height = 210,
             .filledColor = CFK_COLOR03,
             .backgroundColor = CFK_GREY5,
             .markColor = CFK_BLACK,
-            .minValue = 0,
-            .maxValue = 100,
-            .subtitle = &term1,
-            .unit = "C",
             .decimalPlaces = 1
         };
     thermometer.setup(configThermometer0);
     ThermometerConfig configThermometer1 = {
+            .subtitle = &term11,
+            .unit = "C",
+            .minValue = 0,
+            .maxValue = 100,
             .width = 40,
             .height = 212,
             .filledColor = CFK_COLOR05,
             .backgroundColor = CFK_GREY5,
             .markColor = CFK_BLACK,
-            .minValue = 0,
-            .maxValue = 100,
-            .subtitle = &term11,
-            .unit = "C",
             .decimalPlaces = 1
         };
     thermometer1.setup(configThermometer1);
     ThermometerConfig configThermometer2 = {
+            .subtitle = &term12,
+            .unit = "C",
+            .minValue = 0,
+            .maxValue = 100,
             .width = 40,
             .height = 212,
             .filledColor = CFK_COLOR10,
             .backgroundColor = CFK_GREY5,
             .markColor = CFK_BLACK,
-            .minValue = 0,
-            .maxValue = 100,
-            .subtitle = &term12,
-            .unit = "C",
             .decimalPlaces = 1
         };
     thermometer2.setup(configThermometer2);
     ThermometerConfig configThermometer3 = {
+            .subtitle = &term13,
+            .unit = "C",
+            .minValue = 0,
+            .maxValue = 100,
             .width = 40,
             .height = 212,
             .filledColor = CFK_COLOR19,
             .backgroundColor = CFK_GREY5,
             .markColor = CFK_BLACK,
-            .minValue = 0,
-            .maxValue = 100,
-            .subtitle = &term13,
-            .unit = "C",
             .decimalPlaces = 1
         };
     thermometer3.setup(configThermometer3);

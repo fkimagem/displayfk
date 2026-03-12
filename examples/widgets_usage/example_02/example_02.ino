@@ -158,17 +158,17 @@ void screen0(){
 void loadWidgets(){
 
     ToggleButtonConfig configToggle0 = {
+            .callback = toggle1_cb,
             .width = 41,
             .height = 21,
-            .pressedColor = CFK_COLOR30,
-            .callback = toggle1_cb
+            .pressedColor = CFK_COLOR30
         };
     toggle1.setup(configToggle0);
     ToggleButtonConfig configToggle1 = {
+            .callback = toggle2_cb,
             .width = 41,
             .height = 21,
-            .pressedColor = CFK_COLOR30,
-            .callback = toggle2_cb
+            .pressedColor = CFK_COLOR30
         };
     toggle2.setup(configToggle1);
     myDisplay.setToggle(arrayTogglebtn,qtdToggleBtn);

@@ -37,12 +37,10 @@ enum class SourceFile {
  * and the rotation angle of the image.
  */
 struct ImageFromFileConfig {
-  SourceFile source; ///< Source of the image file.
   const char *path;  ///< Path to the image file.
-  functionCB_t
-      cb; ///< Callback function to be called when the image is touched.
+  functionCB_t cb; ///< Callback function to be called when the image is touched.
+  SourceFile source; ///< Source of the image file.
   uint16_t backgroundColor; ///< Background color of the image.
-  // float angle; ///< Rotation angle of the image.
   String toString(){
     return String((int)source) + " " + path;
   }
@@ -60,12 +58,12 @@ struct ImageFromFileConfig {
  */
 struct ImageFromPixelsConfig {
   const pixel_t *pixels;        ///< Pointer to the pixel map data (format depends on display type)
-  uint16_t width;               ///< Width of the image (must be > 0)
-  uint16_t height;              ///< Height of the image (must be > 0)
   const uint8_t *maskAlpha;     ///< Pointer to the alpha mask data for transparency (optional)
   functionCB_t cb;              ///< Callback function to be called when the image is touched
-  uint16_t backgroundColor;      ///< Background color of the image
   float angle;                  ///< Rotation angle of the image in degrees (0.0 = no rotation)
+  uint16_t width;               ///< Width of the image (must be > 0)
+  uint16_t height;              ///< Height of the image (must be > 0)
+  uint16_t backgroundColor;      ///< Background color of the image
   
   /**
    * @brief Validates the configuration structure

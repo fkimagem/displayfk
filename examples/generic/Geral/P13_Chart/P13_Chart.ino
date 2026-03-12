@@ -114,22 +114,22 @@ void screen0(){
 void loadWidgets(){
   LabelConfig configLabel0 = {
             .text = "",
+            .prefix = "",
+            .suffix = "C",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR28,
-            .backgroundColor = CFK_GREY3,
-            .prefix = "",
-            .suffix = "C"
+            .backgroundColor = CFK_GREY3
         };
     text.setup(configLabel0);
     LabelConfig configLabel1 = {
             .text = "",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR02,
-            .backgroundColor = CFK_GREY3,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY3
         };
     text1.setup(configLabel1);
     myDisplay.setLabel(arrayLabel,qtdLabel);
@@ -166,53 +166,53 @@ void loadWidgets(){
     ledpink.setup(configLed5);
     myDisplay.setLed(arrayLed,qtdLed);
     LineChartConfig configLineChart0 = {
-            .width = 342,
-            .height = 135,
+            .colorsSeries = colorsChart0,
+            .subtitles = seriesGrafico,
+            .font = &RobotoRegular5pt7b,
             .minValue = 0,
             .maxValue = 100,
-            .amountSeries = qtdLinesChart0,
-            .colorsSeries = colorsChart0,
+            .width = 342,
+            .height = 135,
             .gridColor = CFK_GREY4,
             .borderColor = CFK_BLACK,
             .backgroundColor = CFK_BLACK,
             .textColor = CFK_WHITE,
             .verticalDivision = 2,
+            .maxPointsAmount = 20,
+            .amountSeries = qtdLinesChart0,
             .workInBackground = false,
             .showZeroLine = true,
             .boldLine = false,
-            .showDots = true,
-            .maxPointsAmount = 20,
-            .font = &RobotoRegular5pt7b,
-            .subtitles = seriesGrafico
+            .showDots = true
         };
     graficocima.setup(configLineChart0);
     LineChartConfig configLineChart1 = {
-            .width = 338,
-            .height = 167,
+            .colorsSeries = colorsChart1,
+            .subtitles = nullptr,
+            .font = &RobotoRegular5pt7b,
             .minValue = 0,
             .maxValue = 100,
-            .amountSeries = qtdLinesChart1,
-            .colorsSeries = colorsChart1,
+            .width = 338,
+            .height = 167,
             .gridColor = CFK_GREY4,
             .borderColor = CFK_BLACK,
             .backgroundColor = CFK_BLACK,
             .textColor = CFK_WHITE,
             .verticalDivision = 2,
+            .maxPointsAmount = LineChart::SHOW_ALL,
+            .amountSeries = qtdLinesChart1,
             .workInBackground = false,
             .showZeroLine = true,
             .boldLine = true,
-            .showDots = true,
-            .maxPointsAmount = LineChart::SHOW_ALL,
-            .font = &RobotoRegular5pt7b,
-            .subtitles = nullptr
+            .showDots = true
         };
     graficobaixo.setup(configLineChart1);
     myDisplay.setLineChart(arrayLinechart,qtdLineChart);
     RectButtonConfig configRectButton0 = {
+            .callback = rectbutton_cb,
             .width = 87,
             .height = 72,
-            .pressedColor = CFK_COLOR20,
-            .callback = rectbutton_cb
+            .pressedColor = CFK_COLOR20
         };
 rectbutton.setup(configRectButton0);
     myDisplay.setRectButton(arrayRectbtn,qtdRectBtn);

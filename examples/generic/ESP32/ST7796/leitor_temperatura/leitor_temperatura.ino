@@ -452,24 +452,24 @@ void loadWidgets()
 
   // Configuração do grafico de linhas
   LineChartConfig configLineChart0 = {                                        // Configuração do grafico de linhas
-                                      .width = 205,                           // Largura do grafico de linhas
-                                      .height = 117,                          // Altura do grafico de linhas
+                                      .colorsSeries = colorsChart0,           // Cores das series no grafico de linhas
+                                      .subtitles = nullptr,
+                                      .font = &RobotoRegular5pt7b,            // Fonte do grafico de linhas
                                       .minValue = 0,                          // Valor minimo do grafico de linhas
                                       .maxValue = 100,                        // Valor maximo do grafico de linhas
-                                      .amountSeries = qtdLinesChart0,         // Quantidade de series no grafico de linhas
-                                      .colorsSeries = colorsChart0,           // Cores das series no grafico de linhas
+                                      .width = 205,                           // Largura do grafico de linhas
+                                      .height = 117,                          // Altura do grafico de linhas
                                       .gridColor = CFK_GREY3,                 // Cor da grade do grafico de linhas
                                       .borderColor = CFK_SADDLEBROWN,         // Cor da borda do grafico de linhas
                                       .backgroundColor = CFK_BLACK,           // Cor de fundo do grafico de linhas
                                       .textColor = CFK_WHITE,                 // Cor do texto do grafico de linhas
                                       .verticalDivision = 5,                  // Quantidade de divisões verticais do grafico de linhas
+                                      .maxPointsAmount = LineChart::SHOW_ALL, // Quantidade maxima de pontos do grafico de linhas
+                                      .amountSeries = qtdLinesChart0,         // Quantidade de series no grafico de linhas
                                       .workInBackground = true,               // Se o grafico de linhas deve ser desenhado em background
                                       .showZeroLine = true,                   // Se deve mostrar a linha zero do grafico de linhas
                                       .boldLine = false,                      // Se as linhas do grafico de linhas devem ser em negrito
-                                      .showDots = false,                      // Se os pontos do grafico de linhas devem ser mostrados
-                                      .maxPointsAmount = LineChart::SHOW_ALL, // Quantidade maxima de pontos do grafico de linhas
-                                      .font = &RobotoRegular5pt7b,            // Fonte do grafico de linhas
-                                      .subtitles = nullptr};
+                                      .showDots = false};                      // Se os pontos do grafico de linhas devem ser mostrados
   arrayLinechart[0]->setup(configLineChart0);           // Configura o widget grafico de linhas 0 com os valores da configuração
   myDisplay.setLineChart(arrayLinechart, qtdLineChart); // Informa para a lib as configurações do widget grafico de linhas
 

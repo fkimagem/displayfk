@@ -80,7 +80,7 @@ uint16_t colorsChart0[qtdLinesChart0] = {CFK_COLOR03,CFK_COLOR10};
 RadioGroup grupo1(0);
 const uint8_t qtdRadioGroup = 1;
 RadioGroup *arrayRadio[qtdRadioGroup] = {&grupo1};
-radio_t radiosOfGroup_grupo1[4] = {{290, 190, 1, CFK_COLOR01},{290, 215, 1, CFK_COLOR01},{290, 241, 1, CFK_COLOR01},{290, 268, 1, CFK_COLOR01}};
+radio_t radiosOfGroup_grupo1[4] = {{290, 190, CFK_COLOR01, 1},{290, 215, CFK_COLOR01, 1},{290, 241, CFK_COLOR01, 1},{290, 268, CFK_COLOR01, 1}};
 SpinBox spinbox(285, 425, 0);
 SpinBox spinbox1(385, 425, 0);
 SpinBox spinbox2(495, 425, 0);
@@ -278,356 +278,365 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     CheckBoxConfig configCheckbox0 = {
+            .callback = checkbox_cb,
+            .weight = CheckBoxWeight::MEDIUM,
             .size = 21,
             .checkedColor = CFK_COLOR28,
-            .callback = checkbox_cb
+            .uncheckedColor = 0
         };
     checkbox.setup(configCheckbox0);
     CheckBoxConfig configCheckbox1 = {
+            .callback = checkbox1_cb,
+            .weight = CheckBoxWeight::MEDIUM,
             .size = 21,
             .checkedColor = CFK_COLOR12,
-            .callback = checkbox1_cb
+            .uncheckedColor = 0
         };
     checkbox1.setup(configCheckbox1);
     CheckBoxConfig configCheckbox2 = {
+            .callback = checkbox2_cb,
+            .weight = CheckBoxWeight::MEDIUM,
             .size = 21,
             .checkedColor = CFK_COLOR12,
-            .callback = checkbox2_cb
+            .uncheckedColor = 0
         };
     checkbox2.setup(configCheckbox2);
     myDisplay.setCheckbox(arrayCheckbox,qtdCheckbox);
     GaugeConfig configGauge0 = {
-            .width = 283,
             .title = "Title",
             .intervals = range0,
             .colors = colors0,
-            .amountIntervals = qtdIntervalG0,
+            .fontFamily = &RobotoBold10pt7b,
             .minValue = 0,
             .maxValue = 100,
+            .width = 283,
             .borderColor = CFK_GREY5,
             .textColor = CFK_BLACK,
             .backgroundColor = CFK_GREY11,
             .titleColor = CFK_BLACK,
             .needleColor = CFK_RED,
             .markersColor = CFK_BLACK,
-            .showLabels = true,
-            .fontFamily = &RobotoBold10pt7b
+            .amountIntervals = qtdIntervalG0,
+            .showLabels = true
         };
     widget.setup(configGauge0);
     myDisplay.setGauge(arrayGauge,qtdGauge);
     HSliderConfig configHSlider0 = {
-            .width = 238,
-            .pressedColor = CFK_COLOR28,
+            .callback = slider_cb,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .radius = 10,
-            .callback = slider_cb
+            .width = 238,
+            .pressedColor = CFK_COLOR28,
+            .backgroundColor = 0
         };
     slider.setup(configHSlider0);
     HSliderConfig configHSlider1 = {
-            .width = 238,
-            .pressedColor = CFK_COLOR22,
+            .callback = slider1_cb,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .radius = 10,
-            .callback = slider1_cb
+            .width = 238,
+            .pressedColor = CFK_COLOR22,
+            .backgroundColor = 0
         };
     slider1.setup(configHSlider1);
     HSliderConfig configHSlider2 = {
-            .width = 238,
-            .pressedColor = CFK_COLOR03,
+            .callback = slider2_cb,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .radius = 10,
-            .callback = slider2_cb
+            .width = 238,
+            .pressedColor = CFK_COLOR03,
+            .backgroundColor = 0
         };
     slider2.setup(configHSlider2);
     myDisplay.setHSlider(arrayHslider,qtdHSlider);
     LabelConfig configLabel0 = {
             .text = "Vac",
+            .prefix = "pref",
+            .suffix = "suf",
             .fontFamily = &RobotoRegular5pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR03,
-            .backgroundColor = CFK_GREY6,
-            .prefix = "pref",
-            .suffix = "suf"
+            .backgroundColor = CFK_GREY6
         };
     line1.setup(configLabel0);
     LabelConfig configLabel1 = {
             .text = "I ac",
+            .prefix = "pref",
+            .suffix = "suf",
             .fontFamily = &RobotoRegular5pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR10,
-            .backgroundColor = CFK_GREY6,
-            .prefix = "pref",
-            .suffix = "suf"
+            .backgroundColor = CFK_GREY6
         };
     line2.setup(configLabel1);
     myDisplay.setLabel(arrayLabel,qtdLabel);
     LineChartConfig configLineChart0 = {
-            .width = 349,
-            .height = 116,
+            .colorsSeries = colorsChart0,
+            .subtitles = nullptr,
+            .font = &RobotoRegular5pt7b,
             .minValue = 0,
             .maxValue = 100,
-            .amountSeries = qtdLinesChart0,
-            .colorsSeries = colorsChart0,
+            .width = 349,
+            .height = 116,
             .gridColor = CFK_GREY9,
             .borderColor = CFK_BLACK,
             .backgroundColor = CFK_BLACK,
             .textColor = CFK_WHITE,
             .verticalDivision = 10,
+            .maxPointsAmount = LineChart::SHOW_ALL,
+            .amountSeries = qtdLinesChart0,
             .workInBackground = false,
             .showZeroLine = true,
             .boldLine = true,
-            .showDots = true,
-            .maxPointsAmount = LineChart::SHOW_ALL,
-            .font = &RobotoRegular5pt7b,
-            .subtitles = nullptr
+            .showDots = true
         };
     linechart.setup(configLineChart0);
     myDisplay.setLineChart(arrayLinechart,qtdLineChart);
     RadioGroupConfig configRadioGroup0 = {
-            .group = 1,
-            .radius = 10,
-            .amount = 4,
             .buttons = radiosOfGroup_grupo1,
-            .defaultClickedId = 1,
-            .callback = callbackOfGroup_grupo1
+            .callback = callbackOfGroup_grupo1,
+            .radius = 10,
+            .group = 1,
+            .amount = 4,
+            .defaultClickedId = 1
         };
     grupo1.setup(configRadioGroup0);
     myDisplay.setRadioGroup(arrayRadio,qtdRadioGroup);
     SpinBoxConfig configSpinBox0 = {
-            .width = 81,
-            .height = 26,
-            .step = 1,
+            .callback = spinbox_cb,
             .minValue = 0,
             .maxValue = 100,
             .startValue = 50,
+            .width = 81,
+            .height = 26,
+            .step = 1,
             .color = CFK_COLOR12,
-            .textColor = CFK_BLACK,
-            .callback = spinbox_cb
+            .textColor = CFK_BLACK
         };
     spinbox.setup(configSpinBox0);
     SpinBoxConfig configSpinBox1 = {
-            .width = 81,
-            .height = 26,
-            .step = 1,
+            .callback = spinbox1_cb,
             .minValue = 0,
             .maxValue = 100,
             .startValue = 50,
+            .width = 81,
+            .height = 26,
+            .step = 1,
             .color = CFK_COLOR12,
-            .textColor = CFK_BLACK,
-            .callback = spinbox1_cb
+            .textColor = CFK_BLACK
         };
     spinbox1.setup(configSpinBox1);
     SpinBoxConfig configSpinBox2 = {
-            .width = 81,
-            .height = 26,
-            .step = 1,
+            .callback = spinbox2_cb,
             .minValue = 0,
             .maxValue = 100,
             .startValue = 50,
+            .width = 81,
+            .height = 26,
+            .step = 1,
             .color = CFK_COLOR27,
-            .textColor = CFK_BLACK,
-            .callback = spinbox2_cb
+            .textColor = CFK_BLACK
         };
     spinbox2.setup(configSpinBox2);
     myDisplay.setSpinbox(arraySpinbox,qtdSpinbox);
     ToggleButtonConfig configToggle0 = {
+            .callback = toggle_cb,
             .width = 41,
             .height = 21,
-            .pressedColor = CFK_COLOR01,
-            .callback = toggle_cb
+            .pressedColor = CFK_COLOR01
         };
     toggle.setup(configToggle0);
     ToggleButtonConfig configToggle1 = {
+            .callback = toggle1_cb,
             .width = 41,
             .height = 21,
-            .pressedColor = CFK_COLOR01,
-            .callback = toggle1_cb
+            .pressedColor = CFK_COLOR01
         };
     toggle1.setup(configToggle1);
     ToggleButtonConfig configToggle2 = {
+            .callback = toggle2_cb,
             .width = 41,
             .height = 21,
-            .pressedColor = CFK_COLOR01,
-            .callback = toggle2_cb
+            .pressedColor = CFK_COLOR01
         };
     toggle2.setup(configToggle2);
     ToggleButtonConfig configToggle3 = {
+            .callback = toggle3_cb,
             .width = 41,
             .height = 21,
-            .pressedColor = CFK_COLOR01,
-            .callback = toggle3_cb
+            .pressedColor = CFK_COLOR01
         };
     toggle3.setup(configToggle3);
     myDisplay.setToggle(arrayTogglebtn,qtdToggleBtn);
     VerticalAnalogConfig configVAnalog0 = {
-            .width = 42,
-            .height = 102,
             .minValue = 0,
             .maxValue = 45,
-            .steps = 10,
+            .width = 42,
+            .height = 102,
             .arrowColor = CFK_COLOR01,
             .textColor = CFK_BLACK,
             .backgroundColor = CFK_GREY12,
-            .borderColor = CFK_BLACK
+            .borderColor = CFK_BLACK,
+            .steps = 10
         };
     vertalog.setup(configVAnalog0);
     VerticalAnalogConfig configVAnalog1 = {
-            .width = 44,
-            .height = 104,
             .minValue = 0,
             .maxValue = 100,
-            .steps = 10,
+            .width = 44,
+            .height = 104,
             .arrowColor = CFK_COLOR01,
             .textColor = CFK_BLACK,
             .backgroundColor = CFK_GREY12,
-            .borderColor = CFK_BLACK
+            .borderColor = CFK_BLACK,
+            .steps = 10
         };
     vertalog1.setup(configVAnalog1);
     VerticalAnalogConfig configVAnalog2 = {
-            .width = 44,
-            .height = 104,
             .minValue = 12,
             .maxValue = 23,
-            .steps = 10,
+            .width = 44,
+            .height = 104,
             .arrowColor = CFK_COLOR01,
             .textColor = CFK_BLACK,
             .backgroundColor = CFK_GREY12,
-            .borderColor = CFK_BLACK
+            .borderColor = CFK_BLACK,
+            .steps = 10
         };
     vertalog2.setup(configVAnalog2);
     VerticalAnalogConfig configVAnalog3 = {
-            .width = 44,
-            .height = 104,
             .minValue = 0,
             .maxValue = 100,
-            .steps = 10,
+            .width = 44,
+            .height = 104,
             .arrowColor = CFK_COLOR01,
             .textColor = CFK_BLACK,
             .backgroundColor = CFK_GREY12,
-            .borderColor = CFK_BLACK
+            .borderColor = CFK_BLACK,
+            .steps = 10
         };
     vertalog3.setup(configVAnalog3);
     myDisplay.setVAnalog(arrayVanalog,qtdVAnalog);
     VerticalBarConfig configVBar0 = {
+            .minValue = 0,
+            .maxValue = 77,
             .width = 20,
             .height = 112,
-            .filledColor = CFK_COLOR20,
-            .minValue = 0,
-            .maxValue = 77
+            .filledColor = CFK_COLOR20
         };
     vertbar.setup(configVBar0);
     VerticalBarConfig configVBar1 = {
+            .minValue = 0,
+            .maxValue = 100,
             .width = 20,
             .height = 114,
-            .filledColor = CFK_COLOR15,
-            .minValue = 0,
-            .maxValue = 100
+            .filledColor = CFK_COLOR15
         };
     vertbar1.setup(configVBar1);
     VerticalBarConfig configVBar2 = {
+            .minValue = 0,
+            .maxValue = 45,
             .width = 20,
             .height = 115,
-            .filledColor = CFK_COLOR03,
-            .minValue = 0,
-            .maxValue = 45
+            .filledColor = CFK_COLOR03
         };
     vertbar2.setup(configVBar2);
     VerticalBarConfig configVBar3 = {
+            .minValue = 0,
+            .maxValue = 77,
             .width = 20,
             .height = 115,
-            .filledColor = CFK_COLOR20,
-            .minValue = 0,
-            .maxValue = 77
+            .filledColor = CFK_COLOR20
         };
     vertbar3.setup(configVBar3);
     VerticalBarConfig configVBar4 = {
+            .minValue = 0,
+            .maxValue = 77,
             .width = 20,
             .height = 116,
-            .filledColor = CFK_COLOR20,
-            .minValue = 0,
-            .maxValue = 77
+            .filledColor = CFK_COLOR20
         };
     vertbar4.setup(configVBar4);
     VerticalBarConfig configVBar5 = {
+            .minValue = 0,
+            .maxValue = 77,
             .width = 20,
             .height = 116,
-            .filledColor = CFK_COLOR18,
-            .minValue = 0,
-            .maxValue = 77
+            .filledColor = CFK_COLOR18
         };
     vertbar5.setup(configVBar5);
     VerticalBarConfig configVBar6 = {
+            .minValue = 0,
+            .maxValue = 77,
             .width = 20,
             .height = 116,
-            .filledColor = CFK_COLOR02,
-            .minValue = 0,
-            .maxValue = 77
+            .filledColor = CFK_COLOR02
         };
     vertbar6.setup(configVBar6);
     myDisplay.setVBar(arrayVbar,qtdVBar);
     ImageFromFileConfig configImage0 = {
-            .source = SourceFile::SPIFFS,
             .path = "/Pinionpng.fki",
             .cb = nullptr,
-            .angle = 0
+            .source = SourceFile::SPIFFS
         };
     pinionpng.setup(configImage0);
     ImageFromFileConfig configImage1 = {
-            .source = SourceFile::SPIFFS,
             .path = "/Rightpng.fki",
             .cb = nullptr,
-            .angle = 0
+            .source = SourceFile::SPIFFS
         };
     rightpng.setup(configImage1);
     ImageFromFileConfig configImage2 = {
-            .source = SourceFile::SPIFFS,
             .path = "/Stoppng.fki",
             .cb = nullptr,
-            .angle = 0
+            .source = SourceFile::SPIFFS
         };
     stoppng.setup(configImage2);
     myDisplay.setImage(arrayImagem,qtdImagem);
     CircularBarConfig configCirculaBar0 = {
-            .radius = 50,
             .minValue = 0,
             .maxValue = 100,
+            .radius = 50,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 15,
             .color = CFK_COLOR01,
             .backgroundColor = CFK_WHITE,
             .textColor = CFK_BLACK,
+            .thickness = 15,
             .showValue = true,
             .inverted = false
         };
     circload.setup(configCirculaBar0);
     CircularBarConfig configCirculaBar1 = {
-            .radius = 50,
             .minValue = 0,
             .maxValue = 100,
+            .radius = 50,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 15,
             .color = CFK_COLOR12,
             .backgroundColor = CFK_WHITE,
             .textColor = CFK_BLACK,
+            .thickness = 15,
             .showValue = true,
             .inverted = false
         };
     circload1.setup(configCirculaBar1);
     CircularBarConfig configCirculaBar2 = {
-            .radius = 50,
             .minValue = 0,
             .maxValue = 100,
+            .radius = 50,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 15,
             .color = CFK_COLOR03,
             .backgroundColor = CFK_WHITE,
             .textColor = CFK_BLACK,
+            .thickness = 15,
             .showValue = true,
             .inverted = false
         };

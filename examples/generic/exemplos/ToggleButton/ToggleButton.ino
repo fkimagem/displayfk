@@ -94,10 +94,10 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     ToggleButtonConfig configToggle0 = {
+            .callback = toggle_cb,
             .width = 41,
             .height = 21,
-            .pressedColor = CFK_COLOR01,
-            .callback = toggle_cb
+            .pressedColor = CFK_COLOR01
         };
     toggle.setup(configToggle0);
     myDisplay.setToggle(arrayTogglebtn,qtdToggleBtn);

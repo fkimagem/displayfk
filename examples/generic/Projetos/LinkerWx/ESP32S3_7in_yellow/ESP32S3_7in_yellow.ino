@@ -657,32 +657,32 @@ void loadWidgets(){
     String text = getResetReasonString();
     LabelConfig configLabel0 = {
             .text = text.c_str(),
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular8pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR12,
-            .backgroundColor = CFK_GREY4,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY4
         };
     txtlog.setup(configLabel0);
     LabelConfig configLabel1 = {
             .text = "temp",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular8pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR12,
-            .backgroundColor = CFK_GREY4,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY4
         };
     txttemp.setup(configLabel1);
     LabelConfig configLabel2 = {
             .text = "umidade",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular8pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR12,
-            .backgroundColor = CFK_GREY4,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY4
         };
     txtumidade.setup(configLabel2);
     myDisplay.setLabel(arrayLabel,qtdLabel);
@@ -704,26 +704,26 @@ void loadWidgets(){
     myDisplay.setLed(arrayLed,qtdLed);
 
     TextButtonConfig configTextButton0 = {
+            .text = "Enviar texto",
+            .callback = btntexto_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 161,
             .height = 35,
             .radius = 10,
             .backgroundColor = CFK_COLOR08,
-            .textColor = CFK_BLACK,
-            .text = "Enviar texto",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btntexto_cb
+            .textColor = CFK_BLACK
         };
 
     btntexto.setup(configTextButton0);
     TextButtonConfig configTextButton1 = {
+            .text = "Enviar struct",
+            .callback = btnstruct1_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 163,
             .height = 37,
             .radius = 10,
             .backgroundColor = CFK_COLOR15,
-            .textColor = CFK_BLACK,
-            .text = "Enviar struct",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btnstruct1_cb
+            .textColor = CFK_BLACK
         };
 
     btnstruct1.setup(configTextButton1);
@@ -734,14 +734,14 @@ void loadWidgets(){
     Numpad::m_keyColor = CFK_GREY13;
 
     NumberBoxConfig configNumberBox0 = {
+            .funcPtr = screen0,
+            .callback = numberbox_cb,
+            .font = &RobotoRegular10pt7b,
+            .startValue = 1234.56,
             .width = 187,
             .height = 25,
             .letterColor = CFK_COLOR01,
-            .backgroundColor = CFK_GREY3,
-            .startValue = 1234.56,
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .callback = numberbox_cb
+            .backgroundColor = CFK_GREY3
         };
     numberbox.setup(configNumberBox0);
     myDisplay.setNumberbox(arrayNumberbox,qtdNumberbox);

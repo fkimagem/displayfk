@@ -7,10 +7,10 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar um botão toggle.
 ///          Deve ser preenchida e passada para o método setup().
 struct ToggleButtonConfig {
+  functionCB_t callback;  ///< Função callback para executar quando o botão é alternado.
   uint16_t width;         ///< Largura do botão.
   uint16_t height;        ///< Altura do botão.
   uint16_t pressedColor;  ///< Cor exibida quando o botão está ligado.
-  functionCB_t callback;  ///< Função callback para executar quando o botão é alternado.
 };
 
 /// @brief Representa um widget de botão toggle que alterna entre estado ligado e desligado a cada toque.

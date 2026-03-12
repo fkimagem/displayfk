@@ -187,12 +187,12 @@ void loadWidgets(){
 
     LabelConfig configLabel0 = {
             .text = "---",
+            .prefix = "Status: ",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_BLACK,
-            .backgroundColor = CFK_WHITE,
-            .prefix = "Status: ",
-            .suffix = ""
+            .backgroundColor = CFK_WHITE
         };
     text3.setup(configLabel0);
     myDisplay.setLabel(arrayLabel,qtdLabel);
@@ -204,39 +204,39 @@ void loadWidgets(){
 
 
     TextBoxConfig configTextBox0 = {
+            .startValue = "SSDI",
+            .funcPtr = screen0,
+            .cb = tbssid_cb,
+            .font = &RobotoRegular10pt7b,
             .width = 141,
             .height = 25,
             .letterColor = CFK_GREY1,
-            .backgroundColor = CFK_WHITE,
-            .startValue = "SSDI",
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .cb = tbssid_cb
+            .backgroundColor = CFK_WHITE
         };
     tbssid.setup(configTextBox0);
     TextBoxConfig configTextBox1 = {
+            .startValue = "PASS",
+            .funcPtr = screen0,
+            .cb = tbpass_cb,
+            .font = &RobotoRegular10pt7b,
             .width = 141,
             .height = 25,
             .letterColor = CFK_GREY1,
-            .backgroundColor = CFK_WHITE,
-            .startValue = "PASS",
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .cb = tbpass_cb
+            .backgroundColor = CFK_WHITE
         };
     tbpass.setup(configTextBox1);
     myDisplay.setTextbox(arrayTextbox,qtdTextbox);
 
 
     TextButtonConfig configTextButton0 = {
+            .text = "Connect",
+            .callback = textbutton1_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 110,
             .height = 40,
             .radius = 10,
             .backgroundColor = CFK_COLOR17,
-            .textColor = CFK_BLACK,
-            .text = "Connect",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = textbutton1_cb
+            .textColor = CFK_BLACK
         };
 
     textbutton1.setup(configTextButton0);

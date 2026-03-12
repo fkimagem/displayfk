@@ -188,9 +188,9 @@ RadioGroup grupo1(0);
 RadioGroup grupo2(0);
 const uint8_t qtdRadioGroup = 2;
 RadioGroup *arrayRadio[qtdRadioGroup] = {&grupo1, &grupo2};
-radio_t radiosOfGroup_grupo1[4] = {{65, 80, 1, CFK_GREY1},{185, 80, 2, CFK_GREY1},{300, 80, 3, CFK_GREY1},{420, 80, 4, CFK_GREY1}};
+radio_t radiosOfGroup_grupo1[4] = {{65, 80, CFK_GREY1, 1},{185, 80, CFK_GREY1, 2},{300, 80, CFK_GREY1, 3},{420, 80, CFK_GREY1, 4}};
 uint16_t radiog1 = 1; // Global variable that stores the value of the widget grupo1
-radio_t radiosOfGroup_grupo2[4] = {{65, 120, 1, CFK_GREY1},{185, 120, 2, CFK_GREY1},{300, 120, 3, CFK_GREY1},{420, 120, 4, CFK_GREY1}};
+radio_t radiosOfGroup_grupo2[4] = {{65, 120, CFK_GREY1, 1},{185, 120, CFK_GREY1, 2},{300, 120, CFK_GREY1, 3},{420, 120, CFK_GREY1, 4}};
 uint16_t radiog2 = 1; // Global variable that stores the value of the widget grupo2
 TextButton btnvolts(20, 205, 0);
 TextButton btnohms(145, 205, 0);
@@ -273,12 +273,12 @@ void loadWidgets(){
 
     LabelConfig configLabel0 = {
             .text = "-----",
+            .prefix = "Result: ",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TC_DATUM,
             .fontColor = CFK_BLACK,
-            .backgroundColor = CFK_WHITE,
-            .prefix = "Result: ",
-            .suffix = ""
+            .backgroundColor = CFK_WHITE
         };
     txtresult.setup(configLabel0);
     myDisplay.setLabel(arrayLabel,qtdLabel);
@@ -290,122 +290,122 @@ void loadWidgets(){
 
 
     NumberBoxConfig configNumberBox0 = {
+            .funcPtr = screen0,
+            .callback = inputvolts_cb,
+            .font = &RobotoRegular10pt7b,
+            .startValue = voltsValue,
             .width = 101,
             .height = 25,
             .letterColor = CFK_GREY1,
             .backgroundColor = CFK_WHITE,
-            .startValue = voltsValue,
-            .decimalPlaces = 2,
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .callback = inputvolts_cb
+            .decimalPlaces = 2
         };
     inputvolts.setup(configNumberBox0);
     NumberBoxConfig configNumberBox1 = {
+            .funcPtr = screen0,
+            .callback = inputohms_cb,
+            .font = &RobotoRegular10pt7b,
+            .startValue = resistenceValue,
             .width = 103,
             .height = 25,
             .letterColor = CFK_GREY1,
             .backgroundColor = CFK_WHITE,
-            .startValue = resistenceValue,
-            .decimalPlaces = 2,
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .callback = inputohms_cb
+            .decimalPlaces = 2
         };
     inputohms.setup(configNumberBox1);
     NumberBoxConfig configNumberBox2 = {
+            .funcPtr = screen0,
+            .callback = inputamps_cb,
+            .font = &RobotoRegular10pt7b,
+            .startValue = ampsValue,
             .width = 103,
             .height = 25,
             .letterColor = CFK_GREY1,
             .backgroundColor = CFK_WHITE,
-            .startValue = ampsValue,
-            .decimalPlaces = 2,
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .callback = inputamps_cb
+            .decimalPlaces = 2
         };
     inputamps.setup(configNumberBox2);
     NumberBoxConfig configNumberBox3 = {
+            .funcPtr = screen0,
+            .callback = inputwatts_cb,
+            .font = &RobotoRegular10pt7b,
+            .startValue = wattsValue,
             .width = 103,
             .height = 25,
             .letterColor = CFK_GREY1,
             .backgroundColor = CFK_WHITE,
-            .startValue = wattsValue,
-            .decimalPlaces = 2,
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .callback = inputwatts_cb
+            .decimalPlaces = 2
         };
     inputwatts.setup(configNumberBox3);
     myDisplay.setNumberbox(arrayNumberbox,qtdNumberbox);
 
 
     RadioGroupConfig configRadioGroup0 = {
-            .group = 1,
-            .radius = 10,
-            .amount = 4,
             .buttons = radiosOfGroup_grupo1,
-            .defaultClickedId = 1,
-            .callback = callbackOfGroup_grupo1
+            .callback = callbackOfGroup_grupo1,
+            .radius = 10,
+            .group = 1,
+            .amount = 4,
+            .defaultClickedId = 1
         };
     grupo1.setup(configRadioGroup0);
     RadioGroupConfig configRadioGroup1 = {
-            .group = 2,
-            .radius = 10,
-            .amount = 4,
             .buttons = radiosOfGroup_grupo2,
-            .defaultClickedId = 1,
-            .callback = callbackOfGroup_grupo2
+            .callback = callbackOfGroup_grupo2,
+            .radius = 10,
+            .group = 2,
+            .amount = 4,
+            .defaultClickedId = 1
         };
     grupo2.setup(configRadioGroup1);
     myDisplay.setRadioGroup(arrayRadio,qtdRadioGroup);
 
 
     TextButtonConfig configTextButton0 = {
+            .text = "Calc V",
+            .callback = btnvolts_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 87,
             .height = 34,
             .radius = 10,
             .backgroundColor = CFK_COLOR14,
-            .textColor = CFK_BLACK,
-            .text = "Calc V",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btnvolts_cb
+            .textColor = CFK_BLACK
         };
 
     btnvolts.setup(configTextButton0);
     TextButtonConfig configTextButton1 = {
+            .text = "Calc R",
+            .callback = btnohms_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 87,
             .height = 34,
             .radius = 10,
             .backgroundColor = CFK_COLOR14,
-            .textColor = CFK_BLACK,
-            .text = "Calc R",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btnohms_cb
+            .textColor = CFK_BLACK
         };
 
     btnohms.setup(configTextButton1);
     TextButtonConfig configTextButton2 = {
+            .text = "Calc I",
+            .callback = btnamps_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 87,
             .height = 34,
             .radius = 10,
             .backgroundColor = CFK_COLOR14,
-            .textColor = CFK_BLACK,
-            .text = "Calc I",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btnamps_cb
+            .textColor = CFK_BLACK
         };
 
     btnamps.setup(configTextButton2);
     TextButtonConfig configTextButton3 = {
+            .text = "Calc W",
+            .callback = btnwatts_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 87,
             .height = 34,
             .radius = 10,
             .backgroundColor = CFK_COLOR14,
-            .textColor = CFK_BLACK,
-            .text = "Calc W",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btnwatts_cb
+            .textColor = CFK_BLACK
         };
 
     btnwatts.setup(configTextButton3);

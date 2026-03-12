@@ -121,12 +121,14 @@ void TextBox::redraw() {
 
   // uint16_t qtdLetrasMax = m_width / area.width;
   // const char *conteudo = m_value.getFirstChars(qtdLetrasMax);
-  const char *conteudo = getFirstLettersForSpace(m_value.getString(),
-                                                 m_width * 0.9, m_height * 0.9);
-
+  char conteudo[256];
+  int n = getFirstLettersForSpace(m_value.getString(), m_width * 0.9, m_height * 0.9, conteudo, sizeof(conteudo));
+  if(n > 0){
+    printText(conteudo, m_xPos + m_padding, m_yPos + m_height / 2, ML_DATUM);
+  }
   // log_d("Draw %d letters from %s in space %d", qtdLetrasMax, conteudo,
   // m_width);
-  printText(conteudo, m_xPos + m_padding, m_yPos + m_height / 2, ML_DATUM);
+  
 
   updateFont(FontType::UNLOAD);
 #endif

@@ -23,18 +23,20 @@ A classe `TextBox` é um widget interativo que exibe e permite edição de texto
 
 ### TextBoxConfig
 
-Estrutura que contém todos os parâmetros de configuração:
+Estrutura que contém todos os parâmetros de configuração (ordem conforme `wtextbox.h`):
 
 ```cpp
 struct TextBoxConfig {
-  uint16_t width;            // Largura da caixa de texto
-  uint16_t height;           // Altura da caixa de texto
-  uint16_t letterColor;      // Cor do texto
-  uint16_t backgroundColor;  // Cor de fundo
-  const char* startValue;    // Texto inicial
-  const GFXfont* font;       // Fonte para o texto
-  functionLoadScreen_t funcPtr; // Ponteiro para função da tela pai
-  functionCB_t cb;           // Função callback
+  const char* startValue;    // Valor de texto inicial para exibir.
+  functionLoadScreen_t funcPtr; // Ponteiro para função da tela pai.
+  functionCB_t cb;           // Função callback executada na interação.
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* font;       // Fonte para usar no texto.
+  #endif
+  uint16_t width;            // Largura da caixa de texto.
+  uint16_t height;           // Altura da caixa de texto.
+  uint16_t letterColor;      // Cor do texto.
+  uint16_t backgroundColor;  // Cor de fundo.
 };
 ```
 
@@ -181,14 +183,14 @@ void setup() {
 void loadWidgets() {
     // Configurar TextBox
     TextBoxConfig configTextBox = {
+        .startValue = "Digite aqui",
+        .funcPtr = screen0,
+        .cb = textbox_cb,
+        .font = &RobotoRegular10pt7b,
         .width = 101,
         .height = 25,
         .letterColor = CFK_COLOR01,
-        .backgroundColor = CFK_WHITE,
-        .startValue = "Digite aqui",
-        .font = &RobotoRegular10pt7b,
-        .funcPtr = screen0,
-        .cb = textbox_cb
+        .backgroundColor = CFK_WHITE
     };
     textbox.setup(configTextBox);
     
@@ -267,14 +269,14 @@ void setup() {
     
     // Configurar TextBox
     TextBoxConfig config = {
+        .startValue = "Digite seu nome",
+        .funcPtr = minhaTela,
+        .cb = texto_callback,
+        .font = &RobotoRegular10pt7b,
         .width = 200,
         .height = 40,
         .letterColor = CFK_COLOR01,
-        .backgroundColor = CFK_WHITE,
-        .startValue = "Digite seu nome",
-        .font = &RobotoRegular10pt7b,
-        .funcPtr = minhaTela,
-        .cb = texto_callback
+        .backgroundColor = CFK_WHITE
     };
     meuTexto.setup(config);
     

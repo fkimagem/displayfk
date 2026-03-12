@@ -98,24 +98,24 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     LineChartConfig configLineChart0 = {
-            .width = 315,
-            .height = 178,
+            .colorsSeries = colorsChart0,
+            .subtitles = nullptr,
+            .font = &RobotoRegular5pt7b,
             .minValue = 0,
             .maxValue = 4095,
-            .amountSeries = qtdLinesChart0,
-            .colorsSeries = colorsChart0,
+            .width = 315,
+            .height = 178,
             .gridColor = CFK_BLACK,
             .borderColor = CFK_BLACK,
             .backgroundColor = CFK_WHITE,
             .textColor = CFK_BLACK,
             .verticalDivision = 10,
+            .maxPointsAmount = LineChart::SHOW_ALL,
+            .amountSeries = qtdLinesChart0,
             .workInBackground = false,
             .showZeroLine = true,
             .boldLine = true,
-            .showDots = false,
-            .maxPointsAmount = LineChart::SHOW_ALL,
-            .font = &RobotoRegular5pt7b,
-            .subtitles = nullptr
+            .showDots = false
         };
     linechart.setup(configLineChart0);
     myDisplay.setLineChart(arrayLinechart,qtdLineChart);

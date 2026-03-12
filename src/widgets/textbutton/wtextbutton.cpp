@@ -15,9 +15,9 @@ TextButton::TextButton(uint16_t _x, uint16_t _y, uint8_t _screen)
 {
   m_offsetMargin = 10;
   #if defined(USING_GRAPHIC_LIB)
-  m_config = {.width = 0, .height = 0, .radius = 0, .backgroundColor = 0, .textColor = 0, .text = "", .fontFamily = &RobotoBold10pt7b, .callback = nullptr};
+  m_config = {.text = "", .callback = nullptr, .fontFamily = &RobotoBold10pt7b, .width = 0, .height = 0, .radius = 0, .backgroundColor = 0, .textColor = 0};
   #else
-  m_config = {.width = 0, .height = 0, .radius = 0, .backgroundColor = 0, .textColor = 0, .text = "", .callback = nullptr};
+  m_config = {.text = "", .callback = nullptr, .width = 0, .height = 0, .radius = 0, .backgroundColor = 0, .textColor = 0};
   #endif
   ESP_LOGD(TAG, "TextButton created at (%d, %d) on screen %d", _x, _y, _screen);
 }

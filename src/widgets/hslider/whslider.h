@@ -4,18 +4,20 @@
 #include "../widgetbase.h"
 #include <Arduino.h>
 #include <esp_log.h>
+#include "../label/wlabel.h" // Para ponteiro Label
 
 /// @brief Estrutura de configuração para o HSlider.
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar um slider horizontal.
 ///          Deve ser preenchida e passada para o método setup().
 struct HSliderConfig {
-  uint16_t width;         ///< Largura da trilha do slider em pixels.
-  uint16_t pressedColor;  ///< Cor RGB565 exibida quando o slider está pressionado.
-  uint16_t backgroundColor; ///< Cor RGB565 de fundo do slider.
+  functionCB_t callback;  ///< Função callback para executar quando o valor do slider muda.
+  Label* subtitle;
   int minValue;           ///< Valor mínimo da faixa do slider.
   int maxValue;           ///< Valor máximo da faixa do slider.
   uint32_t radius;        ///< Raio do controle deslizante em pixels.
-  functionCB_t callback;  ///< Função callback para executar quando o valor do slider muda.
+  uint16_t width;         ///< Largura da trilha do slider em pixels.
+  uint16_t pressedColor;  ///< Cor RGB565 exibida quando o slider está pressionado.
+  uint16_t backgroundColor; ///< Cor RGB565 de fundo do slider.
 };
 
 /// @brief Widget de slider horizontal interativo que permite controle de valores através de deslizamento.

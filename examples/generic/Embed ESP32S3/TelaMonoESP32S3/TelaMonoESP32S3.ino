@@ -226,170 +226,170 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     GaugeConfig configGauge0 = {
-            .width = 260,
             .title = "Current",
             .intervals = range0,
             .colors = colors0,
-            .amountIntervals = qtdIntervalG0,
+            .fontFamily = &RobotoBold10pt7b,
             .minValue = 0,
             .maxValue = 60,
+            .width = 260,
             .borderColor = CFK_BLACK,
             .textColor = CFK_WHITE,
             .backgroundColor = CFK_GREY5,
             .titleColor = CFK_WHITE,
             .needleColor = CFK_RED,
             .markersColor = CFK_BLACK,
-            .showLabels = true,
-            .fontFamily = &RobotoBold10pt7b
+            .amountIntervals = qtdIntervalG0,
+            .showLabels = true
         };
     gaugecorrente.setup(configGauge0);
     GaugeConfig configGauge1 = {
-            .width = 261,
             .title = "Voltage",
             .intervals = range1,
             .colors = colors1,
-            .amountIntervals = qtdIntervalG1,
+            .fontFamily = &RobotoBold10pt7b,
             .minValue = 0,
             .maxValue = 240,
+            .width = 261,
             .borderColor = CFK_BLACK,
             .textColor = CFK_WHITE,
             .backgroundColor = CFK_GREY5,
             .titleColor = CFK_WHITE,
             .needleColor = CFK_RED,
             .markersColor = CFK_BLACK,
-            .showLabels = true,
-            .fontFamily = &RobotoBold10pt7b
+            .amountIntervals = qtdIntervalG1,
+            .showLabels = true
         };
     gaugetensao.setup(configGauge1);
     GaugeConfig configGauge2 = {
-            .width = 460,
             .title = "Active Power",
             .intervals = range2,
             .colors = colors2,
-            .amountIntervals = qtdIntervalG2,
+            .fontFamily = &RobotoBold10pt7b,
             .minValue = 0,
             .maxValue = 14000,
+            .width = 460,
             .borderColor = CFK_BLACK,
             .textColor = CFK_WHITE,
             .backgroundColor = CFK_GREY5,
             .titleColor = CFK_WHITE,
             .needleColor = CFK_RED,
             .markersColor = CFK_BLACK,
-            .showLabels = true,
-            .fontFamily = &RobotoBold10pt7b
+            .amountIntervals = qtdIntervalG2,
+            .showLabels = true
         };
     gaugecorrente2.setup(configGauge2);
     myDisplay.setGauge(arrayGauge,qtdGauge);
     LabelConfig configLabel0 = {
             .text = "1.000",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR01,
-            .backgroundColor = CFK_GREY5,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY5
         };
     line1.setup(configLabel0);
     LabelConfig configLabel1 = {
             .text = "000.0",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_WHITE,
-            .backgroundColor = CFK_GREY5,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY5
         };
     text.setup(configLabel1);
     LabelConfig configLabel2 = {
             .text = "00.00",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_WHITE,
-            .backgroundColor = CFK_GREY5,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY5
         };
     text2.setup(configLabel2);
     LabelConfig configLabel3 = {
             .text = "000.000",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_WHITE,
-            .backgroundColor = CFK_GREY5,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY5
         };
     text3.setup(configLabel3);
     LabelConfig configLabel4 = {
             .text = "1.000",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_WHITE,
-            .backgroundColor = CFK_GREY5,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY5
         };
     text4.setup(configLabel4);
     LabelConfig configLabel5 = {
             .text = "60.00",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_WHITE,
-            .backgroundColor = CFK_GREY5,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY5
         };
     text5.setup(configLabel5);
     LabelConfig configLabel6 = {
             .text = "000000.00",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_WHITE,
-            .backgroundColor = CFK_GREY5,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY5
         };
     text6.setup(configLabel6);
     LabelConfig configLabel7 = {
             .text = "000000.00",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_WHITE,
-            .backgroundColor = CFK_GREY5,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY5
         };
     text7.setup(configLabel7);
     LabelConfig configLabel8 = {
             .text = "000000.00",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_WHITE,
-            .backgroundColor = CFK_GREY5,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY5
         };
     text8.setup(configLabel8);
     myDisplay.setLabel(arrayLabel,qtdLabel);
     LineChartConfig configLineChart0 = {
-            .width = 240,
-            .height = 181,
+            .colorsSeries = colorsChart0,
+            .subtitles = seriesGrafico0,
+            .font = &RobotoRegular5pt7b,
             .minValue = 0,
             .maxValue = 14,
-            .amountSeries = qtdLinesChart0,
-            .colorsSeries = colorsChart0,
+            .width = 240,
+            .height = 181,
             .gridColor = CFK_BLACK,
             .borderColor = CFK_BLACK,
             .backgroundColor = CFK_BLACK,
             .textColor = CFK_WHITE,
             .verticalDivision = 5,
+            .maxPointsAmount = LineChart::SHOW_ALL,
+            .amountSeries = qtdLinesChart0,
             .workInBackground = false,
             .showZeroLine = true,
             .boldLine = true,
-            .showDots = false,
-            .maxPointsAmount = LineChart::SHOW_ALL,
-            .font = &RobotoRegular5pt7b,
-            .subtitles = seriesGrafico0
+            .showDots = false
         };
     grafico.setup(configLineChart0);
     myDisplay.setLineChart(arrayLinechart,qtdLineChart);

@@ -155,19 +155,19 @@ void loadWidgets(){
 
     ImageFromPixelsConfig configImage0 = {
             .pixels = irightpngPixels,
-            .width = irightpngW,
-            .height = irightpngH,
             .maskAlpha = irightpngMask,
             .cb = irightpng_cb,
+            .width = irightpngW,
+            .height = irightpngH,
             .backgroundColor = CFK_WHITE
         };
     irightpng.setupFromPixels(configImage0);
     ImageFromPixelsConfig configImage1 = {
             .pixels = ileftpngPixels,
-            .width = ileftpngW,
-            .height = ileftpngH,
             .maskAlpha = ileftpngMask,
             .cb = ileftpng_cb,
+            .width = ileftpngW,
+            .height = ileftpngH,
             .backgroundColor = CFK_WHITE
         };
     ileftpng.setupFromPixels(configImage1);

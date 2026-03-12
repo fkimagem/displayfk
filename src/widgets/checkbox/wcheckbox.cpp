@@ -17,7 +17,7 @@ CheckBox::CheckBox(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_status(false), m_borderWidth(2), m_borderRadius(5){
   
   // Initialize with default config
-  m_config = {.size = 0, .checkedColor = 0, .uncheckedColor = 0, .weight = CheckBoxWeight::LIGHT, .callback = nullptr};
+  m_config = {.callback = nullptr, .weight = CheckBoxWeight::LIGHT, .size = 0, .checkedColor = 0, .uncheckedColor = 0};
 
   m_topRightPoint = {.x = 0, .y = 0};
   m_bottomCenterPoint = {.x = 0, .y = 0};

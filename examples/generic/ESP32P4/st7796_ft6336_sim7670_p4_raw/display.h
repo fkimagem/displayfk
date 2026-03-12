@@ -84,8 +84,9 @@ void startDisplay(){
  * @param button Referência ao botão a ser desenhado.
  */
 void drawRectButton(RectButton_t& button){
-    int numTons = 10;
-    uint16_t* tons = blendColors(button.outColor, button.inColor, numTons);
+    const int numTons = 10;
+    uint16_t tons[numTons];
+    blendColors(button.outColor, button.inColor, numTons, tons, numTons);
 
     tft->fillRect(button.x, button.y, button.w, button.h, button.inColor);
 
@@ -107,8 +108,6 @@ void drawRectButton(RectButton_t& button){
     
     tft->setCursor(buttonCenterW - (w / 2), buttonCenterH - (h / 2));
     tft->println(button.text);
-
-    delete[] tons; // libera a memória alocada
 }
 
 /* @brief Redesenha toda a tela: limpa e desenha todos os botões. */

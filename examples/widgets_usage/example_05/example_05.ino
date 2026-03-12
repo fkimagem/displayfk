@@ -198,10 +198,10 @@ void loadWidgets(){
 
 
     RectButtonConfig configRectButton0 = {
+            .callback = btncontrolmotor_cb,
             .width = 60,
             .height = 36,
-            .pressedColor = CFK_COLOR16,
-            .callback = btncontrolmotor_cb
+            .pressedColor = CFK_COLOR16
         };
 
 btncontrolmotor.setup(configRectButton0);

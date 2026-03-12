@@ -23,15 +23,17 @@ A classe `Numpad` é um widget interativo que exibe um teclado numérico na tela
 
 ### NumpadConfig
 
-Estrutura que contém todos os parâmetros de configuração do teclado:
+Estrutura que contém todos os parâmetros de configuração do teclado (ordem conforme `numpad.h`):
 
 ```cpp
 struct NumpadConfig {
-  uint16_t backgroundColor;    // Cor de fundo do Numpad
-  uint16_t letterColor;        // Cor do texto das teclas
-  uint16_t keyColor;           // Cor de fundo das teclas
-  const GFXfont* fontKeys;     // Fonte para as teclas
-  const GFXfont* fontPreview;  // Fonte para área de preview
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* fontKeys;     // Fonte para as teclas.
+  const GFXfont* fontPreview;   // Fonte para a área de preview.
+  #endif
+  uint16_t backgroundColor;    // Cor de fundo do Numpad.
+  uint16_t letterColor;        // Cor do texto das teclas.
+  uint16_t keyColor;           // Cor de fundo das teclas.
 };
 ```
 

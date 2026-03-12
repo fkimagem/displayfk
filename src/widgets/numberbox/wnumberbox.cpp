@@ -9,8 +9,11 @@ const char* NumberBox::TAG = "NumberBox";
  * @details Nota: Esta função usa um buffer estático, então seu valor de retorno é válido
  *          apenas até a próxima chamada.
  */
-String NumberBox::convertoToString(double f) {
-  return String(f);
+void NumberBox::convertoToString(double f, char* buf, size_t bufSize) {
+  //return String(f);
+  if (buf && bufSize > 0) {
+    snprintf(buf, bufSize, "%.*f", (int)m_config.decimalPlaces, f);
+  }
 }
 
 /**
@@ -24,7 +27,7 @@ String NumberBox::convertoToString(double f) {
 NumberBox::NumberBox(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_padding(3), m_shouldRedraw(true) {
       #if defined(USING_GRAPHIC_LIB)
-      m_config = {.width = 0, .height = 0, .letterColor = 0, .backgroundColor = 0, .startValue = 0, .decimalPlaces = 2, .font = nullptr, .funcPtr = nullptr, .callback = nullptr};
+      m_config = {.funcPtr = nullptr, .callback = nullptr, .font = nullptr, .startValue = 0, .width = 0, .height = 0, .letterColor = 0, .backgroundColor = 0, .decimalPlaces = 2};
       #endif
     }
 
@@ -131,12 +134,16 @@ void NumberBox::redraw() {
   // &area.width, &area.height); uint16_t qtdLetrasMax = m_width / area.width;
   // const char* conteudo = m_value.getFirstChars(qtdLetrasMax);
   // printText(conteudo, m_xPos + m_padding, m_yPos + m_height/2, ML_DATUM);
-  const char *conteudo = getFirstLettersForSpace(m_value.getString(),
-                                                 m_config.width * 0.9, m_config.height * 0.9);
+  char conteudo[256];
+
+  int n = getFirstLettersForSpace(m_value.getString(), m_config.width * 0.9, m_config.height * 0.9, conteudo, sizeof(conteudo));
+  if( n > 0){
+    printText(conteudo, m_xPos + m_padding, m_yPos + m_config.height / 2, ML_DATUM);
+  }
 
   // log_d("Draw %d letters from %s in space %d", qtdLetrasMax, conteudo,
   // m_width);
-  printText(conteudo, m_xPos + m_padding, m_yPos + m_config.height / 2, ML_DATUM);
+  
 
   updateFont(FontType::UNLOAD);
 

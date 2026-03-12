@@ -94,10 +94,10 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     RectButtonConfig configRectButton0 = {
+            .callback = rectbutton_cb,
             .width = 40,
             .height = 40,
-            .pressedColor = CFK_COLOR01,
-            .callback = rectbutton_cb
+            .pressedColor = CFK_COLOR01
         };
 rectbutton.setup(configRectButton0);
     myDisplay.setRectButton(arrayRectbtn,qtdRectBtn);

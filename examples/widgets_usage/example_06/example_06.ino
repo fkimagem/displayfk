@@ -106,8 +106,8 @@ RadioGroup grupo1(0);
 RadioGroup grupo2(0);
 const uint8_t qtdRadioGroup = 2;
 RadioGroup *arrayRadio[qtdRadioGroup] = {&grupo1, &grupo2};
-radio_t radiosOfGroup_grupo1[3] = {{65, 130, 1, CFK_COLOR30},{65, 170, 2, CFK_COLOR30},{65, 215, 3, CFK_COLOR30}};
-radio_t radiosOfGroup_grupo2[2] = {{290, 130, 1, CFK_COLOR30},{290, 175, 2, CFK_COLOR30}};
+radio_t radiosOfGroup_grupo1[3] = {{65, 130, CFK_COLOR30, 1},{65, 170, CFK_COLOR30, 2},{65, 215, CFK_COLOR30, 3}};
+radio_t radiosOfGroup_grupo2[2] = {{290, 130, CFK_COLOR30, 1},{290, 175, CFK_COLOR30, 2}};
 
 const int pinLed1 = 16;
 const int pinLed2 = 17;
@@ -196,21 +196,21 @@ void screen0(){
 void loadWidgets(){
 
     RadioGroupConfig configRadioGroup0 = {
-            .group = 1,
-            .radius = 10,
-            .amount = 3,
             .buttons = radiosOfGroup_grupo1,
-            .defaultClickedId = 1,
-            .callback = callbackOfGroup_grupo1
+            .callback = callbackOfGroup_grupo1,
+            .radius = 10,
+            .group = 1,
+            .amount = 3,
+            .defaultClickedId = 1
         };
     grupo1.setup(configRadioGroup0);
     RadioGroupConfig configRadioGroup1 = {
-            .group = 2,
-            .radius = 10,
-            .amount = 2,
             .buttons = radiosOfGroup_grupo2,
-            .defaultClickedId = 1,
-            .callback = callbackOfGroup_grupo2
+            .callback = callbackOfGroup_grupo2,
+            .radius = 10,
+            .group = 2,
+            .amount = 2,
+            .defaultClickedId = 1
         };
     grupo2.setup(configRadioGroup1);
     myDisplay.setRadioGroup(arrayRadio,qtdRadioGroup);

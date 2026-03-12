@@ -21,14 +21,14 @@ A classe `ToggleButton` é um widget interativo que representa um botão toggle 
 
 ### ToggleButtonConfig
 
-Estrutura que contém todos os parâmetros de configuração:
+Estrutura que contém todos os parâmetros de configuração (ordem conforme `wtoggle.h`):
 
 ```cpp
 struct ToggleButtonConfig {
-  uint16_t width;         // Largura do botão
-  uint16_t height;        // Altura do botão
-  uint16_t pressedColor;  // Cor quando ligado
-  functionCB_t callback;  // Função callback
+  functionCB_t callback;  // Função callback executada quando o botão é alternado.
+  uint16_t width;         // Largura do botão em pixels.
+  uint16_t height;        // Altura do botão em pixels.
+  uint16_t pressedColor;  // Cor exibida quando o botão está ligado.
 };
 ```
 
@@ -191,19 +191,19 @@ void setup() {
 void loadWidgets() {
     // Configurar Toggle 1
     ToggleButtonConfig configToggle1 = {
+        .callback = toggle1_cb,
         .width = 80,
         .height = 40,
-        .pressedColor = CFK_GREEN,
-        .callback = toggle1_cb
+        .pressedColor = CFK_GREEN
     };
     toggle1.setup(configToggle1);
     
     // Configurar Toggle 2
     ToggleButtonConfig configToggle2 = {
+        .callback = toggle2_cb,
         .width = 100,
         .height = 50,
-        .pressedColor = CFK_BLUE,
-        .callback = toggle2_cb
+        .pressedColor = CFK_BLUE
     };
     toggle2.setup(configToggle2);
     
@@ -291,19 +291,19 @@ void setup() {
     
     // Configurar WiFi Toggle
     ToggleButtonConfig configWifi = {
+        .callback = wifi_callback,
         .width = 80,
         .height = 40,
-        .pressedColor = CFK_GREEN,
-        .callback = wifi_callback
+        .pressedColor = CFK_GREEN
     };
     wifiToggle.setup(configWifi);
     
     // Configurar Bluetooth Toggle
     ToggleButtonConfig configBluetooth = {
+        .callback = bluetooth_callback,
         .width = 80,
         .height = 40,
-        .pressedColor = CFK_BLUE,
-        .callback = bluetooth_callback
+        .pressedColor = CFK_BLUE
     };
     bluetoothToggle.setup(configBluetooth);
     

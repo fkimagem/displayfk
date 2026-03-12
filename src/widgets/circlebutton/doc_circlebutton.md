@@ -22,13 +22,13 @@ A classe `CircleButton` é um widget interativo que representa um botão circula
 
 ### CircleButtonConfig
 
-Estrutura que contém todos os parâmetros de configuração do botão circular:
+Estrutura que contém todos os parâmetros de configuração do botão circular (ordem conforme `wcirclebutton.h`):
 
 ```cpp
 struct CircleButtonConfig {
-  uint16_t radius;          // Raio do botão circular em pixels (5-200 recomendado)
-  uint16_t pressedColor;    // Cor RGB565 quando pressionado
-  functionCB_t callback;    // Ponteiro para função callback
+  functionCB_t callback;   // Callback executada quando o botão é pressionado.
+  uint16_t radius;        // Raio do botão circular em pixels (5-200 recomendado).
+  uint16_t pressedColor;  // Cor RGB565 exibida quando o botão está pressionado.
 };
 ```
 
@@ -180,9 +180,9 @@ void setup() {
 void loadWidgets() {
     // Configurar botão circular
     CircleButtonConfig configCircleButton = {
+        .callback = cirbtn_cb,
         .radius = 40,
-        .pressedColor = CFK_COLOR15,
-        .callback = cirbtn_cb
+        .pressedColor = CFK_COLOR15
     };
     cirbtn.setup(configCircleButton);
     
@@ -267,9 +267,9 @@ void setup() {
     
     // Configurar botão circular
     CircleButtonConfig config = {
+        .callback = botao_callback,
         .radius = 50,
-        .pressedColor = CFK_COLOR15,
-        .callback = botao_callback
+        .pressedColor = CFK_COLOR15
     };
     meuBotao.setup(config);
     

@@ -99,14 +99,14 @@ void loadWidgets(){
     Numpad::m_keyColor = CFK_GREY13;
 
     NumberBoxConfig configNumberBox0 = {
+            .funcPtr = screen0,
+            .callback = numberbox_cb,
+            .font = &RobotoRegular10pt7b,
+            .startValue = 255,
             .width = 101,
             .height = 25,
             .letterColor = CFK_COLOR01,
-            .backgroundColor = CFK_GREY10,
-            .startValue = 255,
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .callback = numberbox_cb
+            .backgroundColor = CFK_GREY10
         };
     numberbox.setup(configNumberBox0);
     myDisplay.setNumberbox(arrayNumberbox,qtdNumberbox);

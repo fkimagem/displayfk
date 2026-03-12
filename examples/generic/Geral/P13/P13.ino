@@ -59,8 +59,8 @@ RadioGroup grupo1(0);
 RadioGroup grupo2(0);
 const uint8_t qtdRadioGroup = 2;
 RadioGroup *arrayRadio[qtdRadioGroup] = {&grupo1, &grupo2};
-radio_t radiosOfGroup_grupo1[3] = {{355, 288, 1, CFK_COLOR01},{355, 330, 2, CFK_COLOR14},{355, 370, 3, CFK_COLOR21}};
-radio_t radiosOfGroup_grupo2[2] = {{430, 281, 1, CFK_COLOR13},{430, 325, 2, CFK_COLOR16}};
+radio_t radiosOfGroup_grupo1[3] = {{355, 288, CFK_COLOR01, 1},{355, 330, CFK_COLOR14, 2},{355, 370, CFK_COLOR21, 3}};
+radio_t radiosOfGroup_grupo2[2] = {{430, 281, CFK_COLOR13, 1},{430, 325, CFK_COLOR16, 2}};
 RectButton btnteste0(29, 170, 0);
 const uint8_t qtdRectBtn = 1;
 RectButton *arrayRectbtn[qtdRectBtn] = {&btnteste0};
@@ -168,43 +168,45 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     CheckBoxConfig configCheckbox0 = {
+            .callback = checkbox0_cb,
             .size = 21,
-            .checkedColor = CFK_COLOR16,
-            .callback = checkbox0_cb
+            .checkedColor = CFK_COLOR16
         };
     checkbox0.setup(configCheckbox0);
     CheckBoxConfig configCheckbox1 = {
+            .callback = checkbox1_cb,
             .size = 21,
-            .checkedColor = CFK_COLOR16,
-            .callback = checkbox1_cb
+            .checkedColor = CFK_COLOR16
         };
     checkbox1.setup(configCheckbox1);
     myDisplay.setCheckbox(arrayCheckbox,qtdCheckbox);
     CircleButtonConfig configCircleButton0 = {
+            .callback = cirbtn0_cb,
             .radius = 40,
-            .pressedColor = CFK_COLOR16,
-            .callback = cirbtn0_cb
+            .pressedColor = CFK_COLOR16
         };
     cirbtn0.setup(configCircleButton0);
     myDisplay.setCircleButton(arrayCirclebtn,qtdCircleBtn);
     HSliderConfig configHSlider0 = {
-            .width = 360,
-            .pressedColor = CFK_COLOR25,
+            .callback = slider0_cb,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .radius = 16,
-            .callback = slider0_cb
+            .width = 360,
+            .pressedColor = CFK_COLOR25,
+            .backgroundColor = CFK_WHITE
         };
     slider0.setup(configHSlider0);
     myDisplay.setHSlider(arrayHslider,qtdHSlider);
     LabelConfig configLabel0 = {
             .text = "Custom text",
+            .prefix = "pref",
+            .suffix = "suf",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR28,
-            .backgroundColor = CFK_WHITE,
-            .prefix = "pref",
-            .suffix = "suf"
+            .backgroundColor = CFK_WHITE
         };
     mudar0.setup(configLabel0);
     myDisplay.setLabel(arrayLabel,qtdLabel);
@@ -215,138 +217,138 @@ void loadWidgets(){
     led0.setup(configLed0);
     myDisplay.setLed(arrayLed,qtdLed);
     NumberBoxConfig configNumberBox0 = {
+            .funcPtr = screen0,
+            .callback = numberbox0_cb,
+            .font = &RobotoRegular10pt7b,
+            .startValue = 123,
             .width = 101,
             .height = 20,
             .letterColor = CFK_COLOR24,
-            .backgroundColor = CFK_WHITE,
-            .startValue = 123,
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .callback = numberbox0_cb
+            .backgroundColor = CFK_WHITE
         };
     numberbox0.setup(configNumberBox0);
     myDisplay.setNumberbox(arrayNumberbox,qtdNumberbox);
     RadioGroupConfig configRadioGroup0 = {
-            .group = 1,
-            .radius = 10,
-            .amount = 3,
             .buttons = radiosOfGroup_grupo1,
-            .defaultClickedId = 1,
-            .callback = callbackOfGroup_grupo1
+            .callback = callbackOfGroup_grupo1,
+            .radius = 10,
+            .group = 1,
+            .amount = 3,
+            .defaultClickedId = 1
         };
     grupo1.setup(configRadioGroup0);
     RadioGroupConfig configRadioGroup1 = {
-            .group = 2,
-            .radius = 10,
-            .amount = 2,
             .buttons = radiosOfGroup_grupo2,
-            .defaultClickedId = 1,
-            .callback = callbackOfGroup_grupo2
+            .callback = callbackOfGroup_grupo2,
+            .radius = 10,
+            .group = 2,
+            .amount = 2,
+            .defaultClickedId = 1
         };
     grupo2.setup(configRadioGroup1);
     myDisplay.setRadioGroup(arrayRadio,qtdRadioGroup);
     RectButtonConfig configRectButton0 = {
+            .callback = btnteste0_cb,
             .width = 88,
             .height = 41,
-            .pressedColor = CFK_COLOR25,
-            .callback = btnteste0_cb
+            .pressedColor = CFK_COLOR25
         };btnteste0.setup(configRectButton0);
     myDisplay.setRectButton(arrayRectbtn,qtdRectBtn);
     SpinBoxConfig configSpinBox0 = {
-            .width = 138,
-            .height = 51,
-            .step = 1,
+            .callback = temperature0_cb,
             .minValue = 0,
             .maxValue = 100,
             .startValue = 50,
+            .width = 138,
+            .height = 51,
+            .step = 1,
             .color = CFK_COLOR25,
-            .textColor = CFK_BLACK,
-            .callback = temperature0_cb
+            .textColor = CFK_BLACK
         };
     temperature0.setup(configSpinBox0);
     SpinBoxConfig configSpinBox1 = {
-            .width = 138,
-            .height = 51,
-            .step = 1,
+            .callback = velocidade1_cb,
             .minValue = 0,
             .maxValue = 100,
             .startValue = 50,
+            .width = 138,
+            .height = 51,
+            .step = 1,
             .color = CFK_COLOR24,
-            .textColor = CFK_WHITE,
-            .callback = velocidade1_cb
+            .textColor = CFK_WHITE
         };
     velocidade1.setup(configSpinBox1);
     myDisplay.setSpinbox(arraySpinbox,qtdSpinbox);
     TextBoxConfig configTextBox0 = {
+            .startValue = "YOUR TEXT HERE...",
+            .funcPtr = screen0,
+            .cb = textbox0_cb,
+            .font = &RobotoRegular10pt7b,
             .width = 142,
             .height = 25,
             .letterColor = CFK_COLOR24,
-            .backgroundColor = CFK_WHITE,
-            .startValue = "YOUR TEXT HERE...",
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .cb = textbox0_cb
+            .backgroundColor = CFK_WHITE
         };
     textbox0.setup(configTextBox0);
     myDisplay.setTextbox(arrayTextbox,qtdTextbox);
     TextButtonConfig configTextButton0 = {
+            .text = "alert",
+            .callback = alerta0_cb,
             .width = 129,
             .height = 47,
             .radius = 10,
             .backgroundColor = CFK_COLOR31,
-            .textColor = CFK_WHITE,
-            .text = "alert",
-            .callback = alerta0_cb
+            .textColor = CFK_WHITE
         };
     alerta0.setup(configTextButton0);
     myDisplay.setTextButton(arrayTextButton,qtdTextButton);
     ToggleButtonConfig configToggle0 = {
+            .callback = wifi0_cb,
             .width = 94,
             .height = 47,
-            .pressedColor = CFK_COLOR31,
-            .callback = wifi0_cb
+            .pressedColor = CFK_COLOR31
         };
     wifi0.setup(configToggle0);
     myDisplay.setToggle(arrayTogglebtn,qtdToggleBtn);
     TouchAreaConfig configTouchArea0 = {
+            .callback = touchaarea0_cb,
             .width = 46,
-            .height = 71,
-            .callback = touchaarea0_cb
+            .height = 71
         };
     touchaarea0.setup(configTouchArea0);
     myDisplay.setTouchArea(arrayToucharea,qtdTouchArea);
     VerticalAnalogConfig configVAnalog0 = {
-            .width = 41,
-            .height = 151,
             .minValue = 0,
             .maxValue = 100,
-            .steps = 10,
+            .width = 41,
+            .height = 151,
             .arrowColor = CFK_COLOR01,
             .textColor = CFK_BLACK,
             .backgroundColor = CFK_WHITE,
-            .borderColor = CFK_BLACK
+            .borderColor = CFK_BLACK,
+            .steps = 10
         };
     vertalog0.setup(configVAnalog0);
     myDisplay.setVAnalog(arrayVanalog,qtdVAnalog);
     VerticalBarConfig configVBar0 = {
+            .minValue = 0,
+            .maxValue = 100,
             .width = 31,
             .height = 152,
-            .filledColor = CFK_COLOR01,
-            .minValue = 0,
-            .maxValue = 100
+            .filledColor = CFK_COLOR01
         };
     vertbar0.setup(configVBar0);
     myDisplay.setVBar(arrayVbar,qtdVBar);
     CircularBarConfig configCirculaBar0 = {
-            .radius = 40,
             .minValue = 0,
             .maxValue = 100,
+            .radius = 40,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 20,
             .color = CFK_COLOR04,
             .backgroundColor = CFK_GREY12,
             .textColor = CFK_BLACK,
+            .thickness = 20,
             .showValue = true,
             .inverted = false
         };

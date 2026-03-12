@@ -188,30 +188,30 @@ void screen0(){
 void loadWidgets(){
 
     CircleButtonConfig configCircleButton0 = {
+            .callback = btnm0_cb,
             .radius = 31,
-            .pressedColor = CFK_COLOR08,
-            .callback = btnm0_cb
+            .pressedColor = CFK_COLOR08
         };
 
     btnm0.setup(configCircleButton0);
     CircleButtonConfig configCircleButton1 = {
+            .callback = btnm1_cb,
             .radius = 31,
-            .pressedColor = CFK_COLOR08,
-            .callback = btnm1_cb
+            .pressedColor = CFK_COLOR08
         };
 
     btnm1.setup(configCircleButton1);
     CircleButtonConfig configCircleButton2 = {
+            .callback = btnm2_cb,
             .radius = 31,
-            .pressedColor = CFK_COLOR08,
-            .callback = btnm2_cb
+            .pressedColor = CFK_COLOR08
         };
 
     btnm2.setup(configCircleButton2);
     CircleButtonConfig configCircleButton3 = {
+            .callback = btnenable_cb,
             .radius = 31,
-            .pressedColor = CFK_COLOR05,
-            .callback = btnenable_cb
+            .pressedColor = CFK_COLOR05
         };
 
     btnenable.setup(configCircleButton3);

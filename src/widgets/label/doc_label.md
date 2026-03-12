@@ -24,17 +24,19 @@ A classe `Label` é um widget visual que exibe texto na tela com formatação pe
 
 ### LabelConfig
 
-Estrutura que contém todos os parâmetros de configuração do label:
+Estrutura que contém todos os parâmetros de configuração do label (ordem conforme `wlabel.h`):
 
 ```cpp
 struct LabelConfig {
-  const char* text;          // Texto inicial a ser exibido
-  const GFXfont* fontFamily; // Ponteiro para fonte (se USING_GRAPHIC_LIB)
-  uint16_t datum;            // Alinhamento do texto
-  uint16_t fontColor;        // Cor do texto
-  uint16_t backgroundColor;  // Cor de fundo
-  const char* prefix;        // Texto de prefixo
-  const char* suffix;        // Texto de sufixo
+  const char* text;          // Texto inicial a ser exibido.
+  const char* prefix;        // Texto de prefixo a ser exibido.
+  const char* suffix;        // Texto de sufixo a ser exibido.
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* fontFamily; // Ponteiro para a fonte usada no texto.
+  #endif
+  uint16_t datum;            // Configuração de alinhamento do texto.
+  uint16_t fontColor;        // Cor do texto.
+  uint16_t backgroundColor;  // Cor de fundo do rótulo.
 };
 ```
 
@@ -240,36 +242,36 @@ void loadWidgets() {
     // Configurar label simples
     LabelConfig configLabel0 = {
         .text = "Custom text",
+        .prefix = "",
+        .suffix = "",
         .fontFamily = &RobotoRegular10pt7b,
         .datum = TL_DATUM,
         .fontColor = CFK_BLACK,
-        .backgroundColor = CFK_WHITE,
-        .prefix = "",
-        .suffix = ""
+        .backgroundColor = CFK_WHITE
     };
     text.setup(configLabel0);
     
     // Label com prefixo
     LabelConfig configLabel1 = {
         .text = "Line 1",
+        .prefix = "Line",
+        .suffix = "",
         .fontFamily = &RobotoRegular10pt7b,
         .datum = TL_DATUM,
         .fontColor = CFK_COLOR09,
-        .backgroundColor = CFK_WHITE,
-        .prefix = "Line",
-        .suffix = ""
+        .backgroundColor = CFK_WHITE
     };
     line1.setup(configLabel1);
     
     // Label com sufixo
     LabelConfig configLabel2 = {
         .text = "Line 2",
+        .prefix = "Line",
+        .suffix = "C",
         .fontFamily = &RobotoRegular10pt7b,
         .datum = TL_DATUM,
         .fontColor = CFK_COLOR04,
-        .backgroundColor = CFK_WHITE,
-        .prefix = "Line",
-        .suffix = "C"
+        .backgroundColor = CFK_WHITE
     };
     line2.setup(configLabel2);
     
@@ -353,48 +355,48 @@ void setup() {
     // Configurar label de título
     LabelConfig configTitulo = {
         .text = "Sistema de Monitoramento",
+        .prefix = "",
+        .suffix = "",
         .fontFamily = &RobotoBold10pt7b,
         .datum = MC_DATUM,
         .fontColor = CFK_BLACK,
-        .backgroundColor = CFK_WHITE,
-        .prefix = "",
-        .suffix = ""
+        .backgroundColor = CFK_WHITE
     };
     titulo.setup(configTitulo);
     
     // Configurar subtítulo
     LabelConfig configSubtitulo = {
         .text = "Sensor de Ambiente",
+        .prefix = "",
+        .suffix = "",
         .fontFamily = &RobotoRegular10pt7b,
         .datum = MC_DATUM,
         .fontColor = CFK_GREY6,
-        .backgroundColor = CFK_WHITE,
-        .prefix = "",
-        .suffix = ""
+        .backgroundColor = CFK_WHITE
     };
     subtitulo.setup(configSubtitulo);
     
     // Configurar label de temperatura
     LabelConfig configTemp = {
         .text = "0",
+        .prefix = "Temperatura: ",
+        .suffix = " °C",
         .fontFamily = &RobotoRegular10pt7b,
         .datum = TL_DATUM,
         .fontColor = CFK_BLACK,
-        .backgroundColor = CFK_WHITE,
-        .prefix = "Temperatura: ",
-        .suffix = " °C"
+        .backgroundColor = CFK_WHITE
     };
     valorTemperatura.setup(configTemp);
     
     // Configurar label de umidade
     LabelConfig configUmidade = {
         .text = "0",
+        .prefix = "Umidade: ",
+        .suffix = " %",
         .fontFamily = &RobotoRegular10pt7b,
         .datum = TL_DATUM,
         .fontColor = CFK_BLACK,
-        .backgroundColor = CFK_WHITE,
-        .prefix = "Umidade: ",
-        .suffix = " %"
+        .backgroundColor = CFK_WHITE
     };
     valorUmidade.setup(configUmidade);
     

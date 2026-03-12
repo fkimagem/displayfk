@@ -27,25 +27,25 @@ Estrutura que representa um botão de rádio individual:
 
 ```cpp
 struct radio_t {
-  uint16_t x;     // Coordenada X do botão
-  uint16_t y;     // Coordenada Y do botão
-  uint8_t id;     // ID único do botão no grupo
-  uint16_t color; // Cor do botão quando selecionado
+  uint16_t x;     // Coordenada X do botão.
+  uint16_t y;     // Coordenada Y do botão.
+  uint16_t color; // Cor do botão quando selecionado.
+  uint8_t id;     // ID único do botão no grupo.
 };
 ```
 
 ### RadioGroupConfig
 
-Estrutura que contém todos os parâmetros de configuração do grupo:
+Estrutura que contém todos os parâmetros de configuração do grupo (ordem conforme `wradiogroup.h`):
 
 ```cpp
 struct RadioGroupConfig {
-  uint8_t group;               // ID do grupo
-  uint16_t radius;             // Raio de todos os botões
-  uint8_t amount;              // Número de botões no grupo
-  const radio_t* buttons;      // Array de botões
-  uint8_t defaultClickedId;    // ID do botão selecionado por padrão
-  functionCB_t callback;       // Função callback
+  const radio_t* buttons;      // Ponteiro para array de botões de rádio.
+  functionCB_t callback;       // Callback executada na mudança de seleção.
+  uint16_t radius;             // Raio de cada botão em pixels.
+  uint8_t group;               // Identificador do grupo.
+  uint8_t amount;              // Número de botões no grupo.
+  uint8_t defaultClickedId;    // ID do botão selecionado por padrão.
 };
 ```
 
@@ -158,9 +158,9 @@ DisplayFK myDisplay;
 
 // Definir botões do grupo
 radio_t opcoes[] = {
-    {50, 100, 1, CFK_COLOR01},  // Opção 1
-    {50, 150, 2, CFK_COLOR02},  // Opção 2
-    {50, 200, 3, CFK_COLOR03}   // Opção 3
+    {50, 100, CFK_COLOR01, 1},  // Opção 1
+    {50, 150, CFK_COLOR02, 2},  // Opção 2
+    {50, 200, CFK_COLOR03, 3}   // Opção 3
 };
 
 // Criar RadioGroup
@@ -191,12 +191,12 @@ void setup() {
 void loadWidgets() {
     // Configurar RadioGroup
     RadioGroupConfig configRadioGroup = {
-        .group = 1,
-        .radius = 15,
-        .amount = 3,
         .buttons = opcoes,
-        .defaultClickedId = 1,
-        .callback = radiogroup_cb
+        .callback = radiogroup_cb,
+        .radius = 15,
+        .group = 1,
+        .amount = 3,
+        .defaultClickedId = 1
     };
     radiogroup.setup(configRadioGroup);
     
@@ -266,9 +266,9 @@ Arduino_GFX *gfx = nullptr;
 
 // Definir opções do grupo
 radio_t opcoesTemperatura[] = {
-    {80, 100, 1, CFK_RED},      // Quente
-    {80, 150, 2, CFK_YELLOW},   // Morno
-    {80, 200, 3, CFK_BLUE}      // Frio
+    {80, 100, CFK_RED, 1},      // Quente
+    {80, 150, CFK_YELLOW, 2},   // Morno
+    {80, 200, CFK_BLUE, 3}      // Frio
 };
 
 // Criar RadioGroup
@@ -289,12 +289,12 @@ void setup() {
     
     // Configurar RadioGroup
     RadioGroupConfig config = {
-        .group = 1,
-        .radius = 20,
-        .amount = 3,
         .buttons = opcoesTemperatura,
-        .defaultClickedId = 2,
-        .callback = temperatura_callback
+        .callback = temperatura_callback,
+        .radius = 20,
+        .group = 1,
+        .amount = 3,
+        .defaultClickedId = 2
     };
     grupoTemperatura.setup(config);
     

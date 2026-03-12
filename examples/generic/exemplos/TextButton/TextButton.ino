@@ -93,13 +93,13 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     TextButtonConfig configTextButton0 = {
+            .text = "Button",
+            .callback = textbutton_cb,
             .width = 150,
             .height = 50,
             .radius = 10,
             .backgroundColor = CFK_COLOR01,
-            .textColor = CFK_WHITE,
-            .text = "Button",
-            .callback = textbutton_cb
+            .textColor = CFK_WHITE
         };
 
     textbutton.setup(configTextButton0);

@@ -173,62 +173,62 @@ void loadWidgets(){
 
     LabelConfig configLabel0 = {
             .text = "label_chart 1",
+            .prefix = "Line",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR08,
-            .backgroundColor = CFK_GREY3,
-            .prefix = "Line",
-            .suffix = ""
+            .backgroundColor = CFK_GREY3
         };
     labelchart11.setup(configLabel0);
     myDisplay.setLabel(arrayLabel,qtdLabel);
 
 
     LineChartConfig configLineChart0 = {
-            .width = 258,
-            .height = 119,
+            .colorsSeries = colorsChart0,
+            .subtitles = seriesGrafico0,
+            .font = &RobotoRegular5pt7b,
             .minValue = 0,
             .maxValue = 100,
-            .amountSeries = qtdLinesChart0,
-            .colorsSeries = colorsChart0,
+            .width = 258,
+            .height = 119,
             .gridColor = CFK_BLACK,
             .borderColor = CFK_BLACK,
             .backgroundColor = CFK_GREY3,
             .textColor = CFK_WHITE,
             .verticalDivision = 5,
+            .maxPointsAmount = LineChart::SHOW_ALL,
+            .amountSeries = qtdLinesChart0,
             .workInBackground = true,
             .showZeroLine = true,
             .boldLine = false,
-            .showDots = false,
-            .maxPointsAmount = LineChart::SHOW_ALL,
-            .font = &RobotoRegular5pt7b,
-            .subtitles = seriesGrafico0
+            .showDots = false
         };
     linechart1.setup(configLineChart0);
     myDisplay.setLineChart(arrayLinechart,qtdLineChart);
 
 
     TextButtonConfig configTextButton0 = {
+            .text = "Next",
+            .callback = btnnext_cb,
+            .fontFamily = &RobotoBold8pt7b,
             .width = 97,
             .height = 38,
             .radius = 10,
             .backgroundColor = CFK_COLOR24,
-            .textColor = CFK_WHITE,
-            .text = "Next",
-            .fontFamily = &RobotoBold8pt7b,
-            .callback = btnnext_cb
+            .textColor = CFK_WHITE
         };
 
     btnnext.setup(configTextButton0);
     TextButtonConfig configTextButton1 = {
+            .text = "Click here",
+            .callback = btnbackpage_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 243,
             .height = 38,
             .radius = 10,
             .backgroundColor = CFK_GREY3,
-            .textColor = CFK_WHITE,
-            .text = "Click here",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btnbackpage_cb
+            .textColor = CFK_WHITE
         };
 
     btnbackpage.setup(configTextButton1);

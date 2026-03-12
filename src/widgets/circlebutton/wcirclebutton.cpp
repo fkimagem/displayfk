@@ -14,7 +14,7 @@ const char* CircleButton::TAG = "CircleButton";
 CircleButton::CircleButton(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_status(false)
 {
-    m_config = {.radius = 0, .pressedColor = 0, .callback = nullptr};
+    m_config = {.callback = nullptr, .radius = 0, .pressedColor = 0};
     ESP_LOGD(TAG, "CircleButton created at (%d, %d) on screen %d", _x, _y, _screen);
 }
 

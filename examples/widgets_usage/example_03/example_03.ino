@@ -160,18 +160,18 @@ void screen0(){
 void loadWidgets(){
 
     RectButtonConfig configRectButton0 = {
+            .callback = rectbutton1_cb,
             .width = 54,
             .height = 40,
-            .pressedColor = CFK_COLOR20,
-            .callback = rectbutton1_cb
+            .pressedColor = CFK_COLOR20
         };
 
 rectbutton1.setup(configRectButton0);
     RectButtonConfig configRectButton1 = {
+            .callback = rectbutton1copy_cb,
             .width = 54,
             .height = 40,
-            .pressedColor = CFK_COLOR23,
-            .callback = rectbutton1copy_cb
+            .pressedColor = CFK_COLOR23
         };
 
 rectbutton1copy.setup(configRectButton1);

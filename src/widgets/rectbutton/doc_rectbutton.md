@@ -23,14 +23,14 @@ A classe `RectButton` é um widget interativo que exibe um botão retangular com
 
 ### RectButtonConfig
 
-Estrutura que contém todos os parâmetros de configuração:
+Estrutura que contém todos os parâmetros de configuração (ordem conforme `wrectbutton.h`):
 
 ```cpp
 struct RectButtonConfig {
-  uint16_t width;         // Largura do botão em pixels
-  uint16_t height;        // Altura do botão em pixels
-  uint16_t pressedColor;  // Cor da área interna quando pressionado
-  functionCB_t callback;  // Função callback
+  functionCB_t callback;  // Função callback executada quando o botão é pressionado.
+  uint16_t width;         // Largura do botão em pixels.
+  uint16_t height;        // Altura do botão em pixels.
+  uint16_t pressedColor;  // Cor exibida quando o botão está pressionado.
 };
 ```
 
@@ -192,19 +192,19 @@ void setup() {
 void loadWidgets() {
     // Configurar Botão 1
     RectButtonConfig configBotao1 = {
+        .callback = botao1_cb,
         .width = 100,
         .height = 50,
-        .pressedColor = CFK_COLOR01,
-        .callback = botao1_cb
+        .pressedColor = CFK_COLOR01
     };
     botao1.setup(configBotao1);
     
     // Configurar Botão 2
     RectButtonConfig configBotao2 = {
+        .callback = botao2_cb,
         .width = 120,
         .height = 60,
-        .pressedColor = CFK_COLOR02,
-        .callback = botao2_cb
+        .pressedColor = CFK_COLOR02
     };
     botao2.setup(configBotao2);
     
@@ -286,19 +286,19 @@ void setup() {
     
     // Configurar botão Ligar
     RectButtonConfig configLigar = {
+        .callback = ligar_callback,
         .width = 120,
         .height = 60,
-        .pressedColor = CFK_GREEN,
-        .callback = ligar_callback
+        .pressedColor = CFK_GREEN
     };
     botaoLigar.setup(configLigar);
     
     // Configurar botão Desligar
     RectButtonConfig configDesligar = {
+        .callback = desligar_callback,
         .width = 120,
         .height = 60,
-        .pressedColor = CFK_RED,
-        .callback = desligar_callback
+        .pressedColor = CFK_RED
     };
     botaoDesligar.setup(configDesligar);
     

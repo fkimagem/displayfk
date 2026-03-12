@@ -172,68 +172,68 @@ void loadWidgets(){
 
     LabelConfig configLabel0 = {
             .text = "label_th",
+            .prefix = "",
+            .suffix = "C",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR04,
-            .backgroundColor = CFK_WHITE,
-            .prefix = "",
-            .suffix = "C"
+            .backgroundColor = CFK_WHITE
         };
     labelthermometer11.setup(configLabel0);
     myDisplay.setLabel(arrayLabel,qtdLabel);
 
 
     VerticalAnalogConfig configVAnalog0 = {
-            .width = 41,
-            .height = 154,
             .minValue = -100,
             .maxValue = 100,
-            .steps = 10,
+            .width = 41,
+            .height = 154,
             .arrowColor = CFK_COLOR01,
             .textColor = CFK_BLACK,
             .backgroundColor = CFK_WHITE,
-            .borderColor = CFK_BLACK
+            .borderColor = CFK_BLACK,
+            .steps = 10
         };
     vertalog1.setup(configVAnalog0);
     myDisplay.setVAnalog(arrayVanalog,qtdVAnalog);
 
 
     VerticalBarConfig configVBar0 = {
-            .width = 21,
-            .height = 116,
-            .filledColor = CFK_COLOR30,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .round = 0,
             .orientation = Orientation::VERTICAL,
-            .subtitle = nullptr
+            .width = 21,
+            .height = 116,
+            .filledColor = CFK_COLOR30
         };
     vertbar1.setup(configVBar0);
     VerticalBarConfig configVBar1 = {
-            .width = 133,
-            .height = 21,
-            .filledColor = CFK_COLOR30,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 100,
             .round = 0,
             .orientation = Orientation::HORIZONTAL,
-            .subtitle = nullptr
+            .width = 133,
+            .height = 21,
+            .filledColor = CFK_COLOR30
         };
     vertbar2.setup(configVBar1);
     myDisplay.setVBar(arrayVbar,qtdVBar);
 
 
     CircularBarConfig configCirculaBar0 = {
-            .radius = 52,
             .minValue = 0,
             .maxValue = 100,
+            .radius = 52,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 20,
             .color = CFK_COLOR20,
             .backgroundColor = CFK_GREY11,
             .textColor = CFK_BLACK,
             .backgroundText = CFK_WHITE,
+            .thickness = 20,
             .showValue = true,
             .inverted = false
         };
@@ -242,15 +242,15 @@ void loadWidgets(){
 
 
     ThermometerConfig configThermometer0 = {
+            .subtitle = &labelthermometer11,
+            .unit = "C",
+            .minValue = 0,
+            .maxValue = 100,
             .width = 41,
             .height = 138,
             .filledColor = CFK_COLOR04,
             .backgroundColor = CFK_WHITE,
             .markColor = CFK_BLACK,
-            .minValue = 0,
-            .maxValue = 100,
-            .subtitle = &labelthermometer11,
-            .unit = "C",
             .decimalPlaces = 1
         };
     thermometer1.setup(configThermometer0);

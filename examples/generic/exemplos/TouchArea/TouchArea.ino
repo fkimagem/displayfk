@@ -93,9 +93,9 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     TouchAreaConfig configTouchArea0 = {
+            .callback = touchaarea_cb,
             .width = 325,
-            .height = 220,
-            .callback = touchaarea_cb
+            .height = 220
         };
     touchaarea.setup(configTouchArea0);
     myDisplay.setTouchArea(arrayToucharea,qtdTouchArea);

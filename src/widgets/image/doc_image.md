@@ -24,30 +24,30 @@ A classe `Image` é um widget visual que exibe imagens na tela. Ele herda de `Wi
 
 ### ImageFromFileConfig
 
-Estrutura para carregar imagens de arquivos:
+Estrutura para carregar imagens de arquivos (ordem conforme `wimage.h`):
 
 ```cpp
 struct ImageFromFileConfig {
-  SourceFile source;           // Fonte: SD, SPIFFS ou FATFS
-  const char *path;           // Caminho do arquivo
-  functionCB_t cb;            // Função callback para toque
-  uint16_t backgroundColor;    // Cor de fundo RGB565
+  const char* path;           // Caminho do arquivo.
+  functionCB_t cb;           // Callback executada quando a imagem é tocada.
+  SourceFile source;         // Fonte: SD, SPIFFS ou FATFS.
+  uint16_t backgroundColor; // Cor de fundo RGB565.
 };
 ```
 
 ### ImageFromPixelsConfig
 
-Estrutura para carregar imagens de dados de pixels:
+Estrutura para carregar imagens de dados de pixels (ordem conforme `wimage.h`):
 
 ```cpp
 struct ImageFromPixelsConfig {
-  const pixel_t *pixels;      // Dados de pixels (formato depende do display)
-  uint16_t width;             // Largura da imagem (> 0)
-  uint16_t height;            // Altura da imagem (> 0)
-  const uint8_t *maskAlpha;   // Máscara de transparência (opcional)
-  functionCB_t cb;            // Função callback para toque
-  uint16_t backgroundColor;   // Cor de fundo RGB565
-  float angle;                // Ângulo de rotação em graus
+  const pixel_t* pixels;     // Dados de pixels (formato depende do display).
+  const uint8_t* maskAlpha;  // Máscara de transparência (opcional, pode ser nullptr).
+  functionCB_t cb;           // Callback executada quando a imagem é tocada.
+  float angle;               // Ângulo de rotação em graus (0 = sem rotação).
+  uint16_t width;            // Largura da imagem (> 0).
+  uint16_t height;           // Altura da imagem (> 0).
+  uint16_t backgroundColor;  // Cor de fundo RGB565.
 };
 ```
 

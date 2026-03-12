@@ -115,12 +115,12 @@ void loadWidgets(){
 
     LabelConfig configLabel0 = {
             .text = "------",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TC_DATUM,
             .fontColor = CFK_BLACK,
-            .backgroundColor = CFK_WHITE,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_WHITE
         };
     txtresultado.setup(configLabel0);
     myDisplay.setLabel(arrayLabel,qtdLabel);
@@ -132,53 +132,53 @@ void loadWidgets(){
 
 
     NumberBoxConfig configNumberBox0 = {
+            .funcPtr = screen0,
+            .callback = numberbox1_cb,
+            .font = &RobotoRegular10pt7b,
+            .startValue = 10,
             .width = 101,
             .height = 25,
             .letterColor = CFK_GREY1,
             .backgroundColor = CFK_WHITE,
-            .startValue = 10,
-            .decimalPlaces = 0,
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .callback = numberbox1_cb
+            .decimalPlaces = 0
         };
     numberbox1.setup(configNumberBox0);
     NumberBoxConfig configNumberBox1 = {
+            .funcPtr = screen0,
+            .callback = numberbox1copy_cb,
+            .font = &RobotoRegular10pt7b,
+            .startValue = 10,
             .width = 103,
             .height = 25,
             .letterColor = CFK_GREY1,
             .backgroundColor = CFK_WHITE,
-            .startValue = 10,
-            .decimalPlaces = 0,
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .callback = numberbox1copy_cb
+            .decimalPlaces = 0
         };
     numberbox1copy.setup(configNumberBox1);
     myDisplay.setNumberbox(arrayNumberbox,qtdNumberbox);
 
 
     TextButtonConfig configTextButton0 = {
+            .text = "Sum",
+            .callback = btnsum_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 79,
             .height = 37,
             .radius = 10,
             .backgroundColor = CFK_GREY11,
-            .textColor = CFK_BLACK,
-            .text = "Sum",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btnsum_cb
+            .textColor = CFK_BLACK
         };
 
     btnsum.setup(configTextButton0);
     TextButtonConfig configTextButton1 = {
+            .text = "Sub",
+            .callback = btnminus_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 79,
             .height = 37,
             .radius = 10,
             .backgroundColor = CFK_GREY11,
-            .textColor = CFK_BLACK,
-            .text = "Sub",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btnminus_cb
+            .textColor = CFK_BLACK
         };
 
     btnminus.setup(configTextButton1);

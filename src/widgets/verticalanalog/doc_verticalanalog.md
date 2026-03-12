@@ -21,19 +21,19 @@ A classe `VAnalog` é um widget que exibe valores numéricos em uma escala anal�
 
 ### VerticalAnalogConfig
 
-Estrutura que contém todos os parâmetros de configuração:
+Estrutura que contém todos os parâmetros de configuração (ordem conforme `wverticalanalog.h`):
 
 ```cpp
 struct VerticalAnalogConfig {
-  uint16_t width;           // Largura do display
-  uint16_t height;          // Altura do display
-  int minValue;            // Valor mínimo da escala
-  int maxValue;            // Valor máximo da escala
-  uint8_t steps;           // Número de divisões na escala
-  uint16_t arrowColor;     // Cor da seta indicadora
-  uint16_t textColor;      // Cor do texto (valores)
-  uint16_t backgroundColor; // Cor de fundo
-  uint16_t borderColor;    // Cor da borda
+  int minValue;            // Valor mínimo da escala.
+  int maxValue;            // Valor máximo da escala.
+  uint16_t width;          // Largura do display em pixels.
+  uint16_t height;         // Altura do display em pixels.
+  uint16_t arrowColor;     // Cor da seta indicadora.
+  uint16_t textColor;      // Cor do texto (valores).
+  uint16_t backgroundColor; // Cor de fundo.
+  uint16_t borderColor;    // Cor da borda.
+  uint8_t steps;           // Número de divisões na escala.
 };
 ```
 
@@ -262,30 +262,30 @@ void setup() {
 void loadWidgets() {
     // Configurar Display 1
     VerticalAnalogConfig configDisplay1 = {
-        .width = 60,
-        .height = 150,
         .minValue = 0,
         .maxValue = 100,
-        .steps = 20,
+        .width = 60,
+        .height = 150,
         .arrowColor = CFK_RED,
         .textColor = CFK_BLACK,
         .backgroundColor = CFK_WHITE,
-        .borderColor = CFK_BLACK
+        .borderColor = CFK_BLACK,
+        .steps = 20
     };
     display1.setup(configDisplay1);
     display1.drawBackground();
     
     // Configurar Display 2
     VerticalAnalogConfig configDisplay2 = {
-        .width = 60,
-        .height = 120,
         .minValue = -50,
         .maxValue = 50,
-        .steps = 10,
+        .width = 60,
+        .height = 120,
         .arrowColor = CFK_BLUE,
         .textColor = CFK_WHITE,
         .backgroundColor = CFK_GREY11,
-        .borderColor = CFK_GREY5
+        .borderColor = CFK_GREY5,
+        .steps = 10
     };
     display2.setup(configDisplay2);
     display2.drawBackground();
@@ -352,30 +352,30 @@ void setup() {
     
     // Configurar Temperatura
     VerticalAnalogConfig configTemp = {
-        .width = 60,
-        .height = 150,
         .minValue = -20,
         .maxValue = 60,
-        .steps = 16,
+        .width = 60,
+        .height = 150,
         .arrowColor = CFK_RED,
         .textColor = CFK_BLACK,
         .backgroundColor = CFK_WHITE,
-        .borderColor = CFK_BLACK
+        .borderColor = CFK_BLACK,
+        .steps = 16
     };
     temperatura.setup(configTemp);
     temperatura.drawBackground();
     
     // Configurar Umidade
     VerticalAnalogConfig configUmidade = {
-        .width = 60,
-        .height = 150,
         .minValue = 0,
         .maxValue = 100,
-        .steps = 20,
+        .width = 60,
+        .height = 150,
         .arrowColor = CFK_BLUE,
         .textColor = CFK_BLACK,
         .backgroundColor = CFK_WHITE,
-        .borderColor = CFK_BLACK
+        .borderColor = CFK_BLACK,
+        .steps = 20
     };
     umidade.setup(configUmidade);
     umidade.drawBackground();

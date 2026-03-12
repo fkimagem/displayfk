@@ -4,7 +4,7 @@
 
 #define MIN_LOOPTASK_TIME_LOG 20
 
-#define RESET_WDT {if(m_enableWTD){esp_task_wdt_reset();}};
+#define RESET_WDT {if(DisplayFK::instance->m_enableWTD){esp_task_wdt_reset();}};
 
 
 DisplayFK *DisplayFK::instance = nullptr;
@@ -2341,11 +2341,15 @@ void DisplayFK::processTouchEvent(uint16_t xTouch, uint16_t yTouch, int zPressur
     UNUSED(zPressure);
 
     #if defined(USING_GRAPHIC_LIB)
+
+
     if(m_debugTouch){
         Serial.printf("Touch pressed at [%i, %i]\n", xTouch, yTouch);
         CHECK_TFT_VOID
         WidgetBase::objTFT->fillCircle(xTouch, yTouch, 2, CFK_FUCHSIA);
     }
+
+
     #endif
     
     if (WidgetBase::usingKeyboard) return;
@@ -2429,7 +2433,8 @@ void DisplayFK::processTouchStatus(bool hasTouch, uint16_t xTouch, uint16_t yTou
     }else if(m_lastTouchState == TouchEventType::TOUCH_HOLD){
         releasePoint.x = xTouch;
         releasePoint.y = yTouch;
-        //Serial.println("---------------------- APERTANDO");
+        processTouchableWidgets(xTouch, yTouch, false);
+        //Serial.printf("---------------------- APERTANDO (%d, %d)\n", xTouch, yTouch);
         
 #ifdef ENABLE_ON_RELEASE
         // Check if widgets are still being touched
@@ -2714,6 +2719,8 @@ void DisplayFK::processHSliderTouch(uint16_t xTouch, uint16_t yTouch, bool colle
     if(!m_hSliderConfigured || !arrayHSlider){
         return;
     }
+
+    //Serial.println("processHSliderTouch");
     
     for (uint32_t indice = 0; indice < qtdHSlider; indice++) {
         // Skip widgets not on current screen
@@ -3217,7 +3224,7 @@ if(touchExterno){
 
     if (hasTouch) {
         
-        processTouchEvent(xTouch, yTouch, zPressure, gesture);
+        //processTouchEvent(xTouch, yTouch, zPressure, gesture);
     }else{
         //ESP_LOGD(TAG, "No touch detected");
     }
@@ -3237,6 +3244,10 @@ if(touchExterno){
     if(startTime >= MIN_LOOPTASK_TIME_LOG){
         ESP_LOGD(TAG, "loopTask finished: %lu ms\n", startTime);
     }
+
+
+    //esp_task_wdt_reset();
+    RESET_WDT
 
     //vTaskDelay(pdMS_TO_TICKS(1));
 }
@@ -3263,7 +3274,8 @@ void DisplayFK::TaskEventoTouch(void *pvParameters)
             // Libera o semáforo novamente para próxima iteração
         //    xSemaphoreGive(DisplayFK::instance->m_loopSemaphore);
         //}
-        if(DisplayFK::instance->m_enableWTD){esp_task_wdt_reset();}
+        RESET_WDT
+        //if(DisplayFK::instance->m_enableWTD){esp_task_wdt_reset();}
         vTaskDelay(pdMS_TO_TICKS(1));
     }
 }
@@ -3446,7 +3458,7 @@ void DisplayFK::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t 
     if(_font){
         WidgetBase::objTFT->setFont(_font);
     }else{
-        WidgetBase::objTFT->setFont((GFXfont *)0);
+        WidgetBase::setFontNull();
     }
     
     
@@ -3454,7 +3466,7 @@ void DisplayFK::printText(const char* _texto, uint16_t _x, uint16_t _y, uint8_t 
     WidgetBase::recalculateTextPosition(_texto, &_x, &_y, _datum);
     WidgetBase::objTFT->setCursor(_x, _y);
     WidgetBase::objTFT->print(_texto);
-    WidgetBase::objTFT->setFont((GFXfont *)0);
+    WidgetBase::setFontNull();
 }
 #endif
 /**

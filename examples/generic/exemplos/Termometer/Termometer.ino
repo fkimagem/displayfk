@@ -97,15 +97,15 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     ThermometerConfig configThermometer0 = {
+            .subtitle = nullptr,
+            .unit = "C",
+            .minValue = 0,
+            .maxValue = 100,
             .width = 25,
             .height = 180,
             .filledColor = CFK_COLOR01,
             .backgroundColor = CFK_WHITE,
             .markColor = CFK_BLACK,
-            .minValue = 0,
-            .maxValue = 100,
-            .subtitle = nullptr,
-            .unit = "C",
             .decimalPlaces = 1
         };
     thermometer.setup(configThermometer0);

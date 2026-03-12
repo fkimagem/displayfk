@@ -20,13 +20,13 @@ A classe `TouchArea` é um widget invisível que define uma área sensível ao t
 
 ### TouchAreaConfig
 
-Estrutura que contém todos os parâmetros de configuração:
+Estrutura que contém todos os parâmetros de configuração (ordem conforme `wtoucharea.h`):
 
 ```cpp
 struct TouchAreaConfig {
-  uint16_t width;         // Largura da área de toque
-  uint16_t height;        // Altura da área de toque
-  functionCB_t callback;  // Função callback
+  functionCB_t callback;  // Callback executada quando a área é tocada.
+  uint16_t width;         // Largura da área de toque em pixels.
+  uint16_t height;        // Altura da área de toque em pixels.
 };
 ```
 
@@ -158,17 +158,17 @@ void setup() {
 void loadWidgets() {
     // Configurar Área 1
     TouchAreaConfig configArea1 = {
+        .callback = area1_cb,
         .width = 100,
-        .height = 80,
-        .callback = area1_cb
+        .height = 80
     };
     area1.setup(configArea1);
     
     // Configurar Área 2
     TouchAreaConfig configArea2 = {
+        .callback = area2_cb,
         .width = 120,
-        .height = 100,
-        .callback = area2_cb
+        .height = 100
     };
     area2.setup(configArea2);
     
@@ -245,25 +245,25 @@ void setup() {
     
     // Configurar Área Esquerda
     TouchAreaConfig configEsquerda = {
+        .callback = area_esquerda_callback,
         .width = 200,
-        .height = 240,
-        .callback = area_esquerda_callback
+        .height = 240
     };
     areaEsquerda.setup(configEsquerda);
     
     // Configurar Área Direita
     TouchAreaConfig configDireita = {
+        .callback = area_direita_callback,
         .width = 200,
-        .height = 240,
-        .callback = area_direita_callback
+        .height = 240
     };
     areaDireita.setup(configDireita);
     
     // Configurar Área Central
     TouchAreaConfig configCentral = {
+        .callback = area_central_callback,
         .width = 200,
-        .height = 100,
-        .callback = area_central_callback
+        .height = 100
     };
     areaCentral.setup(configCentral);
     

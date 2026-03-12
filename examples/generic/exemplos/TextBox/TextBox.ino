@@ -98,14 +98,14 @@ void loadWidgets(){
     WKeyboard::m_keyColor = CFK_GREY13;
 
     TextBoxConfig configTextBox0 = {
+            .startValue = "YOUR TEXT HERE...",
+            .funcPtr = screen0,
+            .cb = textbox_cb,
+            .font = &RobotoRegular10pt7b,
             .width = 174,
             .height = 25,
             .letterColor = CFK_COLOR01,
-            .backgroundColor = CFK_GREY10,
-            .startValue = "YOUR TEXT HERE...",
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .cb = textbox_cb
+            .backgroundColor = CFK_GREY10
         };
     textbox.setup(configTextBox0);
     myDisplay.setTextbox(arrayTextbox,qtdTextbox);

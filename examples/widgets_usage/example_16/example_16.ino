@@ -166,9 +166,9 @@ void loadWidgets(){
 
 
     TouchAreaConfig configTouchArea0 = {
+            .callback = touchaarea2_cb,
             .width = 57,
-            .height = 57,
-            .callback = touchaarea2_cb
+            .height = 57
         };
     touchaarea2.setup(configTouchArea0);
     myDisplay.setTouchArea(arrayToucharea,qtdTouchArea);

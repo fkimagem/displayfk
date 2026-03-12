@@ -166,22 +166,21 @@ inline HSV_t rgb565ToHsv(uint16_t color565) {
  * @brief Gera um degradê (array) em RGB565 variando o brilho para um hue fixo.
  * @param h Matiz fixo [0.0..1.0].
  * @param numTons Quantidade de tons a gerar (>0).
- * @return Ponteiro para array dinâmico de `numTons` elementos RGB565, ou nullptr.
- * @note O chamador deve liberar com `delete[]`.
+ * @param out Ponteiro para o array de saída.
+ * @param outSize Tamanho do array de saída.
+ * @return true se a geração foi bem-sucedida, false caso contrário.
+ * @note O chamador deve garantir que `out` tenha pelo menos `numTons` espaço e não retornar nullptr.
  */
-inline uint16_t* gerarDegradeHSV(float h, int numTons) {
-  if (numTons <= 0) return nullptr;
+ inline bool gerarDegradeHSV(float h, int numTons, uint16_t* out, int outSize) {
+  if (numTons <= 0 || out == nullptr || outSize < numTons) return false;
 
-  uint16_t* tons = new uint16_t[numTons];
-
-  float s = 1.0f; // saturação total
+  float s = 1.0f;
   for (int i = 0; i < numTons; i++) {
-    // brilho de 0.3 até 1.0
-    float v = 0.3f + (0.7f / (numTons - 1)) * i;
-    tons[i] = hsvToRgb565Fast(h, s, v);
+    float v = (numTons > 1) ? (0.3f + (0.7f / (numTons - 1)) * i) : 1.0f;
+    out[i] = hsvToRgb565Fast(h, s, v);
   }
 
-  return tons; // lembre de liberar depois com delete[]
+  return true;
 }
 
 /**
@@ -189,21 +188,20 @@ inline uint16_t* gerarDegradeHSV(float h, int numTons) {
  * @param startColor Cor inicial em RGB565.
  * @param endColor Cor final em RGB565.
  * @param numTons Número de tons a gerar (>=2).
- * @return Ponteiro para array dinâmico de `numTons` elementos RGB565, ou nullptr.
- * @note O chamador deve liberar com `delete[]`.
+ * @param out Ponteiro para o array de saída.
+ * @param outSize Tamanho do array de saída.
+ * @return true se a geração foi bem-sucedida, false caso contrário.
+ * @note O chamador deve garantir que `out` tenha pelo menos `numTons` espaço e não retornar nullptr.
  */
-inline uint16_t* blendColors(uint16_t startColor, uint16_t endColor, int numTons) {
-  if (numTons < 2) return nullptr;
+ inline bool blendColors(uint16_t startColor, uint16_t endColor, int numTons, uint16_t* out, int outSize) {
+  if (numTons < 2 || out == nullptr || outSize < numTons) return false;
 
-  uint16_t* out = new uint16_t[numTons];
   HSV_t a = rgb565ToHsv(startColor);
   HSV_t b = rgb565ToHsv(endColor);
 
-  // Tratar casos acinzentados (s ~ 0): “herdar” h para evitar saltos
   if (a.s < 1e-6f) a.h = b.h;
   if (b.s < 1e-6f) b.h = a.h;
 
-  // Δh normalizado para o menor arco no círculo: [-0.5, +0.5]
   float dh = b.h - a.h;
   if (dh >  0.5f) dh -= 1.0f;
   if (dh < -0.5f) dh += 1.0f;
@@ -212,7 +210,6 @@ inline uint16_t* blendColors(uint16_t startColor, uint16_t endColor, int numTons
     float t = (float)i / (numTons - 1);
 
     float h = a.h + dh * t;
-    // wrap de volta para [0,1]
     if (h < 0.0f) h += 1.0f;
     if (h >= 1.0f) h -= 1.0f;
 
@@ -221,7 +218,7 @@ inline uint16_t* blendColors(uint16_t startColor, uint16_t endColor, int numTons
 
     out[i] = hsvToRgb565Fast(h, s, v);
   }
-  return out;
+  return true;
 }
 
 /**
@@ -229,14 +226,14 @@ inline uint16_t* blendColors(uint16_t startColor, uint16_t endColor, int numTons
  * @param c1 Cor inicial em RGB565.
  * @param c2 Cor final em RGB565.
  * @param numTons Número de tons a gerar (>=2).
- * @return Ponteiro para array dinâmico de `numTons` elementos RGB565, ou nullptr.
+ * @param out Ponteiro para o array de saída.
+ * @param outSize Tamanho do array de saída.
+ * @return true se a geração foi bem-sucedida, false caso contrário.
+ * @note O chamador deve garantir que `out` tenha pelo menos `numTons` espaço e não retornar nullptr.
 */
-inline uint16_t *blendColorsRGB(uint16_t c1, uint16_t c2, int numTons) {
-  if (numTons < 2) return 0;
+inline bool blendColorsRGB(uint16_t c1, uint16_t c2, int numTons, uint16_t* out, int outSize) {
+  if (numTons < 2 || out == nullptr || outSize < numTons) return false;
 
-  uint16_t* out = new uint16_t[numTons];
-
-  // Extrair RGB dos dois
   auto extract = [](uint16_t c, uint8_t &r, uint8_t &g, uint8_t &b) {
     r = ((c >> 11) & 0x1F) << 3;
     g = ((c >> 5) & 0x3F) << 2;
@@ -250,14 +247,14 @@ inline uint16_t *blendColorsRGB(uint16_t c1, uint16_t c2, int numTons) {
   for (int i = 0; i < numTons; i++) {
     float t = (float)i / (numTons - 1);
 
-    uint8_t r = r1 + (r2 - r1) * t;
-    uint8_t g = g1 + (g2 - g1) * t;
-    uint8_t b = b1 + (b2 - b1) * t;
+    uint8_t r = static_cast<uint8_t>(r1 + (r2 - r1) * t);
+    uint8_t g = static_cast<uint8_t>(g1 + (g2 - g1) * t);
+    uint8_t b = static_cast<uint8_t>(b1 + (b2 - b1) * t);
 
     out[i] = rgbTo565(r, g, b);
   }
 
-  return out;
+  return true;
 }
 
 

@@ -149,12 +149,12 @@ void loadWidgets(){
 
     LabelConfig configLabel0 = {
             .text = "---",
+            .prefix = "Voltage: ",
+            .suffix = " V",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TC_DATUM,
             .fontColor = CFK_BLACK,
-            .backgroundColor = CFK_WHITE,
-            .prefix = "Voltage: ",
-            .suffix = " V"
+            .backgroundColor = CFK_WHITE
         };
     txtvolts.setup(configLabel0);
     myDisplay.setLabel(arrayLabel,qtdLabel);

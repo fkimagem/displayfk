@@ -14,16 +14,16 @@ const char *CircularBar::TAG = "CircularBar";
  */
 CircularBar::CircularBar(uint16_t _x, uint16_t _y, uint8_t _screen)
     : WidgetBase(_x, _y, _screen), m_lastValue(0), m_value(0) {
-  m_config = {.radius = 0,
-              .minValue = 0,
+  m_config = {.minValue = 0,
               .maxValue = 100,
+              .radius = 0,
               .startAngle = 0,
               .endAngle = 360,
-              .thickness = 10,
               .color = 0,
               .backgroundColor = 0,
               .textColor = 0,
               .backgroundText = 0,
+              .thickness = 10,
               .showValue = true,
               .inverted = false};
   ESP_LOGD(TAG, "CircularBar created at (%d, %d) on screen %d", _x, _y,

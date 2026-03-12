@@ -7,9 +7,9 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar uma área de toque.
 ///          Deve ser preenchida e passada para o método setup().
 struct TouchAreaConfig {
+  functionCB_t callback;  ///< Função callback para executar quando a área é tocada.
   uint16_t width;         ///< Largura da área de toque.
   uint16_t height;        ///< Altura da área de toque.
-  functionCB_t callback;  ///< Função callback para executar quando a área é tocada.
 };
 
 /// @brief Representa um widget de área sensível ao toque com tamanho customizável e rastreamento de status.

@@ -7,15 +7,15 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar uma caixa de spin.
 ///          Deve ser preenchida e passada para o método setup().
 struct SpinBoxConfig {
-  uint16_t width;         ///< Largura da caixa de spin.
-  uint16_t height;        ///< Altura da caixa de spin.
-  uint16_t step;          ///< Valor do passo para incrementos e decrementos da caixa de spin.
+  functionCB_t callback;  ///< Função callback para executar quando o valor mudar.
   int minValue;                ///< Valor mínimo da faixa da caixa de spin.
   int maxValue;               ///< Valor máximo da faixa da caixa de spin.
   int startValue;         ///< Valor atual da caixa de spin.
+  uint16_t width;         ///< Largura da caixa de spin.
+  uint16_t height;        ///< Altura da caixa de spin.
+  uint16_t step;          ///< Valor do passo para incrementos e decrementos da caixa de spin.
   uint16_t color;         ///< Cor para os elementos de exibição.
   uint16_t textColor;     ///< Cor do texto.
-  functionCB_t callback;  ///< Função callback para executar quando o valor mudar.
 };
 
 /// @brief Widget de caixa de spin para entrada numérica com botões de incremento e decremento.

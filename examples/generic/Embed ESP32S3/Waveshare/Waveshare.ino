@@ -198,61 +198,61 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
   GaugeConfig configGauge0 = {
-            .width = 261,
             .title = "Title",
             .intervals = range0,
             .colors = colors0,
-            .amountIntervals = qtdIntervalG0,
+            .fontFamily = &RobotoBold10pt7b,
             .minValue = 0,
             .maxValue = 100,
+            .width = 261,
             .borderColor = CFK_COLOR23,
             .textColor = CFK_BLACK,
             .backgroundColor = CFK_WHITE,
             .titleColor = CFK_BLACK,
             .needleColor = CFK_RED,
             .markersColor = CFK_BLACK,
-            .showLabels = true,
-            .fontFamily = &RobotoBold10pt7b
+            .amountIntervals = qtdIntervalG0,
+            .showLabels = true
         };
     widget.setup(configGauge0);
     myDisplay.setGauge(arrayGauge,qtdGauge);
 
     LabelConfig configLabel0 = {
             .text = "99",
+            .prefix = "",
+            .suffix = "C",
             .fontFamily = &G7_Segment7_S520pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR01,
-            .backgroundColor = CFK_WHITE,
-            .prefix = "",
-            .suffix = "C"
+            .backgroundColor = CFK_WHITE
         };
     term1.setup(configLabel0);
     term1.setDecimalPlaces(0);
     myDisplay.setLabel(arrayLabel,qtdLabel);
 
     TextButtonConfig configTextButton0 = {
+            .text = "Button",
+            .callback = textbutton_cb,
             .width = 151,
             .height = 50,
             .radius = 10,
             .backgroundColor = CFK_COLOR01,
-            .textColor = CFK_WHITE,
-            .text = "Button",
-            .callback = textbutton_cb
+            .textColor = CFK_WHITE
         };
 
     textbutton.setup(configTextButton0);
     myDisplay.setTextButton(arrayTextButton,qtdTextButton);
 
     ThermometerConfig configThermometer0 = {
+            .subtitle = &term1,
+            .unit = "C",
+            .minValue = 0,
+            .maxValue = 100,
             .width = 27,
             .height = 227,
             .filledColor = CFK_COLOR01,
             .backgroundColor = CFK_WHITE,
             .markColor = CFK_BLACK,
-            .minValue = 0,
-            .maxValue = 100,
-            .subtitle = &term1,
-            .unit = "C",
             .decimalPlaces = 1
         };
     thermometer.setup(configThermometer0);

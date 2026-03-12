@@ -11,16 +11,16 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar uma barra circular.
 ///          Deve ser preenchida e passada para o método setup().
 struct CircularBarConfig {
-  uint16_t radius; ///< Raio da barra circular em pixels.
   int minValue; ///< Valor mínimo da faixa da barra.
   int maxValue; ///< Valor máximo da faixa da barra.
+  uint16_t radius; ///< Raio da barra circular em pixels.
   uint16_t startAngle; ///< Ângulo inicial da barra circular em graus.
   uint16_t endAngle; ///< Ângulo final da barra circular em graus.
-  uint8_t thickness; ///< Espessura da linha da barra circular em pixels.
   uint16_t color; ///< Cor RGB565 da barra circular quando preenchida.
   uint16_t backgroundColor; ///< Cor RGB565 de fundo da barra circular.
   uint16_t textColor; ///< Cor RGB565 do texto que exibe o valor.
   uint16_t backgroundText; ///< Cor RGB565 do fundo da área do texto.
+  uint8_t thickness; ///< Espessura da linha da barra circular em pixels.
   bool showValue; ///< Flag para mostrar/ocultar o texto do valor.
   bool inverted; ///< Flag para indicar se a direção de preenchimento está invertida.
 };

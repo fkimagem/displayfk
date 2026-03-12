@@ -466,6 +466,7 @@ public:
   
 #if defined(USING_GRAPHIC_LIB)
   static void recalculateTextPosition(const char* _texto, uint16_t *_x, uint16_t *_y, uint8_t _datum);
+  static void setFontNull() {if (WidgetBase::objTFT) WidgetBase::objTFT->setFont((GFXfont *)0);} ///< Sets the font to null.
   #endif
 
 protected:
@@ -485,8 +486,9 @@ protected:
 #if defined(USING_GRAPHIC_LIB)
   const GFXfont* getBestRobotoBold(uint16_t availableWidth, uint16_t availableHeight, const char* texto);
   const GFXfont* getBestFontForArea(const char* text,uint16_t width,uint16_t height,const GFXfont* const fonts[],size_t fontCount);
-  const char* getFirstLettersForSpace(const char* textoCompleto, uint16_t width, uint16_t height);
-  const char* getLastLettersForSpace(const char* textoCompleto,uint16_t width,uint16_t height);
+  int getFirstLettersForSpace(const char* textoCompleto, uint16_t width, uint16_t height, char* out, size_t outSize);
+  int getLastLettersForSpace(const char* textoCompleto, uint16_t width, uint16_t height, char* out, size_t outSize);
+  
 #endif
 
   void updateFont(FontType _f);

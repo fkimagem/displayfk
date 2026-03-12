@@ -172,33 +172,36 @@ void screen0(){
 void loadWidgets(){
 
     HSliderConfig configHSlider0 = {
-            .width = 254,
-            .pressedColor = CFK_COLOR01,
-            .backgroundColor = CFK_WHITE,
+            .callback = slider1_cb,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 255,
             .radius = 15,
-            .callback = slider1_cb
+            .width = 254,
+            .pressedColor = CFK_COLOR01,
+            .backgroundColor = CFK_WHITE
         };
     slider1.setup(configHSlider0);
     HSliderConfig configHSlider1 = {
-            .width = 254,
-            .pressedColor = CFK_COLOR11,
-            .backgroundColor = CFK_WHITE,
+            .callback = slider1copy_cb,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 255,
             .radius = 15,
-            .callback = slider1copy_cb
+            .width = 254,
+            .pressedColor = CFK_COLOR11,
+            .backgroundColor = CFK_WHITE
         };
     slider1copy.setup(configHSlider1);
     HSliderConfig configHSlider2 = {
-            .width = 254,
-            .pressedColor = CFK_COLOR22,
-            .backgroundColor = CFK_WHITE,
+            .callback = slider1copy2_cb,
+            .subtitle = nullptr,
             .minValue = 0,
             .maxValue = 255,
             .radius = 15,
-            .callback = slider1copy2_cb
+            .width = 254,
+            .pressedColor = CFK_COLOR22,
+            .backgroundColor = CFK_WHITE
         };
     slider1copy2.setup(configHSlider2);
     myDisplay.setHSlider(arrayHslider,qtdHSlider);

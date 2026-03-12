@@ -95,16 +95,16 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     CircularBarConfig configCirculaBar0 = {
-            .radius = 40,
             .minValue = 0,
             .maxValue = 4095,
+            .radius = 40,
             .startAngle = 0,
             .endAngle = 360,
-            .thickness = 20,
             .color = CFK_COLOR01,
             .backgroundColor = CFK_GREY2,
             .textColor = CFK_BLACK,
             .backgroundText = CFK_WHITE,
+            .thickness = 20,
             .showValue = true,
             .inverted = false
         };

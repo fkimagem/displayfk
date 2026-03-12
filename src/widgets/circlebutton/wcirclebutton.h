@@ -7,9 +7,9 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar um botão circular.
 ///          Deve ser preenchida e passada para o método setup().
 struct CircleButtonConfig {
+  functionCB_t callback; ///< Função callback para executar quando o botão é pressionado.
   uint16_t radius; ///< Raio do botão circular em pixels. Recomendado: 5-200.
   uint16_t pressedColor; ///< Cor RGB565 exibida quando o botão está pressionado.
-  functionCB_t callback; ///< Função callback para executar quando o botão é pressionado.
 };
 
 /// @brief Widget de botão circular interativo que permite controle de estados pressionado/não pressionado.

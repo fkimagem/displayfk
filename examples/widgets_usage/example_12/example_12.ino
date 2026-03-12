@@ -185,32 +185,32 @@ void screen0() {
 // Configure each widgtes to be used
 void loadWidgets() {
 
-  GaugeConfig configGauge0 = {.width = 255,
-                              .height = 96,
-                              .title = "Title",
+  GaugeConfig configGauge0 = {.title = "Title",
                               .intervals = range0,
                               .colors = colors0,
-                              .amountIntervals = qtdIntervalG0,
+                              .fontFamily = &RobotoRegular8pt7b,
                               .minValue = -100,
                               .maxValue = 0,
+                              .width = 255,
+                              .height = 96,
                               .borderColor = CFK_GREY3,
                               .textColor = CFK_BLACK,
                               .backgroundColor = CFK_WHITE,
                               .titleColor = CFK_BLACK,
                               .needleColor = CFK_RED,
                               .markersColor = CFK_BLACK,
-                              .showLabels = true,
-                              .fontFamily = &RobotoRegular8pt7b};
+                              .amountIntervals = qtdIntervalG0,
+                              .showLabels = true};
   widget1.setup(configGauge0);
   myDisplay.setGauge(arrayGauge, qtdGauge);
 
   LabelConfig configLabel0 = {.text = "-----",
+                              .prefix = "RSSI: ",
+                              .suffix = " dBm",
                               .fontFamily = &RobotoRegular10pt7b,
                               .datum = TL_DATUM,
                               .fontColor = CFK_BLACK,
-                              .backgroundColor = CFK_WHITE,
-                              .prefix = "RSSI: ",
-                              .suffix = " dBm"};
+                              .backgroundColor = CFK_WHITE};
   txtforce.setup(configLabel0);
   myDisplay.setLabel(arrayLabel, qtdLabel);
 }

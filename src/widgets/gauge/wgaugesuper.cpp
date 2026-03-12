@@ -29,14 +29,13 @@ GaugeSuper::GaugeSuper(uint16_t _x, uint16_t _y, uint8_t _screen)
       m_distanceAgulhaArco(2), m_borderSize(5), m_availableWidth(0), m_availableHeight(0)
 {
   // Initialize m_config with default values
-  m_config = {.width = 0, .height = 0, .title = nullptr, .intervals = nullptr, .colors = nullptr, 
-              .amountIntervals = 0, .minValue = 0, .maxValue = 100, .borderColor = CFK_BLACK,
-              .textColor = CFK_BLACK, .backgroundColor = CFK_WHITE, .titleColor = CFK_NAVY,
-              .needleColor = CFK_RED, .markersColor = CFK_BLACK, .showLabels = false
+  m_config = {.title = nullptr, .intervals = nullptr, .colors = nullptr,
               #if defined(USING_GRAPHIC_LIB)
-              , .fontFamily = nullptr
+              .fontFamily = nullptr,
               #endif
-              };
+              .minValue = 0, .maxValue = 100, .width = 0, .height = 0, .borderColor = CFK_BLACK,
+              .textColor = CFK_BLACK, .backgroundColor = CFK_WHITE, .titleColor = CFK_NAVY,
+              .needleColor = CFK_RED, .markersColor = CFK_BLACK, .amountIntervals = 0, .showLabels = false};
   
   // Dynamic arrays already initialized in member initializer list
   

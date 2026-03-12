@@ -95,13 +95,13 @@ void screen0(){
 // Configure each widgtes to be used
 void loadWidgets(){
     VerticalBarConfig configVBar0 = {
-            .width = 44,
-            .height = 141,
-            .filledColor = CFK_COLOR01,
             .minValue = 0,
             .maxValue = 4095,
             .round = 0,
-            .orientation = Orientation::VERTICAL
+            .orientation = Orientation::VERTICAL,
+            .width = 44,
+            .height = 141,
+            .filledColor = CFK_COLOR01
         };
     vertbar.setup(configVBar0);
     myDisplay.setVBar(arrayVbar,qtdVBar);

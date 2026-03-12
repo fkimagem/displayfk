@@ -173,12 +173,12 @@ void loadWidgets(){
 
     LabelConfig configLabel0 = {
             .text = "",
+            .prefix = "",
+            .suffix = "",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR04,
-            .backgroundColor = CFK_GREY3,
-            .prefix = "",
-            .suffix = ""
+            .backgroundColor = CFK_GREY3
         };
     txtlog.setup(configLabel0);
     myDisplay.setLabel(arrayLabel,qtdLabel);
@@ -188,43 +188,43 @@ void loadWidgets(){
     Numpad::m_keyColor = CFK_GREY13;
 
     NumberBoxConfig configNumberBox0 = {
+            .funcPtr = screen0,
+            .callback = tbvelocidade_cb,
+            .font = &RobotoRegular10pt7b,
+            .startValue = nb0_val,
             .width = 150,
             .height = 25,
             .letterColor = CFK_COLOR06,
-            .backgroundColor = CFK_GREY5,
-            .startValue = nb0_val,
-            .font = &RobotoRegular10pt7b,
-            .funcPtr = screen0,
-            .callback = tbvelocidade_cb
+            .backgroundColor = CFK_GREY5
         };
     tbvelocidade.setup(configNumberBox0);
     myDisplay.setNumberbox(arrayNumberbox,qtdNumberbox);
 
     ToggleButtonConfig configToggle0 = {
+            .callback = statusmotor_cb,
             .width = 69,
             .height = 35,
-            .pressedColor = CFK_COLOR15,
-            .callback = statusmotor_cb
+            .pressedColor = CFK_COLOR15
         };
     statusmotor.setup(configToggle0);
     myDisplay.setToggle(arrayTogglebtn,qtdToggleBtn);
 
     ImageFromPixelsConfig configImage0 = {
             .pixels = SavepngPixels,
-            .width = SavepngW,
-            .height = SavepngH,
             .maskAlpha = SavepngMask,
             .cb = savepng_cb,
-            .angle = 0
+            .angle = 0,
+            .width = SavepngW,
+            .height = SavepngH
         };
     savepng.setup(configImage0);
     ImageFromPixelsConfig configImage1 = {
             .pixels = SavepngPixels,
-            .width = SavepngW,
-            .height = SavepngH,
             .maskAlpha = SavepngMask,
             .cb = savepng1_cb,
-            .angle = 0
+            .angle = 0,
+            .width = SavepngW,
+            .height = SavepngH
         };
     savepng1.setup(configImage1);
     myDisplay.setImage(arrayImagem,qtdImagem);

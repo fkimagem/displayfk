@@ -48,13 +48,13 @@ const Key_t Numpad::m_pad[NCOLS][NROWS] = {
  *          O teclado não será funcional até que setup() seja chamado.
  */
 Numpad::Numpad(uint16_t _x, uint16_t _y, uint8_t _screen)
-    : WidgetBase(_x, _y, _screen), m_config{}, m_pressedKey{false, 0, 0} {}
+    : WidgetBase(_x, _y, _screen), m_config{}, m_pressedKey{0, 0, false} {}
 
 /**
  * @brief Construtor padrão para a classe Numpad.
  * @details Inicializa um Numpad na posição (0,0) na tela 0.
  */
-Numpad::Numpad() : WidgetBase(0, 0, 0), m_config{}, m_pressedKey{false, 0, 0} {}
+Numpad::Numpad() : WidgetBase(0, 0, 0), m_config{}, m_pressedKey{0, 0, false} {}
 
 /**
  * @brief Destrutor da classe Numpad.
@@ -290,12 +290,13 @@ void Numpad::drawKeys(bool fullScreen, bool onlyContent)
   WidgetBase::objTFT->setTextColor(Numpad::m_keyColor);
 
   WidgetBase::objTFT->setFont(m_fontPreview);
-  const char *conteudo =
-      getLastLettersForSpace(m_content.getString(), m_pontoPreview.width * 0.9,
-                             m_pontoPreview.height * 0.9);
+  char conteudo[256];
+  int n = getLastLettersForSpace(m_content.getString(), m_pontoPreview.width * 0.9, m_pontoPreview.height * 0.9, conteudo, sizeof(conteudo));
+  if(n > 0){
   printText(conteudo, m_pontoPreview.x + 2,
             m_pontoPreview.y + (m_pontoPreview.height / 2), ML_DATUM,
             m_lastArea, Numpad::m_backgroundColor);
+  }
 
   WidgetBase::objTFT->setTextColor(Numpad::m_letterColor);
   drawBackKey(m_backKeyPos.x, m_backKeyPos.y);
@@ -537,7 +538,7 @@ void Numpad::close()
   releaseKey();
 
 #if defined(DISP_DEFAULT)
-  WidgetBase::objTFT->setFont((GFXfont *)0);
+  WidgetBase::setFontNull();
 #endif
   ESP_LOGD(TAG, "Value of content is: %s", m_content.getString());
   ESP_LOGD(TAG, "Value of content is: %f", m_content.toDouble());

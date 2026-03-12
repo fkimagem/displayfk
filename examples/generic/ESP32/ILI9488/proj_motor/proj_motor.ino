@@ -368,24 +368,24 @@ void loadWidgets()
     myDisplay.setLabel(arrayLabel, qtdLabel);//Envia para a biblioteca displayFK quais e quantos são os labels no projetos.
 
     LineChartConfig configLineChart0 = {
-        .width = 200,                          // Largura do gráfico em pixels
-        .height = 118,                         // Altura do gráfico em pixels
+        .colorsSeries = colorsChart0,          // Array com as cores usadas para cada série
+        .subtitles = seriesGrafico0,          // Array de labels que descreve cada série do gráfico
+        .font = &RobotoRegular5pt7b,          // Fonte usada para legendas e textos no gráfico
         .minValue = 0,                        // Valor mínimo no eixo Y do gráfico
         .maxValue = 100,                      // Valor máximo no eixo Y do gráfico
-        .amountSeries = qtdLinesChart0,       // Quantidade de séries de dados (linhas) no gráfico
-        .colorsSeries = colorsChart0,          // Array com as cores usadas para cada série
+        .width = 200,                          // Largura do gráfico em pixels
+        .height = 118,                         // Altura do gráfico em pixels
         .gridColor = CFK_GREY6,                // Cor da grade de fundo do gráfico
         .borderColor = CFK_BLACK,              // Cor da borda do gráfico
         .backgroundColor = CFK_GREY4,          // Cor de fundo do gráfico
         .textColor = CFK_WHITE,                // Cor do texto (e.g. números da escala)
         .verticalDivision = 5,                 // Número de divisões verticais na grade
+        .maxPointsAmount = LineChart::SHOW_ALL, // Número máximo de pontos mostrados (SHOW_ALL = exibe todos)
+        .amountSeries = qtdLinesChart0,       // Quantidade de séries de dados (linhas) no gráfico
         .workInBackground = false,             // Indica se o gráfico atualiza em background (false = no loop principal)
         .showZeroLine = false,                 // Indica se a linha do valor zero deve ser exibida
         .boldLine = true,                      // Exibe linhas da grade com espessura maior
-        .showDots = false,                     // Exibe pontos nos valores das séries (false = linhas lisas)
-        .maxPointsAmount = LineChart::SHOW_ALL, // Número máximo de pontos mostrados (SHOW_ALL = exibe todos)
-        .font = &RobotoRegular5pt7b,          // Fonte usada para legendas e textos no gráfico
-        .subtitles = seriesGrafico0            // Array de labels que descreve cada série do gráfico
+        .showDots = false                      // Exibe pontos nos valores das séries (false = linhas lisas)
     };
     grafico.setup(configLineChart0);//Associa a configuração ao grafico
     

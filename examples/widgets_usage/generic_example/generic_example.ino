@@ -140,11 +140,11 @@ void screen0(){
 void loadWidgets(){
 
     CheckBoxConfig configCheckbox0 = {
+            .callback = checkbox1_cb,
+            .weight = CheckBoxWeight::MEDIUM,
             .size = 21,
             .checkedColor = CFK_COLOR30,
-            .uncheckedColor = CFK_GREY10,
-            .weight = CheckBoxWeight::MEDIUM,
-            .callback = checkbox1_cb
+            .uncheckedColor = CFK_GREY10
         };
     checkbox1.setup(configCheckbox0);
     myDisplay.setCheckbox(arrayCheckbox,qtdCheckbox);
@@ -152,26 +152,26 @@ void loadWidgets(){
 
     LabelConfig configLabel0 = {
             .text = "label_vbar 1",
+            .prefix = "",
+            .suffix = "%",
             .fontFamily = &RobotoRegular10pt7b,
             .datum = TL_DATUM,
             .fontColor = CFK_COLOR30,
-            .backgroundColor = CFK_WHITE,
-            .prefix = "",
-            .suffix = "%"
+            .backgroundColor = CFK_WHITE
         };
     labelvbar12.setup(configLabel0);
     myDisplay.setLabel(arrayLabel,qtdLabel);
 
 
     VerticalBarConfig configVBar0 = {
-            .width = 21,
-            .height = 130,
-            .filledColor = CFK_COLOR30,
+            .subtitle = &labelvbar12,
             .minValue = 0,
             .maxValue = 100,
             .round = 0,
             .orientation = Orientation::VERTICAL,
-            .subtitle = &labelvbar12
+            .width = 21,
+            .height = 130,
+            .filledColor = CFK_COLOR30
         };
     vertbar1.setup(configVBar0);
     myDisplay.setVBar(arrayVbar,qtdVBar);

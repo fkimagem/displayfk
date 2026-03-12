@@ -147,26 +147,26 @@ void screen0(){
 void loadWidgets(){
 
     TextButtonConfig configTextButton0 = {
+            .text = "Start",
+            .callback = btnstart_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 100,
             .height = 40,
             .radius = 10,
             .backgroundColor = CFK_COLOR30,
-            .textColor = CFK_WHITE,
-            .text = "Start",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btnstart_cb
+            .textColor = CFK_WHITE
         };
 
     btnstart.setup(configTextButton0);
     TextButtonConfig configTextButton1 = {
+            .text = "Stop",
+            .callback = btnstop_cb,
+            .fontFamily = &RobotoBold10pt7b,
             .width = 100,
             .height = 40,
             .radius = 10,
             .backgroundColor = CFK_COLOR30,
-            .textColor = CFK_WHITE,
-            .text = "Stop",
-            .fontFamily = &RobotoBold10pt7b,
-            .callback = btnstop_cb
+            .textColor = CFK_WHITE
         };
 
     btnstop.setup(configTextButton1);

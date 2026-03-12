@@ -23,18 +23,20 @@ A classe `TextButton` é um widget interativo que exibe um botão com texto pers
 
 ### TextButtonConfig
 
-Estrutura que contém todos os parâmetros de configuração:
+Estrutura que contém todos os parâmetros de configuração (ordem conforme `wtextbutton.h`):
 
 ```cpp
 struct TextButtonConfig {
-  uint16_t width;         // Largura do botão em pixels
-  uint16_t height;        // Altura do botão em pixels
-  uint16_t radius;        // Raio para cantos arredondados
-  uint16_t backgroundColor; // Cor de fundo do botão
-  uint16_t textColor;     // Cor do texto
-  const char* text;       // Texto a exibir
-  const GFXfont* fontFamily; // Ponteiro para a fonte usada para o texto
-  functionCB_t callback;  // Função callback
+  const char* text;           // Texto a exibir no botão.
+  functionCB_t callback;      // Callback executada quando o botão é pressionado.
+  #if defined(USING_GRAPHIC_LIB)
+  const GFXfont* fontFamily;  // Ponteiro para a fonte usada no texto.
+  #endif
+  uint16_t width;             // Largura do botão em pixels.
+  uint16_t height;            // Altura do botão em pixels.
+  uint16_t radius;            // Raio para cantos arredondados.
+  uint16_t backgroundColor;   // Cor exibida quando o botão está pressionado.
+  uint16_t textColor;         // Cor do texto.
 };
 ```
 
@@ -177,27 +179,27 @@ void setup() {
 void loadWidgets() {
     // Configurar Botão 1
     TextButtonConfig configBotao1 = {
+        .text = "OK",
+        .callback = botao1_cb,
+        .fontFamily = &RobotoBold10pt7b,
         .width = 100,
         .height = 50,
         .radius = 10,
         .backgroundColor = CFK_COLOR01,
-        .textColor = CFK_WHITE,
-        .text = "OK",
-        .fontFamily = &RobotoBold10pt7b,
-        .callback = botao1_cb
+        .textColor = CFK_WHITE
     };
     botao1.setup(configBotao1);
     
     // Configurar Botão 2
     TextButtonConfig configBotao2 = {
+        .text = "Cancelar",
+        .callback = botao2_cb,
+        .fontFamily = &RobotoBold12pt7b,
         .width = 120,
         .height = 60,
         .radius = 15,
         .backgroundColor = CFK_COLOR02,
-        .textColor = CFK_BLACK,
-        .text = "Cancelar",
-        .fontFamily = &RobotoBold12pt7b,
-        .callback = botao2_cb
+        .textColor = CFK_BLACK
     };
     botao2.setup(configBotao2);
     
@@ -273,27 +275,27 @@ void setup() {
     
     // Configurar botão Salvar
     TextButtonConfig configSalvar = {
+        .text = "Salvar",
+        .callback = salvar_callback,
+        .fontFamily = &RobotoBold10pt7b,
         .width = 120,
         .height = 50,
         .radius = 10,
         .backgroundColor = CFK_GREEN,
-        .textColor = CFK_WHITE,
-        .text = "Salvar",
-        .fontFamily = &RobotoBold10pt7b,
-        .callback = salvar_callback
+        .textColor = CFK_WHITE
     };
     botaoSalvar.setup(configSalvar);
     
     // Configurar botão Excluir
     TextButtonConfig configExcluir = {
+        .text = "Excluir",
+        .callback = excluir_callback,
+        .fontFamily = &RobotoBold10pt7b,
         .width = 120,
         .height = 50,
         .radius = 10,
         .backgroundColor = CFK_RED,
-        .textColor = CFK_WHITE,
-        .text = "Excluir",
-        .fontFamily = &RobotoBold10pt7b,
-        .callback = excluir_callback
+        .textColor = CFK_WHITE
     };
     botaoExcluir.setup(configExcluir);
     

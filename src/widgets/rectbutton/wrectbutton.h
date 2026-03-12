@@ -7,10 +7,10 @@
 /// @details Esta estrutura contém todos os parâmetros necessários para configurar um botão retangular.
 ///          Deve ser preenchida e passada para o método setup().
 struct RectButtonConfig {
+  functionCB_t callback;  ///< Função callback para executar quando o botão é interagido.
   uint16_t width;         ///< Largura do botão.
   uint16_t height;        ///< Altura do botão.
   uint16_t pressedColor;  ///< Cor exibida quando o botão está pressionado.
-  functionCB_t callback;  ///< Função callback para executar quando o botão é interagido.
 };
 
 /// @brief Widget de botão retangular com tamanho e cor personalizáveis.

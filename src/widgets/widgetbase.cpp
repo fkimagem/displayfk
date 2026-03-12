@@ -269,102 +269,84 @@ void WidgetBase::addCallback(functionCB_t callback, CallbackOrigin origin){
 
 
 #if defined(USING_GRAPHIC_LIB)
-const char* WidgetBase::getLastLettersForSpace(const char* textoCompleto,uint16_t width,uint16_t height)
+int WidgetBase::getLastLettersForSpace(const char* textoCompleto, uint16_t width, uint16_t height,
+                                       char* out, size_t outSize)
 {
-  static char buffer[256]; // Buffer estático para MCU
-  
-  if (!objTFT || !textoCompleto) {
-    buffer[0] = '\0';
-    return buffer;
-  }
+  if (!out || outSize == 0) return -1;
+  out[0] = '\0';
 
-  // Se string vazia, retorna vazia
-  if (*textoCompleto == '\0') {
-    buffer[0] = '\0';
-    return buffer;
-  }
+  if (!objTFT || !textoCompleto) return 0;
+  if (*textoCompleto == '\0') return 0;
 
   // Calcula o comprimento da string
   size_t len = 0;
-  while (textoCompleto[len] != '\0' && len < sizeof(buffer) - 1) {
+  while (textoCompleto[len] != '\0' && len < outSize - 1) {
     len++;
   }
 
-  // Variáveis reutilizadas para medição
   int16_t x1, y1;
   uint16_t w, h;
 
-  // Testa do comprimento total até 0, mas pegando do final
+  // Testa do comprimento total até 1, pegando do final
   for (size_t testLen = len; testLen > 0; --testLen) {
-    // Calcula posição inicial (pega os últimos testLen caracteres)
     size_t startPos = len - testLen;
-    
-    // Copia substring do final para buffer
+
+    if (testLen >= outSize) continue;
+
     for (size_t i = 0; i < testLen; ++i) {
-      buffer[i] = textoCompleto[startPos + i];
+      out[i] = textoCompleto[startPos + i];
     }
-    buffer[testLen] = '\0';
+    out[testLen] = '\0';
 
-    // Mede o texto
-    objTFT->getTextBounds(buffer, 0, 0, &x1, &y1, &w, &h);
+    objTFT->getTextBounds(out, 0, 0, &x1, &y1, &w, &h);
 
-    // Se cabe, retorna esta substring
     if (w <= width && h <= height) {
-      return buffer;
+      return (int)testLen;
     }
   }
 
   // Nem um caractere coube
-  buffer[0] = '\0';
-  return buffer;
+  out[0] = '\0';
+  return 0;
 }
 
-
-const char* WidgetBase::getFirstLettersForSpace(const char* textoCompleto,uint16_t width,uint16_t height)
+int WidgetBase::getFirstLettersForSpace(const char* textoCompleto, uint16_t width, uint16_t height,
+                                        char* out, size_t outSize)
 {
-  static char buffer[256]; // Buffer estático para MCU
-  
-  if (!objTFT || !textoCompleto) {
-    buffer[0] = '\0';
-    return buffer;
-  }
+  if (!out || outSize == 0) return -1;
+  out[0] = '\0';
 
-  // Se string vazia, retorna vazia
-  if (*textoCompleto == '\0') {
-    buffer[0] = '\0';
-    return buffer;
-  }
+  if (!objTFT || !textoCompleto) return 0;
+  if (*textoCompleto == '\0') return 0;
 
   // Calcula o comprimento da string
   size_t len = 0;
-  while (textoCompleto[len] != '\0' && len < sizeof(buffer) - 1) {
+  while (textoCompleto[len] != '\0' && len < outSize - 1) {
     len++;
   }
 
-  // Variáveis reutilizadas para medição
   int16_t x1, y1;
   uint16_t w, h;
 
-  // Testa do comprimento total até 0
+  // Testa do comprimento total até 1, pegando do início
   for (size_t testLen = len; testLen > 0; --testLen) {
-    // Copia substring para buffer
+    if (testLen >= outSize) continue;
+
     for (size_t i = 0; i < testLen; ++i) {
-      buffer[i] = textoCompleto[i];
+      out[i] = textoCompleto[i];
     }
-    buffer[testLen] = '\0';
+    out[testLen] = '\0';
 
-    // Mede o texto
-    objTFT->getTextBounds(buffer, 0, 0, &x1, &y1, &w, &h);
+    objTFT->getTextBounds(out, 0, 0, &x1, &y1, &w, &h);
 
-    // Se cabe, retorna esta substring
     if (w <= width && h <= height) {
-      return buffer;
+      return (int)testLen;
     }
   }
 
   // Nem um caractere coube
-  buffer[0] = '\0';
-  return buffer;
+  out[0] = '\0';
+  return 0;
 }
 
 /**
@@ -478,7 +460,7 @@ void WidgetBase::updateFont(FontType _f)
     default:
     {
 #if defined(USING_GRAPHIC_LIB)
-        WidgetBase::objTFT->setFont((GFXfont *)0);
+        WidgetBase::setFontNull();
 #endif
     }
     break;

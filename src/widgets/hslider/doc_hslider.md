@@ -24,17 +24,19 @@ A classe `HSlider` é um widget interativo que exibe um slider horizontal com um
 
 ### HSliderConfig
 
-Estrutura que contém todos os parâmetros de configuração do slider:
+Estrutura que contém todos os parâmetros de configuração do slider  
+(atualizada para refletir a ordem real usada no código):
 
 ```cpp
 struct HSliderConfig {
-  uint16_t width;              // Largura da trilha do slider em pixels
-  uint16_t pressedColor;       // Cor RGB565 do controle e barra de progresso
-  uint16_t backgroundColor;    // Cor RGB565 de fundo do slider
-  int minValue;                // Valor mínimo da faixa
-  int maxValue;                // Valor máximo da faixa
-  uint32_t radius;             // Raio do controle deslizante em pixels
-  functionCB_t callback;       // Função callback para mudanças de valor
+  functionCB_t callback;   // Função callback para executar quando o valor mudar.
+  Label* subtitle;         // Label opcional exibida como subtítulo (pode ser nullptr).
+  int minValue;            // Valor mínimo da faixa.
+  int maxValue;            // Valor máximo da faixa.
+  uint32_t radius;         // Raio do controle deslizante em pixels.
+  uint16_t width;          // Largura da trilha do slider em pixels.
+  uint16_t pressedColor;   // Cor RGB565 exibida quando o slider está pressionado.
+  uint16_t backgroundColor;// Cor RGB565 de fundo da trilha do slider.
 };
 ```
 
@@ -198,13 +200,14 @@ void setup() {
 void loadWidgets() {
     // Configurar slider horizontal
     HSliderConfig configHSlider = {
-        .width = 155,
-        .pressedColor = CFK_COLOR20,
-        .backgroundColor = CFK_COLOR22,
-        .minValue = 0,
-        .maxValue = 100,
-        .radius = 17,
-        .callback = slider_cb
+        .callback        = slider_cb,
+        .subtitle        = nullptr,          // ou &minhaLabel, se quiser associar um Label
+        .minValue        = 0,
+        .maxValue        = 100,
+        .radius          = 17,
+        .width           = 155,
+        .pressedColor    = CFK_COLOR20,
+        .backgroundColor = CFK_COLOR22
     };
     slider.setup(configHSlider);
     
