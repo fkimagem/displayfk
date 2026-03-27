@@ -75,11 +75,11 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe VAnalog (VerticalAnalog) </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md1095"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1096"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md1110"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1111"></a>
 Visão Geral</h1>
 <p>A classe <span class="tt"><a class="el" href="class_v_analog.html" title="Representa um widget de display analógico vertical usado para visualizar valores numéricos em uma esc...">VAnalog</a></span> é um widget que exibe valores numéricos em uma escala analógica vertical com seta indicadora. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade para criar displays analógicos verticais com marcações graduadas, seta que se move conforme o valor e área de texto para exibição numérica.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1097"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1112"></a>
 Características Principais</h2>
 <ul>
 <li>📊 Escala analógica vertical com seta indicadora</li>
@@ -92,36 +92,36 @@ Características Principais</h2>
 <li>🔗 Integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1099"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1114"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1100"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1115"></a>
 VerticalAnalogConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração:</p>
+<p>Estrutura que contém todos os parâmetros de configuração (ordem conforme <span class="tt"><a class="el" href="wverticalanalog_8h.html">wverticalanalog.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_vertical_analog_config.html">VerticalAnalogConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#a97d542f4eafbb9048dd8b5deccf362e9">width</a>;           <span class="comment">// Largura do display</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#a9827f9e47b6995ff62e035b441fbda78">height</a>;          <span class="comment">// Altura do display</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_vertical_analog_config.html#a630e67f22dbdc61ab181c9cd8a513c19">minValue</a>;            <span class="comment">// Valor mínimo da escala</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_vertical_analog_config.html#aef0149ba272efc888a200f3a3b7da64d">maxValue</a>;            <span class="comment">// Valor máximo da escala</span></div>
-<div class="line">  uint8_t <a class="code hl_variable" href="struct_vertical_analog_config.html#ae47987859f901edd22bcf056fa55f950">steps</a>;           <span class="comment">// Número de divisões na escala</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#a5b5f9691259a2e1444d8b24b1a06e0df">arrowColor</a>;     <span class="comment">// Cor da seta indicadora</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#a69b6b73448edcc02195f59c71d0e0020">textColor</a>;      <span class="comment">// Cor do texto (valores)</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#acd47e4515dccf560c0085ff4e1bb2e69">backgroundColor</a>; <span class="comment">// Cor de fundo</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#a531a63fc2e320a765951c83810ba56a6">borderColor</a>;    <span class="comment">// Cor da borda</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_vertical_analog_config.html#a630e67f22dbdc61ab181c9cd8a513c19">minValue</a>;            <span class="comment">// Valor mínimo da escala.</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_vertical_analog_config.html#aef0149ba272efc888a200f3a3b7da64d">maxValue</a>;            <span class="comment">// Valor máximo da escala.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#a97d542f4eafbb9048dd8b5deccf362e9">width</a>;          <span class="comment">// Largura do display em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#a9827f9e47b6995ff62e035b441fbda78">height</a>;         <span class="comment">// Altura do display em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#a5b5f9691259a2e1444d8b24b1a06e0df">arrowColor</a>;     <span class="comment">// Cor da seta indicadora.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#a69b6b73448edcc02195f59c71d0e0020">textColor</a>;      <span class="comment">// Cor do texto (valores).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#acd47e4515dccf560c0085ff4e1bb2e69">backgroundColor</a>; <span class="comment">// Cor de fundo.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_analog_config.html#a531a63fc2e320a765951c83810ba56a6">borderColor</a>;    <span class="comment">// Cor da borda.</span></div>
+<div class="line">  uint8_t <a class="code hl_variable" href="struct_vertical_analog_config.html#ae47987859f901edd22bcf056fa55f950">steps</a>;           <span class="comment">// Número de divisões na escala.</span></div>
 <div class="line">};</div>
 <div class="ttc" id="astruct_vertical_analog_config_html"><div class="ttname"><a href="struct_vertical_analog_config.html">VerticalAnalogConfig</a></div><div class="ttdoc">Estrutura de configuração para o VAnalog.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:12</div></div>
-<div class="ttc" id="astruct_vertical_analog_config_html_a531a63fc2e320a765951c83810ba56a6"><div class="ttname"><a href="struct_vertical_analog_config.html#a531a63fc2e320a765951c83810ba56a6">VerticalAnalogConfig::borderColor</a></div><div class="ttdeci">uint16_t borderColor</div><div class="ttdoc">Cor da borda do display.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:21</div></div>
-<div class="ttc" id="astruct_vertical_analog_config_html_a5b5f9691259a2e1444d8b24b1a06e0df"><div class="ttname"><a href="struct_vertical_analog_config.html#a5b5f9691259a2e1444d8b24b1a06e0df">VerticalAnalogConfig::arrowColor</a></div><div class="ttdeci">uint16_t arrowColor</div><div class="ttdoc">Cor da seta marcadora.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:18</div></div>
-<div class="ttc" id="astruct_vertical_analog_config_html_a630e67f22dbdc61ab181c9cd8a513c19"><div class="ttname"><a href="struct_vertical_analog_config.html#a630e67f22dbdc61ab181c9cd8a513c19">VerticalAnalogConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdoc">Valor mínimo da escala.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:15</div></div>
-<div class="ttc" id="astruct_vertical_analog_config_html_a69b6b73448edcc02195f59c71d0e0020"><div class="ttname"><a href="struct_vertical_analog_config.html#a69b6b73448edcc02195f59c71d0e0020">VerticalAnalogConfig::textColor</a></div><div class="ttdeci">uint16_t textColor</div><div class="ttdoc">Cor do texto de exibição.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:19</div></div>
-<div class="ttc" id="astruct_vertical_analog_config_html_a97d542f4eafbb9048dd8b5deccf362e9"><div class="ttname"><a href="struct_vertical_analog_config.html#a97d542f4eafbb9048dd8b5deccf362e9">VerticalAnalogConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura do display VAnalog.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:13</div></div>
-<div class="ttc" id="astruct_vertical_analog_config_html_a9827f9e47b6995ff62e035b441fbda78"><div class="ttname"><a href="struct_vertical_analog_config.html#a9827f9e47b6995ff62e035b441fbda78">VerticalAnalogConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura do display VAnalog.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:14</div></div>
-<div class="ttc" id="astruct_vertical_analog_config_html_acd47e4515dccf560c0085ff4e1bb2e69"><div class="ttname"><a href="struct_vertical_analog_config.html#acd47e4515dccf560c0085ff4e1bb2e69">VerticalAnalogConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo do display.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:20</div></div>
-<div class="ttc" id="astruct_vertical_analog_config_html_ae47987859f901edd22bcf056fa55f950"><div class="ttname"><a href="struct_vertical_analog_config.html#ae47987859f901edd22bcf056fa55f950">VerticalAnalogConfig::steps</a></div><div class="ttdeci">uint8_t steps</div><div class="ttdoc">Número de divisões na escala.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:17</div></div>
-<div class="ttc" id="astruct_vertical_analog_config_html_aef0149ba272efc888a200f3a3b7da64d"><div class="ttname"><a href="struct_vertical_analog_config.html#aef0149ba272efc888a200f3a3b7da64d">VerticalAnalogConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdoc">Valor máximo da escala.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:16</div></div>
+<div class="ttc" id="astruct_vertical_analog_config_html_a531a63fc2e320a765951c83810ba56a6"><div class="ttname"><a href="struct_vertical_analog_config.html#a531a63fc2e320a765951c83810ba56a6">VerticalAnalogConfig::borderColor</a></div><div class="ttdeci">uint16_t borderColor</div><div class="ttdoc">Cor da borda do display.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:20</div></div>
+<div class="ttc" id="astruct_vertical_analog_config_html_a5b5f9691259a2e1444d8b24b1a06e0df"><div class="ttname"><a href="struct_vertical_analog_config.html#a5b5f9691259a2e1444d8b24b1a06e0df">VerticalAnalogConfig::arrowColor</a></div><div class="ttdeci">uint16_t arrowColor</div><div class="ttdoc">Cor da seta marcadora.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:17</div></div>
+<div class="ttc" id="astruct_vertical_analog_config_html_a630e67f22dbdc61ab181c9cd8a513c19"><div class="ttname"><a href="struct_vertical_analog_config.html#a630e67f22dbdc61ab181c9cd8a513c19">VerticalAnalogConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdoc">Valor mínimo da escala.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:13</div></div>
+<div class="ttc" id="astruct_vertical_analog_config_html_a69b6b73448edcc02195f59c71d0e0020"><div class="ttname"><a href="struct_vertical_analog_config.html#a69b6b73448edcc02195f59c71d0e0020">VerticalAnalogConfig::textColor</a></div><div class="ttdeci">uint16_t textColor</div><div class="ttdoc">Cor do texto de exibição.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:18</div></div>
+<div class="ttc" id="astruct_vertical_analog_config_html_a97d542f4eafbb9048dd8b5deccf362e9"><div class="ttname"><a href="struct_vertical_analog_config.html#a97d542f4eafbb9048dd8b5deccf362e9">VerticalAnalogConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura do display VAnalog.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:15</div></div>
+<div class="ttc" id="astruct_vertical_analog_config_html_a9827f9e47b6995ff62e035b441fbda78"><div class="ttname"><a href="struct_vertical_analog_config.html#a9827f9e47b6995ff62e035b441fbda78">VerticalAnalogConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura do display VAnalog.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:16</div></div>
+<div class="ttc" id="astruct_vertical_analog_config_html_acd47e4515dccf560c0085ff4e1bb2e69"><div class="ttname"><a href="struct_vertical_analog_config.html#acd47e4515dccf560c0085ff4e1bb2e69">VerticalAnalogConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo do display.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:19</div></div>
+<div class="ttc" id="astruct_vertical_analog_config_html_ae47987859f901edd22bcf056fa55f950"><div class="ttname"><a href="struct_vertical_analog_config.html#ae47987859f901edd22bcf056fa55f950">VerticalAnalogConfig::steps</a></div><div class="ttdeci">uint8_t steps</div><div class="ttdoc">Número de divisões na escala.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:21</div></div>
+<div class="ttc" id="astruct_vertical_analog_config_html_aef0149ba272efc888a200f3a3b7da64d"><div class="ttname"><a href="struct_vertical_analog_config.html#aef0149ba272efc888a200f3a3b7da64d">VerticalAnalogConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdoc">Valor máximo da escala.</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:14</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1102"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1117"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1103"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1118"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_v_analog.html">VAnalog</a>(uint16_t _x, uint16_t _y, uint8_t _screen)</div>
 <div class="ttc" id="aclass_v_analog_html"><div class="ttname"><a href="class_v_analog.html">VAnalog</a></div><div class="ttdoc">Representa um widget de display analógico vertical usado para visualizar valores numéricos em uma esc...</div><div class="ttdef"><b>Definition</b> wverticalanalog.h:30</div></div>
@@ -132,11 +132,11 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, chame <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1104"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1119"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_v_analog.html">~VAnalog</a>()</div>
 </div><!-- fragment --><p>Libera os recursos do <a class="el" href="class_v_analog.html" title="Representa um widget de display analógico vertical usado para visualizar valores numéricos em uma esc...">VAnalog</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1105"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1120"></a>
 setup()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>(<span class="keyword">const</span> <a class="code hl_struct" href="struct_vertical_analog_config.html">VerticalAnalogConfig</a>&amp; config)</div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
@@ -144,11 +144,11 @@ setup()</h2>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_vertical_analog_config.html" title="Estrutura de configuração para o VAnalog.">VerticalAnalogConfig</a></span> com as configurações</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1106"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1121"></a>
 drawBackground()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> drawBackground()</div>
 </div><!-- fragment --><p>Desenha o fundo do display (escala e marcações). <b>Este método deve ser chamado uma vez após <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a>.</b></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1107"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1122"></a>
 setValue()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setValue(<span class="keywordtype">int</span> newValue, <span class="keywordtype">bool</span> _viewValue)</div>
 </div><!-- fragment --><p>Define o valor atual e se deve exibir o texto numérico.</p>
@@ -156,16 +156,71 @@ setValue()</h2>
 <li><span class="tt">newValue</span>: Novo valor (será limitado entre minValue e maxValue)</li>
 <li><span class="tt">_viewValue</span>: true para exibir texto numérico, false caso contrário</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1108"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1123"></a>
+setMinValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setMinValue(<span class="keywordtype">int</span> newValue)</div>
+</div><!-- fragment --><p>Define o valor mínimo da escala do display analógico.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newValue</span>: Novo valor mínimo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo do display</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa da área da seta antes de redesenhar</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1124"></a>
+setMaxValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setMaxValue(<span class="keywordtype">int</span> newValue)</div>
+</div><!-- fragment --><p>Define o valor máximo da escala do display analógico.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newValue</span>: Novo valor máximo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo do display</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa da área da seta antes de redesenhar</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1125"></a>
+getMinValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> getMinValue()</div>
+</div><!-- fragment --><p>Retorna o valor mínimo atual da escala.</p>
+<p><b>Retorno:</b></p><ul>
+<li>Valor mínimo configurado</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1126"></a>
+getMaxValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> getMaxValue()</div>
+</div><!-- fragment --><p>Retorna o valor máximo atual da escala.</p>
+<p><b>Retorno:</b></p><ul>
+<li>Valor máximo configurado</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1127"></a>
+setScale()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setScale(<span class="keywordtype">int</span> newMinValue, <span class="keywordtype">int</span> newMaxValue)</div>
+</div><!-- fragment --><p>Define simultaneamente os valores mínimo e máximo da escala.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newMinValue</span>: Novo valor mínimo</li>
+<li><span class="tt">newMaxValue</span>: Novo valor máximo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo do display</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa da área da seta antes de redesenhar</li>
+<li>Útil para mudanças dinâmicas de escala</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1128"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna o display visível.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1109"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1129"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta o display.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1111"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1131"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente:</p>
 <ul>
@@ -174,21 +229,36 @@ hide()</h2>
 <li><span class="tt">forceUpdate()</span>: Força atualização</li>
 <li><span class="tt">getCallbackFunc()</span>: Retorna callback</li>
 <li><span class="tt">cleanupMemory()</span>: Limpa memória</li>
-<li><span class="tt">start()</span>: Inicializa configurações e calcula áreas</li>
-<li><span class="tt">calculateArrowVerticalPosition()</span>: Calcula posição da seta</li>
-<li><span class="tt">drawArrow()</span>: Desenha a seta indicadora</li>
-<li><span class="tt">clearArrow()</span>: Limpa a seta anterior</li>
-<li><span class="tt">drawText()</span>: Desenha o texto numérico</li>
+<li><span class="tt">start()</span>: Inicializa configurações e calcula áreas (largura e altura mínimas de 40 pixels)</li>
+<li><span class="tt">calculateArrowVerticalPosition()</span>: Calcula posição vertical da seta baseada no valor</li>
+<li><span class="tt">drawArrow()</span>: Desenha a seta indicadora triangular</li>
+<li><span class="tt">clearArrow()</span>: Limpa a seta anterior (apaga triângulo com cor de fundo)</li>
+<li><span class="tt">drawText()</span>: Desenha o texto numérico na área de texto</li>
+<li><span class="tt">sortValues()</span>: Ordena valores min/max se necessário (chamado automaticamente)</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1132"></a>
+Membros Privados</h2>
+<ul>
+<li><span class="tt">m_currentValue</span>: Valor atual exibido na escala</li>
+<li><span class="tt">m_lastValue</span>: Último valor exibido (usado para otimização de redesenho)</li>
+<li><span class="tt">m_updateText</span>: Flag indicando se o texto precisa ser atualizado</li>
+<li><span class="tt">m_margin</span>: Estrutura de margens (top: 2, bottom: 2, left: 2, right: 2 pixels)</li>
+<li><span class="tt">m_arrowSize</span>: Tamanho da seta (6 pixels)</li>
+<li><span class="tt">m_drawArea</span>: Área retangular para desenhar a escala analógica</li>
+<li><span class="tt">m_arrowArea</span>: Área retangular para desenhar a seta indicadora</li>
+<li><span class="tt">m_textArea</span>: Área retangular para desenhar o texto numérico</li>
+<li><span class="tt">m_config</span>: Estrutura de configuração do <a class="el" href="class_v_analog.html" title="Representa um widget de display analógico vertical usado para visualizar valores numéricos em uma esc...">VAnalog</a></li>
+<li><span class="tt">m_changedScale</span>: Flag que indica quando a escala foi alterada (força redesenho completo)</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1113"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1134"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1114"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1135"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1115"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1136"></a>
 📝 Passo 2: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
@@ -198,8 +268,8 @@ hide()</h2>
 <div class="line"> </div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdVAnalog = 2;</div>
 <div class="line"><a class="code hl_class" href="class_v_analog.html">VAnalog</a> *arrayVAnalog[qtdVAnalog] = {&amp;display1, &amp;display2};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1116"></a>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1137"></a>
 ⚙️ Passo 3: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    Serial.begin(115200);</div>
@@ -211,38 +281,38 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1117"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1138"></a>
 🔧 Passo 4: Configurar os Displays Analógicos</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar Display 1</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_vertical_analog_config.html">VerticalAnalogConfig</a> configDisplay1 = {</div>
-<div class="line">        .width = 60,</div>
-<div class="line">        .height = 150,</div>
 <div class="line">        .minValue = 0,</div>
 <div class="line">        .maxValue = 100,</div>
-<div class="line">        .steps = 20,</div>
+<div class="line">        .width = 60,</div>
+<div class="line">        .height = 150,</div>
 <div class="line">        .arrowColor = <a class="code hl_variable" href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a>,</div>
 <div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .borderColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div>
+<div class="line">        .borderColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
+<div class="line">        .steps = 20</div>
 <div class="line">    };</div>
 <div class="line">    display1.setup(configDisplay1);</div>
 <div class="line">    display1.drawBackground();</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar Display 2</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_vertical_analog_config.html">VerticalAnalogConfig</a> configDisplay2 = {</div>
-<div class="line">        .width = 60,</div>
-<div class="line">        .height = 120,</div>
 <div class="line">        .minValue = -50,</div>
 <div class="line">        .maxValue = 50,</div>
-<div class="line">        .steps = 10,</div>
+<div class="line">        .width = 60,</div>
+<div class="line">        .height = 120,</div>
 <div class="line">        .arrowColor = <a class="code hl_variable" href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a>,</div>
 <div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#a76fa8994e5e948c2b76ab5fa83e60dde">CFK_GREY11</a>,</div>
-<div class="line">        .borderColor = <a class="code hl_variable" href="widgetsetup_8h.html#a2cec2e38bb12530da8c85c8b1943a84e">CFK_GREY5</a></div>
+<div class="line">        .borderColor = <a class="code hl_variable" href="widgetsetup_8h.html#a2cec2e38bb12530da8c85c8b1943a84e">CFK_GREY5</a>,</div>
+<div class="line">        .steps = 10</div>
 <div class="line">    };</div>
 <div class="line">    display2.setup(configDisplay2);</div>
 <div class="line">    display2.drawBackground();</div>
@@ -250,14 +320,14 @@ hide()</h2>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#ad7a8a18922fc9c457a940a50a05cad25">setVAnalog</a>(arrayVAnalog, qtdVAnalog);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_ad7a8a18922fc9c457a940a50a05cad25"><div class="ttname"><a href="class_display_f_k.html#ad7a8a18922fc9c457a940a50a05cad25">DisplayFK::setVAnalog</a></div><div class="ttdeci">void setVAnalog(VAnalog *array[], uint8_t amount)</div><div class="ttdoc">Configures the analog viewer array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:615</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a2cec2e38bb12530da8c85c8b1943a84e"><div class="ttname"><a href="widgetsetup_8h.html#a2cec2e38bb12530da8c85c8b1943a84e">CFK_GREY5</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY5</div><div class="ttdef"><b>Definition</b> widgetsetup.h:204</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a38a7172331dd085517d904a7116559a1"><div class="ttname"><a href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div><div class="ttdeci">constexpr uint16_t CFK_BLUE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:155</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:139</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a76fa8994e5e948c2b76ab5fa83e60dde"><div class="ttname"><a href="widgetsetup_8h.html#a76fa8994e5e948c2b76ab5fa83e60dde">CFK_GREY11</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY11</div><div class="ttdef"><b>Definition</b> widgetsetup.h:210</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:131</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1118"></a>
+<div class="ttc" id="aclass_display_f_k_html_ad7a8a18922fc9c457a940a50a05cad25"><div class="ttname"><a href="class_display_f_k.html#ad7a8a18922fc9c457a940a50a05cad25">DisplayFK::setVAnalog</a></div><div class="ttdeci">void setVAnalog(VAnalog *array[], uint8_t amount)</div><div class="ttdoc">Configures the analog viewer array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:616</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a2cec2e38bb12530da8c85c8b1943a84e"><div class="ttname"><a href="widgetsetup_8h.html#a2cec2e38bb12530da8c85c8b1943a84e">CFK_GREY5</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY5</div><div class="ttdef"><b>Definition</b> widgetsetup.h:206</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a38a7172331dd085517d904a7116559a1"><div class="ttname"><a href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div><div class="ttdeci">constexpr uint16_t CFK_BLUE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:157</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:141</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a76fa8994e5e948c2b76ab5fa83e60dde"><div class="ttname"><a href="widgetsetup_8h.html#a76fa8994e5e948c2b76ab5fa83e60dde">CFK_GREY11</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY11</div><div class="ttdef"><b>Definition</b> widgetsetup.h:212</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:133</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1139"></a>
 🖥️ Passo 5: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -265,9 +335,9 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1119"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1140"></a>
 🔄 Passo 6: Exemplo de Uso</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Simular valores</span></div>
@@ -282,7 +352,7 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1121"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1142"></a>
 📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"> </div>
@@ -309,30 +379,30 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar Temperatura</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_vertical_analog_config.html">VerticalAnalogConfig</a> configTemp = {</div>
-<div class="line">        .width = 60,</div>
-<div class="line">        .height = 150,</div>
 <div class="line">        .minValue = -20,</div>
 <div class="line">        .maxValue = 60,</div>
-<div class="line">        .steps = 16,</div>
+<div class="line">        .width = 60,</div>
+<div class="line">        .height = 150,</div>
 <div class="line">        .arrowColor = <a class="code hl_variable" href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a>,</div>
 <div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .borderColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div>
+<div class="line">        .borderColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
+<div class="line">        .steps = 16</div>
 <div class="line">    };</div>
 <div class="line">    temperatura.setup(configTemp);</div>
 <div class="line">    temperatura.drawBackground();</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar Umidade</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_vertical_analog_config.html">VerticalAnalogConfig</a> configUmidade = {</div>
-<div class="line">        .width = 60,</div>
-<div class="line">        .height = 150,</div>
 <div class="line">        .minValue = 0,</div>
 <div class="line">        .maxValue = 100,</div>
-<div class="line">        .steps = 20,</div>
+<div class="line">        .width = 60,</div>
+<div class="line">        .height = 150,</div>
 <div class="line">        .arrowColor = <a class="code hl_variable" href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a>,</div>
 <div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .borderColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div>
+<div class="line">        .borderColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
+<div class="line">        .steps = 20</div>
 <div class="line">    };</div>
 <div class="line">    umidade.setup(configUmidade);</div>
 <div class="line">    umidade.drawBackground();</div>
@@ -359,9 +429,9 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1123"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1144"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1124"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1145"></a>
 📐 Tamanhos Recomendados</h2>
 <ul>
 <li><b>Pequenos:</b> 50x100 pixels</li>
@@ -369,7 +439,7 @@ hide()</h2>
 <li><b>Grandes:</b> 80x200 pixels</li>
 </ul>
 <p><b>Nota:</b> A largura mínima é de 40 pixels conforme definido no código.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1125"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1146"></a>
 🎨 Cores</h2>
 <ul>
 <li><b>arrowColor:</b> Use cores vibrantes para destaque</li>
@@ -377,7 +447,7 @@ hide()</h2>
 <li><b>backgroundColor:</b> Branco ou cinza claro</li>
 <li><b>borderColor:</b> Preto ou cinza escuro</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1126"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1147"></a>
 📏 Marcações e Escalas</h2>
 <ul>
 <li>Use <span class="tt">steps</span> adequado para legibilidade</li>
@@ -385,7 +455,7 @@ hide()</h2>
 <li>Configure faixa realista (min/max)</li>
 <li>Considere precisão necessária</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1127"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1148"></a>
 ⚡ Performance</h2>
 <ul>
 <li>Redesenho apenas quando valor muda</li>
@@ -394,7 +464,7 @@ hide()</h2>
 <li>Texto opcional para performance</li>
 <li>Áreas de desenho otimizadas</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1128"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1149"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Posicione texto abaixo da escala</li>
@@ -402,7 +472,7 @@ hide()</h2>
 <li>Marcações claras para fácil leitura</li>
 <li>Espaço adequado entre displays</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1129"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1150"></a>
 🎨 Visual</h2>
 <ul>
 <li>Seta triangular contra fundo claro</li>
@@ -411,16 +481,18 @@ hide()</h2>
 <li>Texto numérico opcional</li>
 <li>Layout otimizado com áreas separadas</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1130"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1151"></a>
 🔔 Valores</h2>
 <ul>
 <li>Valores limitados automaticamente</li>
 <li>Texto atualizado automaticamente</li>
 <li>Seta move proporcionalmente</li>
-<li>Faixa configurável</li>
+<li>Faixa configurável dinamicamente com <span class="tt">setMinValue()</span>, <span class="tt">setMaxValue()</span> ou <span class="tt">setScale()</span></li>
+<li>Consulta de valores com <span class="tt">getMinValue()</span> e <span class="tt">getMaxValue()</span></li>
+<li>Ordenação automática de valores min/max</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1132"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1153"></a>
 🔗 Herança de WidgetBase</h1>
 <p>A classe <span class="tt"><a class="el" href="class_v_analog.html" title="Representa um widget de display analógico vertical usado para visualizar valores numéricos em uma esc...">VAnalog</a></span> herda métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
@@ -430,7 +502,7 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1134"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1155"></a>
 🔗 Integração com DisplayFK</h1>
 <p>O <span class="tt"><a class="el" href="class_v_analog.html" title="Representa um widget de display analógico vertical usado para visualizar valores numéricos em uma esc...">VAnalog</a></span> integra-se com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
@@ -441,7 +513,7 @@ hide()</h2>
 <li><b>Valores:</b> Limitação automática respeitada</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1136"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1157"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O <a class="el" href="class_v_analog.html" title="Representa um widget de display analógico vertical usado para visualizar valores numéricos em uma esc...">VAnalog</a> renderiza em áreas otimizadas:</p>
 <ol type="1">
@@ -472,16 +544,24 @@ hide()</h2>
 </ul>
 </li>
 <li><b>Margens (m_margin):</b><ul>
-<li>Espaçamento interno configurável</li>
+<li>Espaçamento interno configurável (2 pixels em todos os lados)</li>
 <li>Separação entre áreas</li>
 <li>Layout otimizado</li>
 </ul>
 </li>
+<li><b>Otimizações:</b><ul>
+<li>Usa <span class="tt">m_lastValue</span> para limpar apenas a seta anterior</li>
+<li>Flag <span class="tt">m_changedScale</span> força redesenho completo da área da seta quando a escala muda</li>
+<li>Flag <span class="tt">m_updateText</span> controla se o texto precisa ser atualizado</li>
+<li>Áreas pré-calculadas (<span class="tt">m_drawArea</span>, <span class="tt">m_arrowArea</span>, <span class="tt">m_textArea</span>) para renderização eficiente</li>
+<li>Validações de estado antes de renderizar</li>
+</ul>
+</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1138"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1159"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1139"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1160"></a>
 Display não aparece</h2>
 <ul>
 <li>Verifique se chamou <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar</li>
@@ -489,7 +569,7 @@ Display não aparece</h2>
 <li>Verifique valores de width e height &gt; 40</li>
 <li>Chame <span class="tt">myDisplay.setVAnalog()</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1140"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1161"></a>
 Valor não muda visualmente</h2>
 <ul>
 <li>Verifique se chamou <span class="tt">setValue()</span> com novo valor</li>
@@ -497,7 +577,7 @@ Valor não muda visualmente</h2>
 <li>Verifique logs para erros</li>
 <li>Teste com valores extremos</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1141"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1162"></a>
 Texto não aparece</h2>
 <ul>
 <li>Verifique se <span class="tt">_viewValue</span> está true</li>
@@ -505,7 +585,7 @@ Texto não aparece</h2>
 <li>Teste com texto simples</li>
 <li>Verifique área de texto disponível</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1142"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1163"></a>
 Visual incorreto</h2>
 <ul>
 <li>Verifique cores configuradas</li>
@@ -513,15 +593,17 @@ Visual incorreto</h2>
 <li>Teste com mais espaçamento</li>
 <li>Verifique steps apropriado</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1143"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1164"></a>
 Problemas de escala</h2>
 <ul>
 <li>Verifique configuração de min/max</li>
 <li>Confirme que steps está adequado</li>
 <li>Teste com diferentes faixas</li>
 <li>Verifique proporção height/steps</li>
+<li>Use <span class="tt">setScale()</span> para alterar min/max simultaneamente</li>
+<li>Valores são ordenados automaticamente se min &gt; max</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1144"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1165"></a>
 Seta não se move</h2>
 <ul>
 <li>Verifique se valor está mudando</li>
@@ -530,7 +612,7 @@ Seta não se move</h2>
 <li>Verifique cores da seta</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1146"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1167"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>

@@ -97,17 +97,17 @@ Características Principais</h2>
 📋 Estruturas de Configuração</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md69"></a>
 CircleButtonConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração do botão circular:</p>
+<p>Estrutura que contém todos os parâmetros de configuração do botão circular (ordem conforme <span class="tt"><a class="el" href="wcirclebutton_8h.html">wcirclebutton.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_circle_button_config.html">CircleButtonConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_circle_button_config.html#a51d298938d15dc33a3d57f8e7d59acc6">radius</a>;          <span class="comment">// Raio do botão circular em pixels (5-200 recomendado)</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_circle_button_config.html#a2fa96ce7cc055546080ddf473f667973">pressedColor</a>;    <span class="comment">// Cor RGB565 quando pressionado</span></div>
-<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_circle_button_config.html#aebe0dfc91c22aea367efbd74280c372a">callback</a>;    <span class="comment">// Ponteiro para função callback</span></div>
+<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_circle_button_config.html#aebe0dfc91c22aea367efbd74280c372a">callback</a>;   <span class="comment">// Callback executada quando o botão é pressionado.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_circle_button_config.html#a51d298938d15dc33a3d57f8e7d59acc6">radius</a>;        <span class="comment">// Raio do botão circular em pixels (5-200 recomendado).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_circle_button_config.html#a2fa96ce7cc055546080ddf473f667973">pressedColor</a>;  <span class="comment">// Cor RGB565 exibida quando o botão está pressionado.</span></div>
 <div class="line">};</div>
 <div class="ttc" id="abase_types_8h_html_a05ded8c943add15c9053b728a4f6b99a"><div class="ttname"><a href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a></div><div class="ttdeci">void(* functionCB_t)()</div><div class="ttdoc">Typedef for a generic callback function.</div><div class="ttdef"><b>Definition</b> baseTypes.h:17</div></div>
 <div class="ttc" id="astruct_circle_button_config_html"><div class="ttname"><a href="struct_circle_button_config.html">CircleButtonConfig</a></div><div class="ttdoc">Estrutura de configuração para o CircleButton.</div><div class="ttdef"><b>Definition</b> wcirclebutton.h:9</div></div>
-<div class="ttc" id="astruct_circle_button_config_html_a2fa96ce7cc055546080ddf473f667973"><div class="ttname"><a href="struct_circle_button_config.html#a2fa96ce7cc055546080ddf473f667973">CircleButtonConfig::pressedColor</a></div><div class="ttdeci">uint16_t pressedColor</div><div class="ttdoc">Cor RGB565 exibida quando o botão está pressionado.</div><div class="ttdef"><b>Definition</b> wcirclebutton.h:11</div></div>
-<div class="ttc" id="astruct_circle_button_config_html_a51d298938d15dc33a3d57f8e7d59acc6"><div class="ttname"><a href="struct_circle_button_config.html#a51d298938d15dc33a3d57f8e7d59acc6">CircleButtonConfig::radius</a></div><div class="ttdeci">uint16_t radius</div><div class="ttdoc">Raio do botão circular em pixels. Recomendado: 5-200.</div><div class="ttdef"><b>Definition</b> wcirclebutton.h:10</div></div>
-<div class="ttc" id="astruct_circle_button_config_html_aebe0dfc91c22aea367efbd74280c372a"><div class="ttname"><a href="struct_circle_button_config.html#aebe0dfc91c22aea367efbd74280c372a">CircleButtonConfig::callback</a></div><div class="ttdeci">functionCB_t callback</div><div class="ttdoc">Função callback para executar quando o botão é pressionado.</div><div class="ttdef"><b>Definition</b> wcirclebutton.h:12</div></div>
+<div class="ttc" id="astruct_circle_button_config_html_a2fa96ce7cc055546080ddf473f667973"><div class="ttname"><a href="struct_circle_button_config.html#a2fa96ce7cc055546080ddf473f667973">CircleButtonConfig::pressedColor</a></div><div class="ttdeci">uint16_t pressedColor</div><div class="ttdoc">Cor RGB565 exibida quando o botão está pressionado.</div><div class="ttdef"><b>Definition</b> wcirclebutton.h:12</div></div>
+<div class="ttc" id="astruct_circle_button_config_html_a51d298938d15dc33a3d57f8e7d59acc6"><div class="ttname"><a href="struct_circle_button_config.html#a51d298938d15dc33a3d57f8e7d59acc6">CircleButtonConfig::radius</a></div><div class="ttdeci">uint16_t radius</div><div class="ttdoc">Raio do botão circular em pixels. Recomendado: 5-200.</div><div class="ttdef"><b>Definition</b> wcirclebutton.h:11</div></div>
+<div class="ttc" id="astruct_circle_button_config_html_aebe0dfc91c22aea367efbd74280c372a"><div class="ttname"><a href="struct_circle_button_config.html#aebe0dfc91c22aea367efbd74280c372a">CircleButtonConfig::callback</a></div><div class="ttdeci">functionCB_t callback</div><div class="ttdoc">Função callback para executar quando o botão é pressionado.</div><div class="ttdef"><b>Definition</b> wcirclebutton.h:10</div></div>
 </div><!-- fragment --><hr  />
 <h1 class="doxsection"><a class="anchor" id="autotoc_md71"></a>
 🔧 Métodos Públicos</h1>
@@ -195,7 +195,7 @@ hide()</h2>
 <div class="line"><span class="comment">// Criar array de ponteiros</span></div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdCircleBtn = 1;</div>
 <div class="line"><a class="code hl_class" href="class_circle_button.html">CircleButton</a> *arrayCirclebtn[qtdCircleBtn] = {&amp;cirbtn};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md85"></a>
 📝 Passo 3: Prototipar Funções de Callback</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> cirbtn_cb();</div>
@@ -210,25 +210,25 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md87"></a>
 🔧 Passo 5: Configurar os Widgets</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar botão circular</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_circle_button_config.html">CircleButtonConfig</a> configCircleButton = {</div>
+<div class="line">        .callback = cirbtn_cb,</div>
 <div class="line">        .radius = 40,</div>
-<div class="line">        .pressedColor = <a class="code hl_variable" href="widgetsetup_8h.html#a6f618a849b9009cd2cb0d417ea257041">CFK_COLOR15</a>,</div>
-<div class="line">        .callback = cirbtn_cb</div>
+<div class="line">        .pressedColor = <a class="code hl_variable" href="widgetsetup_8h.html#a6f618a849b9009cd2cb0d417ea257041">CFK_COLOR15</a></div>
 <div class="line">    };</div>
 <div class="line">    cirbtn.setup(configCircleButton);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#adf699e461df98ece72f3c0a1bf063323">setCircleButton</a>(arrayCirclebtn, qtdCircleBtn);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_adf699e461df98ece72f3c0a1bf063323"><div class="ttname"><a href="class_display_f_k.html#adf699e461df98ece72f3c0a1bf063323">DisplayFK::setCircleButton</a></div><div class="ttdeci">void setCircleButton(CircleButton *array[], uint8_t amount)</div><div class="ttdoc">Configures the circle button array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:147</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a6f618a849b9009cd2cb0d417ea257041"><div class="ttname"><a href="widgetsetup_8h.html#a6f618a849b9009cd2cb0d417ea257041">CFK_COLOR15</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR15</div><div class="ttdef"><b>Definition</b> widgetsetup.h:181</div></div>
+<div class="ttc" id="aclass_display_f_k_html_adf699e461df98ece72f3c0a1bf063323"><div class="ttname"><a href="class_display_f_k.html#adf699e461df98ece72f3c0a1bf063323">DisplayFK::setCircleButton</a></div><div class="ttdeci">void setCircleButton(CircleButton *array[], uint8_t amount)</div><div class="ttdoc">Configures the circle button array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:148</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a6f618a849b9009cd2cb0d417ea257041"><div class="ttname"><a href="widgetsetup_8h.html#a6f618a849b9009cd2cb0d417ea257041">CFK_COLOR15</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR15</div><div class="ttdef"><b>Definition</b> widgetsetup.h:183</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md88"></a>
 🔔 Passo 6: Criar Funções de Callback</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> cirbtn_cb() {</div>
@@ -252,9 +252,9 @@ hide()</h2>
 <div class="line">    <span class="comment">// Desenhar todos os widgets na tela 0</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md90"></a>
 🔄 Passo 8: Alterar Estado Programaticamente (Opcional)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
@@ -298,9 +298,9 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar botão circular</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_circle_button_config.html">CircleButtonConfig</a> config = {</div>
+<div class="line">        .callback = botao_callback,</div>
 <div class="line">        .radius = 50,</div>
-<div class="line">        .pressedColor = <a class="code hl_variable" href="widgetsetup_8h.html#a6f618a849b9009cd2cb0d417ea257041">CFK_COLOR15</a>,</div>
-<div class="line">        .callback = botao_callback</div>
+<div class="line">        .pressedColor = <a class="code hl_variable" href="widgetsetup_8h.html#a6f618a849b9009cd2cb0d417ea257041">CFK_COLOR15</a></div>
 <div class="line">    };</div>
 <div class="line">    meuBotao.setup(config);</div>
 <div class="line">    </div>

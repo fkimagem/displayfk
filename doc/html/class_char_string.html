@@ -79,50 +79,70 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Represents a custom string class with methods for manipulation, retrieval, and conversion.  
- <a href="#details">More...</a></p>
-
 <p><code>#include &lt;<a class="el" href="charstring_8h_source.html">charstring.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a14a8e624fc6b6d7eecf36c1db0407587" id="r_a14a8e624fc6b6d7eecf36c1db0407587"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14a8e624fc6b6d7eecf36c1db0407587">CharString</a> ()</td></tr>
-<tr class="memdesc:a14a8e624fc6b6d7eecf36c1db0407587"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor that initializes an empty string. Sets the internal buffer to an empty string and length to 0.  <br /></td></tr>
+<tr class="memdesc:a14a8e624fc6b6d7eecf36c1db0407587"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. Initializes an empty string.  <br /></td></tr>
 <tr class="memitem:ac42d4a18f7f52a5387db5b1c12587912" id="r_ac42d4a18f7f52a5387db5b1c12587912"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac42d4a18f7f52a5387db5b1c12587912">CharString</a> (const char *initialStr)</td></tr>
-<tr class="memdesc:ac42d4a18f7f52a5387db5b1c12587912"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a> with an initial string.  <br /></td></tr>
+<tr class="memdesc:ac42d4a18f7f52a5387db5b1c12587912"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor that initializes the string with a C-string.  <br /></td></tr>
 <tr class="memitem:aae9fcaaf73abf915e5e99b57b3661eed" id="r_aae9fcaaf73abf915e5e99b57b3661eed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae9fcaaf73abf915e5e99b57b3661eed">clear</a> ()</td></tr>
-<tr class="memdesc:aae9fcaaf73abf915e5e99b57b3661eed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the content of the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>. Sets the first character to null terminator and length to 0.  <br /></td></tr>
+<tr class="memdesc:aae9fcaaf73abf915e5e99b57b3661eed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the string, making it empty (length 0).  <br /></td></tr>
 <tr class="memitem:af6984b98162d507f0f9fefb91788c3ef" id="r_af6984b98162d507f0f9fefb91788c3ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6984b98162d507f0f9fefb91788c3ef">addChar</a> (char c)</td></tr>
-<tr class="memdesc:af6984b98162d507f0f9fefb91788c3ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a character to the end of the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>.  <br /></td></tr>
+<tr class="memdesc:af6984b98162d507f0f9fefb91788c3ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a single character to the end of the string.  <br /></td></tr>
 <tr class="memitem:a11969d5e8df1ba305194d9af04fbba60" id="r_a11969d5e8df1ba305194d9af04fbba60"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a11969d5e8df1ba305194d9af04fbba60">removeLastChar</a> ()</td></tr>
-<tr class="memdesc:a11969d5e8df1ba305194d9af04fbba60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the last character from the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>.  <br /></td></tr>
+<tr class="memdesc:a11969d5e8df1ba305194d9af04fbba60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the last character from the string.  <br /></td></tr>
 <tr class="memitem:a152e1027e9db798bda498ddb515f461a" id="r_a152e1027e9db798bda498ddb515f461a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a152e1027e9db798bda498ddb515f461a">countChars</a> () const</td></tr>
-<tr class="memdesc:a152e1027e9db798bda498ddb515f461a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts the number of characters in the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>.  <br /></td></tr>
-<tr class="memitem:a29bfd4dfd97e91004030da1431db8e6f" id="r_a29bfd4dfd97e91004030da1431db8e6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29bfd4dfd97e91004030da1431db8e6f">setString</a> (const char *newStr, bool autocut)</td></tr>
-<tr class="memdesc:a29bfd4dfd97e91004030da1431db8e6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content to a new C-string, with an option to truncate.  <br /></td></tr>
-<tr class="memitem:acd5f57c1c267f34dba74f6ce03417623" id="r_acd5f57c1c267f34dba74f6ce03417623"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd5f57c1c267f34dba74f6ce03417623">setString</a> (int value)</td></tr>
-<tr class="memdesc:acd5f57c1c267f34dba74f6ce03417623"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content to an integer value.  <br /></td></tr>
-<tr class="memitem:adbe3b4cc14e268a64cbd67c96fed5d14" id="r_adbe3b4cc14e268a64cbd67c96fed5d14"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adbe3b4cc14e268a64cbd67c96fed5d14">setString</a> (float value)</td></tr>
-<tr class="memdesc:adbe3b4cc14e268a64cbd67c96fed5d14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content to a floating-point value.  <br /></td></tr>
+<tr class="memdesc:a152e1027e9db798bda498ddb515f461a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current length of the string (number of characters).  <br /></td></tr>
+<tr class="memitem:a0d4a1101cdb28fc4da3c278fb5902ad8" id="r_a0d4a1101cdb28fc4da3c278fb5902ad8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0d4a1101cdb28fc4da3c278fb5902ad8">setString</a> (const char *newStr, bool autocut=true)</td></tr>
+<tr class="memdesc:a0d4a1101cdb28fc4da3c278fb5902ad8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the string content with a new C-string.  <br /></td></tr>
+<tr class="memitem:a0ec583a07912af6c25a32fdb0389f533" id="r_a0ec583a07912af6c25a32fdb0389f533"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ec583a07912af6c25a32fdb0389f533">setStringInt</a> (int value)</td></tr>
+<tr class="memdesc:a0ec583a07912af6c25a32fdb0389f533"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the string content to the decimal representation of an integer.  <br /></td></tr>
+<tr class="memitem:a9d88da2f82fda412e78f2c7304ed3da1" id="r_a9d88da2f82fda412e78f2c7304ed3da1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d88da2f82fda412e78f2c7304ed3da1">setStringDouble</a> (double value, uint8_t decimalPlaces)</td></tr>
+<tr class="memdesc:a9d88da2f82fda412e78f2c7304ed3da1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the string content to the fixed-point representation of a double.  <br /></td></tr>
 <tr class="memitem:a6f453b5ce819a6dc8a5679954386d083" id="r_a6f453b5ce819a6dc8a5679954386d083"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f453b5ce819a6dc8a5679954386d083">getString</a> () const</td></tr>
-<tr class="memdesc:a6f453b5ce819a6dc8a5679954386d083"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content as a C-string.  <br /></td></tr>
+<tr class="memdesc:a6f453b5ce819a6dc8a5679954386d083"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the internal null-terminated C-string.  <br /></td></tr>
 <tr class="memitem:a93e8f9e3026d65e61d5649c0b5af5446" id="r_a93e8f9e3026d65e61d5649c0b5af5446"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_char_string.html">CharString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93e8f9e3026d65e61d5649c0b5af5446">substring</a> (int startIndex, int count) const</td></tr>
-<tr class="memdesc:a93e8f9e3026d65e61d5649c0b5af5446"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a substring of the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>.  <br /></td></tr>
-<tr class="memitem:aaed49b0d117cbfa5006738a38c62272e" id="r_aaed49b0d117cbfa5006738a38c62272e"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaed49b0d117cbfa5006738a38c62272e">substring_cstr</a> (int startIndex, int count) const</td></tr>
-<tr class="memdesc:aaed49b0d117cbfa5006738a38c62272e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a substring of the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a> as a C-string.  <br /></td></tr>
+<tr class="memdesc:a93e8f9e3026d65e61d5649c0b5af5446"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <a class="el" href="class_char_string.html">CharString</a> containing a substring.  <br /></td></tr>
+<tr class="memitem:a02db363424d2212ff2b6bb73c4c21031" id="r_a02db363424d2212ff2b6bb73c4c21031"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02db363424d2212ff2b6bb73c4c21031">substring_cstr</a> (int startIndex, int count, char *out, size_t outSize) const</td></tr>
+<tr class="memdesc:a02db363424d2212ff2b6bb73c4c21031"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a substring into a caller-provided buffer (safe version).  <br /></td></tr>
 <tr class="memitem:a10980a6beb00670fe9b5e70417b9c303" id="r_a10980a6beb00670fe9b5e70417b9c303"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10980a6beb00670fe9b5e70417b9c303">getLastChars</a> (int qtdLetras) const</td></tr>
-<tr class="memdesc:a10980a6beb00670fe9b5e70417b9c303"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the last specified number of characters from the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>.  <br /></td></tr>
-<tr class="memitem:a91918e89c89beaeeb95afb99dde2638c" id="r_a91918e89c89beaeeb95afb99dde2638c"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91918e89c89beaeeb95afb99dde2638c">getFirstChars</a> (int qtdLetras) const</td></tr>
+<tr class="memdesc:a10980a6beb00670fe9b5e70417b9c303"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the last N characters of the string (no copy).  <br /></td></tr>
+<tr class="memitem:a6d1c4baeb0d819668547c4d35d95dbbe" id="r_a6d1c4baeb0d819668547c4d35d95dbbe"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d1c4baeb0d819668547c4d35d95dbbe">getFirstChars</a> (int qtdLetras, char *out, size_t outSize) const</td></tr>
+<tr class="memdesc:a6d1c4baeb0d819668547c4d35d95dbbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the first N characters into a caller-provided buffer (safe version).  <br /></td></tr>
 <tr class="memitem:a13fdb6e6ffc108514de6ab2ead9fb1af" id="r_a13fdb6e6ffc108514de6ab2ead9fb1af"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13fdb6e6ffc108514de6ab2ead9fb1af">toInt</a> () const</td></tr>
-<tr class="memdesc:a13fdb6e6ffc108514de6ab2ead9fb1af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content to an integer.  <br /></td></tr>
-<tr class="memitem:a147b294fcfc6e6a3152590d9f4ece9aa" id="r_a147b294fcfc6e6a3152590d9f4ece9aa"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a147b294fcfc6e6a3152590d9f4ece9aa">toFloat</a> () const</td></tr>
-<tr class="memdesc:a147b294fcfc6e6a3152590d9f4ece9aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content to a floating-point number.  <br /></td></tr>
+<tr class="memdesc:a13fdb6e6ffc108514de6ab2ead9fb1af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the string as a decimal integer.  <br /></td></tr>
+<tr class="memitem:a63cda60355e5dfe211c5d294d38156a8" id="r_a63cda60355e5dfe211c5d294d38156a8"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63cda60355e5dfe211c5d294d38156a8">toDouble</a> () const</td></tr>
+<tr class="memdesc:a63cda60355e5dfe211c5d294d38156a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the string as a floating-point number.  <br /></td></tr>
 <tr class="memitem:ad9fd225e0a830aa1efea9f8728b414b6" id="r_ad9fd225e0a830aa1efea9f8728b414b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9fd225e0a830aa1efea9f8728b414b6">containsChar</a> (char c) const</td></tr>
-<tr class="memdesc:ad9fd225e0a830aa1efea9f8728b414b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a> contains a specific character.  <br /></td></tr>
+<tr class="memdesc:ad9fd225e0a830aa1efea9f8728b414b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the string contains a given character.  <br /></td></tr>
+<tr class="memitem:aec8518c906e25ea282c2fc5f0d6c9a22" id="r_aec8518c906e25ea282c2fc5f0d6c9a22"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec8518c906e25ea282c2fc5f0d6c9a22">append</a> (const char *s, bool autocut=true)</td></tr>
+<tr class="memdesc:aec8518c906e25ea282c2fc5f0d6c9a22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a C-string to the end of this string.  <br /></td></tr>
+<tr class="memitem:ae690dcc2ad541f31d7057942529a9c62" id="r_ae690dcc2ad541f31d7057942529a9c62"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae690dcc2ad541f31d7057942529a9c62">appendChar</a> (char c)</td></tr>
+<tr class="memdesc:ae690dcc2ad541f31d7057942529a9c62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a single character (alias for addChar).  <br /></td></tr>
+<tr class="memitem:ad5e510ab255f7d609b01d49faf3d1d6c" id="r_ad5e510ab255f7d609b01d49faf3d1d6c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad5e510ab255f7d609b01d49faf3d1d6c">equals</a> (const char *s) const</td></tr>
+<tr class="memdesc:ad5e510ab255f7d609b01d49faf3d1d6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares this string with a C-string for equality.  <br /></td></tr>
+<tr class="memitem:a32588d72341dc9b38a6b0da1e982fdff" id="r_a32588d72341dc9b38a6b0da1e982fdff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32588d72341dc9b38a6b0da1e982fdff">equals</a> (const <a class="el" href="class_char_string.html">CharString</a> &amp;other) const</td></tr>
+<tr class="memdesc:a32588d72341dc9b38a6b0da1e982fdff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares this string with another <a class="el" href="class_char_string.html">CharString</a> for equality.  <br /></td></tr>
+<tr class="memitem:a7115cc7361533d477e0db4f1e2ab6dc4" id="r_a7115cc7361533d477e0db4f1e2ab6dc4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7115cc7361533d477e0db4f1e2ab6dc4">startsWith</a> (const char *prefix) const</td></tr>
+<tr class="memdesc:a7115cc7361533d477e0db4f1e2ab6dc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the string starts with the given prefix.  <br /></td></tr>
+<tr class="memitem:a21c091a87070cf9c3a90b6df380a5e89" id="r_a21c091a87070cf9c3a90b6df380a5e89"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a21c091a87070cf9c3a90b6df380a5e89">endsWith</a> (const char *suffix) const</td></tr>
+<tr class="memdesc:a21c091a87070cf9c3a90b6df380a5e89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the string ends with the given suffix.  <br /></td></tr>
+<tr class="memitem:a5ef787564de4abaea97e382747c92a10" id="r_a5ef787564de4abaea97e382747c92a10"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ef787564de4abaea97e382747c92a10">indexOf</a> (char c, int startIndex=0) const</td></tr>
+<tr class="memdesc:a5ef787564de4abaea97e382747c92a10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the first occurrence of a character starting at a given index.  <br /></td></tr>
+<tr class="memitem:a4ee42135e5fca0bb00ebc57cbd8b037c" id="r_a4ee42135e5fca0bb00ebc57cbd8b037c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ee42135e5fca0bb00ebc57cbd8b037c">indexOf</a> (const char *needle, int startIndex=0) const</td></tr>
+<tr class="memdesc:a4ee42135e5fca0bb00ebc57cbd8b037c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the first occurrence of a substring starting at a given index.  <br /></td></tr>
+<tr class="memitem:aad8beac4ed19c9c3d950a504877ff415" id="r_aad8beac4ed19c9c3d950a504877ff415"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad8beac4ed19c9c3d950a504877ff415">trim</a> ()</td></tr>
+<tr class="memdesc:aad8beac4ed19c9c3d950a504877ff415"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes leading and trailing whitespace from the string (in-place).  <br /></td></tr>
+<tr class="memitem:ac20bfd4a6f1ca1ea1bd6643cc910eaa0" id="r_ac20bfd4a6f1ca1ea1bd6643cc910eaa0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac20bfd4a6f1ca1ea1bd6643cc910eaa0">isEmpty</a> () const</td></tr>
+<tr class="memdesc:ac20bfd4a6f1ca1ea1bd6643cc910eaa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the string is empty (length 0).  <br /></td></tr>
+<tr class="memitem:a7572709926f8b77f0c42e24cafe19206" id="r_a7572709926f8b77f0c42e24cafe19206"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7572709926f8b77f0c42e24cafe19206">toUpper</a> ()</td></tr>
+<tr class="memdesc:a7572709926f8b77f0c42e24cafe19206"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts all characters in the string to uppercase (in-place).  <br /></td></tr>
+<tr class="memitem:af5393d4b783ee3ad45d1d7d68e44f959" id="r_af5393d4b783ee3ad45d1d7d68e44f959"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af5393d4b783ee3ad45d1d7d68e44f959">toLower</a> ()</td></tr>
+<tr class="memdesc:af5393d4b783ee3ad45d1d7d68e44f959"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts all characters in the string to lowercase (in-place).  <br /></td></tr>
 </table>
-<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Represents a custom string class with methods for manipulation, retrieval, and conversion. </p>
-</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a14a8e624fc6b6d7eecf36c1db0407587" name="a14a8e624fc6b6d7eecf36c1db0407587"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a14a8e624fc6b6d7eecf36c1db0407587">&#9670;&#160;</a></span>CharString() <span class="overload">[1/2]</span></h2>
 
@@ -138,7 +158,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Default constructor that initializes an empty string. Sets the internal buffer to an empty string and length to 0. </p>
+<p>Default constructor. Initializes an empty string. </p>
 
 </div>
 </div>
@@ -147,6 +167,9 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">CharString::CharString </td>
@@ -155,12 +178,17 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Constructs a <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a> with an initial string. </p>
+<p>Constructor that initializes the string with a C-string. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">initialStr</td><td>Initial C-string to set as the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content. The string will be automatically truncated if it exceeds MAX_LENGTH_CSTR. </td></tr>
+    <tr><td class="paramname">initialStr</td><td>C-string to copy (may be null; treated as empty). </td></tr>
   </table>
   </dd>
 </dl>
@@ -183,14 +211,71 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Adds a character to the end of the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>. </p>
+<p>Appends a single character to the end of the string. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">c</td><td>Character to add. </td></tr>
+    <tr><td class="paramname">c</td><td>Character to append. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the character was added successfully, false if the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a> is at maximum capacity. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the character was added, false if buffer is full. </dd></dl>
+
+</div>
+</div>
+<a id="aec8518c906e25ea282c2fc5f0d6c9a22" name="aec8518c906e25ea282c2fc5f0d6c9a22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec8518c906e25ea282c2fc5f0d6c9a22">&#9670;&#160;</a></span>append()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CharString::append </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>autocut</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Appends a C-string to the end of this string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>C-string to append (null returns false). </td></tr>
+    <tr><td class="paramname">autocut</td><td>If true, only the part that fits is appended; if false, returns false when it would overflow. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true on success, false if s is null or (when autocut is false) append would exceed max length. </dd></dl>
+
+</div>
+</div>
+<a id="ae690dcc2ad541f31d7057942529a9c62" name="ae690dcc2ad541f31d7057942529a9c62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae690dcc2ad541f31d7057942529a9c62">&#9670;&#160;</a></span>appendChar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CharString::appendChar </td>
+          <td>(</td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>c</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Appends a single character (alias for addChar). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">c</td><td>Character to append. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the character was added, false if buffer is full. </dd></dl>
 
 </div>
 </div>
@@ -209,7 +294,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Clears the content of the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>. Sets the first character to null terminator and length to 0. </p>
+<p>Clears the string, making it empty (length 0). </p>
 
 </div>
 </div>
@@ -228,14 +313,14 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Checks if the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a> contains a specific character. </p>
+<p>Checks whether the string contains a given character. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">c</td><td>Character to search for. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the character is found, otherwise false. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the character is present, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -254,13 +339,91 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Counts the number of characters in the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>. </p>
-<dl class="section return"><dt>Returns</dt><dd>The number of characters in the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>. </dd></dl>
+<p>Returns the current length of the string (number of characters). </p>
+<dl class="section return"><dt>Returns</dt><dd>Number of characters in the string. </dd></dl>
 
 </div>
 </div>
-<a id="a91918e89c89beaeeb95afb99dde2638c" name="a91918e89c89beaeeb95afb99dde2638c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91918e89c89beaeeb95afb99dde2638c">&#9670;&#160;</a></span>getFirstChars()</h2>
+<a id="a21c091a87070cf9c3a90b6df380a5e89" name="a21c091a87070cf9c3a90b6df380a5e89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21c091a87070cf9c3a90b6df380a5e89">&#9670;&#160;</a></span>endsWith()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CharString::endsWith </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>suffix</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks whether the string ends with the given suffix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">suffix</td><td>C-string suffix (null returns false). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the string ends with suffix, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="ad5e510ab255f7d609b01d49faf3d1d6c" name="ad5e510ab255f7d609b01d49faf3d1d6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5e510ab255f7d609b01d49faf3d1d6c">&#9670;&#160;</a></span>equals() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CharString::equals </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compares this string with a C-string for equality. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>C-string to compare (null returns false). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if content is equal, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a32588d72341dc9b38a6b0da1e982fdff" name="a32588d72341dc9b38a6b0da1e982fdff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32588d72341dc9b38a6b0da1e982fdff">&#9670;&#160;</a></span>equals() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CharString::equals </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_char_string.html">CharString</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compares this string with another <a class="el" href="class_char_string.html">CharString</a> for equality. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td><a class="el" href="class_char_string.html">CharString</a> to compare with. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if content is equal, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a6d1c4baeb0d819668547c4d35d95dbbe" name="a6d1c4baeb0d819668547c4d35d95dbbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d1c4baeb0d819668547c4d35d95dbbe">&#9670;&#160;</a></span>getFirstChars()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -268,11 +431,31 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">const char * CharString::getFirstChars </td>
           <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>qtdLetras</em></span></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>qtdLetras</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>outSize</em></span>&#160;) const</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Copies the first N characters into a caller-provided buffer (safe version). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">qtdLetras</td><td>Number of characters to copy from the start. </td></tr>
+    <tr><td class="paramname">out</td><td>Output buffer. </td></tr>
+    <tr><td class="paramname">outSize</td><td>Size of the output buffer (including null terminator). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to out, or "" if out is null or outSize is 0. </dd></dl>
 
 </div>
 </div>
@@ -291,14 +474,14 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retrieves the last specified number of characters from the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>. </p>
+<p>Returns a pointer to the last N characters of the string (no copy). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">qtdLetras</td><td>Number of characters to retrieve from the end. </td></tr>
+    <tr><td class="paramname">qtdLetras</td><td>Number of characters from the end (if larger than length, returns full string). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the last characters as a C-string. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer into internal buffer, or "" if qtdLetras &lt;= 0. </dd></dl>
 
 </div>
 </div>
@@ -317,8 +500,90 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retrieves the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content as a C-string. </p>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content. </dd></dl>
+<p>Returns a pointer to the internal null-terminated C-string. </p>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the internal buffer (valid until the object is modified or destroyed). </dd></dl>
+
+</div>
+</div>
+<a id="a5ef787564de4abaea97e382747c92a10" name="a5ef787564de4abaea97e382747c92a10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ef787564de4abaea97e382747c92a10">&#9670;&#160;</a></span>indexOf() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int CharString::indexOf </td>
+          <td>(</td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>c</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>startIndex</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finds the first occurrence of a character starting at a given index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">c</td><td>Character to search for. </td></tr>
+    <tr><td class="paramname">startIndex</td><td>Index to start searching from (0-based). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Index of the first occurrence, or -1 if not found. </dd></dl>
+
+</div>
+</div>
+<a id="a4ee42135e5fca0bb00ebc57cbd8b037c" name="a4ee42135e5fca0bb00ebc57cbd8b037c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ee42135e5fca0bb00ebc57cbd8b037c">&#9670;&#160;</a></span>indexOf() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int CharString::indexOf </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>needle</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>startIndex</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finds the first occurrence of a substring starting at a given index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">needle</td><td>C-string to search for (null returns -1). </td></tr>
+    <tr><td class="paramname">startIndex</td><td>Index to start searching from (0-based). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Index of the first character of the match, or -1 if not found. </dd></dl>
+
+</div>
+</div>
+<a id="ac20bfd4a6f1ca1ea1bd6643cc910eaa0" name="ac20bfd4a6f1ca1ea1bd6643cc910eaa0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac20bfd4a6f1ca1ea1bd6643cc910eaa0">&#9670;&#160;</a></span>isEmpty()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CharString::isEmpty </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks whether the string is empty (length 0). </p>
+<dl class="section return"><dt>Returns</dt><dd>true if empty, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -337,13 +602,13 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Removes the last character from the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>. </p>
-<dl class="section return"><dt>Returns</dt><dd>True if a character was removed, false if the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a> was empty. </dd></dl>
+<p>Removes the last character from the string. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if a character was removed, false if string was already empty. </dd></dl>
 
 </div>
 </div>
-<a id="a29bfd4dfd97e91004030da1431db8e6f" name="a29bfd4dfd97e91004030da1431db8e6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29bfd4dfd97e91004030da1431db8e6f">&#9670;&#160;</a></span>setString() <span class="overload">[1/3]</span></h2>
+<a id="a0d4a1101cdb28fc4da3c278fb5902ad8" name="a0d4a1101cdb28fc4da3c278fb5902ad8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d4a1101cdb28fc4da3c278fb5902ad8">&#9670;&#160;</a></span>setString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -356,57 +621,62 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>autocut</em></span>&#160;)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>autocut</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sets the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content to a new C-string, with an option to truncate. </p>
+<p>Replaces the string content with a new C-string. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">newStr</td><td>The new C-string to set as content. </td></tr>
-    <tr><td class="paramname">autocut</td><td>If true, truncates the string if it exceeds the maximum length. </td></tr>
+    <tr><td class="paramname">newStr</td><td>New string to copy (null clears the string). </td></tr>
+    <tr><td class="paramname">autocut</td><td>If true, long strings are truncated to MAX_LENGTH_CSTR; if false, returns false when too long. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the string was set successfully. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true on success, false if newStr is null or (when autocut is false) string exceeds max length. </dd></dl>
 
 </div>
 </div>
-<a id="adbe3b4cc14e268a64cbd67c96fed5d14" name="adbe3b4cc14e268a64cbd67c96fed5d14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adbe3b4cc14e268a64cbd67c96fed5d14">&#9670;&#160;</a></span>setString() <span class="overload">[2/3]</span></h2>
+<a id="a9d88da2f82fda412e78f2c7304ed3da1" name="a9d88da2f82fda412e78f2c7304ed3da1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d88da2f82fda412e78f2c7304ed3da1">&#9670;&#160;</a></span>setStringDouble()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool CharString::setString </td>
+          <td class="memname">bool CharString::setStringDouble </td>
           <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>decimalPlaces</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sets the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content to a floating-point value. </p>
+<p>Sets the string content to the fixed-point representation of a double. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">value</td><td>Floating-point value to set as the string. </td></tr>
+    <tr><td class="paramname">value</td><td>Double value to convert. </td></tr>
+    <tr><td class="paramname">decimalPlaces</td><td>Number of decimal places (capped at 6). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the string was set successfully. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true on success (same as setString with autocut). </dd></dl>
 
 </div>
 </div>
-<a id="acd5f57c1c267f34dba74f6ce03417623" name="acd5f57c1c267f34dba74f6ce03417623"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd5f57c1c267f34dba74f6ce03417623">&#9670;&#160;</a></span>setString() <span class="overload">[3/3]</span></h2>
+<a id="a0ec583a07912af6c25a32fdb0389f533" name="a0ec583a07912af6c25a32fdb0389f533"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ec583a07912af6c25a32fdb0389f533">&#9670;&#160;</a></span>setStringInt()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool CharString::setString </td>
+          <td class="memname">bool CharString::setStringInt </td>
           <td>(</td>
           <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
           <td></td>
@@ -414,14 +684,40 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sets the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content to an integer value. </p>
+<p>Sets the string content to the decimal representation of an integer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">value</td><td>Integer value to set as the string. </td></tr>
+    <tr><td class="paramname">value</td><td>Integer value to convert. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the string was set successfully. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true on success (same as setString with autocut). </dd></dl>
+
+</div>
+</div>
+<a id="a7115cc7361533d477e0db4f1e2ab6dc4" name="a7115cc7361533d477e0db4f1e2ab6dc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7115cc7361533d477e0db4f1e2ab6dc4">&#9670;&#160;</a></span>startsWith()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CharString::startsWith </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>prefix</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks whether the string starts with the given prefix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">prefix</td><td>C-string prefix (null returns false). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the string starts with prefix, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -444,20 +740,20 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Returns a substring of the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>. </p>
+<p>Returns a new <a class="el" href="class_char_string.html">CharString</a> containing a substring. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">startIndex</td><td>Starting index for the substring. </td></tr>
-    <tr><td class="paramname">count</td><td>Number of characters to include in the substring. </td></tr>
+    <tr><td class="paramname">startIndex</td><td>Starting index (0-based). </td></tr>
+    <tr><td class="paramname">count</td><td>Number of characters to copy. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a> object containing the specified substring. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="class_char_string.html">CharString</a> with the substring; empty if indices are invalid. </dd></dl>
 
 </div>
 </div>
-<a id="aaed49b0d117cbfa5006738a38c62272e" name="aaed49b0d117cbfa5006738a38c62272e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaed49b0d117cbfa5006738a38c62272e">&#9670;&#160;</a></span>substring_cstr()</h2>
+<a id="a02db363424d2212ff2b6bb73c4c21031" name="a02db363424d2212ff2b6bb73c4c21031"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02db363424d2212ff2b6bb73c4c21031">&#9670;&#160;</a></span>substring_cstr()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -470,31 +766,43 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>count</em></span>&#160;) const</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>count</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>outSize</em></span>&#160;) const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Returns a substring of the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a> as a C-string. </p>
+<p>Writes a substring into a caller-provided buffer (safe version). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">startIndex</td><td>Starting index for the substring. </td></tr>
-    <tr><td class="paramname">count</td><td>Number of characters to include in the substring. </td></tr>
+    <tr><td class="paramname">startIndex</td><td>Starting index (0-based). </td></tr>
+    <tr><td class="paramname">count</td><td>Number of characters to copy. </td></tr>
+    <tr><td class="paramname">out</td><td>Output buffer. </td></tr>
+    <tr><td class="paramname">outSize</td><td>Size of the output buffer (including null terminator). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A C-string containing the specified substring. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to out, or "" if out is null or outSize is 0. </dd></dl>
 
 </div>
 </div>
-<a id="a147b294fcfc6e6a3152590d9f4ece9aa" name="a147b294fcfc6e6a3152590d9f4ece9aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a147b294fcfc6e6a3152590d9f4ece9aa">&#9670;&#160;</a></span>toFloat()</h2>
+<a id="a63cda60355e5dfe211c5d294d38156a8" name="a63cda60355e5dfe211c5d294d38156a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63cda60355e5dfe211c5d294d38156a8">&#9670;&#160;</a></span>toDouble()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float CharString::toFloat </td>
+          <td class="memname">float CharString::toDouble </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -502,8 +810,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Converts the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content to a floating-point number. </p>
-<dl class="section return"><dt>Returns</dt><dd>The floating-point value represented by the string. </dd></dl>
+<p>Parses the string as a floating-point number. </p>
+<dl class="section return"><dt>Returns</dt><dd>The parsed value as float, or 0.0f if the string is not a valid number. </dd></dl>
 
 </div>
 </div>
@@ -522,8 +830,65 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Converts the <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a>'s content to an integer. </p>
-<dl class="section return"><dt>Returns</dt><dd>The integer value represented by the string. </dd></dl>
+<p>Parses the string as a decimal integer. </p>
+<dl class="section return"><dt>Returns</dt><dd>The parsed integer value, or 0 if the string is not a valid number. </dd></dl>
+
+</div>
+</div>
+<a id="af5393d4b783ee3ad45d1d7d68e44f959" name="af5393d4b783ee3ad45d1d7d68e44f959"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5393d4b783ee3ad45d1d7d68e44f959">&#9670;&#160;</a></span>toLower()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CharString::toLower </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts all characters in the string to lowercase (in-place). </p>
+
+</div>
+</div>
+<a id="a7572709926f8b77f0c42e24cafe19206" name="a7572709926f8b77f0c42e24cafe19206"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7572709926f8b77f0c42e24cafe19206">&#9670;&#160;</a></span>toUpper()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CharString::toUpper </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts all characters in the string to uppercase (in-place). </p>
+
+</div>
+</div>
+<a id="aad8beac4ed19c9c3d950a504877ff415" name="aad8beac4ed19c9c3d950a504877ff415"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad8beac4ed19c9c3d950a504877ff415">&#9670;&#160;</a></span>trim()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CharString::trim </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes leading and trailing whitespace from the string (in-place). </p>
 
 </div>
 </div>

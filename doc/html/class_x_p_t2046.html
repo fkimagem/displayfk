@@ -98,8 +98,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3175e30f8a407f46af0c32d28ce4cb29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the <a class="el" href="class_x_p_t2046.html" title="Represents an interface to the XPT2046 touch controller, providing methods to initialize and read tou...">XPT2046</a> with a shared SPI instance.  <br /></td></tr>
 <tr class="memitem:a91be9238d5903d65ea65c2c0d259ede4" id="r_a91be9238d5903d65ea65c2c0d259ede4"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91be9238d5903d65ea65c2c0d259ede4">getInput</a> ()</td></tr>
 <tr class="memdesc:a91be9238d5903d65ea65c2c0d259ede4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads touch input values (x, y, and z coordinates).  <br /></td></tr>
-<tr class="memitem:a63dbf66bbb12df224e93692a79bd5681" id="r_a63dbf66bbb12df224e93692a79bd5681"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63dbf66bbb12df224e93692a79bd5681">getInputBodmer</a> ()</td></tr>
-<tr class="memdesc:a63dbf66bbb12df224e93692a79bd5681"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads touch input values (x, y, and z coordinates) using Bodmer method.  <br /></td></tr>
 <tr class="memitem:a5a2905590695b60013a028c3961160fd" id="r_a5a2905590695b60013a028c3961160fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a2905590695b60013a028c3961160fd">beginTouchCommunication</a> ()</td></tr>
 <tr class="memdesc:a5a2905590695b60013a028c3961160fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start transaction and turn CS pin LOW.  <br /></td></tr>
 <tr class="memitem:a4aa0a13c0d0e5792f7d8d6656562a3f6" id="r_a4aa0a13c0d0e5792f7d8d6656562a3f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4aa0a13c0d0e5792f7d8d6656562a3f6">endTouchCommunication</a> ()</td></tr>
@@ -312,26 +310,6 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reads touch input values (x, y, and z coordinates). </p>
-<dl class="section return"><dt>Returns</dt><dd>A status byte indicating the result of the touch input read. </dd></dl>
-
-</div>
-</div>
-<a id="a63dbf66bbb12df224e93692a79bd5681" name="a63dbf66bbb12df224e93692a79bd5681"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a63dbf66bbb12df224e93692a79bd5681">&#9670;&#160;</a></span>getInputBodmer()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t XPT2046::getInputBodmer </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Reads touch input values (x, y, and z coordinates) using Bodmer method. </p>
 <dl class="section return"><dt>Returns</dt><dd>A status byte indicating the result of the touch input read. </dd></dl>
 
 </div>

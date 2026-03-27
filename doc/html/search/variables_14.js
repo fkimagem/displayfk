@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['uncheckedcolor_0',['uncheckedColor',['../struct_check_box_config.html#afdec0911f43b3edc212611d54666294c',1,'CheckBoxConfig']]],
-  ['unit_1',['unit',['../struct_thermometer_config.html#abf8a12ea104292fa852d5061a2c85ef5',1,'ThermometerConfig']]],
-  ['usingkeyboard_2',['usingKeyboard',['../class_widget_base.html#af87da2f755677b5e2feea6ad2ce94ee6',1,'WidgetBase']]]
+  ['v_0',['v',['../struct_h_s_v__t.html#a7d16394622b3cae51317ec38fb19b972',1,'HSV_t']]],
+  ['verticaldivision_1',['verticalDivision',['../struct_line_chart_config.html#a65c35e9a070a8329fb69105b8b27705f',1,'LineChartConfig']]]
 ];

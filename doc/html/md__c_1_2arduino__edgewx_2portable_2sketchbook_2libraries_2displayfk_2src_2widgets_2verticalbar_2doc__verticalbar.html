@@ -75,11 +75,11 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe VBar (VerticalBar) </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md1147"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1148"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md1168"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1169"></a>
 Visão Geral</h1>
 <p>A classe <span class="tt"><a class="el" href="class_v_bar.html" title="Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de...">VBar</a></span> é um widget que exibe valores numéricos como uma barra vertical ou horizontal preenchida proporcionalmente. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade para criar barras de progresso visuais com cantos arredondados e orientação configurável.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1149"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1170"></a>
 Características Principais</h2>
 <ul>
 <li>📊 Barra de progresso vertical ou horizontal</li>
@@ -87,40 +87,44 @@ Características Principais</h2>
 <li>📏 Cantos arredondados configuráveis</li>
 <li>📈 Faixa de valores configurável (min/max)</li>
 <li>🔄 Suporte a orientação vertical e horizontal</li>
+<li>🔢 Integração opcional com <a class="el" href="class_label.html">Label</a> para exibir valor numérico</li>
 <li>👁️ Pode ser mostrado/ocultado dinamicamente</li>
 <li>🔗 Integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1151"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1172"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1152"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1173"></a>
 VerticalBarConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração:</p>
+<p>Estrutura que contém todos os parâmetros de configuração (ordem conforme <span class="tt"><a class="el" href="wverticalbar_8h.html">wverticalbar.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_vertical_bar_config.html">VerticalBarConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_bar_config.html#a06aa2d6301c06f386cd9c28545886a09">width</a>;         <span class="comment">// Largura da barra</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_bar_config.html#a805abdc56aa506f8a7188b3b0664ce48">height</a>;        <span class="comment">// Altura da barra</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_bar_config.html#a2cc66c3fa49a8fdb17d40bc205e8e272">filledColor</a>;   <span class="comment">// Cor da porção preenchida</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_vertical_bar_config.html#a71646d0291be28b1d406beec05a85bf8">minValue</a>;           <span class="comment">// Valor mínimo da faixa</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_vertical_bar_config.html#af4348ee900ac4b22fc28476e3c9f0a67">maxValue</a>;           <span class="comment">// Valor máximo da faixa</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_vertical_bar_config.html#acc13f60d16ee788092c1d4e8e1fba52b">round</a>;             <span class="comment">// Raio para cantos arredondados</span></div>
-<div class="line">  <a class="code hl_enumeration" href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58">Orientation</a> <a class="code hl_variable" href="struct_vertical_bar_config.html#a0e2e512007ab04bfc6ae867ffbf03c8d">orientation</a>; <span class="comment">// VERTICAL ou HORIZONTAL</span></div>
+<div class="line">  <a class="code hl_class" href="class_label.html">Label</a>* <a class="code hl_variable" href="struct_vertical_bar_config.html#add86cd6e0c3fa8d8a08997f51e3cf6c8">subtitle</a>;           <span class="comment">// Ponteiro para Label opcional para exibir o valor (pode ser nullptr).</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_vertical_bar_config.html#a71646d0291be28b1d406beec05a85bf8">minValue</a>;              <span class="comment">// Valor mínimo da faixa.</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_vertical_bar_config.html#af4348ee900ac4b22fc28476e3c9f0a67">maxValue</a>;              <span class="comment">// Valor máximo da faixa.</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_vertical_bar_config.html#acc13f60d16ee788092c1d4e8e1fba52b">round</a>;                 <span class="comment">// Raio para cantos arredondados.</span></div>
+<div class="line">  <a class="code hl_enumeration" href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58">Orientation</a> <a class="code hl_variable" href="struct_vertical_bar_config.html#a0e2e512007ab04bfc6ae867ffbf03c8d">orientation</a>;   <span class="comment">// VERTICAL ou HORIZONTAL.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_bar_config.html#a06aa2d6301c06f386cd9c28545886a09">width</a>;            <span class="comment">// Largura da barra em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_bar_config.html#a805abdc56aa506f8a7188b3b0664ce48">height</a>;           <span class="comment">// Altura da barra em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_vertical_bar_config.html#a2cc66c3fa49a8fdb17d40bc205e8e272">filledColor</a>;      <span class="comment">// Cor da porção preenchida.</span></div>
 <div class="line">};</div>
 <div class="ttc" id="abase_types_8h_html_a871118a09520247c78a71ecd7b0abd58"><div class="ttname"><a href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58">Orientation</a></div><div class="ttdeci">Orientation</div><div class="ttdef"><b>Definition</b> baseTypes.h:77</div></div>
-<div class="ttc" id="astruct_vertical_bar_config_html"><div class="ttname"><a href="struct_vertical_bar_config.html">VerticalBarConfig</a></div><div class="ttdoc">Estrutura de configuração para o VBar.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:9</div></div>
-<div class="ttc" id="astruct_vertical_bar_config_html_a06aa2d6301c06f386cd9c28545886a09"><div class="ttname"><a href="struct_vertical_bar_config.html#a06aa2d6301c06f386cd9c28545886a09">VerticalBarConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura da exibição do VBar.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:10</div></div>
-<div class="ttc" id="astruct_vertical_bar_config_html_a0e2e512007ab04bfc6ae867ffbf03c8d"><div class="ttname"><a href="struct_vertical_bar_config.html#a0e2e512007ab04bfc6ae867ffbf03c8d">VerticalBarConfig::orientation</a></div><div class="ttdeci">Orientation orientation</div><div class="ttdoc">Orientação da barra (vertical ou horizontal).</div><div class="ttdef"><b>Definition</b> wverticalbar.h:16</div></div>
-<div class="ttc" id="astruct_vertical_bar_config_html_a2cc66c3fa49a8fdb17d40bc205e8e272"><div class="ttname"><a href="struct_vertical_bar_config.html#a2cc66c3fa49a8fdb17d40bc205e8e272">VerticalBarConfig::filledColor</a></div><div class="ttdeci">uint16_t filledColor</div><div class="ttdoc">Cor usada para a porção preenchida da barra.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:12</div></div>
-<div class="ttc" id="astruct_vertical_bar_config_html_a71646d0291be28b1d406beec05a85bf8"><div class="ttname"><a href="struct_vertical_bar_config.html#a71646d0291be28b1d406beec05a85bf8">VerticalBarConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdoc">Valor mínimo da faixa da barra.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:13</div></div>
-<div class="ttc" id="astruct_vertical_bar_config_html_a805abdc56aa506f8a7188b3b0664ce48"><div class="ttname"><a href="struct_vertical_bar_config.html#a805abdc56aa506f8a7188b3b0664ce48">VerticalBarConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura da exibição do VBar.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:11</div></div>
-<div class="ttc" id="astruct_vertical_bar_config_html_acc13f60d16ee788092c1d4e8e1fba52b"><div class="ttname"><a href="struct_vertical_bar_config.html#acc13f60d16ee788092c1d4e8e1fba52b">VerticalBarConfig::round</a></div><div class="ttdeci">int round</div><div class="ttdoc">Raio para os cantos arredondados da barra.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:15</div></div>
-<div class="ttc" id="astruct_vertical_bar_config_html_af4348ee900ac4b22fc28476e3c9f0a67"><div class="ttname"><a href="struct_vertical_bar_config.html#af4348ee900ac4b22fc28476e3c9f0a67">VerticalBarConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdoc">Valor máximo da faixa da barra.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:14</div></div>
+<div class="ttc" id="aclass_label_html"><div class="ttname"><a href="class_label.html">Label</a></div><div class="ttdef"><b>Definition</b> wlabel.h:23</div></div>
+<div class="ttc" id="astruct_vertical_bar_config_html"><div class="ttname"><a href="struct_vertical_bar_config.html">VerticalBarConfig</a></div><div class="ttdoc">Estrutura de configuração para o VBar.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:10</div></div>
+<div class="ttc" id="astruct_vertical_bar_config_html_a06aa2d6301c06f386cd9c28545886a09"><div class="ttname"><a href="struct_vertical_bar_config.html#a06aa2d6301c06f386cd9c28545886a09">VerticalBarConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura da exibição do VBar.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:16</div></div>
+<div class="ttc" id="astruct_vertical_bar_config_html_a0e2e512007ab04bfc6ae867ffbf03c8d"><div class="ttname"><a href="struct_vertical_bar_config.html#a0e2e512007ab04bfc6ae867ffbf03c8d">VerticalBarConfig::orientation</a></div><div class="ttdeci">Orientation orientation</div><div class="ttdoc">Orientação da barra (vertical ou horizontal).</div><div class="ttdef"><b>Definition</b> wverticalbar.h:15</div></div>
+<div class="ttc" id="astruct_vertical_bar_config_html_a2cc66c3fa49a8fdb17d40bc205e8e272"><div class="ttname"><a href="struct_vertical_bar_config.html#a2cc66c3fa49a8fdb17d40bc205e8e272">VerticalBarConfig::filledColor</a></div><div class="ttdeci">uint16_t filledColor</div><div class="ttdoc">Cor usada para a porção preenchida da barra.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:18</div></div>
+<div class="ttc" id="astruct_vertical_bar_config_html_a71646d0291be28b1d406beec05a85bf8"><div class="ttname"><a href="struct_vertical_bar_config.html#a71646d0291be28b1d406beec05a85bf8">VerticalBarConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdoc">Valor mínimo da faixa da barra.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:12</div></div>
+<div class="ttc" id="astruct_vertical_bar_config_html_a805abdc56aa506f8a7188b3b0664ce48"><div class="ttname"><a href="struct_vertical_bar_config.html#a805abdc56aa506f8a7188b3b0664ce48">VerticalBarConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura da exibição do VBar.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:17</div></div>
+<div class="ttc" id="astruct_vertical_bar_config_html_acc13f60d16ee788092c1d4e8e1fba52b"><div class="ttname"><a href="struct_vertical_bar_config.html#acc13f60d16ee788092c1d4e8e1fba52b">VerticalBarConfig::round</a></div><div class="ttdeci">int round</div><div class="ttdoc">Raio para os cantos arredondados da barra.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:14</div></div>
+<div class="ttc" id="astruct_vertical_bar_config_html_add86cd6e0c3fa8d8a08997f51e3cf6c8"><div class="ttname"><a href="struct_vertical_bar_config.html#add86cd6e0c3fa8d8a08997f51e3cf6c8">VerticalBarConfig::subtitle</a></div><div class="ttdeci">Label * subtitle</div><div class="ttdef"><b>Definition</b> wverticalbar.h:11</div></div>
+<div class="ttc" id="astruct_vertical_bar_config_html_af4348ee900ac4b22fc28476e3c9f0a67"><div class="ttname"><a href="struct_vertical_bar_config.html#af4348ee900ac4b22fc28476e3c9f0a67">VerticalBarConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdoc">Valor máximo da faixa da barra.</div><div class="ttdef"><b>Definition</b> wverticalbar.h:13</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1154"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1175"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1155"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1176"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_v_bar.html">VBar</a>(uint16_t _x, uint16_t _y, uint8_t _screen)</div>
-<div class="ttc" id="aclass_v_bar_html"><div class="ttname"><a href="class_v_bar.html">VBar</a></div><div class="ttdoc">Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de...</div><div class="ttdef"><b>Definition</b> wverticalbar.h:25</div></div>
+<div class="ttc" id="aclass_v_bar_html"><div class="ttname"><a href="class_v_bar.html">VBar</a></div><div class="ttdoc">Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de...</div><div class="ttdef"><b>Definition</b> wverticalbar.h:27</div></div>
 </div><!-- fragment --><p>Cria uma nova barra de progresso.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">_x</span>: Coordenada X do canto superior esquerdo</li>
@@ -128,11 +132,11 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, chame <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1156"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1177"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_v_bar.html">~VBar</a>()</div>
 </div><!-- fragment --><p>Libera os recursos do <a class="el" href="class_v_bar.html" title="Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de...">VBar</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1157"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1178"></a>
 setup()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>(<span class="keyword">const</span> <a class="code hl_struct" href="struct_vertical_bar_config.html">VerticalBarConfig</a>&amp; config)</div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
@@ -140,27 +144,82 @@ setup()</h2>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_vertical_bar_config.html" title="Estrutura de configuração para o VBar.">VerticalBarConfig</a></span> com as configurações</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1158"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1179"></a>
 drawBackground()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> drawBackground()</div>
 </div><!-- fragment --><p>Desenha o fundo da barra (container). <b>Este método deve ser chamado uma vez após <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a>.</b></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1159"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1180"></a>
 setValue()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setValue(uint32_t newValue)</div>
 </div><!-- fragment --><p>Define o valor atual da barra.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">newValue</span>: Novo valor (será limitado entre minValue e maxValue)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1160"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1181"></a>
+setMinValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setMinValue(uint32_t newValue)</div>
+</div><!-- fragment --><p>Define o valor mínimo da faixa da barra.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newValue</span>: Novo valor mínimo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo da barra</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa antes de redesenhar</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1182"></a>
+setMaxValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setMaxValue(uint32_t newValue)</div>
+</div><!-- fragment --><p>Define o valor máximo da faixa da barra.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newValue</span>: Novo valor máximo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo da barra</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa antes de redesenhar</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1183"></a>
+getMinValue()</h2>
+<div class="fragment"><div class="line">uint32_t getMinValue()</div>
+</div><!-- fragment --><p>Retorna o valor mínimo atual da faixa da barra.</p>
+<p><b>Retorno:</b></p><ul>
+<li>Valor mínimo configurado</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1184"></a>
+getMaxValue()</h2>
+<div class="fragment"><div class="line">uint32_t getMaxValue()</div>
+</div><!-- fragment --><p>Retorna o valor máximo atual da faixa da barra.</p>
+<p><b>Retorno:</b></p><ul>
+<li>Valor máximo configurado</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1185"></a>
+setScale()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setScale(uint32_t newMinValue, uint32_t newMaxValue)</div>
+</div><!-- fragment --><p>Define simultaneamente os valores mínimo e máximo da faixa da barra.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newMinValue</span>: Novo valor mínimo</li>
+<li><span class="tt">newMaxValue</span>: Novo valor máximo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo da barra</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa antes de redesenhar</li>
+<li>Útil para mudanças dinâmicas de escala</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1186"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna a barra visível.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1161"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1187"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta a barra.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1163"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1189"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente:</p>
 <ul>
@@ -169,17 +228,26 @@ hide()</h2>
 <li><span class="tt">forceUpdate()</span>: Força atualização</li>
 <li><span class="tt">getCallbackFunc()</span>: Retorna callback</li>
 <li><span class="tt">cleanupMemory()</span>: Limpa memória</li>
-<li><span class="tt">start()</span>: Inicializa configurações</li>
+<li><span class="tt">start()</span>: Inicializa configurações e valida dimensões (largura e altura mínimas de 20 pixels)</li>
+<li><span class="tt">sortValues()</span>: Ordena valores min/max se necessário (chamado automaticamente)</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1190"></a>
+Membros Privados</h2>
+<ul>
+<li><span class="tt">m_currentValue</span>: Valor atual representado pela porção preenchida da barra</li>
+<li><span class="tt">m_lastValue</span>: Último valor representado (usado para otimização de redesenho)</li>
+<li><span class="tt">m_config</span>: Estrutura de configuração do <a class="el" href="class_v_bar.html" title="Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de...">VBar</a></li>
+<li><span class="tt">m_changedScale</span>: Flag que indica quando a escala foi alterada (força redesenho completo)</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1165"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1192"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1166"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1193"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1167"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1194"></a>
 📝 Passo 2: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
@@ -189,8 +257,8 @@ hide()</h2>
 <div class="line"> </div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdVBar = 2;</div>
 <div class="line"><a class="code hl_class" href="class_v_bar.html">VBar</a> *arrayVBar[qtdVBar] = {&amp;barra1, &amp;barra2};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1168"></a>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1195"></a>
 ⚙️ Passo 3: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    Serial.begin(115200);</div>
@@ -202,34 +270,36 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1169"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1196"></a>
 🔧 Passo 4: Configurar as Barras</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar Barra Vertical</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_vertical_bar_config.html">VerticalBarConfig</a> configBarra1 = {</div>
-<div class="line">        .width = 30,</div>
-<div class="line">        .height = 150,</div>
-<div class="line">        .filledColor = <a class="code hl_variable" href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a>,</div>
+<div class="line">        .subtitle = <span class="keyword">nullptr</span>,</div>
 <div class="line">        .minValue = 0,</div>
 <div class="line">        .maxValue = 100,</div>
 <div class="line">        .round = 5,</div>
-<div class="line">        .orientation = <a class="code hl_enumvalue" href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58a3e1b74251c07310c5f1b968145bf00dc">Orientation::VERTICAL</a></div>
+<div class="line">        .orientation = <a class="code hl_enumvalue" href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58a3e1b74251c07310c5f1b968145bf00dc">Orientation::VERTICAL</a>,</div>
+<div class="line">        .width = 30,</div>
+<div class="line">        .height = 150,</div>
+<div class="line">        .filledColor = <a class="code hl_variable" href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a></div>
 <div class="line">    };</div>
 <div class="line">    barra1.setup(configBarra1);</div>
 <div class="line">    barra1.drawBackground();</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar Barra Horizontal</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_vertical_bar_config.html">VerticalBarConfig</a> configBarra2 = {</div>
-<div class="line">        .width = 150,</div>
-<div class="line">        .height = 30,</div>
-<div class="line">        .filledColor = <a class="code hl_variable" href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a>,</div>
+<div class="line">        .subtitle = <span class="keyword">nullptr</span>,</div>
 <div class="line">        .minValue = 0,</div>
 <div class="line">        .maxValue = 100,</div>
 <div class="line">        .round = 10,</div>
-<div class="line">        .orientation = <a class="code hl_enumvalue" href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58a86e5d0d8407ce71f7e2004ef3949894e">Orientation::HORIZONTAL</a></div>
+<div class="line">        .orientation = <a class="code hl_enumvalue" href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58a86e5d0d8407ce71f7e2004ef3949894e">Orientation::HORIZONTAL</a>,</div>
+<div class="line">        .width = 150,</div>
+<div class="line">        .height = 30,</div>
+<div class="line">        .filledColor = <a class="code hl_variable" href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div>
 <div class="line">    };</div>
 <div class="line">    barra2.setup(configBarra2);</div>
 <div class="line">    barra2.drawBackground();</div>
@@ -239,10 +309,10 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="abase_types_8h_html_a871118a09520247c78a71ecd7b0abd58a3e1b74251c07310c5f1b968145bf00dc"><div class="ttname"><a href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58a3e1b74251c07310c5f1b968145bf00dc">Orientation::VERTICAL</a></div><div class="ttdeci">@ VERTICAL</div><div class="ttdoc">Vertical orientation.</div><div class="ttdef"><b>Definition</b> baseTypes.h:78</div></div>
 <div class="ttc" id="abase_types_8h_html_a871118a09520247c78a71ecd7b0abd58a86e5d0d8407ce71f7e2004ef3949894e"><div class="ttname"><a href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58a86e5d0d8407ce71f7e2004ef3949894e">Orientation::HORIZONTAL</a></div><div class="ttdeci">@ HORIZONTAL</div><div class="ttdoc">Horizontal orientation.</div><div class="ttdef"><b>Definition</b> baseTypes.h:79</div></div>
-<div class="ttc" id="aclass_display_f_k_html_a261e9289a2090ba7c7cb0a94adce9071"><div class="ttname"><a href="class_display_f_k.html#a261e9289a2090ba7c7cb0a94adce9071">DisplayFK::setVBar</a></div><div class="ttdeci">void setVBar(VBar *array[], uint8_t amount)</div><div class="ttdoc">Configures the vertical bar array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:640</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a0ac5998349343bbfee105dfa5f8ee078"><div class="ttname"><a href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a></div><div class="ttdeci">constexpr uint16_t CFK_GREEN</div><div class="ttdef"><b>Definition</b> widgetsetup.h:150</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a38a7172331dd085517d904a7116559a1"><div class="ttname"><a href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div><div class="ttdeci">constexpr uint16_t CFK_BLUE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:155</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1170"></a>
+<div class="ttc" id="aclass_display_f_k_html_a261e9289a2090ba7c7cb0a94adce9071"><div class="ttname"><a href="class_display_f_k.html#a261e9289a2090ba7c7cb0a94adce9071">DisplayFK::setVBar</a></div><div class="ttdeci">void setVBar(VBar *array[], uint8_t amount)</div><div class="ttdoc">Configures the vertical bar array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:641</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a0ac5998349343bbfee105dfa5f8ee078"><div class="ttname"><a href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a></div><div class="ttdeci">constexpr uint16_t CFK_GREEN</div><div class="ttdef"><b>Definition</b> widgetsetup.h:152</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a38a7172331dd085517d904a7116559a1"><div class="ttname"><a href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div><div class="ttdeci">constexpr uint16_t CFK_BLUE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:157</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1197"></a>
 🖥️ Passo 5: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -250,10 +320,10 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1171"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1198"></a>
 🔄 Passo 6: Exemplo de Uso</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Simular valores</span></div>
@@ -268,7 +338,7 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1173"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1200"></a>
 📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"> </div>
@@ -276,12 +346,16 @@ hide()</h2>
 <div class="line">Arduino_DataBus *bus = <span class="keyword">nullptr</span>;</div>
 <div class="line">Arduino_GFX *gfx = <span class="keyword">nullptr</span>;</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// Criar barras</span></div>
+<div class="line"><span class="comment">// Criar barras e labels</span></div>
 <div class="line"><a class="code hl_class" href="class_v_bar.html">VBar</a> bateria(50, 50, 0);</div>
 <div class="line"><a class="code hl_class" href="class_v_bar.html">VBar</a> progresso(50, 120, 0);</div>
+<div class="line"><a class="code hl_class" href="class_label.html">Label</a> labelBateria(85, 100, 0);  <span class="comment">// Label para exibir valor da bateria</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdVBar = 2;</div>
 <div class="line"><a class="code hl_class" href="class_v_bar.html">VBar</a> *arrayVBar[qtdVBar] = {&amp;bateria, &amp;progresso};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> uint8_t qtdLabel = 1;</div>
+<div class="line"><a class="code hl_class" href="class_label.html">Label</a> *arrayLabel[qtdLabel] = {&amp;labelBateria};</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    Serial.begin(115200);</div>
@@ -293,28 +367,45 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">setDrawObject</a>(gfx);</div>
 <div class="line">    </div>
-<div class="line">    <span class="comment">// Configurar Barra de Bateria (Vertical)</span></div>
+<div class="line">    <span class="comment">// Configurar Label para exibir valor da bateria</span></div>
+<div class="line">    <a class="code hl_struct" href="struct_label_config.html">LabelConfig</a> configLabelBateria = {</div>
+<div class="line">        .text = <span class="stringliteral">&quot;0&quot;</span>,</div>
+<div class="line">        .prefix = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line">        .suffix = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line">        .fontFamily = &amp;RobotoRegular10pt7b,</div>
+<div class="line">        .datum = <a class="code hl_define" href="widgetsetup_8h.html#ab5e3647e20719a695e2557fad717b54a">TL_DATUM</a>,</div>
+<div class="line">        .fontColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
+<div class="line">    };</div>
+<div class="line">    labelBateria.setup(configLabelBateria);</div>
+<div class="line">    </div>
+<div class="line">    <span class="comment">// Configurar Barra de Bateria (Vertical) com Label</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_vertical_bar_config.html">VerticalBarConfig</a> configBateria = {</div>
-<div class="line">        .width = 30,</div>
-<div class="line">        .height = 100,</div>
-<div class="line">        .filledColor = <a class="code hl_variable" href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a>,</div>
+<div class="line">        .subtitle = &amp;labelBateria,</div>
 <div class="line">        .minValue = 0,</div>
 <div class="line">        .maxValue = 100,</div>
 <div class="line">        .round = 5,</div>
-<div class="line">        .orientation = <a class="code hl_enumvalue" href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58a3e1b74251c07310c5f1b968145bf00dc">Orientation::VERTICAL</a></div>
+<div class="line">        .orientation = <a class="code hl_enumvalue" href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58a3e1b74251c07310c5f1b968145bf00dc">Orientation::VERTICAL</a>,</div>
+<div class="line">        .width = 30,</div>
+<div class="line">        .height = 100,</div>
+<div class="line">        .filledColor = <a class="code hl_variable" href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a></div>
 <div class="line">    };</div>
 <div class="line">    bateria.setup(configBateria);</div>
 <div class="line">    bateria.drawBackground();</div>
 <div class="line">    </div>
+<div class="line">    <span class="comment">// Registrar widgets</span></div>
+<div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#a26ef9b13619e13891a0ecabf0b9a7b25">setLabel</a>(arrayLabel, qtdLabel);</div>
+<div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar Barra de Progresso (Horizontal)</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_vertical_bar_config.html">VerticalBarConfig</a> configProgresso = {</div>
-<div class="line">        .width = 200,</div>
-<div class="line">        .height = 20,</div>
-<div class="line">        .filledColor = <a class="code hl_variable" href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a>,</div>
+<div class="line">        .subtitle = <span class="keyword">nullptr</span>,</div>
 <div class="line">        .minValue = 0,</div>
 <div class="line">        .maxValue = 100,</div>
 <div class="line">        .round = 10,</div>
-<div class="line">        .orientation = <a class="code hl_enumvalue" href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58a86e5d0d8407ce71f7e2004ef3949894e">Orientation::HORIZONTAL</a></div>
+<div class="line">        .orientation = <a class="code hl_enumvalue" href="base_types_8h.html#a871118a09520247c78a71ecd7b0abd58a86e5d0d8407ce71f7e2004ef3949894e">Orientation::HORIZONTAL</a>,</div>
+<div class="line">        .width = 200,</div>
+<div class="line">        .height = 20,</div>
+<div class="line">        .filledColor = <a class="code hl_variable" href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div>
 <div class="line">    };</div>
 <div class="line">    progresso.setup(configProgresso);</div>
 <div class="line">    progresso.drawBackground();</div>
@@ -323,6 +414,8 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(minhaTela);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Nota: O Label será atualizado automaticamente quando setValue() for chamado</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Simular nível de bateria</span></div>
@@ -343,16 +436,20 @@ hide()</h2>
 <div class="line">    <a class="code hl_variable" href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>;</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
+<div class="ttc" id="aclass_display_f_k_html_a26ef9b13619e13891a0ecabf0b9a7b25"><div class="ttname"><a href="class_display_f_k.html#a26ef9b13619e13891a0ecabf0b9a7b25">DisplayFK::setLabel</a></div><div class="ttdeci">void setLabel(Label *array[], uint8_t amount)</div><div class="ttdoc">Configures the label array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:261</div></div>
+<div class="ttc" id="astruct_label_config_html"><div class="ttname"><a href="struct_label_config.html">LabelConfig</a></div><div class="ttdef"><b>Definition</b> wlabel.h:10</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ab5e3647e20719a695e2557fad717b54a"><div class="ttname"><a href="widgetsetup_8h.html#ab5e3647e20719a695e2557fad717b54a">TL_DATUM</a></div><div class="ttdeci">#define TL_DATUM</div><div class="ttdef"><b>Definition</b> widgetsetup.h:113</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:133</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1175"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1202"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1176"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1203"></a>
 📐 Tamanhos Recomendados</h2>
 <ul>
 <li><b>Vertical:</b> 20-40 pixels de largura, 100-200 pixels de altura</li>
 <li><b>Horizontal:</b> 100-200 pixels de largura, 20-40 pixels de altura</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1177"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1204"></a>
 🎨 Cores</h2>
 <ul>
 <li>Use cores intuitivas (verde = OK, amarelo = atenção, vermelho = alerta)</li>
@@ -360,13 +457,13 @@ hide()</h2>
 <li>Vermelho para níveis críticos</li>
 <li>Azul para progresso</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1178"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1205"></a>
 🔄 Orientação</h2>
 <ul>
 <li><b>VERTICAL:</b> Para altura, nível, quantidade</li>
 <li><b>HORIZONTAL:</b> Para progresso, carga, porcentagem</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1179"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1206"></a>
 ⚡ Performance</h2>
 <ul>
 <li>Redesenho apenas quando valor muda</li>
@@ -374,7 +471,7 @@ hide()</h2>
 <li>Atualização eficiente do preenchimento</li>
 <li>Otimização para valores em mudança</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1180"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1207"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Cores claras para diferentes estados</li>
@@ -382,7 +479,7 @@ hide()</h2>
 <li>Tamanho adequado para visualização</li>
 <li>Feedback visual imediato</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1181"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1208"></a>
 🎨 Visual</h2>
 <ul>
 <li>Cantos arredondados para aparência moderna</li>
@@ -390,16 +487,19 @@ hide()</h2>
 <li>Fundo cinza claro como padrão</li>
 <li>Borda preta para contorno</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1182"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1209"></a>
 🔔 Valores</h2>
 <ul>
 <li>Valores limitados automaticamente</li>
 <li>Preenchimento proporcional automático</li>
 <li>Suporta valores negativos</li>
-<li>Faixa configurável</li>
+<li>Faixa configurável dinamicamente com <span class="tt">setMinValue()</span>, <span class="tt">setMaxValue()</span> ou <span class="tt">setScale()</span></li>
+<li>Consulta de valores com <span class="tt">getMinValue()</span> e <span class="tt">getMaxValue()</span></li>
+<li>Ordenação automática de valores min/max</li>
+<li>Integração com <a class="el" href="class_label.html">Label</a>: se <span class="tt">subtitle</span> for configurado, o valor é exibido automaticamente no <a class="el" href="class_label.html">Label</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1184"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1211"></a>
 🔗 Herança de WidgetBase</h1>
 <p>A classe <span class="tt"><a class="el" href="class_v_bar.html" title="Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de...">VBar</a></span> herda métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
@@ -409,7 +509,7 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1186"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1213"></a>
 🔗 Integração com DisplayFK</h1>
 <p>O <span class="tt"><a class="el" href="class_v_bar.html" title="Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de...">VBar</a></span> integra-se com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
@@ -420,7 +520,7 @@ hide()</h2>
 <li><b>Valores:</b> Limitação automática respeitada</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1188"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1215"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O <a class="el" href="class_v_bar.html" title="Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de...">VBar</a> renderiza em camadas:</p>
 <ol type="1">
@@ -444,13 +544,26 @@ hide()</h2>
 <li><b>Limpeza:</b><ul>
 <li>Apaga área se valor diminuiu</li>
 <li>Mantém preenchimento se valor aumentou</li>
+<li>Quando <span class="tt">m_changedScale</span> é true, limpa toda a área antes de redesenhar</li>
+</ul>
+</li>
+<li><b><a class="el" href="class_label.html">Label</a> (subtitle):</b><ul>
+<li>Se configurado, atualiza automaticamente o <a class="el" href="class_label.html">Label</a> com o valor atual</li>
+<li>Usa <span class="tt">setTextInt()</span> para atualizar o texto do <a class="el" href="class_label.html">Label</a></li>
+<li>Atualização ocorre a cada redesenho</li>
+</ul>
+</li>
+<li><b>Otimizações:</b><ul>
+<li>Usa <span class="tt">m_lastValue</span> para calcular apenas a diferença a ser redesenhada</li>
+<li>Flag <span class="tt">m_changedScale</span> força redesenho completo quando a escala muda</li>
+<li>Validações de estado antes de renderizar (TFT, visibilidade, tela atual, etc.)</li>
 </ul>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1190"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1217"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1191"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1218"></a>
 Barra não aparece</h2>
 <ul>
 <li>Verifique se chamou <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar</li>
@@ -458,7 +571,7 @@ Barra não aparece</h2>
 <li>Verifique valores de width e height &gt; 20</li>
 <li>Chame <span class="tt">myDisplay.setVBar()</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1192"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1219"></a>
 Valor não muda visualmente</h2>
 <ul>
 <li>Verifique se chamou <span class="tt">setValue()</span> com novo valor</li>
@@ -466,7 +579,15 @@ Valor não muda visualmente</h2>
 <li>Verifique logs para erros</li>
 <li>Teste com valores extremos</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1193"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1220"></a>
+Mudança de escala não funciona</h2>
+<ul>
+<li>Use <span class="tt">setScale()</span> para alterar min/max simultaneamente</li>
+<li>Ou use <span class="tt">setMinValue()</span> e <span class="tt">setMaxValue()</span> separadamente</li>
+<li>Valores são ordenados automaticamente se min &gt; max</li>
+<li>A barra é redesenhada completamente quando a escala muda</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1221"></a>
 Visual incorreto</h2>
 <ul>
 <li>Verifique cores configuradas</li>
@@ -474,7 +595,7 @@ Visual incorreto</h2>
 <li>Verifique valor de round</li>
 <li>Teste com orientação diferente</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md1194"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1222"></a>
 Problemas de proporção</h2>
 <ul>
 <li>Verifique configuração de min/max</li>
@@ -482,8 +603,16 @@ Problemas de proporção</h2>
 <li>Teste com diferentes valores</li>
 <li>Verifique dimensões da barra</li>
 </ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1223"></a>
+Label não atualiza</h2>
+<ul>
+<li>Verifique se <span class="tt">subtitle</span> foi configurado corretamente</li>
+<li>Confirme que o <a class="el" href="class_label.html">Label</a> foi configurado antes do <a class="el" href="class_v_bar.html" title="Representa um widget de barra vertical usado para exibir um valor como uma barra preenchida dentro de...">VBar</a></li>
+<li>Verifique se o <a class="el" href="class_label.html">Label</a> está visível</li>
+<li>Teste com <span class="tt">subtitle-&gt;setTextInt()</span> manualmente</li>
+</ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1196"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1225"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>

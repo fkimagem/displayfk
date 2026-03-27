@@ -75,16 +75,17 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe TextButton </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md883"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md884"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md892"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md893"></a>
 Visão Geral</h1>
 <p>A classe <span class="tt"><a class="el" href="class_text_button.html" title="Widget de botão com texto personalizável, cores e cantos arredondados.">TextButton</a></span> é um widget interativo que exibe um botão com texto personalizável e cantos arredondados. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade completa para criar botões com texto, cores e callbacks configuráveis.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md885"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md894"></a>
 Características Principais</h2>
 <ul>
 <li>🔘 Botão com texto personalizável</li>
 <li>🎨 Cores de fundo e texto configuráveis</li>
 <li>📐 Dimensões e raio de bordas arredondadas configuráveis</li>
+<li>🔤 Fontes personalizáveis (GFXfont)</li>
 <li>🔔 Callback para ações de clique</li>
 <li>👆 Suporte a toque para ativação</li>
 <li>🔒 Pode ser habilitado/desabilitado</li>
@@ -93,36 +94,40 @@ Características Principais</h2>
 <li>🔗 Integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md887"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md896"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md888"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md897"></a>
 TextButtonConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração:</p>
+<p>Estrutura que contém todos os parâmetros de configuração (ordem conforme <span class="tt"><a class="el" href="wtextbutton_8h.html">wtextbutton.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_text_button_config.html">TextButtonConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_button_config.html#a567100027bc9c3109e53d70119f82dce">width</a>;         <span class="comment">// Largura do botão em pixels</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_button_config.html#ad7810eeb2378a0277326c9dbcb9c51e0">height</a>;        <span class="comment">// Altura do botão em pixels</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_button_config.html#ac23140531f7ed4bfd5782d90a1cd6b54">radius</a>;        <span class="comment">// Raio para cantos arredondados</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_button_config.html#a84a2b6e4bbe14f7994886da0820f9205">backgroundColor</a>; <span class="comment">// Cor de fundo do botão</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_button_config.html#a7e65931fb9d36f8095238f6a71be3123">textColor</a>;     <span class="comment">// Cor do texto</span></div>
-<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_text_button_config.html#a76eca8924db6ddbdce7009846455e39e">text</a>;       <span class="comment">// Texto a exibir</span></div>
-<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_text_button_config.html#a5bb80bf2bf59b252499df7f52c56597b">callback</a>;  <span class="comment">// Função callback</span></div>
+<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_text_button_config.html#a76eca8924db6ddbdce7009846455e39e">text</a>;           <span class="comment">// Texto a exibir no botão.</span></div>
+<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_text_button_config.html#a5bb80bf2bf59b252499df7f52c56597b">callback</a>;      <span class="comment">// Callback executada quando o botão é pressionado.</span></div>
+<div class="line"><span class="preprocessor">  #if defined(USING_GRAPHIC_LIB)</span></div>
+<div class="line">  <span class="keyword">const</span> GFXfont* <a class="code hl_variable" href="struct_text_button_config.html#a143cc81647b690a2e7f0e36a0227ba95">fontFamily</a>;  <span class="comment">// Ponteiro para a fonte usada no texto.</span></div>
+<div class="line"><span class="preprocessor">  #endif</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_button_config.html#a567100027bc9c3109e53d70119f82dce">width</a>;             <span class="comment">// Largura do botão em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_button_config.html#ad7810eeb2378a0277326c9dbcb9c51e0">height</a>;            <span class="comment">// Altura do botão em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_button_config.html#ac23140531f7ed4bfd5782d90a1cd6b54">radius</a>;            <span class="comment">// Raio para cantos arredondados.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_button_config.html#a84a2b6e4bbe14f7994886da0820f9205">backgroundColor</a>;   <span class="comment">// Cor exibida quando o botão está pressionado.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_button_config.html#a7e65931fb9d36f8095238f6a71be3123">textColor</a>;         <span class="comment">// Cor do texto.</span></div>
 <div class="line">};</div>
 <div class="ttc" id="abase_types_8h_html_a05ded8c943add15c9053b728a4f6b99a"><div class="ttname"><a href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a></div><div class="ttdeci">void(* functionCB_t)()</div><div class="ttdoc">Typedef for a generic callback function.</div><div class="ttdef"><b>Definition</b> baseTypes.h:17</div></div>
 <div class="ttc" id="astruct_text_button_config_html"><div class="ttname"><a href="struct_text_button_config.html">TextButtonConfig</a></div><div class="ttdoc">Estrutura de configuração para o TextButton.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:9</div></div>
-<div class="ttc" id="astruct_text_button_config_html_a567100027bc9c3109e53d70119f82dce"><div class="ttname"><a href="struct_text_button_config.html#a567100027bc9c3109e53d70119f82dce">TextButtonConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura do botão.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:10</div></div>
-<div class="ttc" id="astruct_text_button_config_html_a5bb80bf2bf59b252499df7f52c56597b"><div class="ttname"><a href="struct_text_button_config.html#a5bb80bf2bf59b252499df7f52c56597b">TextButtonConfig::callback</a></div><div class="ttdeci">functionCB_t callback</div><div class="ttdoc">Função callback para executar quando o botão é pressionado.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:16</div></div>
-<div class="ttc" id="astruct_text_button_config_html_a76eca8924db6ddbdce7009846455e39e"><div class="ttname"><a href="struct_text_button_config.html#a76eca8924db6ddbdce7009846455e39e">TextButtonConfig::text</a></div><div class="ttdeci">const char * text</div><div class="ttdoc">Texto para exibir no botão.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:15</div></div>
-<div class="ttc" id="astruct_text_button_config_html_a7e65931fb9d36f8095238f6a71be3123"><div class="ttname"><a href="struct_text_button_config.html#a7e65931fb9d36f8095238f6a71be3123">TextButtonConfig::textColor</a></div><div class="ttdeci">uint16_t textColor</div><div class="ttdoc">Cor do texto exibido no botão.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:14</div></div>
-<div class="ttc" id="astruct_text_button_config_html_a84a2b6e4bbe14f7994886da0820f9205"><div class="ttname"><a href="struct_text_button_config.html#a84a2b6e4bbe14f7994886da0820f9205">TextButtonConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor exibida quando o botão está pressionado.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:13</div></div>
-<div class="ttc" id="astruct_text_button_config_html_ac23140531f7ed4bfd5782d90a1cd6b54"><div class="ttname"><a href="struct_text_button_config.html#ac23140531f7ed4bfd5782d90a1cd6b54">TextButtonConfig::radius</a></div><div class="ttdeci">uint16_t radius</div><div class="ttdoc">Raio para os cantos arredondados do botão.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:12</div></div>
-<div class="ttc" id="astruct_text_button_config_html_ad7810eeb2378a0277326c9dbcb9c51e0"><div class="ttname"><a href="struct_text_button_config.html#ad7810eeb2378a0277326c9dbcb9c51e0">TextButtonConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura do botão.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:11</div></div>
+<div class="ttc" id="astruct_text_button_config_html_a143cc81647b690a2e7f0e36a0227ba95"><div class="ttname"><a href="struct_text_button_config.html#a143cc81647b690a2e7f0e36a0227ba95">TextButtonConfig::fontFamily</a></div><div class="ttdeci">const GFXfont * fontFamily</div><div class="ttdoc">Ponteiro para a fonte usada para o texto.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:13</div></div>
+<div class="ttc" id="astruct_text_button_config_html_a567100027bc9c3109e53d70119f82dce"><div class="ttname"><a href="struct_text_button_config.html#a567100027bc9c3109e53d70119f82dce">TextButtonConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura do botão.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:15</div></div>
+<div class="ttc" id="astruct_text_button_config_html_a5bb80bf2bf59b252499df7f52c56597b"><div class="ttname"><a href="struct_text_button_config.html#a5bb80bf2bf59b252499df7f52c56597b">TextButtonConfig::callback</a></div><div class="ttdeci">functionCB_t callback</div><div class="ttdoc">Função callback para executar quando o botão é pressionado.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:11</div></div>
+<div class="ttc" id="astruct_text_button_config_html_a76eca8924db6ddbdce7009846455e39e"><div class="ttname"><a href="struct_text_button_config.html#a76eca8924db6ddbdce7009846455e39e">TextButtonConfig::text</a></div><div class="ttdeci">const char * text</div><div class="ttdoc">Texto para exibir no botão.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:10</div></div>
+<div class="ttc" id="astruct_text_button_config_html_a7e65931fb9d36f8095238f6a71be3123"><div class="ttname"><a href="struct_text_button_config.html#a7e65931fb9d36f8095238f6a71be3123">TextButtonConfig::textColor</a></div><div class="ttdeci">uint16_t textColor</div><div class="ttdoc">Cor do texto exibido no botão.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:19</div></div>
+<div class="ttc" id="astruct_text_button_config_html_a84a2b6e4bbe14f7994886da0820f9205"><div class="ttname"><a href="struct_text_button_config.html#a84a2b6e4bbe14f7994886da0820f9205">TextButtonConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor exibida quando o botão está pressionado.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:18</div></div>
+<div class="ttc" id="astruct_text_button_config_html_ac23140531f7ed4bfd5782d90a1cd6b54"><div class="ttname"><a href="struct_text_button_config.html#ac23140531f7ed4bfd5782d90a1cd6b54">TextButtonConfig::radius</a></div><div class="ttdeci">uint16_t radius</div><div class="ttdoc">Raio para os cantos arredondados do botão.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:17</div></div>
+<div class="ttc" id="astruct_text_button_config_html_ad7810eeb2378a0277326c9dbcb9c51e0"><div class="ttname"><a href="struct_text_button_config.html#ad7810eeb2378a0277326c9dbcb9c51e0">TextButtonConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura do botão.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:16</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md890"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md899"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md891"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md900"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_text_button.html">TextButton</a>(uint16_t _x, uint16_t _y, uint8_t _screen)</div>
-<div class="ttc" id="aclass_text_button_html"><div class="ttname"><a href="class_text_button.html">TextButton</a></div><div class="ttdoc">Widget de botão com texto personalizável, cores e cantos arredondados.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:27</div></div>
+<div class="ttc" id="aclass_text_button_html"><div class="ttname"><a href="class_text_button.html">TextButton</a></div><div class="ttdoc">Widget de botão com texto personalizável, cores e cantos arredondados.</div><div class="ttdef"><b>Definition</b> wtextbutton.h:30</div></div>
 </div><!-- fragment --><p>Cria um novo botão de texto.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">_x</span>: Coordenada X do canto superior esquerdo</li>
@@ -130,11 +135,11 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, chame <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md892"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md901"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_text_button.html">~TextButton</a>()</div>
 </div><!-- fragment --><p>Libera os recursos do <a class="el" href="class_text_button.html" title="Widget de botão com texto personalizável, cores e cantos arredondados.">TextButton</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md893"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md902"></a>
 setup()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>(<span class="keyword">const</span> <a class="code hl_struct" href="struct_text_button_config.html">TextButtonConfig</a>&amp; config)</div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
@@ -142,31 +147,31 @@ setup()</h2>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_text_button_config.html" title="Estrutura de configuração para o TextButton.">TextButtonConfig</a></span> com as configurações</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md894"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md903"></a>
 onClick()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> onClick()</div>
 </div><!-- fragment --><p>Simula um clique no botão programaticamente (executa o callback).</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md895"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md904"></a>
 getEnabled()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">bool</span> getEnabled()</div>
 </div><!-- fragment --><p>Retorna se o botão está habilitado.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md896"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md905"></a>
 setEnabled()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setEnabled(<span class="keywordtype">bool</span> newState)</div>
 </div><!-- fragment --><p>Habilita ou desabilita o botão.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">newState</span>: true para habilitar, false para desabilitar</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md897"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md906"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna o botão visível.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md898"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md907"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta o botão.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md900"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md909"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente:</p>
 <ul>
@@ -178,14 +183,14 @@ hide()</h2>
 <li><span class="tt">start()</span>: Inicializa configurações</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md902"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md911"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md903"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md912"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md904"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md913"></a>
 📝 Passo 2: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
@@ -195,8 +200,8 @@ hide()</h2>
 <div class="line"> </div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdTextbutton = 2;</div>
 <div class="line"><a class="code hl_class" href="class_text_button.html">TextButton</a> *arrayTextbutton[qtdTextbutton] = {&amp;botao1, &amp;botao2};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md905"></a>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md914"></a>
 ⚙️ Passo 3: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    Serial.begin(115200);</div>
@@ -208,44 +213,47 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md906"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md915"></a>
 🔧 Passo 4: Configurar os Botões</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar Botão 1</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_text_button_config.html">TextButtonConfig</a> configBotao1 = {</div>
+<div class="line">        .text = <span class="stringliteral">&quot;OK&quot;</span>,</div>
+<div class="line">        .callback = botao1_cb,</div>
+<div class="line">        .fontFamily = &amp;RobotoBold10pt7b,</div>
 <div class="line">        .width = 100,</div>
 <div class="line">        .height = 50,</div>
 <div class="line">        .radius = 10,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a>,</div>
-<div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .text = <span class="stringliteral">&quot;OK&quot;</span>,</div>
-<div class="line">        .callback = botao1_cb</div>
+<div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    botao1.setup(configBotao1);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar Botão 2</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_text_button_config.html">TextButtonConfig</a> configBotao2 = {</div>
+<div class="line">        .text = <span class="stringliteral">&quot;Cancelar&quot;</span>,</div>
+<div class="line">        .callback = botao2_cb,</div>
+<div class="line">        .fontFamily = &amp;RobotoBold12pt7b,</div>
 <div class="line">        .width = 120,</div>
 <div class="line">        .height = 60,</div>
 <div class="line">        .radius = 15,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#a71fb63c26747d09a993538ccb8025bad">CFK_COLOR02</a>,</div>
-<div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
-<div class="line">        .text = <span class="stringliteral">&quot;Cancelar&quot;</span>,</div>
-<div class="line">        .callback = botao2_cb</div>
+<div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div>
 <div class="line">    };</div>
 <div class="line">    botao2.setup(configBotao2);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
-<div class="line">    myDisplay.setTextbutton(arrayTextbutton, qtdTextbutton);</div>
+<div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#addffa98abbc19110e8fd6f84c1c55ef7">setTextButton</a>(arrayTextbutton, qtdTextbutton);</div>
 <div class="line">}</div>
-<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:167</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a71fb63c26747d09a993538ccb8025bad"><div class="ttname"><a href="widgetsetup_8h.html#a71fb63c26747d09a993538ccb8025bad">CFK_COLOR02</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR02</div><div class="ttdef"><b>Definition</b> widgetsetup.h:168</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:131</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md907"></a>
+<div class="ttc" id="aclass_display_f_k_html_addffa98abbc19110e8fd6f84c1c55ef7"><div class="ttname"><a href="class_display_f_k.html#addffa98abbc19110e8fd6f84c1c55ef7">DisplayFK::setTextButton</a></div><div class="ttdeci">void setTextButton(TextButton *array[], uint8_t amount)</div><div class="ttdoc">Configures the text button array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:442</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:169</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a71fb63c26747d09a993538ccb8025bad"><div class="ttname"><a href="widgetsetup_8h.html#a71fb63c26747d09a993538ccb8025bad">CFK_COLOR02</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR02</div><div class="ttdef"><b>Definition</b> widgetsetup.h:170</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:133</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md916"></a>
 🔔 Passo 5: Criar Funções de Callback</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> botao1_cb() {</div>
 <div class="line">    Serial.println(<span class="stringliteral">&quot;Botão OK pressionado!&quot;</span>);</div>
@@ -254,7 +262,7 @@ hide()</h2>
 <div class="line"><span class="keywordtype">void</span> botao2_cb() {</div>
 <div class="line">    Serial.println(<span class="stringliteral">&quot;Botão Cancelar pressionado!&quot;</span>);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md908"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md917"></a>
 🖥️ Passo 6: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -262,9 +270,9 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md909"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md918"></a>
 🔄 Passo 7: Exemplo de Uso</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Simular clique programaticamente</span></div>
@@ -277,7 +285,7 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md911"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md920"></a>
 📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"> </div>
@@ -304,29 +312,31 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar botão Salvar</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_text_button_config.html">TextButtonConfig</a> configSalvar = {</div>
+<div class="line">        .text = <span class="stringliteral">&quot;Salvar&quot;</span>,</div>
+<div class="line">        .callback = salvar_callback,</div>
+<div class="line">        .fontFamily = &amp;RobotoBold10pt7b,</div>
 <div class="line">        .width = 120,</div>
 <div class="line">        .height = 50,</div>
 <div class="line">        .radius = 10,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a>,</div>
-<div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .text = <span class="stringliteral">&quot;Salvar&quot;</span>,</div>
-<div class="line">        .callback = salvar_callback</div>
+<div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    botaoSalvar.setup(configSalvar);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar botão Excluir</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_text_button_config.html">TextButtonConfig</a> configExcluir = {</div>
+<div class="line">        .text = <span class="stringliteral">&quot;Excluir&quot;</span>,</div>
+<div class="line">        .callback = excluir_callback,</div>
+<div class="line">        .fontFamily = &amp;RobotoBold10pt7b,</div>
 <div class="line">        .width = 120,</div>
 <div class="line">        .height = 50,</div>
 <div class="line">        .radius = 10,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a>,</div>
-<div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .text = <span class="stringliteral">&quot;Excluir&quot;</span>,</div>
-<div class="line">        .callback = excluir_callback</div>
+<div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    botaoExcluir.setup(configExcluir);</div>
 <div class="line">    </div>
-<div class="line">    myDisplay.setTextbutton(arrayTextbutton, qtdTextbutton);</div>
+<div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#addffa98abbc19110e8fd6f84c1c55ef7">setTextButton</a>(arrayTextbutton, qtdTextbutton);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(minhaTela);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
@@ -348,19 +358,19 @@ hide()</h2>
 <div class="line"><span class="keywordtype">void</span> excluir_callback() {</div>
 <div class="line">    Serial.println(<span class="stringliteral">&quot;Excluindo dados...&quot;</span>);</div>
 <div class="line">}</div>
-<div class="ttc" id="awidgetsetup_8h_html_a0ac5998349343bbfee105dfa5f8ee078"><div class="ttname"><a href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a></div><div class="ttdeci">constexpr uint16_t CFK_GREEN</div><div class="ttdef"><b>Definition</b> widgetsetup.h:150</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:139</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a0ac5998349343bbfee105dfa5f8ee078"><div class="ttname"><a href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a></div><div class="ttdeci">constexpr uint16_t CFK_GREEN</div><div class="ttdef"><b>Definition</b> widgetsetup.h:152</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:141</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md913"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md922"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md914"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md923"></a>
 📐 Tamanhos Recomendados</h2>
 <ul>
 <li><b>Pequenos:</b> 60x30 pixels</li>
 <li><b>Médios:</b> 100x50 pixels</li>
 <li><b>Grandes:</b> 150x70 pixels</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md915"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md924"></a>
 🎨 Cores</h2>
 <ul>
 <li>Use cores contrastantes para fundo e texto</li>
@@ -369,15 +379,17 @@ hide()</h2>
 <li>Azul para ações neutras</li>
 <li>Considere o tema claro/escuro</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md916"></a>
-🔔 Textos</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md925"></a>
+🔔 Textos e Fontes</h2>
 <ul>
 <li>Use textos curtos e claros</li>
 <li>Evite textos muito longos</li>
 <li>Considere o espaço disponível</li>
-<li>Use fontes apropriadas para o tamanho</li>
+<li>Use fontes apropriadas para o tamanho do botão</li>
+<li>Configure <span class="tt">fontFamily</span> com ponteiro para fonte GFXfont (ex: <span class="tt">&amp;RobotoBold10pt7b</span>)</li>
+<li>Fontes maiores podem não caber em botões pequenos</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md917"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md926"></a>
 ⚡ Performance</h2>
 <ul>
 <li>Redesenho apenas quando necessário</li>
@@ -385,7 +397,7 @@ hide()</h2>
 <li>Callbacks executados apenas no clique</li>
 <li>Estados internos otimizados</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md918"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md927"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Botões grandes o suficiente para toque</li>
@@ -393,15 +405,15 @@ hide()</h2>
 <li>Cores intuitivas para diferentes ações</li>
 <li>Posições lógicas na interface</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md919"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md928"></a>
 🎨 Visual</h2>
 <ul>
 <li>Bordas arredondadas para aparência moderna</li>
 <li>Cores adaptadas ao modo claro/escuro</li>
 <li>Texto centralizado automaticamente</li>
-<li>Fonte otimizada para o espaço</li>
+<li>Fonte configurável através de fontFamily</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md920"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md929"></a>
 🔒 Controle</h2>
 <ul>
 <li>Pode ser habilitado/desabilitado</li>
@@ -410,7 +422,7 @@ hide()</h2>
 <li>Estados persistentes</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md922"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md931"></a>
 🔗 Herança de WidgetBase</h1>
 <p>A classe <span class="tt"><a class="el" href="class_text_button.html" title="Widget de botão com texto personalizável, cores e cantos arredondados.">TextButton</a></span> herda métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
@@ -420,7 +432,7 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md924"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md933"></a>
 🔗 Integração com DisplayFK</h1>
 <p>O <span class="tt"><a class="el" href="class_text_button.html" title="Widget de botão com texto personalizável, cores e cantos arredondados.">TextButton</a></span> integra-se com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
@@ -431,7 +443,7 @@ hide()</h2>
 <li><b>Estados:</b> Persistência entre ciclos</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md926"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md935"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O <a class="el" href="class_text_button.html" title="Widget de botão com texto personalizável, cores e cantos arredondados.">TextButton</a> renderiza assim:</p>
 <ol type="1">
@@ -443,7 +455,7 @@ hide()</h2>
 <li><b>Texto:</b><ul>
 <li>Texto centralizado no botão</li>
 <li>Cor definida por textColor</li>
-<li>Fonte otimizada para o espaço disponível</li>
+<li>Fonte definida por fontFamily (ponteiro para GFXfont)</li>
 </ul>
 </li>
 <li><b>Adaptação ao Tema:</b><ul>
@@ -454,17 +466,17 @@ hide()</h2>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md928"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md937"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md929"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md938"></a>
 Botão não aparece</h2>
 <ul>
 <li>Verifique se chamou <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar</li>
 <li>Confirme valores de width e height &gt; 0</li>
 <li>Verifique se está na tela correta</li>
-<li>Chame <span class="tt">myDisplay.setTextbutton()</span></li>
+<li>Chame <span class="tt">myDisplay.setTextButton()</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md930"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md939"></a>
 Toque não funciona</h2>
 <ul>
 <li>Verifique se o usuário tocou dentro da área</li>
@@ -472,7 +484,7 @@ Toque não funciona</h2>
 <li>Verifique logs para erros</li>
 <li>Teste com botão maior</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md931"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md940"></a>
 Callback não executa</h2>
 <ul>
 <li>Verifique se callback foi configurado corretamente</li>
@@ -480,15 +492,17 @@ Callback não executa</h2>
 <li>Verifique logs para erros</li>
 <li>Teste com onClick() programático</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md932"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md941"></a>
 Texto não aparece</h2>
 <ul>
 <li>Verifique se o texto foi configurado</li>
 <li>Confirme textColor contrasta com backgroundColor</li>
-<li>Verifique dimensões adequadas</li>
+<li>Verifique se fontFamily foi configurado corretamente</li>
+<li>Verifique dimensões adequadas para a fonte escolhida</li>
 <li>Teste com texto mais simples</li>
+<li>Certifique-se de que a fonte está incluída no projeto</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md933"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md942"></a>
 Visual incorreto</h2>
 <ul>
 <li>Verifique cores configuradas</li>
@@ -497,7 +511,7 @@ Visual incorreto</h2>
 <li>Teste em modo claro/escuro</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md935"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md944"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>

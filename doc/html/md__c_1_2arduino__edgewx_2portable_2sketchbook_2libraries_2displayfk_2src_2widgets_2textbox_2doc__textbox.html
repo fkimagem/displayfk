@@ -75,55 +75,57 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe TextBox </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md830"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md831"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md839"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md840"></a>
 Visão Geral</h1>
-<p>A classe <span class="tt"><a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a></span> é um widget interativo que exibe e permite edição de texto através de um teclado virtual. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e trabalha em conjunto com <span class="tt">Keyboard</span> para fornecer uma interface completa de entrada de texto.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md832"></a>
+<p>A classe <span class="tt"><a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a></span> é um widget interativo que exibe e permite edição de texto através de um teclado virtual. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e trabalha em conjunto com <span class="tt"><a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a></span> para fornecer uma interface completa de entrada de texto.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md841"></a>
 Características Principais</h2>
 <ul>
 <li>📝 Exibe e edita texto (string)</li>
-<li>⌨️ Permite edição via teclado virtual (Keyboard)</li>
+<li>⌨️ Permite edição via teclado virtual (<a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a>)</li>
 <li>🎨 Cores e fontes personalizáveis</li>
 <li>📐 Dimensões configuráveis</li>
 <li>🔔 Callback para mudanças de texto</li>
 <li>👆 Suporte a toque para abrir teclado</li>
-<li>💾 Texto armazenado como <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a></li>
+<li>💾 Texto armazenado como <a class="el" href="class_char_string.html">CharString</a></li>
 <li>👁️ Pode ser mostrado/ocultado dinamicamente</li>
-<li>🔗 Integra-se com Keyboard automaticamente</li>
+<li>🔗 Integra-se com <a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a> automaticamente</li>
 <li>🌓 Suporte a modo claro/escuro</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md834"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md843"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md835"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md844"></a>
 TextBoxConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração:</p>
+<p>Estrutura que contém todos os parâmetros de configuração (ordem conforme <span class="tt"><a class="el" href="wtextbox_8h.html">wtextbox.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_text_box_config.html">TextBoxConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_box_config.html#a9ae059a69696eedc9dd11b274cf39acb">width</a>;            <span class="comment">// Largura da caixa de texto</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_box_config.html#a1968e0d7e1aad0d556e0e03981c26c20">height</a>;           <span class="comment">// Altura da caixa de texto</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_box_config.html#ab216134e0cf2cde7ea01bf6f78bd42e1">letterColor</a>;      <span class="comment">// Cor do texto</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_box_config.html#afb7f8c04e08458df5b4b4ce78c3c6372">backgroundColor</a>;  <span class="comment">// Cor de fundo</span></div>
-<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_text_box_config.html#a026c472622542692c3a8d26a7f780861">startValue</a>;    <span class="comment">// Texto inicial</span></div>
-<div class="line">  <span class="keyword">const</span> GFXfont* <a class="code hl_variable" href="struct_text_box_config.html#af140a21a89e07ad0d85bea847069b319">font</a>;       <span class="comment">// Fonte para o texto</span></div>
-<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a28d8d27ff6c544b45c0462406bf622be">functionLoadScreen_t</a> <a class="code hl_variable" href="struct_text_box_config.html#ad80d0fe3bf178cb0f563750df1bfa158">funcPtr</a>; <span class="comment">// Ponteiro para função da tela pai</span></div>
-<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_text_box_config.html#aaf12a76ca0453e60a802036615d879b7">cb</a>;           <span class="comment">// Função callback</span></div>
+<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_text_box_config.html#a026c472622542692c3a8d26a7f780861">startValue</a>;    <span class="comment">// Valor de texto inicial para exibir.</span></div>
+<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a28d8d27ff6c544b45c0462406bf622be">functionLoadScreen_t</a> <a class="code hl_variable" href="struct_text_box_config.html#ad80d0fe3bf178cb0f563750df1bfa158">funcPtr</a>; <span class="comment">// Ponteiro para função da tela pai.</span></div>
+<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_text_box_config.html#aaf12a76ca0453e60a802036615d879b7">cb</a>;           <span class="comment">// Função callback executada na interação.</span></div>
+<div class="line"><span class="preprocessor">  #if defined(USING_GRAPHIC_LIB)</span></div>
+<div class="line">  <span class="keyword">const</span> GFXfont* <a class="code hl_variable" href="struct_text_box_config.html#af140a21a89e07ad0d85bea847069b319">font</a>;       <span class="comment">// Fonte para usar no texto.</span></div>
+<div class="line"><span class="preprocessor">  #endif</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_box_config.html#a9ae059a69696eedc9dd11b274cf39acb">width</a>;            <span class="comment">// Largura da caixa de texto.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_box_config.html#a1968e0d7e1aad0d556e0e03981c26c20">height</a>;           <span class="comment">// Altura da caixa de texto.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_box_config.html#ab216134e0cf2cde7ea01bf6f78bd42e1">letterColor</a>;      <span class="comment">// Cor do texto.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_text_box_config.html#afb7f8c04e08458df5b4b4ce78c3c6372">backgroundColor</a>;  <span class="comment">// Cor de fundo.</span></div>
 <div class="line">};</div>
 <div class="ttc" id="abase_types_8h_html_a05ded8c943add15c9053b728a4f6b99a"><div class="ttname"><a href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a></div><div class="ttdeci">void(* functionCB_t)()</div><div class="ttdoc">Typedef for a generic callback function.</div><div class="ttdef"><b>Definition</b> baseTypes.h:17</div></div>
 <div class="ttc" id="abase_types_8h_html_a28d8d27ff6c544b45c0462406bf622be"><div class="ttname"><a href="base_types_8h.html#a28d8d27ff6c544b45c0462406bf622be">functionLoadScreen_t</a></div><div class="ttdeci">void(* functionLoadScreen_t)()</div><div class="ttdoc">Typedef for a callback function used to load screens on request.</div><div class="ttdef"><b>Definition</b> baseTypes.h:21</div></div>
 <div class="ttc" id="astruct_text_box_config_html"><div class="ttname"><a href="struct_text_box_config.html">TextBoxConfig</a></div><div class="ttdoc">Estrutura de configuração para o TextBox.</div><div class="ttdef"><b>Definition</b> wtextbox.h:10</div></div>
-<div class="ttc" id="astruct_text_box_config_html_a026c472622542692c3a8d26a7f780861"><div class="ttname"><a href="struct_text_box_config.html#a026c472622542692c3a8d26a7f780861">TextBoxConfig::startValue</a></div><div class="ttdeci">const char * startValue</div><div class="ttdoc">Valor de texto inicial para exibir.</div><div class="ttdef"><b>Definition</b> wtextbox.h:15</div></div>
-<div class="ttc" id="astruct_text_box_config_html_a1968e0d7e1aad0d556e0e03981c26c20"><div class="ttname"><a href="struct_text_box_config.html#a1968e0d7e1aad0d556e0e03981c26c20">TextBoxConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura da caixa de texto.</div><div class="ttdef"><b>Definition</b> wtextbox.h:12</div></div>
-<div class="ttc" id="astruct_text_box_config_html_a9ae059a69696eedc9dd11b274cf39acb"><div class="ttname"><a href="struct_text_box_config.html#a9ae059a69696eedc9dd11b274cf39acb">TextBoxConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura da caixa de texto.</div><div class="ttdef"><b>Definition</b> wtextbox.h:11</div></div>
-<div class="ttc" id="astruct_text_box_config_html_aaf12a76ca0453e60a802036615d879b7"><div class="ttname"><a href="struct_text_box_config.html#aaf12a76ca0453e60a802036615d879b7">TextBoxConfig::cb</a></div><div class="ttdeci">functionCB_t cb</div><div class="ttdoc">Função callback para executar na interação.</div><div class="ttdef"><b>Definition</b> wtextbox.h:20</div></div>
-<div class="ttc" id="astruct_text_box_config_html_ab216134e0cf2cde7ea01bf6f78bd42e1"><div class="ttname"><a href="struct_text_box_config.html#ab216134e0cf2cde7ea01bf6f78bd42e1">TextBoxConfig::letterColor</a></div><div class="ttdeci">uint16_t letterColor</div><div class="ttdoc">Cor do texto para exibir o valor.</div><div class="ttdef"><b>Definition</b> wtextbox.h:13</div></div>
-<div class="ttc" id="astruct_text_box_config_html_ad80d0fe3bf178cb0f563750df1bfa158"><div class="ttname"><a href="struct_text_box_config.html#ad80d0fe3bf178cb0f563750df1bfa158">TextBoxConfig::funcPtr</a></div><div class="ttdeci">functionLoadScreen_t funcPtr</div><div class="ttdoc">Ponteiro de função para a função de carregamento da tela pai.</div><div class="ttdef"><b>Definition</b> wtextbox.h:19</div></div>
-<div class="ttc" id="astruct_text_box_config_html_af140a21a89e07ad0d85bea847069b319"><div class="ttname"><a href="struct_text_box_config.html#af140a21a89e07ad0d85bea847069b319">TextBoxConfig::font</a></div><div class="ttdeci">const GFXfont * font</div><div class="ttdoc">Fonte para usar no texto.</div><div class="ttdef"><b>Definition</b> wtextbox.h:17</div></div>
-<div class="ttc" id="astruct_text_box_config_html_afb7f8c04e08458df5b4b4ce78c3c6372"><div class="ttname"><a href="struct_text_box_config.html#afb7f8c04e08458df5b4b4ce78c3c6372">TextBoxConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo da caixa de texto.</div><div class="ttdef"><b>Definition</b> wtextbox.h:14</div></div>
+<div class="ttc" id="astruct_text_box_config_html_a026c472622542692c3a8d26a7f780861"><div class="ttname"><a href="struct_text_box_config.html#a026c472622542692c3a8d26a7f780861">TextBoxConfig::startValue</a></div><div class="ttdeci">const char * startValue</div><div class="ttdoc">Valor de texto inicial para exibir.</div><div class="ttdef"><b>Definition</b> wtextbox.h:11</div></div>
+<div class="ttc" id="astruct_text_box_config_html_a1968e0d7e1aad0d556e0e03981c26c20"><div class="ttname"><a href="struct_text_box_config.html#a1968e0d7e1aad0d556e0e03981c26c20">TextBoxConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura da caixa de texto.</div><div class="ttdef"><b>Definition</b> wtextbox.h:18</div></div>
+<div class="ttc" id="astruct_text_box_config_html_a9ae059a69696eedc9dd11b274cf39acb"><div class="ttname"><a href="struct_text_box_config.html#a9ae059a69696eedc9dd11b274cf39acb">TextBoxConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura da caixa de texto.</div><div class="ttdef"><b>Definition</b> wtextbox.h:17</div></div>
+<div class="ttc" id="astruct_text_box_config_html_aaf12a76ca0453e60a802036615d879b7"><div class="ttname"><a href="struct_text_box_config.html#aaf12a76ca0453e60a802036615d879b7">TextBoxConfig::cb</a></div><div class="ttdeci">functionCB_t cb</div><div class="ttdoc">Função callback para executar na interação.</div><div class="ttdef"><b>Definition</b> wtextbox.h:13</div></div>
+<div class="ttc" id="astruct_text_box_config_html_ab216134e0cf2cde7ea01bf6f78bd42e1"><div class="ttname"><a href="struct_text_box_config.html#ab216134e0cf2cde7ea01bf6f78bd42e1">TextBoxConfig::letterColor</a></div><div class="ttdeci">uint16_t letterColor</div><div class="ttdoc">Cor do texto para exibir o valor.</div><div class="ttdef"><b>Definition</b> wtextbox.h:19</div></div>
+<div class="ttc" id="astruct_text_box_config_html_ad80d0fe3bf178cb0f563750df1bfa158"><div class="ttname"><a href="struct_text_box_config.html#ad80d0fe3bf178cb0f563750df1bfa158">TextBoxConfig::funcPtr</a></div><div class="ttdeci">functionLoadScreen_t funcPtr</div><div class="ttdoc">Ponteiro de função para a função de carregamento da tela pai.</div><div class="ttdef"><b>Definition</b> wtextbox.h:12</div></div>
+<div class="ttc" id="astruct_text_box_config_html_af140a21a89e07ad0d85bea847069b319"><div class="ttname"><a href="struct_text_box_config.html#af140a21a89e07ad0d85bea847069b319">TextBoxConfig::font</a></div><div class="ttdeci">const GFXfont * font</div><div class="ttdoc">Fonte para usar no texto.</div><div class="ttdef"><b>Definition</b> wtextbox.h:15</div></div>
+<div class="ttc" id="astruct_text_box_config_html_afb7f8c04e08458df5b4b4ce78c3c6372"><div class="ttname"><a href="struct_text_box_config.html#afb7f8c04e08458df5b4b4ce78c3c6372">TextBoxConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo da caixa de texto.</div><div class="ttdef"><b>Definition</b> wtextbox.h:20</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md837"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md846"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md838"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md847"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_text_box.html">TextBox</a>(uint16_t _x, uint16_t _y, uint8_t _screen)</div>
 <div class="line"><a class="code hl_class" href="class_text_box.html">TextBox</a>() <span class="comment">// Construtor padrão</span></div>
@@ -135,11 +137,11 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, chame <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md839"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md848"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_text_box.html">~TextBox</a>()</div>
 </div><!-- fragment --><p>Libera os recursos do <a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md840"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md849"></a>
 setup()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>(<span class="keyword">const</span> <a class="code hl_struct" href="struct_text_box_config.html">TextBoxConfig</a>&amp; config)</div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
@@ -147,11 +149,11 @@ setup()</h2>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_text_box_config.html" title="Estrutura de configuração para o TextBox.">TextBoxConfig</a></span> com as configurações</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md841"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md850"></a>
 getValue()</h2>
 <div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* getValue()</div>
 </div><!-- fragment --><p>Retorna o texto atual como string (const char*).</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md842"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md851"></a>
 setValue()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setValue(<span class="keyword">const</span> <span class="keywordtype">char</span>* str)</div>
 </div><!-- fragment --><p>Define o texto exibido.</p>
@@ -159,56 +161,59 @@ setValue()</h2>
 <li><span class="tt">str</span>: Novo texto</li>
 </ul>
 <p><b>Características:</b></p><ul>
-<li>Texto é armazenado internamente como <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a></li>
+<li>Texto é armazenado internamente como <a class="el" href="class_char_string.html">CharString</a></li>
 <li>Marca para redesenho</li>
 <li>Registra no log do ESP32</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md843"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md852"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna o <a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a> visível.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md844"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md853"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta o <a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a>.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md846"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md855"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente:</p>
 <ul>
-<li><span class="tt">detectTouch()</span>: Detecta toque e abre Keyboard</li>
+<li><span class="tt">detectTouch()</span>: Detecta toque e abre <a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a></li>
 <li><span class="tt">redraw()</span>: Redesenha o <a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a></li>
 <li><span class="tt">forceUpdate()</span>: Força atualização</li>
 <li><span class="tt">getCallbackFunc()</span>: Retorna callback</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md848"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md857"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md849"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md858"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md850"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md859"></a>
 🏗️ Passo 2: Configurar Cores Globais do Keyboard</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// Configurar cores do Keyboard (usado pelo TextBox)</span></div>
-<div class="line">Keyboard::m_backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#af0896c6694781bb10bd957c3738c566f">CFK_GREY3</a>;</div>
-<div class="line">Keyboard::m_letterColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>;</div>
-<div class="line">Keyboard::m_keyColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae0bdce199f0fb656fb0ad1c0656d97a0">CFK_GREY13</a>;</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae0bdce199f0fb656fb0ad1c0656d97a0"><div class="ttname"><a href="widgetsetup_8h.html#ae0bdce199f0fb656fb0ad1c0656d97a0">CFK_GREY13</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY13</div><div class="ttdef"><b>Definition</b> widgetsetup.h:212</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:131</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_af0896c6694781bb10bd957c3738c566f"><div class="ttname"><a href="widgetsetup_8h.html#af0896c6694781bb10bd957c3738c566f">CFK_GREY3</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY3</div><div class="ttdef"><b>Definition</b> widgetsetup.h:202</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md851"></a>
+<div class="line"><span class="comment">// Configurar cores do WKeyboard (usado pelo TextBox)</span></div>
+<div class="line"><a class="code hl_variable" href="class_w_keyboard.html#a863346774448136b55bfff722d2faa12">WKeyboard::m_backgroundColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#af0896c6694781bb10bd957c3738c566f">CFK_GREY3</a>;</div>
+<div class="line"><a class="code hl_variable" href="class_w_keyboard.html#a9afd85a83590c457d6b07821894a994e">WKeyboard::m_letterColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>;</div>
+<div class="line"><a class="code hl_variable" href="class_w_keyboard.html#a24678decc5a422a8c1d028ee96b5dea5">WKeyboard::m_keyColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#ae0bdce199f0fb656fb0ad1c0656d97a0">CFK_GREY13</a>;</div>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+<div class="ttc" id="aclass_w_keyboard_html_a24678decc5a422a8c1d028ee96b5dea5"><div class="ttname"><a href="class_w_keyboard.html#a24678decc5a422a8c1d028ee96b5dea5">WKeyboard::m_keyColor</a></div><div class="ttdeci">static uint16_t m_keyColor</div><div class="ttdoc">Cor de teclas estática para o teclado.</div><div class="ttdef"><b>Definition</b> wkeyboard.h:29</div></div>
+<div class="ttc" id="aclass_w_keyboard_html_a863346774448136b55bfff722d2faa12"><div class="ttname"><a href="class_w_keyboard.html#a863346774448136b55bfff722d2faa12">WKeyboard::m_backgroundColor</a></div><div class="ttdeci">static uint16_t m_backgroundColor</div><div class="ttdoc">Cor de fundo estática para o teclado.</div><div class="ttdef"><b>Definition</b> wkeyboard.h:27</div></div>
+<div class="ttc" id="aclass_w_keyboard_html_a9afd85a83590c457d6b07821894a994e"><div class="ttname"><a href="class_w_keyboard.html#a9afd85a83590c457d6b07821894a994e">WKeyboard::m_letterColor</a></div><div class="ttdeci">static uint16_t m_letterColor</div><div class="ttdoc">Cor de letras estática para o teclado.</div><div class="ttdef"><b>Definition</b> wkeyboard.h:28</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae0bdce199f0fb656fb0ad1c0656d97a0"><div class="ttname"><a href="widgetsetup_8h.html#ae0bdce199f0fb656fb0ad1c0656d97a0">CFK_GREY13</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY13</div><div class="ttdef"><b>Definition</b> widgetsetup.h:214</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:133</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_af0896c6694781bb10bd957c3738c566f"><div class="ttname"><a href="widgetsetup_8h.html#af0896c6694781bb10bd957c3738c566f">CFK_GREY3</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY3</div><div class="ttdef"><b>Definition</b> widgetsetup.h:204</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md860"></a>
 📝 Passo 3: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><span class="comment">// Criar TextBox</span></div>
 <div class="line"><a class="code hl_class" href="class_text_box.html">TextBox</a> textbox(110, 240, 0);</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdTextbox = 1;</div>
 <div class="line"><a class="code hl_class" href="class_text_box.html">TextBox</a> *arrayTextbox[qtdTextbox] = {&amp;textbox};</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md852"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md861"></a>
 ⚙️ Passo 4: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    Serial.begin(115200);</div>
@@ -220,39 +225,39 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md853"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md862"></a>
 🔧 Passo 5: Configurar o TextBox</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar TextBox</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_text_box_config.html">TextBoxConfig</a> configTextBox = {</div>
+<div class="line">        .startValue = <span class="stringliteral">&quot;Digite aqui&quot;</span>,</div>
+<div class="line">        .funcPtr = screen0,</div>
+<div class="line">        .cb = textbox_cb,</div>
+<div class="line">        .font = &amp;RobotoRegular10pt7b,</div>
 <div class="line">        .width = 101,</div>
 <div class="line">        .height = 25,</div>
 <div class="line">        .letterColor = <a class="code hl_variable" href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a>,</div>
-<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .startValue = <span class="stringliteral">&quot;Digite aqui&quot;</span>,</div>
-<div class="line">        .font = &amp;RobotoRegular10pt7b,</div>
-<div class="line">        .funcPtr = screen0,</div>
-<div class="line">        .cb = textbox_cb</div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    textbox.setup(configTextBox);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#a146a35f3f39aa36e9c7c426a6d0c4113">setTextbox</a>(arrayTextbox, qtdTextbox);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a146a35f3f39aa36e9c7c426a6d0c4113"><div class="ttname"><a href="class_display_f_k.html#a146a35f3f39aa36e9c7c426a6d0c4113">DisplayFK::setTextbox</a></div><div class="ttdeci">void setTextbox(TextBox *array[], uint8_t amount)</div><div class="ttdoc">Configures the text box array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:491</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:167</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md854"></a>
+<div class="ttc" id="aclass_display_f_k_html_a146a35f3f39aa36e9c7c426a6d0c4113"><div class="ttname"><a href="class_display_f_k.html#a146a35f3f39aa36e9c7c426a6d0c4113">DisplayFK::setTextbox</a></div><div class="ttdeci">void setTextbox(TextBox *array[], uint8_t amount)</div><div class="ttdoc">Configures the text box array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:492</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:169</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md863"></a>
 🔔 Passo 6: Criar Função de Callback</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> textbox_cb() {</div>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span>* texto = textbox.getValue();</div>
 <div class="line">    Serial.print(<span class="stringliteral">&quot;Novo texto: &quot;</span>);</div>
 <div class="line">    Serial.println(texto);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md855"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md864"></a>
 🖥️ Passo 7: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -260,9 +265,9 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md856"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md865"></a>
 🔄 Passo 8: Exemplo de Uso</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Ler texto atual</span></div>
@@ -275,7 +280,7 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md858"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md867"></a>
 📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="_roboto_regular10pt7b_8h.html">fonts/RobotoRegular/RobotoRegular10pt7b.h</a>&gt;</span></div>
@@ -284,10 +289,10 @@ hide()</h2>
 <div class="line">Arduino_DataBus *bus = <span class="keyword">nullptr</span>;</div>
 <div class="line">Arduino_GFX *gfx = <span class="keyword">nullptr</span>;</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// Configurar cores do Keyboard</span></div>
-<div class="line">Keyboard::m_backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#af0896c6694781bb10bd957c3738c566f">CFK_GREY3</a>;</div>
-<div class="line">Keyboard::m_letterColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>;</div>
-<div class="line">Keyboard::m_keyColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae0bdce199f0fb656fb0ad1c0656d97a0">CFK_GREY13</a>;</div>
+<div class="line"><span class="comment">// Configurar cores do WKeyboard</span></div>
+<div class="line"><a class="code hl_variable" href="class_w_keyboard.html#a863346774448136b55bfff722d2faa12">WKeyboard::m_backgroundColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#af0896c6694781bb10bd957c3738c566f">CFK_GREY3</a>;</div>
+<div class="line"><a class="code hl_variable" href="class_w_keyboard.html#a9afd85a83590c457d6b07821894a994e">WKeyboard::m_letterColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>;</div>
+<div class="line"><a class="code hl_variable" href="class_w_keyboard.html#a24678decc5a422a8c1d028ee96b5dea5">WKeyboard::m_keyColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#ae0bdce199f0fb656fb0ad1c0656d97a0">CFK_GREY13</a>;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Criar TextBox</span></div>
 <div class="line"><a class="code hl_class" href="class_text_box.html">TextBox</a> meuTexto(100, 100, 0);</div>
@@ -307,14 +312,14 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar TextBox</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_text_box_config.html">TextBoxConfig</a> config = {</div>
+<div class="line">        .startValue = <span class="stringliteral">&quot;Digite seu nome&quot;</span>,</div>
+<div class="line">        .funcPtr = minhaTela,</div>
+<div class="line">        .cb = texto_callback,</div>
+<div class="line">        .font = &amp;RobotoRegular10pt7b,</div>
 <div class="line">        .width = 200,</div>
 <div class="line">        .height = 40,</div>
 <div class="line">        .letterColor = <a class="code hl_variable" href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a>,</div>
-<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .startValue = <span class="stringliteral">&quot;Digite seu nome&quot;</span>,</div>
-<div class="line">        .font = &amp;RobotoRegular10pt7b,</div>
-<div class="line">        .funcPtr = minhaTela,</div>
-<div class="line">        .cb = texto_callback</div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    meuTexto.setup(config);</div>
 <div class="line">    </div>
@@ -339,16 +344,16 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="a_roboto_regular10pt7b_8h_html"><div class="ttname"><a href="_roboto_regular10pt7b_8h.html">RobotoRegular10pt7b.h</a></div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md860"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md869"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md861"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md870"></a>
 📐 Tamanhos Recomendados</h2>
 <ul>
 <li><b>Pequenos:</b> 80x25 pixels</li>
 <li><b>Médios:</b> 120x35 pixels</li>
 <li><b>Grandes:</b> 180x45 pixels</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md862"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md871"></a>
 🎨 Cores</h2>
 <ul>
 <li>Use cores contrastantes para texto e fundo</li>
@@ -356,31 +361,31 @@ hide()</h2>
 <li>Considere o tema claro/escuro</li>
 <li>Borda usa letterColor</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md863"></a>
-🔔 Integração com Keyboard</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md872"></a>
+🔔 Integração com WKeyboard</h2>
 <ul>
-<li>Keyboard abre automaticamente ao tocar no <a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a></li>
-<li>Configure cores globais do Keyboard antes de usar <a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a></li>
-<li>O Keyboard aplica o texto automaticamente ao fechar</li>
+<li><a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a> abre automaticamente ao tocar no <a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a></li>
+<li>Configure cores globais do <a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a> antes de usar <a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a></li>
+<li>O <a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a> aplica o texto automaticamente ao fechar</li>
 <li>funcPtr deve apontar para função da tela pai</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md864"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md873"></a>
 ⚡ Performance</h2>
 <ul>
-<li>Armazenamento interno eficiente com <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a></li>
+<li>Armazenamento interno eficiente com <a class="el" href="class_char_string.html">CharString</a></li>
 <li>Redesenho apenas quando necessário</li>
-<li>Integração otimizada com Keyboard</li>
+<li>Integração otimizada com <a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a></li>
 <li>Formatação inteligente do texto</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md865"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md874"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Tamanho adequado para fácil toque</li>
 <li>Texto exibido com formatação inteligente</li>
-<li>Preview no Keyboard mostra texto em tempo real</li>
+<li>Preview no <a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a> mostra texto em tempo real</li>
 <li>Callback executa quando texto é confirmado</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md866"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md875"></a>
 🎨 Display</h2>
 <ul>
 <li>Retângulo com borda simples</li>
@@ -388,16 +393,16 @@ hide()</h2>
 <li>Formatação automática do texto</li>
 <li>Padding de 3 pixels por padrão</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md867"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md876"></a>
 📝 Texto</h2>
 <ul>
 <li>Suporta strings de qualquer tamanho</li>
 <li>Formatação automática para caber no espaço</li>
-<li>Conversão interna para <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a></li>
-<li>Validação pelo Keyboard</li>
+<li>Conversão interna para <a class="el" href="class_char_string.html">CharString</a></li>
+<li>Validação pelo <a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md869"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md878"></a>
 🔗 Herança de WidgetBase</h1>
 <p>A classe <span class="tt"><a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a></span> herda métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
@@ -407,18 +412,18 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md871"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md880"></a>
 🔗 Integração com DisplayFK</h1>
 <p>O <span class="tt"><a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a></span> integra-se com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
-<li><b>Keyboard:</b> Abre automaticamente ao tocar</li>
+<li><b><a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a>:</b> Abre automaticamente ao tocar</li>
 <li><b>Callback:</b> Executado quando texto é confirmado</li>
 <li><b>Screen:</b> FuncPtr aponta para função da tela pai</li>
 <li><b>Gerenciamento:</b> Controlado pelo loop principal</li>
 <li><b>Bloqueio:</b> Outros widgets ficam bloqueados durante edição</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md873"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md882"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O <a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a> renderiza assim:</p>
 <ol type="1">
@@ -437,14 +442,14 @@ hide()</h2>
 <li><b>Otimizações:</b><ul>
 <li>Formatação inteligente do texto</li>
 <li>Redesenho apenas quando necessário</li>
-<li>Conversão otimizada para <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a></li>
+<li>Conversão otimizada para <a class="el" href="class_char_string.html">CharString</a></li>
 </ul>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md875"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md884"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md876"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md885"></a>
 TextBox não aparece</h2>
 <ul>
 <li>Verifique se chamou <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar</li>
@@ -452,23 +457,23 @@ TextBox não aparece</h2>
 <li>Verifique se está na tela correta</li>
 <li>Chame <span class="tt">myDisplay.setTextbox()</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md877"></a>
-Keyboard não abre</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md886"></a>
+WKeyboard não abre</h2>
 <ul>
 <li>Verifique se o usuário tocou no <a class="el" href="class_text_box.html" title="Widget de caixa de texto para exibir e editar texto.">TextBox</a></li>
 <li>Confirme que funcPtr foi configurado corretamente</li>
 <li>Verifique logs para erros</li>
 <li>Teste com touch inicializado</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md878"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md887"></a>
 Texto não é aplicado</h2>
 <ul>
-<li>Verifique se usuário pressionou OK no Keyboard</li>
+<li>Verifique se usuário pressionou OK no <a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a></li>
 <li>Confirme que callback está configurado</li>
 <li>Verifique logs para erros</li>
 <li>Teste com texto simples</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md879"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md888"></a>
 Texto não mostra corretamente</h2>
 <ul>
 <li>Verifique configuração de fonte</li>
@@ -476,7 +481,7 @@ Texto não mostra corretamente</h2>
 <li>Teste com texto menor</li>
 <li>Verifique width e height adequados</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md880"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md889"></a>
 Problemas de formatação</h2>
 <ul>
 <li>Textos longos podem ser truncados</li>
@@ -485,11 +490,11 @@ Problemas de formatação</h2>
 <li>Teste diferentes textos</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md882"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md891"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>
-<li><b>Keyboard:</b> <span class="tt">Keyboard</span> (<a class="el" href="wkeyboard_8h.html">src/widgets/textbox/wkeyboard.h</a>)</li>
+<li><b><a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a>:</b> <span class="tt"><a class="el" href="class_w_keyboard.html" title="Widget de teclado na tela com modos de entrada alfanumérica e numérica.">WKeyboard</a></span> (<a class="el" href="wkeyboard_8h.html">src/widgets/textbox/wkeyboard.h</a>)</li>
 <li><b><a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a> Principal:</b> <span class="tt"><a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></span> (<a class="el" href="displayfk_8h.html">src/displayfk.h</a>)</li>
 <li><b>Cores Padrão:</b> Definidas em <a class="el" href="displayfk_8h.html">displayfk.h</a></li>
 <li><b>Fontes:</b> src/fonts/RobotoRegular/ </li>

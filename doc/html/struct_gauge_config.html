@@ -86,40 +86,42 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a737ae4675ba5b5df80e975dbc69c0097" id="r_a737ae4675ba5b5df80e975dbc69c0097"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a737ae4675ba5b5df80e975dbc69c0097">width</a></td></tr>
-<tr class="memdesc:a737ae4675ba5b5df80e975dbc69c0097"><td class="mdescLeft">&#160;</td><td class="mdescRight">Largura do gauge em pixels.  <br /></td></tr>
 <tr class="memitem:a17641544e0fd70461131e9db0fe06f40" id="r_a17641544e0fd70461131e9db0fe06f40"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17641544e0fd70461131e9db0fe06f40">title</a></td></tr>
-<tr class="memdesc:a17641544e0fd70461131e9db0fe06f40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Título exibido no gauge.  <br /></td></tr>
+<tr class="memdesc:a17641544e0fd70461131e9db0fe06f40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Título exibido no gauge. Pode ser nullptr se não houver título. Máximo de MAX_TITLE_LENGTH (20) caracteres. Será truncado automaticamente se exceder.  <br /></td></tr>
 <tr class="memitem:acac8c39386a88113e86e8fc6e996c480" id="r_acac8c39386a88113e86e8fc6e996c480"><td class="memItemLeft" align="right" valign="top">const int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acac8c39386a88113e86e8fc6e996c480">intervals</a></td></tr>
-<tr class="memdesc:acac8c39386a88113e86e8fc6e996c480"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array de valores dos intervalos.  <br /></td></tr>
+<tr class="memdesc:acac8c39386a88113e86e8fc6e996c480"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array de valores dos intervalos. Deve ser nullptr se amountIntervals for 0, caso contrário deve apontar para um array válido. Valores devem estar ordenados entre minValue e maxValue.  <br /></td></tr>
 <tr class="memitem:adfdf26e36e9f5e9e8bcf9ef76b4eb2c8" id="r_adfdf26e36e9f5e9e8bcf9ef76b4eb2c8"><td class="memItemLeft" align="right" valign="top">const uint16_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adfdf26e36e9f5e9e8bcf9ef76b4eb2c8">colors</a></td></tr>
-<tr class="memdesc:adfdf26e36e9f5e9e8bcf9ef76b4eb2c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array de cores correspondentes aos intervalos.  <br /></td></tr>
-<tr class="memitem:a63817902ceaa59d1c24b8f4da302be1e" id="r_a63817902ceaa59d1c24b8f4da302be1e"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63817902ceaa59d1c24b8f4da302be1e">amountIntervals</a></td></tr>
-<tr class="memdesc:a63817902ceaa59d1c24b8f4da302be1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número de intervalos e cores.  <br /></td></tr>
-<tr class="memitem:a40a5fad875dacc61a96732fa9c8d31dd" id="r_a40a5fad875dacc61a96732fa9c8d31dd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a40a5fad875dacc61a96732fa9c8d31dd">minValue</a></td></tr>
-<tr class="memdesc:a40a5fad875dacc61a96732fa9c8d31dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Valor mínimo da faixa do gauge.  <br /></td></tr>
-<tr class="memitem:a576ccefa838fda4e9c3351154cf39eb2" id="r_a576ccefa838fda4e9c3351154cf39eb2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a576ccefa838fda4e9c3351154cf39eb2">maxValue</a></td></tr>
-<tr class="memdesc:a576ccefa838fda4e9c3351154cf39eb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Valor máximo da faixa do gauge.  <br /></td></tr>
-<tr class="memitem:a41d1d163a869c1844d656b436ccde6a5" id="r_a41d1d163a869c1844d656b436ccde6a5"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41d1d163a869c1844d656b436ccde6a5">borderColor</a></td></tr>
-<tr class="memdesc:a41d1d163a869c1844d656b436ccde6a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor da borda do gauge.  <br /></td></tr>
-<tr class="memitem:aa9007603fde8e840567e0e8fa0009785" id="r_aa9007603fde8e840567e0e8fa0009785"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9007603fde8e840567e0e8fa0009785">textColor</a></td></tr>
-<tr class="memdesc:aa9007603fde8e840567e0e8fa0009785"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor para texto e exibição de valores.  <br /></td></tr>
-<tr class="memitem:aff23199c2927d652066ed4f0fc4c9018" id="r_aff23199c2927d652066ed4f0fc4c9018"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff23199c2927d652066ed4f0fc4c9018">backgroundColor</a></td></tr>
-<tr class="memdesc:aff23199c2927d652066ed4f0fc4c9018"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor de fundo do gauge.  <br /></td></tr>
-<tr class="memitem:a51579068dc807e451c615d123785b088" id="r_a51579068dc807e451c615d123785b088"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51579068dc807e451c615d123785b088">titleColor</a></td></tr>
-<tr class="memdesc:a51579068dc807e451c615d123785b088"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor do texto do título.  <br /></td></tr>
-<tr class="memitem:a940e5d386aabeaab7d40af4de458e5fb" id="r_a940e5d386aabeaab7d40af4de458e5fb"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a940e5d386aabeaab7d40af4de458e5fb">needleColor</a></td></tr>
-<tr class="memdesc:a940e5d386aabeaab7d40af4de458e5fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor da agulha.  <br /></td></tr>
-<tr class="memitem:ae5147e566dd9d241e526ff8383cf1435" id="r_ae5147e566dd9d241e526ff8383cf1435"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae5147e566dd9d241e526ff8383cf1435">markersColor</a></td></tr>
-<tr class="memdesc:ae5147e566dd9d241e526ff8383cf1435"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor dos marcadores.  <br /></td></tr>
-<tr class="memitem:a7dde9068d86b2f159cf4d2b217c52848" id="r_a7dde9068d86b2f159cf4d2b217c52848"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7dde9068d86b2f159cf4d2b217c52848">showLabels</a></td></tr>
-<tr class="memdesc:a7dde9068d86b2f159cf4d2b217c52848"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag para mostrar rótulos de texto dos intervalos.  <br /></td></tr>
+<tr class="memdesc:adfdf26e36e9f5e9e8bcf9ef76b4eb2c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array de cores correspondentes aos intervalos (formato RGB565). Deve ter o mesmo tamanho de intervals. Deve ser nullptr se amountIntervals for 0, caso contrário deve apontar para um array válido.  <br /></td></tr>
 <tr class="memitem:a38c649f2c3a04b32ca002724b7df712d" id="r_a38c649f2c3a04b32ca002724b7df712d"><td class="memItemLeft" align="right" valign="top">const GFXfont *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38c649f2c3a04b32ca002724b7df712d">fontFamily</a></td></tr>
-<tr class="memdesc:a38c649f2c3a04b32ca002724b7df712d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fonte usada para renderização de texto.  <br /></td></tr>
+<tr class="memdesc:a38c649f2c3a04b32ca002724b7df712d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fonte usada para renderização de texto. Pode ser nullptr para usar fonte padrão. Necessário se showLabels for true ou se houver título.  <br /></td></tr>
+<tr class="memitem:a40a5fad875dacc61a96732fa9c8d31dd" id="r_a40a5fad875dacc61a96732fa9c8d31dd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a40a5fad875dacc61a96732fa9c8d31dd">minValue</a></td></tr>
+<tr class="memdesc:a40a5fad875dacc61a96732fa9c8d31dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Valor mínimo da faixa do gauge. Deve ser menor que maxValue. Se minValue &gt;= maxValue, os valores serão trocados automaticamente.  <br /></td></tr>
+<tr class="memitem:a576ccefa838fda4e9c3351154cf39eb2" id="r_a576ccefa838fda4e9c3351154cf39eb2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a576ccefa838fda4e9c3351154cf39eb2">maxValue</a></td></tr>
+<tr class="memdesc:a576ccefa838fda4e9c3351154cf39eb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Valor máximo da faixa do gauge. Deve ser maior que minValue. Define o limite superior da faixa de valores exibida.  <br /></td></tr>
+<tr class="memitem:a737ae4675ba5b5df80e975dbc69c0097" id="r_a737ae4675ba5b5df80e975dbc69c0097"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a737ae4675ba5b5df80e975dbc69c0097">width</a></td></tr>
+<tr class="memdesc:a737ae4675ba5b5df80e975dbc69c0097"><td class="mdescLeft">&#160;</td><td class="mdescRight">Largura do gauge em pixels. Deve ser maior que 0. Define a largura total do retângulo do gauge.  <br /></td></tr>
+<tr class="memitem:a17c5b27be50e181b40c00fa058cea9d2" id="r_a17c5b27be50e181b40c00fa058cea9d2"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17c5b27be50e181b40c00fa058cea9d2">height</a></td></tr>
+<tr class="memdesc:a17c5b27be50e181b40c00fa058cea9d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Altura do gauge em pixels. Define a altura total do retângulo do gauge. Usado para calcular dimensões disponíveis.  <br /></td></tr>
+<tr class="memitem:a41d1d163a869c1844d656b436ccde6a5" id="r_a41d1d163a869c1844d656b436ccde6a5"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41d1d163a869c1844d656b436ccde6a5">borderColor</a></td></tr>
+<tr class="memdesc:a41d1d163a869c1844d656b436ccde6a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor da borda do gauge (formato RGB565). Usada para desenhar as bordas do retângulo do gauge.  <br /></td></tr>
+<tr class="memitem:aa9007603fde8e840567e0e8fa0009785" id="r_aa9007603fde8e840567e0e8fa0009785"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9007603fde8e840567e0e8fa0009785">textColor</a></td></tr>
+<tr class="memdesc:aa9007603fde8e840567e0e8fa0009785"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor para texto e exibição de valores (formato RGB565). Usada para renderizar o valor numérico exibido no centro do gauge.  <br /></td></tr>
+<tr class="memitem:aff23199c2927d652066ed4f0fc4c9018" id="r_aff23199c2927d652066ed4f0fc4c9018"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff23199c2927d652066ed4f0fc4c9018">backgroundColor</a></td></tr>
+<tr class="memdesc:aff23199c2927d652066ed4f0fc4c9018"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor de fundo do gauge (formato RGB565). Usada para preencher a área interna do gauge.  <br /></td></tr>
+<tr class="memitem:a51579068dc807e451c615d123785b088" id="r_a51579068dc807e451c615d123785b088"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51579068dc807e451c615d123785b088">titleColor</a></td></tr>
+<tr class="memdesc:a51579068dc807e451c615d123785b088"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor do texto do título (formato RGB565). Usada apenas se title não for nullptr.  <br /></td></tr>
+<tr class="memitem:a940e5d386aabeaab7d40af4de458e5fb" id="r_a940e5d386aabeaab7d40af4de458e5fb"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a940e5d386aabeaab7d40af4de458e5fb">needleColor</a></td></tr>
+<tr class="memdesc:a940e5d386aabeaab7d40af4de458e5fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor da agulha (formato RGB565). Usada para desenhar a agulha que indica o valor atual.  <br /></td></tr>
+<tr class="memitem:ae5147e566dd9d241e526ff8383cf1435" id="r_ae5147e566dd9d241e526ff8383cf1435"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae5147e566dd9d241e526ff8383cf1435">markersColor</a></td></tr>
+<tr class="memdesc:ae5147e566dd9d241e526ff8383cf1435"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cor dos marcadores (formato RGB565). Usada para desenhar os marcadores graduados no arco do gauge.  <br /></td></tr>
+<tr class="memitem:a63817902ceaa59d1c24b8f4da302be1e" id="r_a63817902ceaa59d1c24b8f4da302be1e"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63817902ceaa59d1c24b8f4da302be1e">amountIntervals</a></td></tr>
+<tr class="memdesc:a63817902ceaa59d1c24b8f4da302be1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número de intervalos e cores. Máximo de MAX_SERIES (10). Se 0, não haverá intervalos coloridos. Deve corresponder ao tamanho dos arrays intervals e colors.  <br /></td></tr>
+<tr class="memitem:a7dde9068d86b2f159cf4d2b217c52848" id="r_a7dde9068d86b2f159cf4d2b217c52848"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7dde9068d86b2f159cf4d2b217c52848">showLabels</a></td></tr>
+<tr class="memdesc:a7dde9068d86b2f159cf4d2b217c52848"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag para mostrar rótulos de texto dos intervalos. Se true, exibe os valores dos intervalos como rótulos no gauge. Requer fontFamily configurado.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Estrutura de configuração para o <a class="el" href="class_gauge_super.html" title="Widget de gauge super com agulha e intervalos codificados por cores.">GaugeSuper</a>. </p>
-<p>Esta estrutura contém todos os parâmetros necessários para configurar um gauge super. Deve ser preenchida e passada para o método <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a>. </p>
+<p>Esta estrutura contém todos os parâmetros necessários para configurar um gauge super. Deve ser preenchida e passada para o método <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a>. Todos os campos são obrigatórios exceto title, intervals, colors e fontFamily que podem ser nullptr se não utilizados. </p><dl class="section note"><dt>Note</dt><dd>Os arrays intervals e colors devem ter o mesmo tamanho especificado em amountIntervals. O valor de amountIntervals não pode exceder MAX_SERIES (10). </dd></dl>
 </div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
 <a id="a63817902ceaa59d1c24b8f4da302be1e" name="a63817902ceaa59d1c24b8f4da302be1e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a63817902ceaa59d1c24b8f4da302be1e">&#9670;&#160;</a></span>amountIntervals</h2>
@@ -133,7 +135,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Número de intervalos e cores. </p>
+<p>Número de intervalos e cores. Máximo de MAX_SERIES (10). Se 0, não haverá intervalos coloridos. Deve corresponder ao tamanho dos arrays intervals e colors. </p>
 
 </div>
 </div>
@@ -149,7 +151,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Cor de fundo do gauge. </p>
+<p>Cor de fundo do gauge (formato RGB565). Usada para preencher a área interna do gauge. </p>
 
 </div>
 </div>
@@ -165,7 +167,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Cor da borda do gauge. </p>
+<p>Cor da borda do gauge (formato RGB565). Usada para desenhar as bordas do retângulo do gauge. </p>
 
 </div>
 </div>
@@ -181,7 +183,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Array de cores correspondentes aos intervalos. </p>
+<p>Array de cores correspondentes aos intervalos (formato RGB565). Deve ter o mesmo tamanho de intervals. Deve ser nullptr se amountIntervals for 0, caso contrário deve apontar para um array válido. </p>
 
 </div>
 </div>
@@ -197,7 +199,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Fonte usada para renderização de texto. </p>
+<p>Fonte usada para renderização de texto. Pode ser nullptr para usar fonte padrão. Necessário se showLabels for true ou se houver título. </p>
+
+</div>
+</div>
+<a id="a17c5b27be50e181b40c00fa058cea9d2" name="a17c5b27be50e181b40c00fa058cea9d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17c5b27be50e181b40c00fa058cea9d2">&#9670;&#160;</a></span>height</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t GaugeConfig::height</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Altura do gauge em pixels. Define a altura total do retângulo do gauge. Usado para calcular dimensões disponíveis. </p>
 
 </div>
 </div>
@@ -213,7 +231,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Array de valores dos intervalos. </p>
+<p>Array de valores dos intervalos. Deve ser nullptr se amountIntervals for 0, caso contrário deve apontar para um array válido. Valores devem estar ordenados entre minValue e maxValue. </p>
 
 </div>
 </div>
@@ -229,7 +247,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Cor dos marcadores. </p>
+<p>Cor dos marcadores (formato RGB565). Usada para desenhar os marcadores graduados no arco do gauge. </p>
 
 </div>
 </div>
@@ -245,7 +263,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Valor máximo da faixa do gauge. </p>
+<p>Valor máximo da faixa do gauge. Deve ser maior que minValue. Define o limite superior da faixa de valores exibida. </p>
 
 </div>
 </div>
@@ -261,7 +279,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Valor mínimo da faixa do gauge. </p>
+<p>Valor mínimo da faixa do gauge. Deve ser menor que maxValue. Se minValue &gt;= maxValue, os valores serão trocados automaticamente. </p>
 
 </div>
 </div>
@@ -277,7 +295,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Cor da agulha. </p>
+<p>Cor da agulha (formato RGB565). Usada para desenhar a agulha que indica o valor atual. </p>
 
 </div>
 </div>
@@ -293,7 +311,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Flag para mostrar rótulos de texto dos intervalos. </p>
+<p>Flag para mostrar rótulos de texto dos intervalos. Se true, exibe os valores dos intervalos como rótulos no gauge. Requer fontFamily configurado. </p>
 
 </div>
 </div>
@@ -309,7 +327,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Cor para texto e exibição de valores. </p>
+<p>Cor para texto e exibição de valores (formato RGB565). Usada para renderizar o valor numérico exibido no centro do gauge. </p>
 
 </div>
 </div>
@@ -325,7 +343,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Título exibido no gauge. </p>
+<p>Título exibido no gauge. Pode ser nullptr se não houver título. Máximo de MAX_TITLE_LENGTH (20) caracteres. Será truncado automaticamente se exceder. </p>
 
 </div>
 </div>
@@ -341,7 +359,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Cor do texto do título. </p>
+<p>Cor do texto do título (formato RGB565). Usada apenas se title não for nullptr. </p>
 
 </div>
 </div>
@@ -357,7 +375,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Largura do gauge em pixels. </p>
+<p>Largura do gauge em pixels. Deve ser maior que 0. Define a largura total do retângulo do gauge. </p>
 
 </div>
 </div>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['j_0',['j',['../structgsl___d_i_s_t_a_n_c_e___t_y_p_e.html#a40b9e82f244ec23499c7387d5a9a1e5c',1,'gsl_DISTANCE_TYPE']]]
+  ['keycolor_0',['keyColor',['../struct_numpad_config.html#aa1e53f8ff3ddb88acbd0d79cc5afaaea',1,'NumpadConfig']]]
 ];

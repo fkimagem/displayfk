@@ -97,34 +97,34 @@ Características Principais</h2>
 📋 Estruturas de Configuração</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md121"></a>
 CircularBarConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração da barra circular:</p>
+<p>Estrutura que contém todos os parâmetros de configuração da barra circular (ordem conforme <span class="tt"><a class="el" href="wcircularbar_8h.html">wcircularbar.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_circular_bar_config.html">CircularBarConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#ae48be0536a608e7db4bf335d57d1e558">radius</a>;           <span class="comment">// Raio da barra circular em pixels</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_circular_bar_config.html#a8662936682062ec14acaa2b8273e3dcd">minValue</a>;              <span class="comment">// Valor mínimo da faixa da barra</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_circular_bar_config.html#aa91b7ef04722370e0c1b8f321a1bf56e">maxValue</a>;              <span class="comment">// Valor máximo da faixa da barra</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#ac128ec458d93ab0a659e2bba485ad394">startAngle</a>;       <span class="comment">// Ângulo inicial da barra em graus (0-360)</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#a29ac765ae5880bc40b7a27a161178989">endAngle</a>;         <span class="comment">// Ângulo final da barra em graus (0-360)</span></div>
-<div class="line">  uint8_t <a class="code hl_variable" href="struct_circular_bar_config.html#a714a593c50de3a99d1f26c1e802d990e">thickness</a>;         <span class="comment">// Espessura da linha da barra em pixels</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#ae772f0290455a2b89a983df730b6b4b3">color</a>;            <span class="comment">// Cor RGB565 da barra quando preenchida</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#a02b228148f79025327bc28d86766e6cc">backgroundColor</a>;  <span class="comment">// Cor RGB565 de fundo da barra</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#a9e0b006d72c708e8715380b078d6cda0">textColor</a>;        <span class="comment">// Cor RGB565 do texto do valor</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#a77f0139eb861ea308c128b566afd0985">backgroundText</a>;   <span class="comment">// Cor RGB565 do fundo da área do texto</span></div>
-<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_circular_bar_config.html#a4446379a7ac982ab5c3c83591fbf7917">showValue</a>;            <span class="comment">// Flag para mostrar/ocultar o valor no centro</span></div>
-<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_circular_bar_config.html#aa7a55af6dc1d1723dfbb4a86f6cc8868">inverted</a>;             <span class="comment">// Flag para direção invertida de preenchimento</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_circular_bar_config.html#a8662936682062ec14acaa2b8273e3dcd">minValue</a>;              <span class="comment">// Valor mínimo da faixa da barra.</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_circular_bar_config.html#aa91b7ef04722370e0c1b8f321a1bf56e">maxValue</a>;              <span class="comment">// Valor máximo da faixa da barra.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#ae48be0536a608e7db4bf335d57d1e558">radius</a>;           <span class="comment">// Raio da barra circular em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#ac128ec458d93ab0a659e2bba485ad394">startAngle</a>;       <span class="comment">// Ângulo inicial da barra em graus (0-360).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#a29ac765ae5880bc40b7a27a161178989">endAngle</a>;         <span class="comment">// Ângulo final da barra em graus (0-360).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#ae772f0290455a2b89a983df730b6b4b3">color</a>;            <span class="comment">// Cor RGB565 da barra quando preenchida.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#a02b228148f79025327bc28d86766e6cc">backgroundColor</a>;  <span class="comment">// Cor RGB565 de fundo da barra.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#a9e0b006d72c708e8715380b078d6cda0">textColor</a>;        <span class="comment">// Cor RGB565 do texto do valor.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_circular_bar_config.html#a77f0139eb861ea308c128b566afd0985">backgroundText</a>;   <span class="comment">// Cor RGB565 do fundo da área do texto.</span></div>
+<div class="line">  uint8_t <a class="code hl_variable" href="struct_circular_bar_config.html#a714a593c50de3a99d1f26c1e802d990e">thickness</a>;         <span class="comment">// Espessura da linha da barra em pixels.</span></div>
+<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_circular_bar_config.html#a4446379a7ac982ab5c3c83591fbf7917">showValue</a>;            <span class="comment">// Flag para mostrar/ocultar o valor no centro.</span></div>
+<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_circular_bar_config.html#aa7a55af6dc1d1723dfbb4a86f6cc8868">inverted</a>;             <span class="comment">// Flag para direção invertida de preenchimento.</span></div>
 <div class="line">};</div>
 <div class="ttc" id="astruct_circular_bar_config_html"><div class="ttname"><a href="struct_circular_bar_config.html">CircularBarConfig</a></div><div class="ttdoc">Estrutura de configuração para o CircularBar.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:13</div></div>
-<div class="ttc" id="astruct_circular_bar_config_html_a02b228148f79025327bc28d86766e6cc"><div class="ttname"><a href="struct_circular_bar_config.html#a02b228148f79025327bc28d86766e6cc">CircularBarConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor RGB565 de fundo da barra circular.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:21</div></div>
+<div class="ttc" id="astruct_circular_bar_config_html_a02b228148f79025327bc28d86766e6cc"><div class="ttname"><a href="struct_circular_bar_config.html#a02b228148f79025327bc28d86766e6cc">CircularBarConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor RGB565 de fundo da barra circular.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:20</div></div>
 <div class="ttc" id="astruct_circular_bar_config_html_a29ac765ae5880bc40b7a27a161178989"><div class="ttname"><a href="struct_circular_bar_config.html#a29ac765ae5880bc40b7a27a161178989">CircularBarConfig::endAngle</a></div><div class="ttdeci">uint16_t endAngle</div><div class="ttdoc">Ângulo final da barra circular em graus.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:18</div></div>
 <div class="ttc" id="astruct_circular_bar_config_html_a4446379a7ac982ab5c3c83591fbf7917"><div class="ttname"><a href="struct_circular_bar_config.html#a4446379a7ac982ab5c3c83591fbf7917">CircularBarConfig::showValue</a></div><div class="ttdeci">bool showValue</div><div class="ttdoc">Flag para mostrar/ocultar o texto do valor.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:24</div></div>
-<div class="ttc" id="astruct_circular_bar_config_html_a714a593c50de3a99d1f26c1e802d990e"><div class="ttname"><a href="struct_circular_bar_config.html#a714a593c50de3a99d1f26c1e802d990e">CircularBarConfig::thickness</a></div><div class="ttdeci">uint8_t thickness</div><div class="ttdoc">Espessura da linha da barra circular em pixels.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:19</div></div>
-<div class="ttc" id="astruct_circular_bar_config_html_a77f0139eb861ea308c128b566afd0985"><div class="ttname"><a href="struct_circular_bar_config.html#a77f0139eb861ea308c128b566afd0985">CircularBarConfig::backgroundText</a></div><div class="ttdeci">uint16_t backgroundText</div><div class="ttdoc">Cor RGB565 do fundo da área do texto.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:23</div></div>
-<div class="ttc" id="astruct_circular_bar_config_html_a8662936682062ec14acaa2b8273e3dcd"><div class="ttname"><a href="struct_circular_bar_config.html#a8662936682062ec14acaa2b8273e3dcd">CircularBarConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdoc">Valor mínimo da faixa da barra.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:15</div></div>
-<div class="ttc" id="astruct_circular_bar_config_html_a9e0b006d72c708e8715380b078d6cda0"><div class="ttname"><a href="struct_circular_bar_config.html#a9e0b006d72c708e8715380b078d6cda0">CircularBarConfig::textColor</a></div><div class="ttdeci">uint16_t textColor</div><div class="ttdoc">Cor RGB565 do texto que exibe o valor.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:22</div></div>
+<div class="ttc" id="astruct_circular_bar_config_html_a714a593c50de3a99d1f26c1e802d990e"><div class="ttname"><a href="struct_circular_bar_config.html#a714a593c50de3a99d1f26c1e802d990e">CircularBarConfig::thickness</a></div><div class="ttdeci">uint8_t thickness</div><div class="ttdoc">Espessura da linha da barra circular em pixels.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:23</div></div>
+<div class="ttc" id="astruct_circular_bar_config_html_a77f0139eb861ea308c128b566afd0985"><div class="ttname"><a href="struct_circular_bar_config.html#a77f0139eb861ea308c128b566afd0985">CircularBarConfig::backgroundText</a></div><div class="ttdeci">uint16_t backgroundText</div><div class="ttdoc">Cor RGB565 do fundo da área do texto.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:22</div></div>
+<div class="ttc" id="astruct_circular_bar_config_html_a8662936682062ec14acaa2b8273e3dcd"><div class="ttname"><a href="struct_circular_bar_config.html#a8662936682062ec14acaa2b8273e3dcd">CircularBarConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdoc">Valor mínimo da faixa da barra.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:14</div></div>
+<div class="ttc" id="astruct_circular_bar_config_html_a9e0b006d72c708e8715380b078d6cda0"><div class="ttname"><a href="struct_circular_bar_config.html#a9e0b006d72c708e8715380b078d6cda0">CircularBarConfig::textColor</a></div><div class="ttdeci">uint16_t textColor</div><div class="ttdoc">Cor RGB565 do texto que exibe o valor.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:21</div></div>
 <div class="ttc" id="astruct_circular_bar_config_html_aa7a55af6dc1d1723dfbb4a86f6cc8868"><div class="ttname"><a href="struct_circular_bar_config.html#aa7a55af6dc1d1723dfbb4a86f6cc8868">CircularBarConfig::inverted</a></div><div class="ttdeci">bool inverted</div><div class="ttdoc">Flag para indicar se a direção de preenchimento está invertida.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:25</div></div>
-<div class="ttc" id="astruct_circular_bar_config_html_aa91b7ef04722370e0c1b8f321a1bf56e"><div class="ttname"><a href="struct_circular_bar_config.html#aa91b7ef04722370e0c1b8f321a1bf56e">CircularBarConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdoc">Valor máximo da faixa da barra.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:16</div></div>
+<div class="ttc" id="astruct_circular_bar_config_html_aa91b7ef04722370e0c1b8f321a1bf56e"><div class="ttname"><a href="struct_circular_bar_config.html#aa91b7ef04722370e0c1b8f321a1bf56e">CircularBarConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdoc">Valor máximo da faixa da barra.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:15</div></div>
 <div class="ttc" id="astruct_circular_bar_config_html_ac128ec458d93ab0a659e2bba485ad394"><div class="ttname"><a href="struct_circular_bar_config.html#ac128ec458d93ab0a659e2bba485ad394">CircularBarConfig::startAngle</a></div><div class="ttdeci">uint16_t startAngle</div><div class="ttdoc">Ângulo inicial da barra circular em graus.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:17</div></div>
-<div class="ttc" id="astruct_circular_bar_config_html_ae48be0536a608e7db4bf335d57d1e558"><div class="ttname"><a href="struct_circular_bar_config.html#ae48be0536a608e7db4bf335d57d1e558">CircularBarConfig::radius</a></div><div class="ttdeci">uint16_t radius</div><div class="ttdoc">Raio da barra circular em pixels.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:14</div></div>
-<div class="ttc" id="astruct_circular_bar_config_html_ae772f0290455a2b89a983df730b6b4b3"><div class="ttname"><a href="struct_circular_bar_config.html#ae772f0290455a2b89a983df730b6b4b3">CircularBarConfig::color</a></div><div class="ttdeci">uint16_t color</div><div class="ttdoc">Cor RGB565 da barra circular quando preenchida.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:20</div></div>
+<div class="ttc" id="astruct_circular_bar_config_html_ae48be0536a608e7db4bf335d57d1e558"><div class="ttname"><a href="struct_circular_bar_config.html#ae48be0536a608e7db4bf335d57d1e558">CircularBarConfig::radius</a></div><div class="ttdeci">uint16_t radius</div><div class="ttdoc">Raio da barra circular em pixels.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:16</div></div>
+<div class="ttc" id="astruct_circular_bar_config_html_ae772f0290455a2b89a983df730b6b4b3"><div class="ttname"><a href="struct_circular_bar_config.html#ae772f0290455a2b89a983df730b6b4b3">CircularBarConfig::color</a></div><div class="ttdeci">uint16_t color</div><div class="ttdoc">Cor RGB565 da barra circular quando preenchida.</div><div class="ttdef"><b>Definition</b> wcircularbar.h:19</div></div>
 </div><!-- fragment --><hr  />
 <h1 class="doxsection"><a class="anchor" id="autotoc_md123"></a>
 🔧 Métodos Públicos</h1>
@@ -169,6 +169,61 @@ setValue()</h2>
 <li>Registra o evento no log do ESP32</li>
 </ul>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md128"></a>
+setMinValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setMinValue(<span class="keywordtype">int</span> newValue)</div>
+</div><!-- fragment --><p>Define o valor mínimo da faixa da barra circular.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newValue</span>: Novo valor mínimo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo da barra</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa do arco antes de redesenhar</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md129"></a>
+setMaxValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setMaxValue(<span class="keywordtype">int</span> newValue)</div>
+</div><!-- fragment --><p>Define o valor máximo da faixa da barra circular.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newValue</span>: Novo valor máximo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo da barra</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa do arco antes de redesenhar</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md130"></a>
+getMinValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> getMinValue()</div>
+</div><!-- fragment --><p>Retorna o valor mínimo atual da faixa da barra circular.</p>
+<p><b>Retorno:</b></p><ul>
+<li>Valor mínimo configurado</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md131"></a>
+getMaxValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> getMaxValue()</div>
+</div><!-- fragment --><p>Retorna o valor máximo atual da faixa da barra circular.</p>
+<p><b>Retorno:</b></p><ul>
+<li>Valor máximo configurado</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md132"></a>
+setScale()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setScale(<span class="keywordtype">int</span> newMinValue, <span class="keywordtype">int</span> newMaxValue)</div>
+</div><!-- fragment --><p>Define simultaneamente os valores mínimo e máximo da faixa da barra circular.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newMinValue</span>: Novo valor mínimo</li>
+<li><span class="tt">newMaxValue</span>: Novo valor máximo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo da barra</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa do arco antes de redesenhar</li>
+<li>Útil para mudanças dinâmicas de escala</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md133"></a>
 drawBackground()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> drawBackground()</div>
 </div><!-- fragment --><p>Desenha o fundo da barra circular. <b>Este método deve ser chamado uma vez após <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a> para inicializar o fundo.</b></p>
@@ -177,16 +232,16 @@ drawBackground()</h2>
 <li>Inicializa a exibição da barra</li>
 <li>Deve ser chamado antes de usar <span class="tt">setValue()</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md129"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md134"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna a barra circular visível na tela.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md130"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md135"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta a barra circular da tela.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md132"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md137"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente e não precisam ser invocados diretamente:</p>
 <ul>
@@ -194,17 +249,28 @@ hide()</h2>
 <li><span class="tt">redraw()</span>: Redesenha a barra na tela com renderização eficiente</li>
 <li><span class="tt">forceUpdate()</span>: Força uma atualização imediata</li>
 <li><span class="tt">getCallbackFunc()</span>: Retorna a função callback</li>
-<li><span class="tt">start()</span>: Aplica validações e inicializações</li>
+<li><span class="tt">start()</span>: Aplica validações e inicializações (não implementado no código atual)</li>
+<li><span class="tt">sortValues()</span>: Ordena valores min/max se necessário (chamado automaticamente)</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md138"></a>
+Membros Privados</h2>
+<ul>
+<li><span class="tt">m_value</span>: Valor atual a ser exibido na barra</li>
+<li><span class="tt">m_lastValue</span>: Último valor representado (usado para otimização de redesenho incremental)</li>
+<li><span class="tt">m_rotation</span>: Ângulo de rotação do gauge (onde 0 está no meio direito)</li>
+<li><span class="tt">m_lastArea</span>: Última área calculada para o rótulo (usado para otimização de texto)</li>
+<li><span class="tt">m_config</span>: Estrutura contendo configuração completa da barra circular</li>
+<li><span class="tt">m_changedScale</span>: Flag que indica quando a escala foi alterada (força redesenho completo do arco)</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md134"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md140"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md135"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md141"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias (SPI, display, etc.)</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md136"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md142"></a>
 🏗️ Passo 2: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
@@ -214,12 +280,12 @@ hide()</h2>
 <div class="line"><span class="comment">// Criar array de ponteiros</span></div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdCircBar = 1;</div>
 <div class="line"><a class="code hl_class" href="class_circular_bar.html">CircularBar</a> *arrayCircularbar[qtdCircBar] = {&amp;circload};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md137"></a>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md143"></a>
 📝 Passo 3: Prototipar Funções de Callback</h2>
 <div class="fragment"><div class="line"><span class="comment">// CircularBar não usa callbacks por padrão, mas pode ser configurado</span></div>
 <div class="line"><span class="keywordtype">void</span> circularbar_cb();</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md138"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md144"></a>
 ⚙️ Passo 4: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    <span class="comment">// ... configuração do display e touch ...</span></div>
@@ -230,24 +296,24 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md139"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md145"></a>
 🔧 Passo 5: Configurar os Widgets</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar barra circular</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_circular_bar_config.html">CircularBarConfig</a> configCirculaBar = {</div>
-<div class="line">        .radius = 40,</div>
 <div class="line">        .minValue = 0,</div>
 <div class="line">        .maxValue = 100,</div>
+<div class="line">        .radius = 40,</div>
 <div class="line">        .startAngle = 0,</div>
 <div class="line">        .endAngle = 360,</div>
-<div class="line">        .thickness = 10,</div>
 <div class="line">        .color = <a class="code hl_variable" href="widgetsetup_8h.html#a067e01c37384dbb6e7cc57d82fbf8a5e">CFK_COLOR09</a>,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
 <div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
 <div class="line">        .backgroundText = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
+<div class="line">        .thickness = 10,</div>
 <div class="line">        .showValue = <span class="keyword">true</span>,</div>
 <div class="line">        .inverted = <span class="keyword">false</span></div>
 <div class="line">    };</div>
@@ -259,18 +325,18 @@ hide()</h2>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#a11b11f7bb9062b41915e275b0189bb81">setCircularBar</a>(arrayCircularbar, qtdCircBar);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a11b11f7bb9062b41915e275b0189bb81"><div class="ttname"><a href="class_display_f_k.html#a11b11f7bb9062b41915e275b0189bb81">DisplayFK::setCircularBar</a></div><div class="ttdeci">void setCircularBar(CircularBar *array[], uint8_t amount)</div><div class="ttdoc">Configures the circular bar array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:204</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a067e01c37384dbb6e7cc57d82fbf8a5e"><div class="ttname"><a href="widgetsetup_8h.html#a067e01c37384dbb6e7cc57d82fbf8a5e">CFK_COLOR09</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR09</div><div class="ttdef"><b>Definition</b> widgetsetup.h:175</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:131</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md140"></a>
+<div class="ttc" id="aclass_display_f_k_html_a11b11f7bb9062b41915e275b0189bb81"><div class="ttname"><a href="class_display_f_k.html#a11b11f7bb9062b41915e275b0189bb81">DisplayFK::setCircularBar</a></div><div class="ttdeci">void setCircularBar(CircularBar *array[], uint8_t amount)</div><div class="ttdoc">Configures the circular bar array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:205</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a067e01c37384dbb6e7cc57d82fbf8a5e"><div class="ttname"><a href="widgetsetup_8h.html#a067e01c37384dbb6e7cc57d82fbf8a5e">CFK_COLOR09</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR09</div><div class="ttdef"><b>Definition</b> widgetsetup.h:177</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:133</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md146"></a>
 🔔 Passo 6: Criar Funções de Callback (Opcional)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> circularbar_cb() {</div>
 <div class="line">    <span class="comment">// CircularBar normalmente não usa callbacks</span></div>
 <div class="line">    <span class="comment">// Mas pode ser configurado se necessário</span></div>
 <div class="line">    Serial.println(<span class="stringliteral">&quot;CircularBar callback executado&quot;</span>);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md141"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md147"></a>
 🖥️ Passo 7: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -279,9 +345,9 @@ hide()</h2>
 <div class="line">    <span class="comment">// Desenhar todos os widgets na tela 0</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md142"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md148"></a>
 🔄 Passo 8: Atualizar Valor (Exemplo de Uso)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Simular mudança de valor</span></div>
@@ -303,7 +369,7 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md144"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md150"></a>
 📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"> </div>
@@ -366,18 +432,18 @@ hide()</h2>
 <div class="line">    <a class="code hl_variable" href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>;</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="awidgetsetup_8h_html_adeef1b93c803217f6e5d26443a6634e0"><div class="ttname"><a href="widgetsetup_8h.html#adeef1b93c803217f6e5d26443a6634e0">CFK_GREY7</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY7</div><div class="ttdef"><b>Definition</b> widgetsetup.h:206</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_adeef1b93c803217f6e5d26443a6634e0"><div class="ttname"><a href="widgetsetup_8h.html#adeef1b93c803217f6e5d26443a6634e0">CFK_GREY7</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY7</div><div class="ttdef"><b>Definition</b> widgetsetup.h:208</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md146"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md152"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md147"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md153"></a>
 📐 Tamanhos Recomendados</h2>
 <ul>
 <li><b>Pequenos:</b> Raio 20-30 pixels (ícones discretos)</li>
 <li><b>Médios:</b> Raio 40-60 pixels (uso geral)</li>
 <li><b>Grandes:</b> Raio 70-100 pixels (elementos principais)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md148"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md154"></a>
 🎨 Cores</h2>
 <ul>
 <li>Use cores contrastantes entre barra e fundo</li>
@@ -385,22 +451,23 @@ hide()</h2>
 <li>Texto deve contrastar com o fundo da área central</li>
 <li>Cores vibrantes para a barra preenchida</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md149"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md155"></a>
 🔔 Callbacks</h2>
 <ul>
 <li><a class="el" href="class_circular_bar.html" title="Widget de barra circular que exibe um valor como um arco preenchido dentro de uma faixa especificada.">CircularBar</a> normalmente não usa callbacks</li>
 <li>Mantenha as callbacks curtas se configuradas</li>
 <li>Use para notificar mudanças importantes de valor</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md150"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md156"></a>
 ⚡ Performance</h2>
 <ul>
 <li>Renderização eficiente com atualizações incrementais</li>
 <li>Desenha apenas a diferença entre valores</li>
 <li>Evite atualizações muito frequentes</li>
 <li>Use <span class="tt">drawBackground()</span> apenas uma vez</li>
+<li>Mudanças de escala redesenham completamente a barra</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md151"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md157"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Deixe espaço suficiente ao redor da barra</li>
@@ -408,7 +475,7 @@ hide()</h2>
 <li>Considere a legibilidade do texto no centro</li>
 <li>Teste diferentes ângulos de início e fim</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md152"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md158"></a>
 🎨 Design Visual</h2>
 <ul>
 <li>A barra desenha um arco circular preenchido</li>
@@ -417,7 +484,7 @@ hide()</h2>
 <li>Centro: círculo com valor numérico (se habilitado)</li>
 <li>Espessura ajustável para diferentes estilos</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md153"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md159"></a>
 📊 Configuração de Ângulos</h2>
 <ul>
 <li><b>0°</b>: Direita (3 horas)</li>
@@ -426,8 +493,16 @@ hide()</h2>
 <li><b>270°</b>: Cima (12 horas)</li>
 <li><b>360°</b>: Volta completa</li>
 </ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md160"></a>
+🔔 Valores e Escala</h2>
+<ul>
+<li>Faixa configurável dinamicamente com <span class="tt">setMinValue()</span>, <span class="tt">setMaxValue()</span> ou <span class="tt">setScale()</span></li>
+<li>Consulta de valores com <span class="tt">getMinValue()</span> e <span class="tt">getMaxValue()</span></li>
+<li>Ordenação automática de valores min/max</li>
+<li>Valores limitados automaticamente dentro da faixa</li>
+</ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md155"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md162"></a>
 🔗 Herança de WidgetBase</h1>
 <p>A classe <span class="tt"><a class="el" href="class_circular_bar.html" title="Widget de barra circular que exibe um valor como um arco preenchido dentro de uma faixa especificada.">CircularBar</a></span> herda todos os métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
@@ -437,7 +512,7 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho automático</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md157"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md164"></a>
 🔗 Integração com DisplayFK</h1>
 <p>O <span class="tt"><a class="el" href="class_circular_bar.html" title="Widget de barra circular que exibe um valor como um arco preenchido dentro de uma faixa especificada.">CircularBar</a></span> integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
@@ -448,7 +523,7 @@ hide()</h2>
 <li><b>Fontes:</b> Usa RobotoBold10pt7b para exibição de valores</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md159"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md166"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O <span class="tt"><a class="el" href="class_circular_bar.html" title="Widget de barra circular que exibe um valor como um arco preenchido dentro de uma faixa especificada.">CircularBar</a></span> é renderizado em camadas:</p>
 <ol type="1">
@@ -470,16 +545,18 @@ hide()</h2>
 </ul>
 </li>
 <li><b>Otimizações</b>:<ul>
-<li>Desenha apenas a diferença entre valores</li>
+<li>Desenha apenas a diferença entre valores (usando <span class="tt">m_lastValue</span>)</li>
+<li>Flag <span class="tt">m_changedScale</span> força redesenho completo do arco quando a escala muda</li>
 <li>Debounce para evitar redesenhos excessivos</li>
-<li>Validações de estado antes de renderizar</li>
+<li>Validações de estado antes de renderizar (TFT, visibilidade, inicialização, etc.)</li>
+<li>Usa <span class="tt">m_lastArea</span> para otimizar atualização do texto central</li>
 </ul>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md161"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md168"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md162"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md169"></a>
 Barra não aparece na tela</h2>
 <ul>
 <li>Verifique se chamou <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar o objeto</li>
@@ -488,7 +565,7 @@ Barra não aparece na tela</h2>
 <li>Certifique-se de chamar <span class="tt">myDisplay.setCircularBar()</span></li>
 <li>Confirme que o raio é maior que 0</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md163"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md170"></a>
 Barra não atualiza o valor</h2>
 <ul>
 <li>Verifique se chamou <span class="tt">setValue()</span> com novo valor</li>
@@ -496,7 +573,15 @@ Barra não atualiza o valor</h2>
 <li>Verifique se o widget está habilitado</li>
 <li>Certifique-se de que <span class="tt">drawBackground()</span> foi chamado</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md164"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md171"></a>
+Mudança de escala não funciona</h2>
+<ul>
+<li>Use <span class="tt">setScale()</span> para alterar min/max simultaneamente</li>
+<li>Ou use <span class="tt">setMinValue()</span> e <span class="tt">setMaxValue()</span> separadamente</li>
+<li>Valores são ordenados automaticamente se min &gt; max</li>
+<li>A barra é redesenhada completamente quando a escala muda</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md172"></a>
 Texto não aparece no centro</h2>
 <ul>
 <li>Verifique se <span class="tt">showValue = true</span> na configuração</li>
@@ -504,7 +589,7 @@ Texto não aparece no centro</h2>
 <li>Verifique se as cores do texto contrastam com o fundo</li>
 <li>Certifique-se de que a fonte está disponível</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md165"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md173"></a>
 Problemas visuais</h2>
 <ul>
 <li>Verifique se as cores contrastam adequadamente</li>
@@ -512,7 +597,7 @@ Problemas visuais</h2>
 <li>Verifique se os ângulos estão configurados corretamente</li>
 <li>Para barras grossas, considere ajustar a espessura</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md166"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md174"></a>
 Performance lenta</h2>
 <ul>
 <li>Evite atualizações muito frequentes de valor</li>
@@ -520,7 +605,7 @@ Performance lenta</h2>
 <li>Considere aumentar o debounce se necessário</li>
 <li>Verifique se não há muitos widgets na mesma tela</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md167"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md175"></a>
 Ângulos incorretos</h2>
 <ul>
 <li>Lembre-se: 0° = direita, 90° = baixo, 180° = esquerda, 270° = cima</li>
@@ -529,7 +614,7 @@ Performance lenta</h2>
 <li>Teste diferentes configurações de ângulo</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md169"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md177"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>

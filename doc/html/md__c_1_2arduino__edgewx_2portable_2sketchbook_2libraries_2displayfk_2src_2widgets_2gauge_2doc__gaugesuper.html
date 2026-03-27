@@ -75,11 +75,11 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe GaugeSuper </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md170"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md171"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md178"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md179"></a>
 Visão Geral</h1>
 <p>A classe <span class="tt"><a class="el" href="class_gauge_super.html" title="Widget de gauge super com agulha e intervalos codificados por cores.">GaugeSuper</a></span> é um widget visual avançado que exibe um gauge semicircular com agulha móvel, intervalos codificados por cores, marcadores graduados e rótulos opcionais. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece uma interface gráfica completa para criar gauges profissionais em displays.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md172"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md180"></a>
 Características Principais</h2>
 <ul>
 <li>🎯 Gauge semicircular com agulha animada</li>
@@ -96,51 +96,55 @@ Características Principais</h2>
 <li>💾 Gerenciamento automático de memória</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md174"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md182"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md175"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md183"></a>
 GaugeConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração do gauge:</p>
+<p>Estrutura que contém todos os parâmetros de configuração do gauge (ordem conforme <span class="tt"><a class="el" href="wgaugesuper_8h.html">wgaugesuper.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_gauge_config.html">GaugeConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#a737ae4675ba5b5df80e975dbc69c0097">width</a>;                      <span class="comment">// Largura do gauge em pixels</span></div>
-<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_gauge_config.html#a17641544e0fd70461131e9db0fe06f40">title</a>;                   <span class="comment">// Título exibido no gauge (máx 20 caracteres)</span></div>
-<div class="line">  <span class="keyword">const</span> <span class="keywordtype">int</span>* <a class="code hl_variable" href="struct_gauge_config.html#acac8c39386a88113e86e8fc6e996c480">intervals</a>;                <span class="comment">// Array de valores dos intervalos</span></div>
-<div class="line">  <span class="keyword">const</span> uint16_t* <a class="code hl_variable" href="struct_gauge_config.html#adfdf26e36e9f5e9e8bcf9ef76b4eb2c8">colors</a>;              <span class="comment">// Array de cores para cada intervalo</span></div>
-<div class="line">  uint8_t <a class="code hl_variable" href="struct_gauge_config.html#a63817902ceaa59d1c24b8f4da302be1e">amountIntervals</a>;             <span class="comment">// Número de intervalos/cores (máx 10)</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_gauge_config.html#a40a5fad875dacc61a96732fa9c8d31dd">minValue</a>;                        <span class="comment">// Valor mínimo da faixa</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_gauge_config.html#a576ccefa838fda4e9c3351154cf39eb2">maxValue</a>;                        <span class="comment">// Valor máximo da faixa</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#a41d1d163a869c1844d656b436ccde6a5">borderColor</a>;                <span class="comment">// Cor RGB565 da borda</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#aa9007603fde8e840567e0e8fa0009785">textColor</a>;                  <span class="comment">// Cor RGB565 do texto</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#aff23199c2927d652066ed4f0fc4c9018">backgroundColor</a>;            <span class="comment">// Cor RGB565 de fundo</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#a51579068dc807e451c615d123785b088">titleColor</a>;                 <span class="comment">// Cor RGB565 do título</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#a940e5d386aabeaab7d40af4de458e5fb">needleColor</a>;                <span class="comment">// Cor RGB565 da agulha</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#ae5147e566dd9d241e526ff8383cf1435">markersColor</a>;               <span class="comment">// Cor RGB565 dos marcadores</span></div>
-<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_gauge_config.html#a7dde9068d86b2f159cf4d2b217c52848">showLabels</a>;                     <span class="comment">// Flag para mostrar rótulos</span></div>
-<div class="line">  <span class="keyword">const</span> GFXfont* <a class="code hl_variable" href="struct_gauge_config.html#a38c649f2c3a04b32ca002724b7df712d">fontFamily</a>;          <span class="comment">// Fonte para texto</span></div>
+<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_gauge_config.html#a17641544e0fd70461131e9db0fe06f40">title</a>;                   <span class="comment">// Título exibido no gauge (máx 20 caracteres, pode ser nullptr).</span></div>
+<div class="line">  <span class="keyword">const</span> <span class="keywordtype">int</span>* <a class="code hl_variable" href="struct_gauge_config.html#acac8c39386a88113e86e8fc6e996c480">intervals</a>;                <span class="comment">// Array de valores dos intervalos (nullptr se amountIntervals = 0).</span></div>
+<div class="line">  <span class="keyword">const</span> uint16_t* <a class="code hl_variable" href="struct_gauge_config.html#adfdf26e36e9f5e9e8bcf9ef76b4eb2c8">colors</a>;              <span class="comment">// Array de cores para cada intervalo (nullptr se amountIntervals = 0).</span></div>
+<div class="line"><span class="preprocessor">  #if defined(USING_GRAPHIC_LIB)</span></div>
+<div class="line">  <span class="keyword">const</span> GFXfont* <a class="code hl_variable" href="struct_gauge_config.html#a38c649f2c3a04b32ca002724b7df712d">fontFamily</a>;           <span class="comment">// Fonte para texto (pode ser nullptr; necessário se showLabels = true).</span></div>
+<div class="line"><span class="preprocessor">  #endif</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_gauge_config.html#a40a5fad875dacc61a96732fa9c8d31dd">minValue</a>;                        <span class="comment">// Valor mínimo da faixa.</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_gauge_config.html#a576ccefa838fda4e9c3351154cf39eb2">maxValue</a>;                        <span class="comment">// Valor máximo da faixa.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#a737ae4675ba5b5df80e975dbc69c0097">width</a>;                      <span class="comment">// Largura do gauge em pixels (deve ser &gt; 0).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#a17c5b27be50e181b40c00fa058cea9d2">height</a>;                     <span class="comment">// Altura do gauge em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#a41d1d163a869c1844d656b436ccde6a5">borderColor</a>;                <span class="comment">// Cor RGB565 da borda.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#aa9007603fde8e840567e0e8fa0009785">textColor</a>;                  <span class="comment">// Cor RGB565 do texto e valores.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#aff23199c2927d652066ed4f0fc4c9018">backgroundColor</a>;           <span class="comment">// Cor RGB565 de fundo.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#a51579068dc807e451c615d123785b088">titleColor</a>;                 <span class="comment">// Cor RGB565 do título.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#a940e5d386aabeaab7d40af4de458e5fb">needleColor</a>;                <span class="comment">// Cor RGB565 da agulha.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_gauge_config.html#ae5147e566dd9d241e526ff8383cf1435">markersColor</a>;               <span class="comment">// Cor RGB565 dos marcadores.</span></div>
+<div class="line">  uint8_t <a class="code hl_variable" href="struct_gauge_config.html#a63817902ceaa59d1c24b8f4da302be1e">amountIntervals</a>;             <span class="comment">// Número de intervalos/cores (máx 10, 0 = sem intervalos).</span></div>
+<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_gauge_config.html#a7dde9068d86b2f159cf4d2b217c52848">showLabels</a>;                     <span class="comment">// Flag para mostrar rótulos (requer fontFamily).</span></div>
 <div class="line">};</div>
-<div class="ttc" id="astruct_gauge_config_html"><div class="ttname"><a href="struct_gauge_config.html">GaugeConfig</a></div><div class="ttdoc">Estrutura de configuração para o GaugeSuper.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:12</div></div>
-<div class="ttc" id="astruct_gauge_config_html_a17641544e0fd70461131e9db0fe06f40"><div class="ttname"><a href="struct_gauge_config.html#a17641544e0fd70461131e9db0fe06f40">GaugeConfig::title</a></div><div class="ttdeci">const char * title</div><div class="ttdoc">Título exibido no gauge.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:14</div></div>
-<div class="ttc" id="astruct_gauge_config_html_a38c649f2c3a04b32ca002724b7df712d"><div class="ttname"><a href="struct_gauge_config.html#a38c649f2c3a04b32ca002724b7df712d">GaugeConfig::fontFamily</a></div><div class="ttdeci">const GFXfont * fontFamily</div><div class="ttdoc">Fonte usada para renderização de texto.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:28</div></div>
-<div class="ttc" id="astruct_gauge_config_html_a40a5fad875dacc61a96732fa9c8d31dd"><div class="ttname"><a href="struct_gauge_config.html#a40a5fad875dacc61a96732fa9c8d31dd">GaugeConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdoc">Valor mínimo da faixa do gauge.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:18</div></div>
-<div class="ttc" id="astruct_gauge_config_html_a41d1d163a869c1844d656b436ccde6a5"><div class="ttname"><a href="struct_gauge_config.html#a41d1d163a869c1844d656b436ccde6a5">GaugeConfig::borderColor</a></div><div class="ttdeci">uint16_t borderColor</div><div class="ttdoc">Cor da borda do gauge.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:20</div></div>
-<div class="ttc" id="astruct_gauge_config_html_a51579068dc807e451c615d123785b088"><div class="ttname"><a href="struct_gauge_config.html#a51579068dc807e451c615d123785b088">GaugeConfig::titleColor</a></div><div class="ttdeci">uint16_t titleColor</div><div class="ttdoc">Cor do texto do título.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:23</div></div>
-<div class="ttc" id="astruct_gauge_config_html_a576ccefa838fda4e9c3351154cf39eb2"><div class="ttname"><a href="struct_gauge_config.html#a576ccefa838fda4e9c3351154cf39eb2">GaugeConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdoc">Valor máximo da faixa do gauge.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:19</div></div>
-<div class="ttc" id="astruct_gauge_config_html_a63817902ceaa59d1c24b8f4da302be1e"><div class="ttname"><a href="struct_gauge_config.html#a63817902ceaa59d1c24b8f4da302be1e">GaugeConfig::amountIntervals</a></div><div class="ttdeci">uint8_t amountIntervals</div><div class="ttdoc">Número de intervalos e cores.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:17</div></div>
-<div class="ttc" id="astruct_gauge_config_html_a737ae4675ba5b5df80e975dbc69c0097"><div class="ttname"><a href="struct_gauge_config.html#a737ae4675ba5b5df80e975dbc69c0097">GaugeConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura do gauge em pixels.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:13</div></div>
-<div class="ttc" id="astruct_gauge_config_html_a7dde9068d86b2f159cf4d2b217c52848"><div class="ttname"><a href="struct_gauge_config.html#a7dde9068d86b2f159cf4d2b217c52848">GaugeConfig::showLabels</a></div><div class="ttdeci">bool showLabels</div><div class="ttdoc">Flag para mostrar rótulos de texto dos intervalos.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:26</div></div>
-<div class="ttc" id="astruct_gauge_config_html_a940e5d386aabeaab7d40af4de458e5fb"><div class="ttname"><a href="struct_gauge_config.html#a940e5d386aabeaab7d40af4de458e5fb">GaugeConfig::needleColor</a></div><div class="ttdeci">uint16_t needleColor</div><div class="ttdoc">Cor da agulha.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:24</div></div>
-<div class="ttc" id="astruct_gauge_config_html_aa9007603fde8e840567e0e8fa0009785"><div class="ttname"><a href="struct_gauge_config.html#aa9007603fde8e840567e0e8fa0009785">GaugeConfig::textColor</a></div><div class="ttdeci">uint16_t textColor</div><div class="ttdoc">Cor para texto e exibição de valores.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:21</div></div>
-<div class="ttc" id="astruct_gauge_config_html_acac8c39386a88113e86e8fc6e996c480"><div class="ttname"><a href="struct_gauge_config.html#acac8c39386a88113e86e8fc6e996c480">GaugeConfig::intervals</a></div><div class="ttdeci">const int * intervals</div><div class="ttdoc">Array de valores dos intervalos.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:15</div></div>
-<div class="ttc" id="astruct_gauge_config_html_adfdf26e36e9f5e9e8bcf9ef76b4eb2c8"><div class="ttname"><a href="struct_gauge_config.html#adfdf26e36e9f5e9e8bcf9ef76b4eb2c8">GaugeConfig::colors</a></div><div class="ttdeci">const uint16_t * colors</div><div class="ttdoc">Array de cores correspondentes aos intervalos.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:16</div></div>
-<div class="ttc" id="astruct_gauge_config_html_ae5147e566dd9d241e526ff8383cf1435"><div class="ttname"><a href="struct_gauge_config.html#ae5147e566dd9d241e526ff8383cf1435">GaugeConfig::markersColor</a></div><div class="ttdeci">uint16_t markersColor</div><div class="ttdoc">Cor dos marcadores.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:25</div></div>
-<div class="ttc" id="astruct_gauge_config_html_aff23199c2927d652066ed4f0fc4c9018"><div class="ttname"><a href="struct_gauge_config.html#aff23199c2927d652066ed4f0fc4c9018">GaugeConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo do gauge.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:22</div></div>
+<div class="ttc" id="astruct_gauge_config_html"><div class="ttname"><a href="struct_gauge_config.html">GaugeConfig</a></div><div class="ttdoc">Estrutura de configuração para o GaugeSuper.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:15</div></div>
+<div class="ttc" id="astruct_gauge_config_html_a17641544e0fd70461131e9db0fe06f40"><div class="ttname"><a href="struct_gauge_config.html#a17641544e0fd70461131e9db0fe06f40">GaugeConfig::title</a></div><div class="ttdeci">const char * title</div><div class="ttdoc">Título exibido no gauge. Pode ser nullptr se não houver título. Máximo de MAX_TITLE_LENGTH (20) carac...</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:16</div></div>
+<div class="ttc" id="astruct_gauge_config_html_a17c5b27be50e181b40c00fa058cea9d2"><div class="ttname"><a href="struct_gauge_config.html#a17c5b27be50e181b40c00fa058cea9d2">GaugeConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura do gauge em pixels. Define a altura total do retângulo do gauge. Usado para calcular dimensões...</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:25</div></div>
+<div class="ttc" id="astruct_gauge_config_html_a38c649f2c3a04b32ca002724b7df712d"><div class="ttname"><a href="struct_gauge_config.html#a38c649f2c3a04b32ca002724b7df712d">GaugeConfig::fontFamily</a></div><div class="ttdeci">const GFXfont * fontFamily</div><div class="ttdoc">Fonte usada para renderização de texto. Pode ser nullptr para usar fonte padrão. Necessário se showLa...</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:20</div></div>
+<div class="ttc" id="astruct_gauge_config_html_a40a5fad875dacc61a96732fa9c8d31dd"><div class="ttname"><a href="struct_gauge_config.html#a40a5fad875dacc61a96732fa9c8d31dd">GaugeConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdoc">Valor mínimo da faixa do gauge. Deve ser menor que maxValue. Se minValue &gt;= maxValue,...</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:22</div></div>
+<div class="ttc" id="astruct_gauge_config_html_a41d1d163a869c1844d656b436ccde6a5"><div class="ttname"><a href="struct_gauge_config.html#a41d1d163a869c1844d656b436ccde6a5">GaugeConfig::borderColor</a></div><div class="ttdeci">uint16_t borderColor</div><div class="ttdoc">Cor da borda do gauge (formato RGB565). Usada para desenhar as bordas do retângulo do gauge.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:26</div></div>
+<div class="ttc" id="astruct_gauge_config_html_a51579068dc807e451c615d123785b088"><div class="ttname"><a href="struct_gauge_config.html#a51579068dc807e451c615d123785b088">GaugeConfig::titleColor</a></div><div class="ttdeci">uint16_t titleColor</div><div class="ttdoc">Cor do texto do título (formato RGB565). Usada apenas se title não for nullptr.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:29</div></div>
+<div class="ttc" id="astruct_gauge_config_html_a576ccefa838fda4e9c3351154cf39eb2"><div class="ttname"><a href="struct_gauge_config.html#a576ccefa838fda4e9c3351154cf39eb2">GaugeConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdoc">Valor máximo da faixa do gauge. Deve ser maior que minValue. Define o limite superior da faixa de val...</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:23</div></div>
+<div class="ttc" id="astruct_gauge_config_html_a63817902ceaa59d1c24b8f4da302be1e"><div class="ttname"><a href="struct_gauge_config.html#a63817902ceaa59d1c24b8f4da302be1e">GaugeConfig::amountIntervals</a></div><div class="ttdeci">uint8_t amountIntervals</div><div class="ttdoc">Número de intervalos e cores. Máximo de MAX_SERIES (10). Se 0, não haverá intervalos coloridos....</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:32</div></div>
+<div class="ttc" id="astruct_gauge_config_html_a737ae4675ba5b5df80e975dbc69c0097"><div class="ttname"><a href="struct_gauge_config.html#a737ae4675ba5b5df80e975dbc69c0097">GaugeConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura do gauge em pixels. Deve ser maior que 0. Define a largura total do retângulo do gauge.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:24</div></div>
+<div class="ttc" id="astruct_gauge_config_html_a7dde9068d86b2f159cf4d2b217c52848"><div class="ttname"><a href="struct_gauge_config.html#a7dde9068d86b2f159cf4d2b217c52848">GaugeConfig::showLabels</a></div><div class="ttdeci">bool showLabels</div><div class="ttdoc">Flag para mostrar rótulos de texto dos intervalos. Se true, exibe os valores dos intervalos como rótu...</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:33</div></div>
+<div class="ttc" id="astruct_gauge_config_html_a940e5d386aabeaab7d40af4de458e5fb"><div class="ttname"><a href="struct_gauge_config.html#a940e5d386aabeaab7d40af4de458e5fb">GaugeConfig::needleColor</a></div><div class="ttdeci">uint16_t needleColor</div><div class="ttdoc">Cor da agulha (formato RGB565). Usada para desenhar a agulha que indica o valor atual.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:30</div></div>
+<div class="ttc" id="astruct_gauge_config_html_aa9007603fde8e840567e0e8fa0009785"><div class="ttname"><a href="struct_gauge_config.html#aa9007603fde8e840567e0e8fa0009785">GaugeConfig::textColor</a></div><div class="ttdeci">uint16_t textColor</div><div class="ttdoc">Cor para texto e exibição de valores (formato RGB565). Usada para renderizar o valor numérico exibido...</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:27</div></div>
+<div class="ttc" id="astruct_gauge_config_html_acac8c39386a88113e86e8fc6e996c480"><div class="ttname"><a href="struct_gauge_config.html#acac8c39386a88113e86e8fc6e996c480">GaugeConfig::intervals</a></div><div class="ttdeci">const int * intervals</div><div class="ttdoc">Array de valores dos intervalos. Deve ser nullptr se amountIntervals for 0, caso contrário deve apont...</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:17</div></div>
+<div class="ttc" id="astruct_gauge_config_html_adfdf26e36e9f5e9e8bcf9ef76b4eb2c8"><div class="ttname"><a href="struct_gauge_config.html#adfdf26e36e9f5e9e8bcf9ef76b4eb2c8">GaugeConfig::colors</a></div><div class="ttdeci">const uint16_t * colors</div><div class="ttdoc">Array de cores correspondentes aos intervalos (formato RGB565). Deve ter o mesmo tamanho de intervals...</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:18</div></div>
+<div class="ttc" id="astruct_gauge_config_html_ae5147e566dd9d241e526ff8383cf1435"><div class="ttname"><a href="struct_gauge_config.html#ae5147e566dd9d241e526ff8383cf1435">GaugeConfig::markersColor</a></div><div class="ttdeci">uint16_t markersColor</div><div class="ttdoc">Cor dos marcadores (formato RGB565). Usada para desenhar os marcadores graduados no arco do gauge.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:31</div></div>
+<div class="ttc" id="astruct_gauge_config_html_aff23199c2927d652066ed4f0fc4c9018"><div class="ttname"><a href="struct_gauge_config.html#aff23199c2927d652066ed4f0fc4c9018">GaugeConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo do gauge (formato RGB565). Usada para preencher a área interna do gauge.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:28</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md177"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md185"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md178"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md186"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_gauge_super.html">GaugeSuper</a>(uint16_t _x, uint16_t _y, uint8_t _screen)</div>
-<div class="ttc" id="aclass_gauge_super_html"><div class="ttname"><a href="class_gauge_super.html">GaugeSuper</a></div><div class="ttdoc">Widget de gauge super com agulha e intervalos codificados por cores.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:39</div></div>
+<div class="ttc" id="aclass_gauge_super_html"><div class="ttname"><a href="class_gauge_super.html">GaugeSuper</a></div><div class="ttdoc">Widget de gauge super com agulha e intervalos codificados por cores.</div><div class="ttdef"><b>Definition</b> wgaugesuper.h:43</div></div>
 </div><!-- fragment --><p>Cria um novo gauge super na posição especificada. A posição (<span class="tt">_x</span>, <span class="tt">_y</span>) representa o centro horizontal e o topo do retângulo do gauge.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">_x</span>: Coordenada X do centro horizontal do gauge</li>
@@ -148,11 +152,11 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, é obrigatório chamar <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md179"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md187"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_gauge_super.html">~GaugeSuper</a>()</div>
 </div><!-- fragment --><p>Libera todos os recursos do gauge, incluindo memória alocada dinamicamente para arrays.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md180"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md188"></a>
 setup()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>(<span class="keyword">const</span> <a class="code hl_struct" href="struct_gauge_config.html">GaugeConfig</a>&amp; config)</div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
@@ -161,12 +165,14 @@ setup()</h2>
 <li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_gauge_config.html" title="Estrutura de configuração para o GaugeSuper.">GaugeConfig</a></span> com as configurações</li>
 </ul>
 <p><b>Validações automáticas:</b></p><ul>
+<li>Largura (width) deve ser maior que 0</li>
 <li>Valores min/max são trocados automaticamente se min &gt; max</li>
 <li>Título é truncado se exceder 20 caracteres</li>
 <li>Intervalos são limitados a no máximo 10</li>
 <li>Memória é alocada dinamicamente para arrays</li>
+<li>Altura (height) é usada para calcular dimensões disponíveis (altura - 2*borderSize)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md181"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md189"></a>
 setValue()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setValue(<span class="keywordtype">int</span> newValue)</div>
 </div><!-- fragment --><p>Define o valor atual do gauge e marca para redesenho da agulha.</p>
@@ -179,7 +185,7 @@ setValue()</h2>
 <li>Marca o widget para redesenho apenas se o valor mudou</li>
 <li>Registra o evento no log do ESP32</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md182"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md190"></a>
 drawBackground()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> drawBackground()</div>
 </div><!-- fragment --><p>Desenha o fundo completo do gauge. <b>Este método deve ser chamado uma vez após <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a> para inicializar o gauge.</b></p>
@@ -191,16 +197,16 @@ drawBackground()</h2>
 <li>Desenha título se fornecido</li>
 <li>Deve ser chamado antes de usar <span class="tt">setValue()</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md183"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md191"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna o gauge visível na tela.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md184"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md192"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta o gauge da tela.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md186"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md194"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente e não precisam ser invocados diretamente:</p>
 <ul>
@@ -215,14 +221,14 @@ hide()</h2>
 <li><span class="tt">isLabelsVisible()</span>: Verifica se rótulos estão visíveis</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md188"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md196"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md189"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md197"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias (SPI, display, etc.)</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md190"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md198"></a>
 🏗️ Passo 2: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
@@ -237,15 +243,15 @@ hide()</h2>
 <div class="line"><span class="keyword">const</span> uint8_t qtdIntervalG0 = 4;</div>
 <div class="line"><span class="keywordtype">int</span> range0[qtdIntervalG0] = {0, 25, 50, 75};</div>
 <div class="line">uint16_t colors0[qtdIntervalG0] = {<a class="code hl_variable" href="widgetsetup_8h.html#a067e01c37384dbb6e7cc57d82fbf8a5e">CFK_COLOR09</a>, <a class="code hl_variable" href="widgetsetup_8h.html#a12bb6c02ecdc453023c9500639ef9ab7">CFK_COLOR06</a>, <a class="code hl_variable" href="widgetsetup_8h.html#a2c9f8f5a14aad96d441c29d6df5ad694">CFK_COLOR03</a>, <a class="code hl_variable" href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a>};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a067e01c37384dbb6e7cc57d82fbf8a5e"><div class="ttname"><a href="widgetsetup_8h.html#a067e01c37384dbb6e7cc57d82fbf8a5e">CFK_COLOR09</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR09</div><div class="ttdef"><b>Definition</b> widgetsetup.h:175</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a12bb6c02ecdc453023c9500639ef9ab7"><div class="ttname"><a href="widgetsetup_8h.html#a12bb6c02ecdc453023c9500639ef9ab7">CFK_COLOR06</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR06</div><div class="ttdef"><b>Definition</b> widgetsetup.h:172</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:167</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a2c9f8f5a14aad96d441c29d6df5ad694"><div class="ttname"><a href="widgetsetup_8h.html#a2c9f8f5a14aad96d441c29d6df5ad694">CFK_COLOR03</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR03</div><div class="ttdef"><b>Definition</b> widgetsetup.h:169</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md191"></a>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a067e01c37384dbb6e7cc57d82fbf8a5e"><div class="ttname"><a href="widgetsetup_8h.html#a067e01c37384dbb6e7cc57d82fbf8a5e">CFK_COLOR09</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR09</div><div class="ttdef"><b>Definition</b> widgetsetup.h:177</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a12bb6c02ecdc453023c9500639ef9ab7"><div class="ttname"><a href="widgetsetup_8h.html#a12bb6c02ecdc453023c9500639ef9ab7">CFK_COLOR06</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR06</div><div class="ttdef"><b>Definition</b> widgetsetup.h:174</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:169</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a2c9f8f5a14aad96d441c29d6df5ad694"><div class="ttname"><a href="widgetsetup_8h.html#a2c9f8f5a14aad96d441c29d6df5ad694">CFK_COLOR03</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR03</div><div class="ttdef"><b>Definition</b> widgetsetup.h:171</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md199"></a>
 📝 Passo 3: Prototipar Funções</h2>
 <div class="fragment"><div class="line"><span class="comment">// Gauge não usa callbacks por padrão</span></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md192"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md200"></a>
 ⚙️ Passo 4: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    <span class="comment">// ... configuração do display e touch ...</span></div>
@@ -256,29 +262,30 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md193"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md201"></a>
 🔧 Passo 5: Configurar os Widgets</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar gauge super</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_gauge_config.html">GaugeConfig</a> configGauge = {</div>
-<div class="line">        .width = 205,</div>
 <div class="line">        .title = <span class="stringliteral">&quot;Titulo&quot;</span>,</div>
 <div class="line">        .intervals = range0,</div>
 <div class="line">        .colors = colors0,</div>
-<div class="line">        .amountIntervals = qtdIntervalG0,</div>
+<div class="line">        .fontFamily = &amp;RobotoBold10pt7b,</div>
 <div class="line">        .minValue = 0,</div>
 <div class="line">        .maxValue = 100,</div>
+<div class="line">        .width = 205,</div>
+<div class="line">        .height = 150,</div>
 <div class="line">        .borderColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
 <div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
 <div class="line">        .titleColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
 <div class="line">        .needleColor = <a class="code hl_variable" href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a>,</div>
 <div class="line">        .markersColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
-<div class="line">        .showLabels = <span class="keyword">true</span>,</div>
-<div class="line">        .fontFamily = &amp;RobotoBold10pt7b</div>
+<div class="line">        .amountIntervals = qtdIntervalG0,</div>
+<div class="line">        .showLabels = <span class="keyword">true</span></div>
 <div class="line">    };</div>
 <div class="line">    widget.setup(configGauge);</div>
 <div class="line">    </div>
@@ -288,14 +295,14 @@ hide()</h2>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#a7f6e121a7b944725049f4ca70ed0e9ff">setGauge</a>(arrayGauge, qtdGauge);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a7f6e121a7b944725049f4ca70ed0e9ff"><div class="ttname"><a href="class_display_f_k.html#a7f6e121a7b944725049f4ca70ed0e9ff">DisplayFK::setGauge</a></div><div class="ttdeci">void setGauge(GaugeSuper *array[], uint8_t amount)</div><div class="ttdoc">Configures the gauge array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:175</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:139</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:131</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md194"></a>
+<div class="ttc" id="aclass_display_f_k_html_a7f6e121a7b944725049f4ca70ed0e9ff"><div class="ttname"><a href="class_display_f_k.html#a7f6e121a7b944725049f4ca70ed0e9ff">DisplayFK::setGauge</a></div><div class="ttdeci">void setGauge(GaugeSuper *array[], uint8_t amount)</div><div class="ttdoc">Configures the gauge array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:176</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:141</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:133</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md202"></a>
 🔔 Passo 6: Criar Funções de Callback (Opcional)</h2>
 <div class="fragment"><div class="line"><span class="comment">// Gauge não usa callbacks normalmente</span></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md195"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md203"></a>
 🖥️ Passo 7: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -304,9 +311,9 @@ hide()</h2>
 <div class="line">    <span class="comment">// Desenhar todos os widgets na tela 0</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md196"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md204"></a>
 🔄 Passo 8: Atualizar Valor (Exemplo de Uso)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Simular dados de sensor</span></div>
@@ -317,7 +324,7 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md198"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md206"></a>
 📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="_roboto_regular10pt7b_8h.html">fonts/RobotoRegular/RobotoRegular10pt7b.h</a>&gt;</span></div>
@@ -349,21 +356,22 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar gauge</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_gauge_config.html">GaugeConfig</a> config = {</div>
-<div class="line">        .width = 300,</div>
 <div class="line">        .title = <span class="stringliteral">&quot;Velocidade&quot;</span>,</div>
 <div class="line">        .intervals = intervalos,</div>
 <div class="line">        .colors = cores,</div>
-<div class="line">        .amountIntervals = qtdIntervalos,</div>
+<div class="line">        .fontFamily = &amp;RobotoBold10pt7b,</div>
 <div class="line">        .minValue = 0,</div>
 <div class="line">        .maxValue = 100,</div>
+<div class="line">        .width = 300,</div>
+<div class="line">        .height = 200,</div>
 <div class="line">        .borderColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
 <div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
 <div class="line">        .titleColor = <a class="code hl_variable" href="widgetsetup_8h.html#a6a6ff0c936512c5519fe11ffbec3cfe8">CFK_NAVY</a>,</div>
 <div class="line">        .needleColor = <a class="code hl_variable" href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a>,</div>
 <div class="line">        .markersColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
-<div class="line">        .showLabels = <span class="keyword">true</span>,</div>
-<div class="line">        .fontFamily = &amp;RobotoBold10pt7b</div>
+<div class="line">        .amountIntervals = qtdIntervalos,</div>
+<div class="line">        .showLabels = <span class="keyword">true</span></div>
 <div class="line">    };</div>
 <div class="line">    meuGauge.setup(config);</div>
 <div class="line">    </div>
@@ -389,18 +397,19 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
 <div class="ttc" id="a_roboto_regular10pt7b_8h_html"><div class="ttname"><a href="_roboto_regular10pt7b_8h.html">RobotoRegular10pt7b.h</a></div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a6a6ff0c936512c5519fe11ffbec3cfe8"><div class="ttname"><a href="widgetsetup_8h.html#a6a6ff0c936512c5519fe11ffbec3cfe8">CFK_NAVY</a></div><div class="ttdeci">constexpr uint16_t CFK_NAVY</div><div class="ttdef"><b>Definition</b> widgetsetup.h:156</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a6a6ff0c936512c5519fe11ffbec3cfe8"><div class="ttname"><a href="widgetsetup_8h.html#a6a6ff0c936512c5519fe11ffbec3cfe8">CFK_NAVY</a></div><div class="ttdeci">constexpr uint16_t CFK_NAVY</div><div class="ttdef"><b>Definition</b> widgetsetup.h:158</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md200"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md208"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md201"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md209"></a>
 📐 Tamanhos Recomendados</h2>
 <ul>
-<li><b>Pequenos:</b> Largura 150-200 pixels</li>
-<li><b>Médios:</b> Largura 250-350 pixels</li>
-<li><b>Grandes:</b> Largura 400-500 pixels</li>
+<li><b>Pequenos:</b> Largura 150-200 pixels, Altura 100-150 pixels</li>
+<li><b>Médios:</b> Largura 250-350 pixels, Altura 150-200 pixels</li>
+<li><b>Grandes:</b> Largura 400-500 pixels, Altura 200-300 pixels</li>
+<li><b>Nota:</b> A altura deve ser suficiente para acomodar o arco do gauge, título (se houver), valor exibido e bordas. A altura disponível para desenho é calculada como height - 2*borderSize.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md202"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md210"></a>
 🎨 Cores</h2>
 <ul>
 <li>Use cores contrastantes entre intervalos</li>
@@ -408,13 +417,13 @@ hide()</h2>
 <li>Agulha vermelha é tradicional e visível</li>
 <li>Consider o tema claro/escuro da interface</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md203"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md211"></a>
 🔔 Callbacks</h2>
 <ul>
 <li>Gauge não usa callbacks por padrão</li>
 <li>É apenas visual, não interativo</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md204"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md212"></a>
 ⚡ Performance</h2>
 <ul>
 <li>Renderização eficiente com atualizações incrementais</li>
@@ -422,7 +431,7 @@ hide()</h2>
 <li>Desenhe fundo apenas uma vez com drawBackground()</li>
 <li>Evite atualizações muito frequentes de valor</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md205"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md213"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Use intervalos logicamente separados</li>
@@ -430,7 +439,7 @@ hide()</h2>
 <li>Escolha título descritivo mas curto</li>
 <li>Teste legibilidade dos rótulos</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md206"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md214"></a>
 🎨 Design Visual</h2>
 <ul>
 <li>O gauge desenha um semicírculo com agulha central</li>
@@ -440,7 +449,7 @@ hide()</h2>
 <li>Agulha aponta para o valor atual</li>
 <li>Valor é exibido no centro inferior</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md207"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md215"></a>
 📊 Configuração de Intervalos</h2>
 <ul>
 <li>Limite máximo de 10 intervalos</li>
@@ -450,7 +459,7 @@ hide()</h2>
 <li>Intervalos devem ter espaçamento adequado</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md209"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md217"></a>
 🔗 Herança de WidgetBase</h1>
 <p>A classe <span class="tt"><a class="el" href="class_gauge_super.html" title="Widget de gauge super com agulha e intervalos codificados por cores.">GaugeSuper</a></span> herda todos os métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
@@ -460,7 +469,7 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho automático</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md211"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md219"></a>
 🔗 Integração com DisplayFK</h1>
 <p>O <span class="tt"><a class="el" href="class_gauge_super.html" title="Widget de gauge super com agulha e intervalos codificados por cores.">GaugeSuper</a></span> integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
@@ -472,7 +481,7 @@ hide()</h2>
 <li><b>Memória:</b> Gerenciamento automático de memória</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md213"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md221"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O <span class="tt"><a class="el" href="class_gauge_super.html" title="Widget de gauge super com agulha e intervalos codificados por cores.">GaugeSuper</a></span> é renderizado em camadas:</p>
 <ol type="1">
@@ -501,9 +510,9 @@ hide()</h2>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md215"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md223"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md216"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md224"></a>
 Gauge não aparece na tela</h2>
 <ul>
 <li>Verifique se chamou <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar o objeto</li>
@@ -512,7 +521,7 @@ Gauge não aparece na tela</h2>
 <li>Certifique-se de chamar <span class="tt">myDisplay.setGauge()</span></li>
 <li>Confirme que a largura é maior que 0</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md217"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md225"></a>
 Gauge não atualiza a agulha</h2>
 <ul>
 <li>Verifique se chamou <span class="tt">setValue()</span> com novo valor</li>
@@ -520,7 +529,7 @@ Gauge não atualiza a agulha</h2>
 <li>Verifique se o widget está habilitado</li>
 <li>Certifique-se de que <span class="tt">drawBackground()</span> foi chamado</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md218"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md226"></a>
 Intervalos não aparecem ou cores erradas</h2>
 <ul>
 <li>Verifique se arrays de intervalos e cores foram fornecidos</li>
@@ -528,7 +537,7 @@ Intervalos não aparecem ou cores erradas</h2>
 <li>Verifique se intervalos estão ordenados</li>
 <li>Certifique-se de que não excede 10 intervalos</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md219"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md227"></a>
 Rótulos não aparecem</h2>
 <ul>
 <li>Verifique se <span class="tt">showLabels = true</span> na configuração</li>
@@ -536,7 +545,7 @@ Rótulos não aparecem</h2>
 <li>Verifique se há espaço suficiente para os rótulos</li>
 <li>Certifique-se de que o gauge tem largura adequada</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md220"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md228"></a>
 Título não aparece</h2>
 <ul>
 <li>Verifique se <span class="tt">title</span> foi fornecido e não é nullptr</li>
@@ -544,7 +553,7 @@ Título não aparece</h2>
 <li>Verifique se há espaço suficiente no gauge</li>
 <li>Certifique-se de que titleColor contrasta com o fundo</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md221"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md229"></a>
 Problemas de memória</h2>
 <ul>
 <li>O gauge aloca memória dinamicamente</li>
@@ -552,7 +561,7 @@ Problemas de memória</h2>
 <li>Não reconfigure o mesmo gauge muitas vezes</li>
 <li>Verifique logs do ESP32 para erros de alocação</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md222"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md230"></a>
 Performance lenta</h2>
 <ul>
 <li>Evite atualizações muito frequentes de valor</li>
@@ -561,7 +570,7 @@ Performance lenta</h2>
 <li>Verifique se não há muitos widgets na mesma tela</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md224"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md232"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>

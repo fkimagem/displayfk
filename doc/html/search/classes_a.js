@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['margin_5ft_0',['Margin_t',['../struct_margin__t.html',1,'']]]
+  ['performancemetrics_5ft_0',['PerformanceMetrics_t',['../struct_performance_metrics__t.html',1,'']]]
 ];

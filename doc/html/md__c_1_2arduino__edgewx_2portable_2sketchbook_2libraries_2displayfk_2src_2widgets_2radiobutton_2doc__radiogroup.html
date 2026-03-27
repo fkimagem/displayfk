@@ -75,11 +75,11 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe RadioGroup </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md613"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md614"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md622"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md623"></a>
 Visão Geral</h1>
 <p>A classe <span class="tt"><a class="el" href="class_radio_group.html" title="Widget de grupo de botões de rádio que permite seleção de uma opção dentro do grupo.">RadioGroup</a></span> é um widget interativo que exibe um grupo de botões de rádio onde apenas um pode estar selecionado por vez. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade completa para criar e gerenciar grupos de seleção única na tela.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md615"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md624"></a>
 Características Principais</h2>
 <ul>
 <li>🔘 Grupo de botões de rádio circulares</li>
@@ -94,45 +94,45 @@ Características Principais</h2>
 <li>🔗 Integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md617"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md626"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md618"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md627"></a>
 radio_t</h2>
 <p>Estrutura que representa um botão de rádio individual:</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="structradio__t.html">radio_t</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="structradio__t.html#a12a3aab6c5d2e1a08c1dda177544364e">x</a>;     <span class="comment">// Coordenada X do botão</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="structradio__t.html#a8af5a8b7dadc69a2705474bca4699252">y</a>;     <span class="comment">// Coordenada Y do botão</span></div>
-<div class="line">  uint8_t <a class="code hl_variable" href="gsl__point__id_8c.html#a35fc2aadb5f638d5cc76810431d956c7">id</a>;     <span class="comment">// ID único do botão no grupo</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="structradio__t.html#a954b1344748eee4f52ce1e1fb8bc7ff6">color</a>; <span class="comment">// Cor do botão quando selecionado</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="structradio__t.html#a12a3aab6c5d2e1a08c1dda177544364e">x</a>;     <span class="comment">// Coordenada X do botão.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="structradio__t.html#a8af5a8b7dadc69a2705474bca4699252">y</a>;     <span class="comment">// Coordenada Y do botão.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="structradio__t.html#a954b1344748eee4f52ce1e1fb8bc7ff6">color</a>; <span class="comment">// Cor do botão quando selecionado.</span></div>
+<div class="line">  uint8_t <a class="code hl_variable" href="structradio__t.html#ae9f61669cd7f62f8c56648abe974742f">id</a>;     <span class="comment">// ID único do botão no grupo.</span></div>
 <div class="line">};</div>
-<div class="ttc" id="agsl__point__id_8c_html_a35fc2aadb5f638d5cc76810431d956c7"><div class="ttname"><a href="gsl__point__id_8c.html#a35fc2aadb5f638d5cc76810431d956c7">id</a></div><div class="ttdeci">unsigned char id</div><div class="ttdef"><b>Definition</b> gsl_point_id.c:191</div></div>
 <div class="ttc" id="astructradio__t_html"><div class="ttname"><a href="structradio__t.html">radio_t</a></div><div class="ttdoc">Estrutura representando um botão de rádio único com posição, ID e cor.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:8</div></div>
 <div class="ttc" id="astructradio__t_html_a12a3aab6c5d2e1a08c1dda177544364e"><div class="ttname"><a href="structradio__t.html#a12a3aab6c5d2e1a08c1dda177544364e">radio_t::x</a></div><div class="ttdeci">uint16_t x</div><div class="ttdoc">Coordenada X do botão de rádio.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:9</div></div>
 <div class="ttc" id="astructradio__t_html_a8af5a8b7dadc69a2705474bca4699252"><div class="ttname"><a href="structradio__t.html#a8af5a8b7dadc69a2705474bca4699252">radio_t::y</a></div><div class="ttdeci">uint16_t y</div><div class="ttdoc">Coordenada Y do botão de rádio.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:10</div></div>
-<div class="ttc" id="astructradio__t_html_a954b1344748eee4f52ce1e1fb8bc7ff6"><div class="ttname"><a href="structradio__t.html#a954b1344748eee4f52ce1e1fb8bc7ff6">radio_t::color</a></div><div class="ttdeci">uint16_t color</div><div class="ttdoc">Cor do botão de rádio.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:12</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md619"></a>
+<div class="ttc" id="astructradio__t_html_a954b1344748eee4f52ce1e1fb8bc7ff6"><div class="ttname"><a href="structradio__t.html#a954b1344748eee4f52ce1e1fb8bc7ff6">radio_t::color</a></div><div class="ttdeci">uint16_t color</div><div class="ttdoc">Cor do botão de rádio.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:11</div></div>
+<div class="ttc" id="astructradio__t_html_ae9f61669cd7f62f8c56648abe974742f"><div class="ttname"><a href="structradio__t.html#ae9f61669cd7f62f8c56648abe974742f">radio_t::id</a></div><div class="ttdeci">uint8_t id</div><div class="ttdoc">Identificador do botão de rádio dentro do grupo.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:12</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md628"></a>
 RadioGroupConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração do grupo:</p>
+<p>Estrutura que contém todos os parâmetros de configuração do grupo (ordem conforme <span class="tt"><a class="el" href="wradiogroup_8h.html">wradiogroup.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_radio_group_config.html">RadioGroupConfig</a> {</div>
-<div class="line">  uint8_t <a class="code hl_variable" href="struct_radio_group_config.html#ac962ce6ba1928c209eefe0aedddd32d3">group</a>;               <span class="comment">// ID do grupo</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_radio_group_config.html#a4b5970ccfb63452b74e2c4e9ffab78d4">radius</a>;             <span class="comment">// Raio de todos os botões</span></div>
-<div class="line">  uint8_t <a class="code hl_variable" href="struct_radio_group_config.html#a5d352afe8c0930c8739ea7b8e86f81ff">amount</a>;              <span class="comment">// Número de botões no grupo</span></div>
-<div class="line">  <span class="keyword">const</span> <a class="code hl_struct" href="structradio__t.html">radio_t</a>* <a class="code hl_variable" href="struct_radio_group_config.html#a5a426b291dec25cb99aa93bb5b8da235">buttons</a>;      <span class="comment">// Array de botões</span></div>
-<div class="line">  uint8_t <a class="code hl_variable" href="struct_radio_group_config.html#a42950cd421e58447bf4792ab9d9f0fea">defaultClickedId</a>;    <span class="comment">// ID do botão selecionado por padrão</span></div>
-<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_radio_group_config.html#a0c3eef9b2670d8ac58359e5e5f9fdfb9">callback</a>;       <span class="comment">// Função callback</span></div>
+<div class="line">  <span class="keyword">const</span> <a class="code hl_struct" href="structradio__t.html">radio_t</a>* <a class="code hl_variable" href="struct_radio_group_config.html#a5a426b291dec25cb99aa93bb5b8da235">buttons</a>;      <span class="comment">// Ponteiro para array de botões de rádio.</span></div>
+<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_radio_group_config.html#a0c3eef9b2670d8ac58359e5e5f9fdfb9">callback</a>;       <span class="comment">// Callback executada na mudança de seleção.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_radio_group_config.html#a4b5970ccfb63452b74e2c4e9ffab78d4">radius</a>;             <span class="comment">// Raio de cada botão em pixels.</span></div>
+<div class="line">  uint8_t <a class="code hl_variable" href="struct_radio_group_config.html#ac962ce6ba1928c209eefe0aedddd32d3">group</a>;               <span class="comment">// Identificador do grupo.</span></div>
+<div class="line">  uint8_t <a class="code hl_variable" href="struct_radio_group_config.html#a5d352afe8c0930c8739ea7b8e86f81ff">amount</a>;              <span class="comment">// Número de botões no grupo.</span></div>
+<div class="line">  uint8_t <a class="code hl_variable" href="struct_radio_group_config.html#a42950cd421e58447bf4792ab9d9f0fea">defaultClickedId</a>;    <span class="comment">// ID do botão selecionado por padrão.</span></div>
 <div class="line">};</div>
 <div class="ttc" id="abase_types_8h_html_a05ded8c943add15c9053b728a4f6b99a"><div class="ttname"><a href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a></div><div class="ttdeci">void(* functionCB_t)()</div><div class="ttdoc">Typedef for a generic callback function.</div><div class="ttdef"><b>Definition</b> baseTypes.h:17</div></div>
 <div class="ttc" id="astruct_radio_group_config_html"><div class="ttname"><a href="struct_radio_group_config.html">RadioGroupConfig</a></div><div class="ttdoc">Estrutura de configuração para o RadioGroup.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:18</div></div>
-<div class="ttc" id="astruct_radio_group_config_html_a0c3eef9b2670d8ac58359e5e5f9fdfb9"><div class="ttname"><a href="struct_radio_group_config.html#a0c3eef9b2670d8ac58359e5e5f9fdfb9">RadioGroupConfig::callback</a></div><div class="ttdeci">functionCB_t callback</div><div class="ttdoc">Função callback para executar na mudança de seleção.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:24</div></div>
-<div class="ttc" id="astruct_radio_group_config_html_a42950cd421e58447bf4792ab9d9f0fea"><div class="ttname"><a href="struct_radio_group_config.html#a42950cd421e58447bf4792ab9d9f0fea">RadioGroupConfig::defaultClickedId</a></div><div class="ttdeci">uint8_t defaultClickedId</div><div class="ttdoc">ID do botão de rádio a ser selecionado por padrão.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:23</div></div>
-<div class="ttc" id="astruct_radio_group_config_html_a4b5970ccfb63452b74e2c4e9ffab78d4"><div class="ttname"><a href="struct_radio_group_config.html#a4b5970ccfb63452b74e2c4e9ffab78d4">RadioGroupConfig::radius</a></div><div class="ttdeci">uint16_t radius</div><div class="ttdoc">Raio de cada botão de rádio.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:20</div></div>
-<div class="ttc" id="astruct_radio_group_config_html_a5a426b291dec25cb99aa93bb5b8da235"><div class="ttname"><a href="struct_radio_group_config.html#a5a426b291dec25cb99aa93bb5b8da235">RadioGroupConfig::buttons</a></div><div class="ttdeci">const radio_t * buttons</div><div class="ttdoc">Ponteiro para um array definindo os botões de rádio.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:22</div></div>
-<div class="ttc" id="astruct_radio_group_config_html_a5d352afe8c0930c8739ea7b8e86f81ff"><div class="ttname"><a href="struct_radio_group_config.html#a5d352afe8c0930c8739ea7b8e86f81ff">RadioGroupConfig::amount</a></div><div class="ttdeci">uint8_t amount</div><div class="ttdoc">Número de botões de rádio no grupo.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:21</div></div>
-<div class="ttc" id="astruct_radio_group_config_html_ac962ce6ba1928c209eefe0aedddd32d3"><div class="ttname"><a href="struct_radio_group_config.html#ac962ce6ba1928c209eefe0aedddd32d3">RadioGroupConfig::group</a></div><div class="ttdeci">uint8_t group</div><div class="ttdoc">Identificador do grupo para os botões de rádio.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:19</div></div>
+<div class="ttc" id="astruct_radio_group_config_html_a0c3eef9b2670d8ac58359e5e5f9fdfb9"><div class="ttname"><a href="struct_radio_group_config.html#a0c3eef9b2670d8ac58359e5e5f9fdfb9">RadioGroupConfig::callback</a></div><div class="ttdeci">functionCB_t callback</div><div class="ttdoc">Função callback para executar na mudança de seleção.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:20</div></div>
+<div class="ttc" id="astruct_radio_group_config_html_a42950cd421e58447bf4792ab9d9f0fea"><div class="ttname"><a href="struct_radio_group_config.html#a42950cd421e58447bf4792ab9d9f0fea">RadioGroupConfig::defaultClickedId</a></div><div class="ttdeci">uint8_t defaultClickedId</div><div class="ttdoc">ID do botão de rádio a ser selecionado por padrão.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:24</div></div>
+<div class="ttc" id="astruct_radio_group_config_html_a4b5970ccfb63452b74e2c4e9ffab78d4"><div class="ttname"><a href="struct_radio_group_config.html#a4b5970ccfb63452b74e2c4e9ffab78d4">RadioGroupConfig::radius</a></div><div class="ttdeci">uint16_t radius</div><div class="ttdoc">Raio de cada botão de rádio.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:21</div></div>
+<div class="ttc" id="astruct_radio_group_config_html_a5a426b291dec25cb99aa93bb5b8da235"><div class="ttname"><a href="struct_radio_group_config.html#a5a426b291dec25cb99aa93bb5b8da235">RadioGroupConfig::buttons</a></div><div class="ttdeci">const radio_t * buttons</div><div class="ttdoc">Ponteiro para um array definindo os botões de rádio.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:19</div></div>
+<div class="ttc" id="astruct_radio_group_config_html_a5d352afe8c0930c8739ea7b8e86f81ff"><div class="ttname"><a href="struct_radio_group_config.html#a5d352afe8c0930c8739ea7b8e86f81ff">RadioGroupConfig::amount</a></div><div class="ttdeci">uint8_t amount</div><div class="ttdoc">Número de botões de rádio no grupo.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:23</div></div>
+<div class="ttc" id="astruct_radio_group_config_html_ac962ce6ba1928c209eefe0aedddd32d3"><div class="ttname"><a href="struct_radio_group_config.html#ac962ce6ba1928c209eefe0aedddd32d3">RadioGroupConfig::group</a></div><div class="ttdeci">uint8_t group</div><div class="ttdoc">Identificador do grupo para os botões de rádio.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:22</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md621"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md630"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md622"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md631"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_radio_group.html">RadioGroup</a>(uint8_t _screen)</div>
 <div class="ttc" id="aclass_radio_group_html"><div class="ttname"><a href="class_radio_group.html">RadioGroup</a></div><div class="ttdoc">Widget de grupo de botões de rádio que permite seleção de uma opção dentro do grupo.</div><div class="ttdef"><b>Definition</b> wradiogroup.h:35</div></div>
@@ -141,11 +141,11 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, chame <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md623"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md632"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_radio_group.html">~RadioGroup</a>()</div>
 </div><!-- fragment --><p>Libera automaticamente a memória alocada para os botões.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md624"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md633"></a>
 setup()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>(<span class="keyword">const</span> <a class="code hl_struct" href="struct_radio_group_config.html">RadioGroupConfig</a>&amp; config)</div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
@@ -153,31 +153,31 @@ setup()</h2>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_radio_group_config.html" title="Estrutura de configuração para o RadioGroup.">RadioGroupConfig</a></span> com as configurações</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md625"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md634"></a>
 getSelected()</h2>
 <div class="fragment"><div class="line">uint16_t getSelected()</div>
 </div><!-- fragment --><p>Retorna o ID do botão atualmente selecionado.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md626"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md635"></a>
 setSelected()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setSelected(uint16_t clickedId)</div>
 </div><!-- fragment --><p>Define qual botão está selecionado programaticamente.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">clickedId</span>: ID do botão a selecionar</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md627"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md636"></a>
 getGroupId()</h2>
 <div class="fragment"><div class="line">uint16_t getGroupId()</div>
 </div><!-- fragment --><p>Retorna o ID do grupo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md628"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md637"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna o grupo de botões visível.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md629"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md638"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta o grupo de botões.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md631"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md640"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente:</p>
 <ul>
@@ -188,22 +188,22 @@ hide()</h2>
 <li><span class="tt">cleanupMemory()</span>: Limpa memória alocada</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md633"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md642"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md634"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md643"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md635"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md644"></a>
 📝 Passo 2: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Definir botões do grupo</span></div>
 <div class="line"><a class="code hl_struct" href="structradio__t.html">radio_t</a> opcoes[] = {</div>
-<div class="line">    {50, 100, 1, <a class="code hl_variable" href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a>},  <span class="comment">// Opção 1</span></div>
-<div class="line">    {50, 150, 2, <a class="code hl_variable" href="widgetsetup_8h.html#a71fb63c26747d09a993538ccb8025bad">CFK_COLOR02</a>},  <span class="comment">// Opção 2</span></div>
-<div class="line">    {50, 200, 3, <a class="code hl_variable" href="widgetsetup_8h.html#a2c9f8f5a14aad96d441c29d6df5ad694">CFK_COLOR03</a>}   <span class="comment">// Opção 3</span></div>
+<div class="line">    {50, 100, <a class="code hl_variable" href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a>, 1},  <span class="comment">// Opção 1</span></div>
+<div class="line">    {50, 150, <a class="code hl_variable" href="widgetsetup_8h.html#a71fb63c26747d09a993538ccb8025bad">CFK_COLOR02</a>, 2},  <span class="comment">// Opção 2</span></div>
+<div class="line">    {50, 200, <a class="code hl_variable" href="widgetsetup_8h.html#a2c9f8f5a14aad96d441c29d6df5ad694">CFK_COLOR03</a>, 3}   <span class="comment">// Opção 3</span></div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Criar RadioGroup</span></div>
@@ -211,11 +211,11 @@ hide()</h2>
 <div class="line"> </div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdRadiogroup = 1;</div>
 <div class="line"><a class="code hl_class" href="class_radio_group.html">RadioGroup</a> *arrayRadiogroup[qtdRadiogroup] = {&amp;radiogroup};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:167</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a2c9f8f5a14aad96d441c29d6df5ad694"><div class="ttname"><a href="widgetsetup_8h.html#a2c9f8f5a14aad96d441c29d6df5ad694">CFK_COLOR03</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR03</div><div class="ttdef"><b>Definition</b> widgetsetup.h:169</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a71fb63c26747d09a993538ccb8025bad"><div class="ttname"><a href="widgetsetup_8h.html#a71fb63c26747d09a993538ccb8025bad">CFK_COLOR02</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR02</div><div class="ttdef"><b>Definition</b> widgetsetup.h:168</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md636"></a>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:169</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a2c9f8f5a14aad96d441c29d6df5ad694"><div class="ttname"><a href="widgetsetup_8h.html#a2c9f8f5a14aad96d441c29d6df5ad694">CFK_COLOR03</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR03</div><div class="ttdef"><b>Definition</b> widgetsetup.h:171</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a71fb63c26747d09a993538ccb8025bad"><div class="ttname"><a href="widgetsetup_8h.html#a71fb63c26747d09a993538ccb8025bad">CFK_COLOR02</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR02</div><div class="ttdef"><b>Definition</b> widgetsetup.h:170</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md645"></a>
 ⚙️ Passo 3: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    Serial.begin(115200);</div>
@@ -227,27 +227,27 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md637"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md646"></a>
 🔧 Passo 4: Configurar o RadioGroup</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar RadioGroup</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_radio_group_config.html">RadioGroupConfig</a> configRadioGroup = {</div>
-<div class="line">        .group = 1,</div>
-<div class="line">        .radius = 15,</div>
-<div class="line">        .amount = 3,</div>
 <div class="line">        .buttons = opcoes,</div>
-<div class="line">        .defaultClickedId = 1,</div>
-<div class="line">        .callback = radiogroup_cb</div>
+<div class="line">        .callback = radiogroup_cb,</div>
+<div class="line">        .radius = 15,</div>
+<div class="line">        .group = 1,</div>
+<div class="line">        .amount = 3,</div>
+<div class="line">        .defaultClickedId = 1</div>
 <div class="line">    };</div>
 <div class="line">    radiogroup.setup(configRadioGroup);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.setRadiogroup(arrayRadiogroup, qtdRadiogroup);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md638"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md647"></a>
 🔔 Passo 5: Criar Função de Callback</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> radiogroup_cb() {</div>
 <div class="line">    uint16_t selecionado = radiogroup.getSelected();</div>
@@ -267,7 +267,7 @@ hide()</h2>
 <div class="line">            <span class="keywordflow">break</span>;</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md639"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md648"></a>
 🖥️ Passo 6: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -275,10 +275,10 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md640"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md649"></a>
 🔄 Passo 7: Exemplo de Uso</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Ler seleção atual</span></div>
@@ -291,7 +291,7 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md642"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md651"></a>
 📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"> </div>
@@ -301,9 +301,9 @@ hide()</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Definir opções do grupo</span></div>
 <div class="line"><a class="code hl_struct" href="structradio__t.html">radio_t</a> opcoesTemperatura[] = {</div>
-<div class="line">    {80, 100, 1, <a class="code hl_variable" href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a>},      <span class="comment">// Quente</span></div>
-<div class="line">    {80, 150, 2, <a class="code hl_variable" href="widgetsetup_8h.html#a6fd9fea6ea06218a26be79e01b2d1b1e">CFK_YELLOW</a>},   <span class="comment">// Morno</span></div>
-<div class="line">    {80, 200, 3, <a class="code hl_variable" href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a>}      <span class="comment">// Frio</span></div>
+<div class="line">    {80, 100, <a class="code hl_variable" href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a>, 1},      <span class="comment">// Quente</span></div>
+<div class="line">    {80, 150, <a class="code hl_variable" href="widgetsetup_8h.html#a6fd9fea6ea06218a26be79e01b2d1b1e">CFK_YELLOW</a>, 2},   <span class="comment">// Morno</span></div>
+<div class="line">    {80, 200, <a class="code hl_variable" href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a>, 3}      <span class="comment">// Frio</span></div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Criar RadioGroup</span></div>
@@ -324,12 +324,12 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar RadioGroup</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_radio_group_config.html">RadioGroupConfig</a> config = {</div>
-<div class="line">        .group = 1,</div>
-<div class="line">        .radius = 20,</div>
-<div class="line">        .amount = 3,</div>
 <div class="line">        .buttons = opcoesTemperatura,</div>
-<div class="line">        .defaultClickedId = 2,</div>
-<div class="line">        .callback = temperatura_callback</div>
+<div class="line">        .callback = temperatura_callback,</div>
+<div class="line">        .radius = 20,</div>
+<div class="line">        .group = 1,</div>
+<div class="line">        .amount = 3,</div>
+<div class="line">        .defaultClickedId = 2</div>
 <div class="line">    };</div>
 <div class="line">    grupoTemperatura.setup(config);</div>
 <div class="line">    </div>
@@ -353,20 +353,20 @@ hide()</h2>
 <div class="line">    Serial.print(<span class="stringliteral">&quot;Temperatura selecionada: &quot;</span>);</div>
 <div class="line">    Serial.println(temp);</div>
 <div class="line">}</div>
-<div class="ttc" id="awidgetsetup_8h_html_a38a7172331dd085517d904a7116559a1"><div class="ttname"><a href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div><div class="ttdeci">constexpr uint16_t CFK_BLUE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:155</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:139</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a6fd9fea6ea06218a26be79e01b2d1b1e"><div class="ttname"><a href="widgetsetup_8h.html#a6fd9fea6ea06218a26be79e01b2d1b1e">CFK_YELLOW</a></div><div class="ttdeci">constexpr uint16_t CFK_YELLOW</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a38a7172331dd085517d904a7116559a1"><div class="ttname"><a href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div><div class="ttdeci">constexpr uint16_t CFK_BLUE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:157</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:141</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a6fd9fea6ea06218a26be79e01b2d1b1e"><div class="ttname"><a href="widgetsetup_8h.html#a6fd9fea6ea06218a26be79e01b2d1b1e">CFK_YELLOW</a></div><div class="ttdeci">constexpr uint16_t CFK_YELLOW</div><div class="ttdef"><b>Definition</b> widgetsetup.h:136</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md644"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md653"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md645"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md654"></a>
 📐 Tamanhos Recomendados</h2>
 <ul>
 <li><b>Pequenos:</b> Raio 10-15 pixels</li>
 <li><b>Médios:</b> Raio 15-25 pixels</li>
 <li><b>Grandes:</b> Raio 25-35 pixels</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md646"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md655"></a>
 🎨 Cores</h2>
 <ul>
 <li>Use cores diferentes para cada botão</li>
@@ -374,7 +374,7 @@ hide()</h2>
 <li>Botão selecionado usa a cor definida</li>
 <li>Botões não selecionados usam cor de fundo</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md647"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md656"></a>
 🔔 Layout</h2>
 <ul>
 <li>Espaçamento adequado entre botões</li>
@@ -382,7 +382,7 @@ hide()</h2>
 <li>Posições claras e organizadas</li>
 <li>Fácil acesso por toque</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md648"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md657"></a>
 ⚡ Performance</h2>
 <ul>
 <li>Gerenciamento eficiente de memória</li>
@@ -390,7 +390,7 @@ hide()</h2>
 <li>Detecção de toque otimizada</li>
 <li>Callback executado apenas na mudança</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md649"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md658"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Botões grandes o suficiente para toque</li>
@@ -398,7 +398,7 @@ hide()</h2>
 <li>Cores distintivas para cada opção</li>
 <li>Posições intuitivas</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md650"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md659"></a>
 🎨 Visual</h2>
 <ul>
 <li>Círculos com bordas definidas</li>
@@ -406,7 +406,7 @@ hide()</h2>
 <li>Cores adaptadas ao modo claro/escuro</li>
 <li>Renderização suave e clara</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md651"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md660"></a>
 🔢 IDs e Grupos</h2>
 <ul>
 <li>IDs únicos dentro do grupo</li>
@@ -415,7 +415,7 @@ hide()</h2>
 <li>Validação de IDs válidos</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md653"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md662"></a>
 🔗 Herança de WidgetBase</h1>
 <p>A classe <span class="tt"><a class="el" href="class_radio_group.html" title="Widget de grupo de botões de rádio que permite seleção de uma opção dentro do grupo.">RadioGroup</a></span> herda métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
@@ -425,7 +425,7 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md655"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md664"></a>
 🔗 Integração com DisplayFK</h1>
 <p>O <span class="tt"><a class="el" href="class_radio_group.html" title="Widget de grupo de botões de rádio que permite seleção de uma opção dentro do grupo.">RadioGroup</a></span> integra-se com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
@@ -436,7 +436,7 @@ hide()</h2>
 <li><b>Grupos:</b> Suporte a múltiplos grupos independentes</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md657"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md666"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O <a class="el" href="class_radio_group.html" title="Widget de grupo de botões de rádio que permite seleção de uma opção dentro do grupo.">RadioGroup</a> renderiza assim:</p>
 <ol type="1">
@@ -461,9 +461,9 @@ hide()</h2>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md659"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md668"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md660"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md669"></a>
 Botões não aparecem</h2>
 <ul>
 <li>Verifique se chamou <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar</li>
@@ -471,7 +471,7 @@ Botões não aparecem</h2>
 <li>Verifique se array de botões foi definido</li>
 <li>Chame <span class="tt">myDisplay.setRadiogroup()</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md661"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md670"></a>
 Toque não funciona</h2>
 <ul>
 <li>Verifique se o usuário tocou dentro do raio</li>
@@ -479,7 +479,7 @@ Toque não funciona</h2>
 <li>Verifique logs para erros</li>
 <li>Teste com botões maiores</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md662"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md671"></a>
 Callback não executa</h2>
 <ul>
 <li>Verifique se callback foi configurado</li>
@@ -487,7 +487,7 @@ Callback não executa</h2>
 <li>Verifique logs para erros</li>
 <li>Teste com seleção programática</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md663"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md672"></a>
 Botões não mudam visualmente</h2>
 <ul>
 <li>Verifique se m_shouldRedraw está sendo definido</li>
@@ -495,7 +495,7 @@ Botões não mudam visualmente</h2>
 <li>Verifique cores configuradas</li>
 <li>Teste com cores mais contrastantes</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md664"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md673"></a>
 Problemas de memória</h2>
 <ul>
 <li>Verifique se cleanupMemory() está sendo chamado</li>
@@ -504,7 +504,7 @@ Problemas de memória</h2>
 <li>Teste com menos botões primeiro</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md666"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md675"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>

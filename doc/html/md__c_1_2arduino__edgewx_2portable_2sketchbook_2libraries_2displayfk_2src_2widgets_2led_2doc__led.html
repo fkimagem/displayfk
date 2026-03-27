@@ -75,11 +75,11 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe Led </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md404"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md405"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md412"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md413"></a>
 Visão Geral</h1>
 <p>A classe <span class="tt"><a class="el" href="class_led.html" title="Widget de LED com tamanho e cor personalizáveis.">Led</a></span> é um widget visual que exibe um LED na tela com efeito de brilho quando ligado. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade completa para criar e gerenciar LEDs indicadores com diferentes tamanhos e cores.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md406"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md414"></a>
 Características Principais</h2>
 <ul>
 <li>💡 LED circular com efeito de brilho</li>
@@ -91,29 +91,33 @@ Características Principais</h2>
 <li>🔗 Integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></li>
 <li>🌓 Suporte a modo claro/escuro</li>
 <li>🔄 Estados ligado/desligado</li>
+<li>🎛️ Estado inicial configurável via <span class="tt">initialState</span></li>
+<li>🌈 Mudança de cor dinâmica via <span class="tt">setColor()</span></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md408"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md416"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md409"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md417"></a>
 LedConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração do LED:</p>
+<p>Estrutura que contém todos os parâmetros de configuração do LED (ordem conforme <span class="tt"><a class="el" href="wled_8h.html">wled.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_led_config.html">LedConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_led_config.html#a0d4d10b1aa80839e092455525c6c4296">radius</a>;     <span class="comment">// Raio do LED em pixels (recomendado: 5-50)</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_led_config.html#a9693936eda0d65142484f7be9431c61e">colorOn</a>;    <span class="comment">// Cor RGB565 quando ligado</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_led_config.html#a9b69086dcbaf252b55212ffe6d3084c9">colorOff</a>;   <span class="comment">// Cor RGB565 quando desligado (0 = automático)</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_led_config.html#a0d4d10b1aa80839e092455525c6c4296">radius</a>;     <span class="comment">// Raio do LED em pixels (recomendado: 5-50).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_led_config.html#a9693936eda0d65142484f7be9431c61e">colorOn</a>;    <span class="comment">// Cor RGB565 quando ligado.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_led_config.html#a9b69086dcbaf252b55212ffe6d3084c9">colorOff</a>;   <span class="comment">// Cor RGB565 quando desligado (0 = automático).</span></div>
+<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_led_config.html#a31956651ab5d9133248e08035b76d2c7">initialState</a>;   <span class="comment">// Estado inicial do LED (true = ligado, false = desligado).</span></div>
 <div class="line">};</div>
 <div class="ttc" id="astruct_led_config_html"><div class="ttname"><a href="struct_led_config.html">LedConfig</a></div><div class="ttdoc">Estrutura de configuração para o Led.</div><div class="ttdef"><b>Definition</b> wled.h:11</div></div>
 <div class="ttc" id="astruct_led_config_html_a0d4d10b1aa80839e092455525c6c4296"><div class="ttname"><a href="struct_led_config.html#a0d4d10b1aa80839e092455525c6c4296">LedConfig::radius</a></div><div class="ttdeci">uint16_t radius</div><div class="ttdoc">Raio do LED em pixels. Recomendado: 5-50.</div><div class="ttdef"><b>Definition</b> wled.h:12</div></div>
+<div class="ttc" id="astruct_led_config_html_a31956651ab5d9133248e08035b76d2c7"><div class="ttname"><a href="struct_led_config.html#a31956651ab5d9133248e08035b76d2c7">LedConfig::initialState</a></div><div class="ttdeci">bool initialState</div><div class="ttdoc">Estado inicial do LED (true = ligado, false = desligado).</div><div class="ttdef"><b>Definition</b> wled.h:15</div></div>
 <div class="ttc" id="astruct_led_config_html_a9693936eda0d65142484f7be9431c61e"><div class="ttname"><a href="struct_led_config.html#a9693936eda0d65142484f7be9431c61e">LedConfig::colorOn</a></div><div class="ttdeci">uint16_t colorOn</div><div class="ttdoc">Cor RGB565 exibida quando o LED está ligado.</div><div class="ttdef"><b>Definition</b> wled.h:13</div></div>
 <div class="ttc" id="astruct_led_config_html_a9b69086dcbaf252b55212ffe6d3084c9"><div class="ttname"><a href="struct_led_config.html#a9b69086dcbaf252b55212ffe6d3084c9">LedConfig::colorOff</a></div><div class="ttdeci">uint16_t colorOff</div><div class="ttdoc">Cor RGB565 exibida quando o LED está desligado (opcional, 0 = automático).</div><div class="ttdef"><b>Definition</b> wled.h:14</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md411"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md419"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md412"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md420"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_led.html">Led</a>(uint16_t _x, uint16_t _y, uint8_t _screen)</div>
-<div class="ttc" id="aclass_led_html"><div class="ttname"><a href="class_led.html">Led</a></div><div class="ttdoc">Widget de LED com tamanho e cor personalizáveis.</div><div class="ttdef"><b>Definition</b> wled.h:24</div></div>
+<div class="ttc" id="aclass_led_html"><div class="ttname"><a href="class_led.html">Led</a></div><div class="ttdoc">Widget de LED com tamanho e cor personalizáveis.</div><div class="ttdef"><b>Definition</b> wled.h:25</div></div>
 </div><!-- fragment --><p>Cria um novo LED na posição especificada. A posição (<span class="tt">_x</span>, <span class="tt">_y</span>) representa o <b>centro</b> do LED.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">_x</span>: Coordenada X do centro do LED</li>
@@ -121,11 +125,11 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, é obrigatório chamar <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md413"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md421"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_led.html">~Led</a>()</div>
 </div><!-- fragment --><p>Libera os recursos do LED automaticamente.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md414"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md422"></a>
 setup()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>(<span class="keyword">const</span> <a class="code hl_struct" href="struct_led_config.html">LedConfig</a>&amp; config)</div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
@@ -133,11 +137,25 @@ setup()</h2>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_led_config.html" title="Estrutura de configuração para o Led.">LedConfig</a></span> com as configurações</li>
 </ul>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_led_config.html" title="Estrutura de configuração para o Led.">LedConfig</a></span> com as configurações<ul>
+<li><span class="tt">radius</span>: Raio do LED em pixels (recomendado: 5-50)</li>
+<li><span class="tt">colorOn</span>: Cor RGB565 quando ligado</li>
+<li><span class="tt">colorOff</span>: Cor RGB565 quando desligado (0 = automático baseado no modo claro/escuro)</li>
+<li><span class="tt">initialState</span>: Estado inicial do LED (true = ligado, false = desligado)</li>
+</ul>
+</li>
+</ul>
 <p><b>Validações automáticas:</b></p><ul>
 <li>Raio deve ser maior que zero</li>
 <li>Aviso se raio é muito grande (&gt; 50 pixels)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md415"></a>
+<p><b>Comportamento:</b></p><ul>
+<li>O LED é inicializado com o estado especificado em <span class="tt">initialState</span></li>
+<li>O gradiente de cor é calculado automaticamente baseado em <span class="tt">colorOn</span></li>
+<li>Se <span class="tt">colorOff</span> for 0, a cor será calculada automaticamente baseada no modo claro/escuro</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md423"></a>
 getState()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">bool</span> getState() const</div>
 </div><!-- fragment --><p>Retorna o estado atual do LED.</p>
@@ -145,7 +163,7 @@ getState()</h2>
 <li><span class="tt">true</span>: LED ligado</li>
 <li><span class="tt">false</span>: LED desligado</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md416"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md424"></a>
 setState()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setState(<span class="keywordtype">bool</span> newValue)</div>
 </div><!-- fragment --><p>Define o estado do LED e atualiza o visual automaticamente.</p>
@@ -157,20 +175,32 @@ setState()</h2>
 <li>Atualiza gradiente de cor quando ligado</li>
 <li>Registra evento no log do ESP32</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md417"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md425"></a>
+setColor()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setColor(uint16_t color)</div>
+</div><!-- fragment --><p>Altera a cor do LED quando ligado dinamicamente, sem necessidade de reconfigurar todo o widget.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">color</span>: Nova cor RGB565 para o estado ligado</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Atualiza o gradiente de cor automaticamente</li>
+<li>Marca para redesenho imediato</li>
+<li>Útil para mudar a cor do LED em tempo de execução</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md426"></a>
 drawBackground()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> drawBackground()</div>
 </div><!-- fragment --><p>Desenha o fundo do LED (círculo e borda). <b>Este método pode ser chamado para inicializar o LED visualmente.</b></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md418"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md427"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna o LED visível na tela.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md419"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md428"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta o LED da tela.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md421"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md430"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente:</p>
 <ul>
@@ -179,20 +209,20 @@ hide()</h2>
 <li><span class="tt">forceUpdate()</span>: Força atualização</li>
 <li><span class="tt">getCallbackFunc()</span>: Retorna função callback</li>
 <li><span class="tt">validateConfig()</span>: Valida configuração</li>
-<li><span class="tt">updateGradient()</span>: Atualiza gradiente de cor</li>
-<li><span class="tt">getOffColor()</span>: Obtém cor para estado desligado</li>
+<li><span class="tt">updateGradient()</span>: Atualiza gradiente de cor usando <span class="tt"><a class="el" href="color_8h.html#a6e2d9aea94f6e08c0568d5f2921a3499" title="Clareia uma cor RGB565 em direção ao branco.">lighten565()</a></span> com fator progressivo</li>
+<li><span class="tt">getOffColor()</span>: Obtém cor para estado desligado (automático se colorOff = 0)</li>
 <li><span class="tt">getBackgroundColor()</span>: Obtém cor de fundo</li>
 <li><span class="tt">cleanupMemory()</span>: Limpa memória (não usado para LED)</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md423"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md432"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md424"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md433"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md425"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md434"></a>
 🏗️ Passo 2: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
@@ -202,11 +232,11 @@ hide()</h2>
 <div class="line"><span class="comment">// Criar array de ponteiros</span></div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdLed = 1;</div>
 <div class="line"><a class="code hl_class" href="class_led.html">Led</a> *arrayLed[qtdLed] = {&amp;led};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md426"></a>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md435"></a>
 📝 Passo 3: Prototipar Funções (Opcional)</h2>
 <div class="fragment"><div class="line"><span class="comment">// LEDs não usam callbacks normalmente</span></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md427"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md436"></a>
 ⚙️ Passo 4: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    <span class="comment">// ... configuração do display ...</span></div>
@@ -216,17 +246,18 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md428"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md437"></a>
 🔧 Passo 5: Configurar os Widgets</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar LED</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_led_config.html">LedConfig</a> configLed = {</div>
 <div class="line">        .radius = 16,</div>
 <div class="line">        .colorOn = <a class="code hl_variable" href="widgetsetup_8h.html#a80cbfc817f9a08d4be7b707f9cefc9ea">CFK_COLOR11</a>,</div>
-<div class="line">        .colorOff = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div>
+<div class="line">        .colorOff = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
+<div class="line">        .initialState = <span class="keyword">false</span>  <span class="comment">// Inicia desligado</span></div>
 <div class="line">    };</div>
 <div class="line">    led.setup(configLed);</div>
 <div class="line">    </div>
@@ -236,25 +267,25 @@ hide()</h2>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aeace7954c5c148206d2249c4936b8ad7">setLed</a>(arrayLed, qtdLed);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aeace7954c5c148206d2249c4936b8ad7"><div class="ttname"><a href="class_display_f_k.html#aeace7954c5c148206d2249c4936b8ad7">DisplayFK::setLed</a></div><div class="ttdeci">void setLed(Led *array[], uint8_t amount)</div><div class="ttdoc">Configures the LED array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:287</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a80cbfc817f9a08d4be7b707f9cefc9ea"><div class="ttname"><a href="widgetsetup_8h.html#a80cbfc817f9a08d4be7b707f9cefc9ea">CFK_COLOR11</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR11</div><div class="ttdef"><b>Definition</b> widgetsetup.h:177</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:131</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md429"></a>
+<div class="ttc" id="aclass_display_f_k_html_aeace7954c5c148206d2249c4936b8ad7"><div class="ttname"><a href="class_display_f_k.html#aeace7954c5c148206d2249c4936b8ad7">DisplayFK::setLed</a></div><div class="ttdeci">void setLed(Led *array[], uint8_t amount)</div><div class="ttdoc">Configures the LED array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:288</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a80cbfc817f9a08d4be7b707f9cefc9ea"><div class="ttname"><a href="widgetsetup_8h.html#a80cbfc817f9a08d4be7b707f9cefc9ea">CFK_COLOR11</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR11</div><div class="ttdef"><b>Definition</b> widgetsetup.h:179</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:133</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md438"></a>
 🔔 Passo 6: Criar Funções de Callback (Opcional)</h2>
 <div class="fragment"><div class="line"><span class="comment">// LEDs não usam callbacks normalmente</span></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md430"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md439"></a>
 🖥️ Passo 7: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
-<div class="line">    <a class="code hl_variable" href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a> = CFK GenesisITE;</div>
+<div class="line">    <a class="code hl_variable" href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>;</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Desenhar todos os widgets na tela 0</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md431"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md440"></a>
 🔄 Passo 8: Atualizar Estado (Exemplo de Uso)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Ligar LED</span></div>
@@ -268,17 +299,26 @@ hide()</h2>
 <div class="line">    <span class="comment">// Verificar estado</span></div>
 <div class="line">    <span class="keywordtype">bool</span> estáLigado = led.getState();</div>
 <div class="line">    </div>
+<div class="line">    <span class="comment">// Alterar cor dinamicamente</span></div>
+<div class="line">    led.setColor(<a class="code hl_variable" href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a>);  <span class="comment">// Muda para verde</span></div>
+<div class="line">    led.setState(<span class="keyword">true</span>);</div>
+<div class="line">    </div>
+<div class="line">    delay(1000);</div>
+<div class="line">    </div>
+<div class="line">    led.setColor(<a class="code hl_variable" href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a>);    <span class="comment">// Muda para vermelho</span></div>
 <div class="line">    delay(1000);</div>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a0ac5998349343bbfee105dfa5f8ee078"><div class="ttname"><a href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a></div><div class="ttdeci">constexpr uint16_t CFK_GREEN</div><div class="ttdef"><b>Definition</b> widgetsetup.h:152</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:141</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md433"></a>
-📝 Exemplo Completo€</h1>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md442"></a>
+📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
-<div class="line">Arduino_ЯataBus *bus = <span class="keyword">nullptr</span>;</div>
-<div class="line">Arduino_GFX *gfx butterfly;</div>
+<div class="line">Arduino_DataBus *bus = <span class="keyword">nullptr</span>;</div>
+<div class="line">Arduino_GFX *gfx = <span class="keyword">nullptr</span>;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Criar LEDs</span></div>
 <div class="line"><a class="code hl_class" href="class_led.html">Led</a> ledVermelho(100, 100, 0);</div>
@@ -289,11 +329,11 @@ hide()</h2>
 <div class="line"><a class="code hl_class" href="class_led.html">Led</a> *arrayLed[qtdLed] = {&amp;ledVermelho, &amp;ledVerde, &amp;ledAzul};</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
-<div class="line">    Serial.begin(115200 foot);</div>
+<div class="line">    Serial.begin(115200);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Inicializar display</span></div>
 <div class="line">    bus = <span class="keyword">new</span> Arduino_ESP32SPI(<span class="comment">/* ... */</span>);</div>
-<div class="line">    gfx = <span class="keyword">new</span> Arduino_ST7789(<span class="comment">/* fireplace.*/</span>);</div>
+<div class="line">    gfx = <span class="keyword">new</span> Arduino_ST7789(<span class="comment">/* ... */</span>);</div>
 <div class="line">    gfx-&gt;begin();</div>
 <div class="line">    </div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">setDrawObject</a>(gfx);</div>
@@ -302,7 +342,8 @@ hide()</h2>
 <div class="line">    <a class="code hl_struct" href="struct_led_config.html">LedConfig</a> configVermelho = {</div>
 <div class="line">        .radius = 15,</div>
 <div class="line">        .colorOn = <a class="code hl_variable" href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a>,</div>
-<div class="line">        .colorOff = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div>
+<div class="line">        .colorOff = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
+<div class="line">        .initialState = <span class="keyword">false</span></div>
 <div class="line">    };</div>
 <div class="line">    ledVermelho.setup(configVermelho);</div>
 <div class="line">    </div>
@@ -310,7 +351,8 @@ hide()</h2>
 <div class="line">    <a class="code hl_struct" href="struct_led_config.html">LedConfig</a> configVerde = {</div>
 <div class="line">        .radius = 15,</div>
 <div class="line">        .colorOn = <a class="code hl_variable" href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a>,</div>
-<div class="line">        .colorOff = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div>
+<div class="line">        .colorOff = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
+<div class="line">        .initialState = <span class="keyword">false</span></div>
 <div class="line">    };</div>
 <div class="line">    ledVerde.setup(configVerde);</div>
 <div class="line">    </div>
@@ -318,7 +360,8 @@ hide()</h2>
 <div class="line">    <a class="code hl_struct" href="struct_led_config.html">LedConfig</a> configAzul = {</div>
 <div class="line">        .radius = 15,</div>
 <div class="line">        .colorOn = <a class="code hl_variable" href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a>,</div>
-<div class="line">        .colorOff = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div>
+<div class="line">        .colorOff = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
+<div class="line">        .initialState = <span class="keyword">false</span></div>
 <div class="line">    };</div>
 <div class="line">    ledAzul.setup(configAzul);</div>
 <div class="line">    </div>
@@ -353,22 +396,20 @@ hide()</h2>
 <div class="line"><span class="keywordtype">void</span> minhaTela() {</div>
 <div class="line">    gfx-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
 <div class="line">    <a class="code hl_variable" href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>;</div>
-<div class="line">ธรรมชาติ myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
+<div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="awidgetsetup_8h_html_a0ac5998349343bbfee105dfa5f8ee078"><div class="ttname"><a href="widgetsetup_8h.html#a0ac5998349343bbfee105dfa5f8ee078">CFK_GREEN</a></div><div class="ttdeci">constexpr uint16_t CFK_GREEN</div><div class="ttdef"><b>Definition</b> widgetsetup.h:150</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a38a7172331dd085517d904a7116559a1"><div class="ttname"><a href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div><div class="ttdeci">constexpr uint16_t CFK_BLUE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:155</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:139</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a38a7172331dd085517d904a7116559a1"><div class="ttname"><a href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div><div class="ttdeci">constexpr uint16_t CFK_BLUE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:157</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md435"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md444"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md436"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md445"></a>
 📐 Tamanhos Recomendados</h2>
 <ul>
 <li><b>Pequenos:</b> Raio 8-12 pixels (indicadores discretos)</li>
 <li><b>Médios:</b> Raio 14-18 pixels (uso geral)</li>
 <li><b>Grandes:</b> Raio 20-30 pixels (destaque importante)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md437"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md446"></a>
 🎨 Cores</h2>
 <ul>
 <li>Use cores vibrantes para estado ligado</li>
@@ -377,21 +418,22 @@ hide()</h2>
 <li>Estado desligado pode ser cinza ou preto</li>
 <li>Considere contraste com o fundo</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md438"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md447"></a>
 🔔 Callbacks</h2>
 <ul>
 <li>LEDs não usam callbacks normalmente</li>
 <li>São elementos apenas visuais</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md439"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md448"></a>
 ⚡ Performance</h2>
 <ul>
 <li>Gradiente de cor calculado apenas quando ligado</li>
 <li>Renderização eficiente com círculos preenchidos</li>
 <li>Raio muito grande pode impactar performance</li>
 <li>Redesenho apenas quando estado muda</li>
+<li>Logs do ESP32 disponíveis via ESP_LOG (nível DEBUG) para depuração</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md440"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md449"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Use LEDs para indicar estados importantes</li>
@@ -399,7 +441,7 @@ hide()</h2>
 <li>Use cores significativas (vermelho=erro, verde=ok, etc.)</li>
 <li>Tamanho adequado para distância de visualização</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md441"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md450"></a>
 🎨 Design Visual</h2>
 <ul>
 <li>Efeito de brilho com múltiplos círculos concêntricos</li>
@@ -409,17 +451,19 @@ hide()</h2>
 <li>Estado ligado: gradiente de brilho</li>
 <li>Estado desligado: círculo sólido</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md442"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md451"></a>
 💡 Efeito de Brilho</h2>
 <ul>
 <li>5 círculos concêntricos desenhados</li>
 <li>Cada círculo menor que o anterior (4 pixels)</li>
 <li>Offset de 2 pixels para efeito 3D</li>
-<li>Gradiente calculado dinamicamente</li>
+<li>Gradiente calculado dinamicamente usando <span class="tt"><a class="el" href="color_8h.html#a6e2d9aea94f6e08c0568d5f2921a3499" title="Clareia uma cor RGB565 em direção ao branco.">lighten565()</a></span></li>
+<li>Fator de clareamento: 0.2 * índice do círculo (0.0 a 0.8)</li>
 <li>Cores mais claras no centro, mais escuras nas bordas</li>
+<li>Gradiente baseado em conversão HSV para melhor qualidade visual</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md444"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md453"></a>
 🔗 Herança de WidgetBase</h1>
 <p>A classe <span class="tt"><a class="el" href="class_led.html" title="Widget de LED com tamanho e cor personalizáveis.">Led</a></span> herda todos os métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
@@ -429,7 +473,7 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho automático</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md446"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md455"></a>
 🔗 Integração com DisplayFK</h1>
 <p>O <span class="tt"><a class="el" href="class_led.html" title="Widget de LED com tamanho e cor personalizáveis.">Led</a></span> integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
@@ -440,7 +484,7 @@ hide()</h2>
 <li><b>Efeitos Visuais:</b> Gradiente calculado automaticamente</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md448"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md457"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O <span class="tt"><a class="el" href="class_led.html" title="Widget de LED com tamanho e cor personalizáveis.">Led</a></span> é renderizado em duas camadas:</p>
 <ol type="1">
@@ -473,9 +517,9 @@ hide()</h2>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md450"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md459"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md451"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md460"></a>
 LED não aparece na tela</h2>
 <ul>
 <li>Verifique se chamou <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar o objeto</li>
@@ -484,15 +528,16 @@ LED não aparece na tela</h2>
 <li>Certifique-se de chamar <span class="tt">myDisplay.setLed()</span></li>
 <li>Confirme que o raio é maior que 0</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md452"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md461"></a>
 LED não muda de cor</h2>
 <ul>
 <li>Verifique se chamou <span class="tt">setState()</span> com novo valor</li>
 <li>Confirme que <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a> foi chamado</li>
 <li>Verifique se o LED está visível</li>
 <li>Certifique-se de que o widget está habilitado</li>
+<li>Use <span class="tt">setColor()</span> para alterar a cor dinamicamente sem reconfigurar</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md453"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md462"></a>
 Efeito de brilho não aparece</h2>
 <ul>
 <li>Verifique se o LED está realmente ligado</li>
@@ -500,7 +545,7 @@ Efeito de brilho não aparece</h2>
 <li>Gradiente é aplicado apenas quando ligado</li>
 <li>Tamanho de raio pode afetar visibilidade do efeito</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md454"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md463"></a>
 Problemas de performance</h2>
 <ul>
 <li>Raio muito grande (&gt; 50 pixels) afeta performance</li>
@@ -508,16 +553,18 @@ Problemas de performance</h2>
 <li>Redesenho apenas quando necessário</li>
 <li>Use raios menores quando possível</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md455"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md464"></a>
 Cores não aparecem corretamente</h2>
 <ul>
 <li>Use formatos RGB565 corretos</li>
 <li>Verifique contraste com o fundo</li>
 <li>Considere o modo claro/escuro</li>
 <li>Teste diferentes combinações de cores</li>
+<li>O estado inicial pode ser configurado via <span class="tt">initialState</span> na estrutura <span class="tt"><a class="el" href="struct_led_config.html" title="Estrutura de configuração para o Led.">LedConfig</a></span></li>
+<li>Use <span class="tt">setColor()</span> para mudar a cor em tempo de execução</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md457"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md466"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>

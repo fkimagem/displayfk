@@ -1,10 +1,13 @@
 var searchData=
 [
-  ['key_0',['key',['../uniongsl___p_o_i_n_t___t_y_p_e.html#a5fb419bf2fd0bf9c8228280dad38185b',1,'gsl_POINT_TYPE']]],
-  ['key_5fline_1',['key_line',['../uniongsl___f_l_a_g___t_y_p_e.html#a169f4c76f1b7bd1a2e06ab811105a9b9',1,'gsl_FLAG_TYPE']]],
-  ['key_5fmap_5fable_2',['key_map_able',['../gsl__point__id_8c.html#a623ef3818a05263b13dd7fe996995b51',1,'gsl_point_id.c']]],
-  ['key_5fonly_5fone_3',['key_only_one',['../uniongsl___f_l_a_g___t_y_p_e.html#a106a243b2bb97aa4d8dcfdec7a33553f',1,'gsl_FLAG_TYPE']]],
-  ['key_5frange_5farray_4',['key_range_array',['../gsl__point__id_8c.html#aae55914f4211f2312c32c66f77e3d3f9',1,'gsl_point_id.c']]],
-  ['key_5frt_5',['key_rt',['../uniongsl___f_l_a_g___t_y_p_e.html#a8a7542fb3a0d34eca9b69af9923107fb',1,'gsl_FLAG_TYPE']]],
-  ['keycolor_6',['keyColor',['../struct_numpad_config.html#aa1e53f8ff3ddb88acbd0d79cc5afaaea',1,'NumpadConfig']]]
+  ['label_0',['label',['../struct_key__t.html#afa8f0906ec3ced61b8b6b848e1e47dc0',1,'Key_t']]],
+  ['lastdrawtime_1',['lastDrawTime',['../struct_performance_metrics__t.html#ae1f8e98cd994b46973560009e44f7b69',1,'PerformanceMetrics_t']]],
+  ['lastfileloadtime_2',['lastFileLoadTime',['../struct_performance_metrics__t.html#a7faa04d05c83597a0e20d89772832dcc',1,'PerformanceMetrics_t']]],
+  ['lastrotationtime_3',['lastRotationTime',['../struct_performance_metrics__t.html#ad612550d44d98fb53fdf4c2ae24f14ef',1,'PerformanceMetrics_t']]],
+  ['left_4',['left',['../struct_margin__t.html#af7325b9aae2fc3f0ba603fa12423d62e',1,'Margin_t']]],
+  ['lettercolor_5',['letterColor',['../struct_numpad_config.html#a0728ff3629994f94d04c0938631753cb',1,'NumpadConfig::letterColor'],['../struct_number_box_config.html#a2e77727894002ba3ca75246885f637d2',1,'NumberBoxConfig::letterColor'],['../struct_text_box_config.html#ab216134e0cf2cde7ea01bf6f78bd42e1',1,'TextBoxConfig::letterColor']]],
+  ['lightmode_6',['lightMode',['../class_widget_base.html#aa38d59e3529155c30c580552d4d21fef',1,'WidgetBase']]],
+  ['line_7',['line',['../structlog_message__t.html#a4f32499be564731862781ed58597441c',1,'logMessage_t']]],
+  ['line_5flength_8',['line_length',['../structlog_message__t.html#acc3588d4fdd8b718a2d96ded401db754',1,'logMessage_t']]],
+  ['loadscreen_9',['loadScreen',['../class_widget_base.html#a2221912a74a9725474724a506c37de5f',1,'WidgetBase']]]
 ];

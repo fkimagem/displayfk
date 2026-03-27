@@ -75,11 +75,11 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe LineChart </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md458"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md459"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md467"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md468"></a>
 Visão Geral</h1>
-<p>A classe <span class="tt"><a class="el" href="class_line_chart.html" title="Widget de gráfico de linhas para plotar dados com múltiplas séries opcionais.">LineChart</a></span> é um widget visual avançado que exibe gráficos de linhas com múltiplas séries de dados. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade completa para criar e gerenciar gráficos com atualizações em tempo real, grade de referência e suporte a até 10 séries simultâneas.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md460"></a>
+<p>A classe <span class="tt"><a class="el" href="class_line_chart.html" title="Widget de gráfico de linhas com múltiplas séries, ring buffer e snapshot thread-safe.">LineChart</a></span> é um widget visual avançado que exibe gráficos de linhas com múltiplas séries de dados. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade completa para criar e gerenciar gráficos com atualizações em tempo real, grade de referência e suporte a até 10 séries simultâneas.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md469"></a>
 Características Principais</h2>
 <ul>
 <li>📊 Gráfico de linhas com múltiplas séries</li>
@@ -95,62 +95,66 @@ Características Principais</h2>
 <li>🔗 Integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md462"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md471"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md463"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md472"></a>
 LineChartConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração do gráfico:</p>
+<p>Estrutura que contém todos os parâmetros de configuração do gráfico. <br  />
+ Ela foi reorganizada para melhor alinhamento em 32 bits (veja também <span class="tt">STRUCT_ALIGNMENT.md</span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_line_chart_config.html">LineChartConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#ad9fd78ae11c5c2fd317e38034af97e51">width</a>;                <span class="comment">// Largura do gráfico em pixels</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#a177fba04c55e307177eecd82b8352bfd">height</a>;               <span class="comment">// Altura do gráfico em pixels</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_line_chart_config.html#a1660207fe40af09108b73127d7820e93">minValue</a>;                  <span class="comment">// Valor mínimo da faixa</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_line_chart_config.html#a4a60348f8ca729d85565f4c18d26d1b8">maxValue</a>;                  <span class="comment">// Valor máximo da faixa</span></div>
-<div class="line">  uint8_t <a class="code hl_variable" href="struct_line_chart_config.html#a6445b6eff2c770b36cad72a9fbeb3ec1">amountSeries</a>;          <span class="comment">// Número de séries (máx 10)</span></div>
-<div class="line">  uint16_t* <a class="code hl_variable" href="struct_line_chart_config.html#afcedf6c3ce1bb2e5e63f5f73927714b2">colorsSeries</a>;        <span class="comment">// Array de cores para cada série</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#aea583dac9755a5ec24417a6cd5f9b8be">gridColor</a>;            <span class="comment">// Cor das linhas da grade</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#ae4cf69ac8c5fcb4e0fbe21182a09a95f">borderColor</a>;          <span class="comment">// Cor da borda</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#a83cf65aec347b29ef5a334b163a3a03c">backgroundColor</a>;      <span class="comment">// Cor de fundo</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#a14d98c4359a1c96d7fbc485baa6eb2c6">textColor</a>;            <span class="comment">// Cor do texto</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#a65c35e9a070a8329fb69105b8b27705f">verticalDivision</a>;     <span class="comment">// Espaçamento entre linhas verticais</span></div>
-<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_line_chart_config.html#aec75cc5838520d781ea7c12224d64c15">workInBackground</a>;         <span class="comment">// Flag para desenho em background</span></div>
-<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_line_chart_config.html#a7787b0fd0934d2d1cfcdcf5bc1f573b9">showZeroLine</a>;             <span class="comment">// Flag para mostrar linha zero</span></div>
-<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_line_chart_config.html#ad7ab5c4080b54444b8ed7b33fbfbb8f6">boldLine</a>;                 <span class="comment">// Flag para linha em negrito</span></div>
-<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_line_chart_config.html#ad3ee9d13b47f8e58c5ae0c733505e531">showDots</a>;                 <span class="comment">// Flag para mostrar pontos</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#a7ee7df78262bd0803f666ad697966b5b">maxPointsAmount</a>;      <span class="comment">// Número máximo de pontos</span></div>
-<div class="line">  <span class="keyword">const</span> GFXfont* <a class="code hl_variable" href="struct_line_chart_config.html#a5cdae475c35c8ec5b4508d363204da0a">font</a>;           <span class="comment">// Fonte para texto</span></div>
-<div class="line">  <a class="code hl_class" href="class_label.html">Label</a>** <a class="code hl_variable" href="struct_line_chart_config.html#a519b7662b91ff4359cd53a7d97cf9e7e">subtitles</a>;             <span class="comment">// Array de Labels para legenda</span></div>
+<div class="line">  uint16_t* <a class="code hl_variable" href="struct_line_chart_config.html#afcedf6c3ce1bb2e5e63f5f73927714b2">colorsSeries</a>;        <span class="comment">// Array de cores para cada série.</span></div>
+<div class="line">  <a class="code hl_class" href="class_label.html">Label</a>** <a class="code hl_variable" href="struct_line_chart_config.html#a519b7662b91ff4359cd53a7d97cf9e7e">subtitles</a>;             <span class="comment">// Array de ponteiros para Label para cada série (pode ser nullptr).</span></div>
+<div class="line"><span class="preprocessor">#if defined(USING_GRAPHIC_LIB)</span></div>
+<div class="line">  <span class="keyword">const</span> GFXfont* <a class="code hl_variable" href="struct_line_chart_config.html#a5cdae475c35c8ec5b4508d363204da0a">font</a>;           <span class="comment">// Fonte usada para texto no gráfico.</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_line_chart_config.html#a1660207fe40af09108b73127d7820e93">minValue</a>;                  <span class="comment">// Valor mínimo para a faixa do gráfico (eixo Y).</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_line_chart_config.html#a4a60348f8ca729d85565f4c18d26d1b8">maxValue</a>;                  <span class="comment">// Valor máximo para a faixa do gráfico (eixo Y).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#ad9fd78ae11c5c2fd317e38034af97e51">width</a>;                <span class="comment">// Largura do gráfico em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#a177fba04c55e307177eecd82b8352bfd">height</a>;               <span class="comment">// Altura do gráfico em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#aea583dac9755a5ec24417a6cd5f9b8be">gridColor</a>;            <span class="comment">// Cor das linhas da grade.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#ae4cf69ac8c5fcb4e0fbe21182a09a95f">borderColor</a>;          <span class="comment">// Cor da borda do gráfico.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#a83cf65aec347b29ef5a334b163a3a03c">backgroundColor</a>;      <span class="comment">// Cor de fundo do gráfico.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#a14d98c4359a1c96d7fbc485baa6eb2c6">textColor</a>;            <span class="comment">// Cor do texto exibido no gráfico.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#a65c35e9a070a8329fb69105b8b27705f">verticalDivision</a>;     <span class="comment">// Quantidade de divisões verticais (linhas horizontais da grade).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_line_chart_config.html#a7ee7df78262bd0803f666ad697966b5b">maxPointsAmount</a>;      <span class="comment">// Número máximo de pontos por série (use LineChart::SHOW_ALL para não limitar).</span></div>
+<div class="line">  uint8_t <a class="code hl_variable" href="struct_line_chart_config.html#a6445b6eff2c770b36cad72a9fbeb3ec1">amountSeries</a>;          <span class="comment">// Número de séries para plotar (máx. 10).</span></div>
+<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_line_chart_config.html#aec75cc5838520d781ea7c12224d64c15">workInBackground</a>;         <span class="comment">// Se true, o gráfico é renderizado em background.</span></div>
+<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_line_chart_config.html#a7787b0fd0934d2d1cfcdcf5bc1f573b9">showZeroLine</a>;             <span class="comment">// Se true, desenha a linha de valor zero.</span></div>
+<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_line_chart_config.html#ad7ab5c4080b54444b8ed7b33fbfbb8f6">boldLine</a>;                 <span class="comment">// Se true, usa linhas mais espessas.</span></div>
+<div class="line">  <span class="keywordtype">bool</span> <a class="code hl_variable" href="struct_line_chart_config.html#ad3ee9d13b47f8e58c5ae0c733505e531">showDots</a>;                 <span class="comment">// Se true, desenha pontos nos valores.</span></div>
+<div class="line">  <span class="comment">// 3 bytes de padding no final (alinhamento da struct ao maior membro: 4 bytes)</span></div>
 <div class="line">};</div>
-<div class="ttc" id="aclass_label_html"><div class="ttname"><a href="class_label.html">Label</a></div><div class="ttdoc">Widget de rótulo de texto com fonte e cores personalizáveis.</div><div class="ttdef"><b>Definition</b> wlabel.h:28</div></div>
-<div class="ttc" id="astruct_line_chart_config_html"><div class="ttname"><a href="struct_line_chart_config.html">LineChartConfig</a></div><div class="ttdoc">Estrutura de configuração para o LineChart.</div><div class="ttdef"><b>Definition</b> wlinechart.h:20</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_a14d98c4359a1c96d7fbc485baa6eb2c6"><div class="ttname"><a href="struct_line_chart_config.html#a14d98c4359a1c96d7fbc485baa6eb2c6">LineChartConfig::textColor</a></div><div class="ttdeci">uint16_t textColor</div><div class="ttdoc">Cor do texto exibido no gráfico.</div><div class="ttdef"><b>Definition</b> wlinechart.h:30</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_a1660207fe40af09108b73127d7820e93"><div class="ttname"><a href="struct_line_chart_config.html#a1660207fe40af09108b73127d7820e93">LineChartConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdoc">Valor mínimo para a faixa do gráfico.</div><div class="ttdef"><b>Definition</b> wlinechart.h:23</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_a177fba04c55e307177eecd82b8352bfd"><div class="ttname"><a href="struct_line_chart_config.html#a177fba04c55e307177eecd82b8352bfd">LineChartConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura do gráfico em pixels.</div><div class="ttdef"><b>Definition</b> wlinechart.h:22</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_a4a60348f8ca729d85565f4c18d26d1b8"><div class="ttname"><a href="struct_line_chart_config.html#a4a60348f8ca729d85565f4c18d26d1b8">LineChartConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdoc">Valor máximo para a faixa do gráfico.</div><div class="ttdef"><b>Definition</b> wlinechart.h:24</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_a519b7662b91ff4359cd53a7d97cf9e7e"><div class="ttname"><a href="struct_line_chart_config.html#a519b7662b91ff4359cd53a7d97cf9e7e">LineChartConfig::subtitles</a></div><div class="ttdeci">Label ** subtitles</div><div class="ttdoc">Array de ponteiros para Label para cada série (pode ser nullptr).</div><div class="ttdef"><b>Definition</b> wlinechart.h:40</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_a5cdae475c35c8ec5b4508d363204da0a"><div class="ttname"><a href="struct_line_chart_config.html#a5cdae475c35c8ec5b4508d363204da0a">LineChartConfig::font</a></div><div class="ttdeci">const GFXfont * font</div><div class="ttdoc">Fonte usada para texto no gráfico.</div><div class="ttdef"><b>Definition</b> wlinechart.h:38</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_a6445b6eff2c770b36cad72a9fbeb3ec1"><div class="ttname"><a href="struct_line_chart_config.html#a6445b6eff2c770b36cad72a9fbeb3ec1">LineChartConfig::amountSeries</a></div><div class="ttdeci">uint8_t amountSeries</div><div class="ttdoc">Número de séries para plotar.</div><div class="ttdef"><b>Definition</b> wlinechart.h:25</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_a65c35e9a070a8329fb69105b8b27705f"><div class="ttname"><a href="struct_line_chart_config.html#a65c35e9a070a8329fb69105b8b27705f">LineChartConfig::verticalDivision</a></div><div class="ttdeci">uint16_t verticalDivision</div><div class="ttdoc">Espaçamento entre linhas verticais da grade.</div><div class="ttdef"><b>Definition</b> wlinechart.h:31</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_a7787b0fd0934d2d1cfcdcf5bc1f573b9"><div class="ttname"><a href="struct_line_chart_config.html#a7787b0fd0934d2d1cfcdcf5bc1f573b9">LineChartConfig::showZeroLine</a></div><div class="ttdeci">bool showZeroLine</div><div class="ttdoc">Flag para mostrar a linha zero no gráfico.</div><div class="ttdef"><b>Definition</b> wlinechart.h:33</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_a7ee7df78262bd0803f666ad697966b5b"><div class="ttname"><a href="struct_line_chart_config.html#a7ee7df78262bd0803f666ad697966b5b">LineChartConfig::maxPointsAmount</a></div><div class="ttdeci">uint16_t maxPointsAmount</div><div class="ttdoc">Número máximo de pontos para mostrar no gráfico.</div><div class="ttdef"><b>Definition</b> wlinechart.h:36</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_a83cf65aec347b29ef5a334b163a3a03c"><div class="ttname"><a href="struct_line_chart_config.html#a83cf65aec347b29ef5a334b163a3a03c">LineChartConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo do gráfico.</div><div class="ttdef"><b>Definition</b> wlinechart.h:29</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_ad3ee9d13b47f8e58c5ae0c733505e531"><div class="ttname"><a href="struct_line_chart_config.html#ad3ee9d13b47f8e58c5ae0c733505e531">LineChartConfig::showDots</a></div><div class="ttdeci">bool showDots</div><div class="ttdoc">Flag para mostrar os pontos na linha.</div><div class="ttdef"><b>Definition</b> wlinechart.h:35</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_ad7ab5c4080b54444b8ed7b33fbfbb8f6"><div class="ttname"><a href="struct_line_chart_config.html#ad7ab5c4080b54444b8ed7b33fbfbb8f6">LineChartConfig::boldLine</a></div><div class="ttdeci">bool boldLine</div><div class="ttdoc">Flag para tornar a linha em negrito.</div><div class="ttdef"><b>Definition</b> wlinechart.h:34</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_ad9fd78ae11c5c2fd317e38034af97e51"><div class="ttname"><a href="struct_line_chart_config.html#ad9fd78ae11c5c2fd317e38034af97e51">LineChartConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura do gráfico em pixels.</div><div class="ttdef"><b>Definition</b> wlinechart.h:21</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_ae4cf69ac8c5fcb4e0fbe21182a09a95f"><div class="ttname"><a href="struct_line_chart_config.html#ae4cf69ac8c5fcb4e0fbe21182a09a95f">LineChartConfig::borderColor</a></div><div class="ttdeci">uint16_t borderColor</div><div class="ttdoc">Cor da borda do gráfico.</div><div class="ttdef"><b>Definition</b> wlinechart.h:28</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_aea583dac9755a5ec24417a6cd5f9b8be"><div class="ttname"><a href="struct_line_chart_config.html#aea583dac9755a5ec24417a6cd5f9b8be">LineChartConfig::gridColor</a></div><div class="ttdeci">uint16_t gridColor</div><div class="ttdoc">Cor das linhas da grade.</div><div class="ttdef"><b>Definition</b> wlinechart.h:27</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_aec75cc5838520d781ea7c12224d64c15"><div class="ttname"><a href="struct_line_chart_config.html#aec75cc5838520d781ea7c12224d64c15">LineChartConfig::workInBackground</a></div><div class="ttdeci">bool workInBackground</div><div class="ttdoc">Flag para desenho em background.</div><div class="ttdef"><b>Definition</b> wlinechart.h:32</div></div>
-<div class="ttc" id="astruct_line_chart_config_html_afcedf6c3ce1bb2e5e63f5f73927714b2"><div class="ttname"><a href="struct_line_chart_config.html#afcedf6c3ce1bb2e5e63f5f73927714b2">LineChartConfig::colorsSeries</a></div><div class="ttdeci">uint16_t * colorsSeries</div><div class="ttdoc">Array de cores para cada série.</div><div class="ttdef"><b>Definition</b> wlinechart.h:26</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md464"></a>
+<div class="ttc" id="aclass_label_html"><div class="ttname"><a href="class_label.html">Label</a></div><div class="ttdef"><b>Definition</b> wlabel.h:23</div></div>
+<div class="ttc" id="astruct_line_chart_config_html"><div class="ttname"><a href="struct_line_chart_config.html">LineChartConfig</a></div><div class="ttdef"><b>Definition</b> wlinechart.h:12</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_a14d98c4359a1c96d7fbc485baa6eb2c6"><div class="ttname"><a href="struct_line_chart_config.html#a14d98c4359a1c96d7fbc485baa6eb2c6">LineChartConfig::textColor</a></div><div class="ttdeci">uint16_t textColor</div><div class="ttdef"><b>Definition</b> wlinechart.h:25</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_a1660207fe40af09108b73127d7820e93"><div class="ttname"><a href="struct_line_chart_config.html#a1660207fe40af09108b73127d7820e93">LineChartConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdef"><b>Definition</b> wlinechart.h:18</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_a177fba04c55e307177eecd82b8352bfd"><div class="ttname"><a href="struct_line_chart_config.html#a177fba04c55e307177eecd82b8352bfd">LineChartConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdef"><b>Definition</b> wlinechart.h:21</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_a4a60348f8ca729d85565f4c18d26d1b8"><div class="ttname"><a href="struct_line_chart_config.html#a4a60348f8ca729d85565f4c18d26d1b8">LineChartConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdef"><b>Definition</b> wlinechart.h:19</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_a519b7662b91ff4359cd53a7d97cf9e7e"><div class="ttname"><a href="struct_line_chart_config.html#a519b7662b91ff4359cd53a7d97cf9e7e">LineChartConfig::subtitles</a></div><div class="ttdeci">Label ** subtitles</div><div class="ttdef"><b>Definition</b> wlinechart.h:14</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_a5cdae475c35c8ec5b4508d363204da0a"><div class="ttname"><a href="struct_line_chart_config.html#a5cdae475c35c8ec5b4508d363204da0a">LineChartConfig::font</a></div><div class="ttdeci">const GFXfont * font</div><div class="ttdef"><b>Definition</b> wlinechart.h:16</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_a6445b6eff2c770b36cad72a9fbeb3ec1"><div class="ttname"><a href="struct_line_chart_config.html#a6445b6eff2c770b36cad72a9fbeb3ec1">LineChartConfig::amountSeries</a></div><div class="ttdeci">uint8_t amountSeries</div><div class="ttdef"><b>Definition</b> wlinechart.h:28</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_a65c35e9a070a8329fb69105b8b27705f"><div class="ttname"><a href="struct_line_chart_config.html#a65c35e9a070a8329fb69105b8b27705f">LineChartConfig::verticalDivision</a></div><div class="ttdeci">uint16_t verticalDivision</div><div class="ttdef"><b>Definition</b> wlinechart.h:26</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_a7787b0fd0934d2d1cfcdcf5bc1f573b9"><div class="ttname"><a href="struct_line_chart_config.html#a7787b0fd0934d2d1cfcdcf5bc1f573b9">LineChartConfig::showZeroLine</a></div><div class="ttdeci">bool showZeroLine</div><div class="ttdef"><b>Definition</b> wlinechart.h:30</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_a7ee7df78262bd0803f666ad697966b5b"><div class="ttname"><a href="struct_line_chart_config.html#a7ee7df78262bd0803f666ad697966b5b">LineChartConfig::maxPointsAmount</a></div><div class="ttdeci">uint16_t maxPointsAmount</div><div class="ttdef"><b>Definition</b> wlinechart.h:27</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_a83cf65aec347b29ef5a334b163a3a03c"><div class="ttname"><a href="struct_line_chart_config.html#a83cf65aec347b29ef5a334b163a3a03c">LineChartConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdef"><b>Definition</b> wlinechart.h:24</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_ad3ee9d13b47f8e58c5ae0c733505e531"><div class="ttname"><a href="struct_line_chart_config.html#ad3ee9d13b47f8e58c5ae0c733505e531">LineChartConfig::showDots</a></div><div class="ttdeci">bool showDots</div><div class="ttdef"><b>Definition</b> wlinechart.h:32</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_ad7ab5c4080b54444b8ed7b33fbfbb8f6"><div class="ttname"><a href="struct_line_chart_config.html#ad7ab5c4080b54444b8ed7b33fbfbb8f6">LineChartConfig::boldLine</a></div><div class="ttdeci">bool boldLine</div><div class="ttdef"><b>Definition</b> wlinechart.h:31</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_ad9fd78ae11c5c2fd317e38034af97e51"><div class="ttname"><a href="struct_line_chart_config.html#ad9fd78ae11c5c2fd317e38034af97e51">LineChartConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdef"><b>Definition</b> wlinechart.h:20</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_ae4cf69ac8c5fcb4e0fbe21182a09a95f"><div class="ttname"><a href="struct_line_chart_config.html#ae4cf69ac8c5fcb4e0fbe21182a09a95f">LineChartConfig::borderColor</a></div><div class="ttdeci">uint16_t borderColor</div><div class="ttdef"><b>Definition</b> wlinechart.h:23</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_aea583dac9755a5ec24417a6cd5f9b8be"><div class="ttname"><a href="struct_line_chart_config.html#aea583dac9755a5ec24417a6cd5f9b8be">LineChartConfig::gridColor</a></div><div class="ttdeci">uint16_t gridColor</div><div class="ttdef"><b>Definition</b> wlinechart.h:22</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_aec75cc5838520d781ea7c12224d64c15"><div class="ttname"><a href="struct_line_chart_config.html#aec75cc5838520d781ea7c12224d64c15">LineChartConfig::workInBackground</a></div><div class="ttdeci">bool workInBackground</div><div class="ttdef"><b>Definition</b> wlinechart.h:29</div></div>
+<div class="ttc" id="astruct_line_chart_config_html_afcedf6c3ce1bb2e5e63f5f73927714b2"><div class="ttname"><a href="struct_line_chart_config.html#afcedf6c3ce1bb2e5e63f5f73927714b2">LineChartConfig::colorsSeries</a></div><div class="ttdeci">uint16_t * colorsSeries</div><div class="ttdef"><b>Definition</b> wlinechart.h:13</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md473"></a>
 Constantes</h2>
 <div class="fragment"><div class="line"><span class="keyword">static</span> <span class="keyword">constexpr</span> uint16_t SHOW_ALL = 9999; <span class="comment">// Mostra todos os pontos</span></div>
 <div class="line"><span class="keyword">static</span> <span class="keyword">constexpr</span> uint8_t MAX_SERIES = 10;  <span class="comment">// Máximo de séries</span></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md466"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md475"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md467"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md476"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_line_chart.html">LineChart</a>(uint16_t _x, uint16_t _y, uint8_t _screen)</div>
-<div class="ttc" id="aclass_line_chart_html"><div class="ttname"><a href="class_line_chart.html">LineChart</a></div><div class="ttdoc">Widget de gráfico de linhas para plotar dados com múltiplas séries opcionais.</div><div class="ttdef"><b>Definition</b> wlinechart.h:51</div></div>
+<div class="ttc" id="aclass_line_chart_html"><div class="ttname"><a href="class_line_chart.html">LineChart</a></div><div class="ttdoc">Widget de gráfico de linhas com múltiplas séries, ring buffer e snapshot thread-safe.</div><div class="ttdef"><b>Definition</b> wlinechart.h:37</div></div>
 </div><!-- fragment --><p>Cria um novo gráfico de linhas na posição especificada.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">_x</span>: Coordenada X do canto superior esquerdo</li>
@@ -158,19 +162,19 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, é obrigatório chamar <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md468"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md477"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_line_chart.html">~LineChart</a>()</div>
 </div><!-- fragment --><p>Libera automaticamente a memória alocada para séries de dados.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md469"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md478"></a>
 setup()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>(<span class="keyword">const</span> <a class="code hl_struct" href="struct_line_chart_config.html">LineChartConfig</a>&amp; config)</div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
 </div><!-- fragment --><p>Configura o gráfico com os parâmetros especificados. <b>Este método deve ser chamado após a criação do objeto.</b></p>
 <p><b>Parâmetros:</b></p><ul>
-<li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_line_chart_config.html" title="Estrutura de configuração para o LineChart.">LineChartConfig</a></span> com as configurações</li>
+<li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_line_chart_config.html">LineChartConfig</a></span> com as configurações</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md470"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md479"></a>
 push()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">bool</span> push(uint16_t serieIndex, <span class="keywordtype">int</span> newValue)</div>
 </div><!-- fragment --><p>Adiciona um novo valor a uma série específica do gráfico.</p>
@@ -188,20 +192,20 @@ push()</h2>
 <li>Thread-safe com mutex</li>
 <li>Marca para redesenho</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md471"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md480"></a>
 drawBackground()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> drawBackground()</div>
 </div><!-- fragment --><p>Desenha o fundo do gráfico (borda, grade e fundo). <b>Este método deve ser chamado uma vez após <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a>.</b></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md472"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md481"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna o gráfico visível na tela.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md473"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md482"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta o gráfico da tela.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md475"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md484"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente:</p>
 <ul>
@@ -215,14 +219,14 @@ hide()</h2>
 <li><span class="tt">drawAllSeries()</span>: Desenha todas as séries</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md477"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md486"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md478"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md487"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md479"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md488"></a>
 🏗️ Passo 2: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
@@ -237,13 +241,13 @@ hide()</h2>
 <div class="line"><span class="comment">// Criar array de ponteiros</span></div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdLineChart = 1;</div>
 <div class="line"><a class="code hl_class" href="class_line_chart.html">LineChart</a> *arrayLinechart[qtdLineChart] = {&amp;linechart};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a067e01c37384dbb6e7cc57d82fbf8a5e"><div class="ttname"><a href="widgetsetup_8h.html#a067e01c37384dbb6e7cc57d82fbf8a5e">CFK_COLOR09</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR09</div><div class="ttdef"><b>Definition</b> widgetsetup.h:175</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a9ef228b5a2263774ad4bbfbcac2d480f"><div class="ttname"><a href="widgetsetup_8h.html#a9ef228b5a2263774ad4bbfbcac2d480f">CFK_COLOR04</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR04</div><div class="ttdef"><b>Definition</b> widgetsetup.h:170</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md480"></a>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a067e01c37384dbb6e7cc57d82fbf8a5e"><div class="ttname"><a href="widgetsetup_8h.html#a067e01c37384dbb6e7cc57d82fbf8a5e">CFK_COLOR09</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR09</div><div class="ttdef"><b>Definition</b> widgetsetup.h:177</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a9ef228b5a2263774ad4bbfbcac2d480f"><div class="ttname"><a href="widgetsetup_8h.html#a9ef228b5a2263774ad4bbfbcac2d480f">CFK_COLOR04</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR04</div><div class="ttdef"><b>Definition</b> widgetsetup.h:172</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md489"></a>
 📝 Passo 3: Prototipar Funções (Opcional)</h2>
 <div class="fragment"><div class="line"><span class="comment">// LineChart não usa callbacks normalmente</span></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md481"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md490"></a>
 ⚙️ Passo 4: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    <span class="comment">// ... configuração do display ...</span></div>
@@ -253,32 +257,32 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md482"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md491"></a>
 🔧 Passo 5: Configurar o Gráfico</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar gráfico de linhas</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_line_chart_config.html">LineChartConfig</a> configLineChart = {</div>
-<div class="line">        .width = 500,</div>
-<div class="line">        .height = 113,</div>
-<div class="line">        .minValue = 0,</div>
-<div class="line">        .maxValue = 100,</div>
-<div class="line">        .amountSeries = qtdLinesChart0,</div>
 <div class="line">        .colorsSeries = colorsChart0,</div>
-<div class="line">        .gridColor = <a class="code hl_variable" href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a>,</div>
+<div class="line">        .subtitles   = seriesGrafico0,</div>
+<div class="line">        .font        = &amp;RobotoRegular5pt7b,</div>
+<div class="line">        .minValue    = 0,</div>
+<div class="line">        .maxValue    = 100,</div>
+<div class="line">        .width       = 500,</div>
+<div class="line">        .height      = 113,</div>
+<div class="line">        .gridColor   = <a class="code hl_variable" href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a>,</div>
 <div class="line">        .borderColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#a5679aa820f9371da045134a916463fd9">CFK_GREY4</a>,</div>
-<div class="line">        .textColor = <a class="code hl_variable" href="widgetsetup_8h.html#aaea62fb5c85e195ae778bdaac0343c6f">CFK_COLOR19</a>,</div>
+<div class="line">        .textColor   = <a class="code hl_variable" href="widgetsetup_8h.html#aaea62fb5c85e195ae778bdaac0343c6f">CFK_COLOR19</a>,</div>
 <div class="line">        .verticalDivision = 10,</div>
+<div class="line">        .maxPointsAmount  = <a class="code hl_variable" href="class_line_chart.html#a448c0b570e54c50730e1fff727f68113">LineChart::SHOW_ALL</a>,</div>
+<div class="line">        .amountSeries     = qtdLinesChart0,</div>
 <div class="line">        .workInBackground = <span class="keyword">false</span>,</div>
-<div class="line">        .showZeroLine = <span class="keyword">true</span>,</div>
-<div class="line">        .boldLine = <span class="keyword">false</span>,</div>
-<div class="line">        .showDots = <span class="keyword">false</span>,</div>
-<div class="line">        .maxPointsAmount = <a class="code hl_variable" href="class_line_chart.html#a448c0b570e54c50730e1fff727f68113">LineChart::SHOW_ALL</a>,</div>
-<div class="line">        .font = &amp;RobotoRegular5pt7b,</div>
-<div class="line">        .subtitles = seriesGrafico0</div>
+<div class="line">        .showZeroLine     = <span class="keyword">true</span>,</div>
+<div class="line">        .boldLine         = <span class="keyword">false</span>,</div>
+<div class="line">        .showDots         = <span class="keyword">false</span></div>
 <div class="line">    };</div>
 <div class="line">    linechart.setup(configLineChart);</div>
 <div class="line">    </div>
@@ -288,13 +292,13 @@ hide()</h2>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#a47c9547f8bcb254e4327c3f3e244ebab">setLineChart</a>(arrayLinechart, qtdLineChart);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a47c9547f8bcb254e4327c3f3e244ebab"><div class="ttname"><a href="class_display_f_k.html#a47c9547f8bcb254e4327c3f3e244ebab">DisplayFK::setLineChart</a></div><div class="ttdeci">void setLineChart(LineChart *array[], uint8_t amount)</div><div class="ttdoc">Configures the line chart array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:317</div></div>
-<div class="ttc" id="aclass_line_chart_html_a448c0b570e54c50730e1fff727f68113"><div class="ttname"><a href="class_line_chart.html#a448c0b570e54c50730e1fff727f68113">LineChart::SHOW_ALL</a></div><div class="ttdeci">static constexpr uint16_t SHOW_ALL</div><div class="ttdoc">Constante para mostrar todos os pontos (máximo 9999).</div><div class="ttdef"><b>Definition</b> wlinechart.h:53</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:167</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a5679aa820f9371da045134a916463fd9"><div class="ttname"><a href="widgetsetup_8h.html#a5679aa820f9371da045134a916463fd9">CFK_GREY4</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY4</div><div class="ttdef"><b>Definition</b> widgetsetup.h:203</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_aaea62fb5c85e195ae778bdaac0343c6f"><div class="ttname"><a href="widgetsetup_8h.html#aaea62fb5c85e195ae778bdaac0343c6f">CFK_COLOR19</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR19</div><div class="ttdef"><b>Definition</b> widgetsetup.h:185</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:131</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md483"></a>
+<div class="ttc" id="aclass_display_f_k_html_a47c9547f8bcb254e4327c3f3e244ebab"><div class="ttname"><a href="class_display_f_k.html#a47c9547f8bcb254e4327c3f3e244ebab">DisplayFK::setLineChart</a></div><div class="ttdeci">void setLineChart(LineChart *array[], uint8_t amount)</div><div class="ttdoc">Configures the line chart array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:318</div></div>
+<div class="ttc" id="aclass_line_chart_html_a448c0b570e54c50730e1fff727f68113"><div class="ttname"><a href="class_line_chart.html#a448c0b570e54c50730e1fff727f68113">LineChart::SHOW_ALL</a></div><div class="ttdeci">static constexpr uint16_t SHOW_ALL</div><div class="ttdef"><b>Definition</b> wlinechart.h:39</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:169</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a5679aa820f9371da045134a916463fd9"><div class="ttname"><a href="widgetsetup_8h.html#a5679aa820f9371da045134a916463fd9">CFK_GREY4</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY4</div><div class="ttdef"><b>Definition</b> widgetsetup.h:205</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_aaea62fb5c85e195ae778bdaac0343c6f"><div class="ttname"><a href="widgetsetup_8h.html#aaea62fb5c85e195ae778bdaac0343c6f">CFK_COLOR19</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR19</div><div class="ttdef"><b>Definition</b> widgetsetup.h:187</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:133</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md492"></a>
 🔔 Passo 6: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -302,10 +306,10 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md484"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md493"></a>
 🔄 Passo 7: Adicionar Dados (Exemplo)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Adicionar valores às séries</span></div>
@@ -319,7 +323,7 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md486"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md495"></a>
 📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"> </div>
@@ -388,14 +392,14 @@ hide()</h2>
 <div class="line">    <a class="code hl_variable" href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>;</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_line_chart_html_a0c1b31a2e400cbcee5a617506f7bd7ac"><div class="ttname"><a href="class_line_chart.html#a0c1b31a2e400cbcee5a617506f7bd7ac">LineChart::setup</a></div><div class="ttdeci">void setup(const LineChartConfig &amp;config)</div><div class="ttdoc">Configura o LineChart usando uma estrutura de configuração.</div><div class="ttdef"><b>Definition</b> wlinechart.cpp:852</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a38a7172331dd085517d904a7116559a1"><div class="ttname"><a href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div><div class="ttdeci">constexpr uint16_t CFK_BLUE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:155</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:139</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a8c951fc0cf1c92ef5bc3970bf8c3bfed"><div class="ttname"><a href="widgetsetup_8h.html#a8c951fc0cf1c92ef5bc3970bf8c3bfed">CFK_GREY8</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY8</div><div class="ttdef"><b>Definition</b> widgetsetup.h:207</div></div>
+<div class="ttc" id="aclass_line_chart_html_a0c1b31a2e400cbcee5a617506f7bd7ac"><div class="ttname"><a href="class_line_chart.html#a0c1b31a2e400cbcee5a617506f7bd7ac">LineChart::setup</a></div><div class="ttdeci">void setup(const LineChartConfig &amp;config)</div><div class="ttdef"><b>Definition</b> wlinechart.cpp:211</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a38a7172331dd085517d904a7116559a1"><div class="ttname"><a href="widgetsetup_8h.html#a38a7172331dd085517d904a7116559a1">CFK_BLUE</a></div><div class="ttdeci">constexpr uint16_t CFK_BLUE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:157</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:141</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a8c951fc0cf1c92ef5bc3970bf8c3bfed"><div class="ttname"><a href="widgetsetup_8h.html#a8c951fc0cf1c92ef5bc3970bf8c3bfed">CFK_GREY8</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY8</div><div class="ttdef"><b>Definition</b> widgetsetup.h:209</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md488"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md497"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md489"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md498"></a>
 📐 Tamanhos Recomendados</h2>
 <ul>
 <li><b>Pequenos:</b> 200x100 pixels</li>
@@ -403,7 +407,7 @@ hide()</h2>
 </li>
 <li><b>Grandes:</b> 600x300 pixels</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md490"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md499"></a>
 🎨 Configuração de Séries</h2>
 <ul>
 <li>Máximo de 10 séries por gráfico</li>
@@ -411,7 +415,7 @@ hide()</h2>
 <li>Labels opcionais para legendas</li>
 <li>Valores devem estar entre minValue e maxValue</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md491"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md500"></a>
 🔔 Performance</h2>
 <ul>
 <li>Atualizações thread-safe com mutex</li>
@@ -420,7 +424,7 @@ hide()</h2>
 <li>Trabalhar em background se necessário</li>
 <li>Configurações</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md492"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md501"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Configure grade clara e legível</li>
@@ -429,7 +433,7 @@ hide()</h2>
 <li>Adicione legendas para clareza</li>
 <li>Pontos nas linhas melhoram visibilidade</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md493"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md502"></a>
 🎨 Efeitos Visuais</h2>
 <ul>
 <li><span class="tt">showDots</span>: Mostra pontos nas linhas</li>
@@ -439,9 +443,9 @@ hide()</h2>
 <li>Cores diferentes para cada série</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md495"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md504"></a>
 🔗 Herança de WidgetBase</h1>
-<p>A classe <span class="tt"><a class="el" href="class_line_chart.html" title="Widget de gráfico de linhas para plotar dados com múltiplas séries opcionais.">LineChart</a></span> herda métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
+<p>A classe <span class="tt"><a class="el" href="class_line_chart.html" title="Widget de gráfico de linhas com múltiplas séries, ring buffer e snapshot thread-safe.">LineChart</a></span> herda métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
 <li><span class="tt">isEnabled()</span> / <span class="tt">setEnabled()</span>: Habilitar/desabilitar</li>
 <li><span class="tt">isInitialized()</span>: Verificar configuração</li>
@@ -449,9 +453,9 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md497"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md506"></a>
 🔗 Integração com DisplayFK</h1>
-<p>O <span class="tt"><a class="el" href="class_line_chart.html" title="Widget de gráfico de linhas para plotar dados com múltiplas séries opcionais.">LineChart</a></span> integra-se com <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
+<p>O <span class="tt"><a class="el" href="class_line_chart.html" title="Widget de gráfico de linhas com múltiplas séries, ring buffer e snapshot thread-safe.">LineChart</a></span> integra-se com <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
 <li><b>Renderização:</b> Automática com <span class="tt">drawWidgetsOnScreen()</span></li>
 <li><b>Thread-Safety:</b> Mutex para acesso seguro</li>
@@ -460,7 +464,7 @@ hide()</h2>
 <li><b>Séries:</b> Múltiplas séries simultâneas</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md499"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md508"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O gráfico renderiza em camadas:</p>
 <ol type="1">
@@ -483,9 +487,9 @@ hide()</h2>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md501"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md510"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md502"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md511"></a>
 Gráfico não aparece</h2>
 <ul>
 <li>Chame <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar o objeto</li>
@@ -493,7 +497,7 @@ Gráfico não aparece</h2>
 <li>Verifique se está na tela correta</li>
 <li>Chame <span class="tt">myDisplay.setLineChart()</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md503"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md512"></a>
 Dados não aparecem</h2>
 <ul>
 <li>Use <span class="tt">push()</span> para adicionar valores</li>
@@ -501,7 +505,7 @@ Dados não aparecem</h2>
 <li>Confirme valores entre minValue e maxValue</li>
 <li>Verifique se gráfico está visível</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md504"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md513"></a>
 Problemas de performance</h2>
 <ul>
 <li>Limite número de pontos com maxPointsAmount</li>
@@ -510,7 +514,7 @@ Problemas de performance</h2>
 <li>Use workInBackground se apropriado</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md506"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md515"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>

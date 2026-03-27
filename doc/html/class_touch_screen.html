@@ -105,7 +105,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a631c226c890dd7163c737e7c3d906384" id="r_a631c226c890dd7163c737e7c3d906384"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a631c226c890dd7163c737e7c3d906384">setInvertAxis</a> (bool invert_x, bool invert_y)</td></tr>
 <tr class="memitem:af867578623d2c092403115588bdff18c" id="r_af867578623d2c092403115588bdff18c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af867578623d2c092403115588bdff18c">setSwapAxis</a> (bool swap)</td></tr>
 <tr class="memitem:a7332d968eb7fbb060e848f822e042c01" id="r_a7332d968eb7fbb060e848f822e042c01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7332d968eb7fbb060e848f822e042c01">setLogMessages</a> (bool enable)</td></tr>
-<tr class="memitem:ab55081afe76086ece39b408b511a0aba" id="r_ab55081afe76086ece39b408b511a0aba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab55081afe76086ece39b408b511a0aba">startAsGSL3680</a> (uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST)</td></tr>
+<tr class="memitem:ae7a113835728e08b887c3a8ee5b4a3bb" id="r_ae7a113835728e08b887c3a8ee5b4a3bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae7a113835728e08b887c3a8ee5b4a3bb">startAsFT6336</a> (uint16_t w, uint16_t h, uint8_t _rotation, uint8_t pinSDA, uint8_t pinSCL, uint8_t pinINT, uint8_t pinRST)</td></tr>
+<tr class="memitem:a75d55b17ceee61b5d4f0e899b84ab0a4" id="r_a75d55b17ceee61b5d4f0e899b84ab0a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a75d55b17ceee61b5d4f0e899b84ab0a4">showSetup</a> ()</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -171,15 +172,6 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">array</td><td>Array of calibration points.</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>Calibrates the touch screen using 9 points. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">parameters</td><td>Array of calibration parameters. </td></tr>
-    <tr><td class="paramname">color_fg</td><td>Color of the foreground. </td></tr>
-    <tr><td class="paramname">color_bg</td><td>Color of the background. </td></tr>
-    <tr><td class="paramname">size</td><td>Size of the calibration points.</td></tr>
   </table>
   </dd>
 </dl>
@@ -427,14 +419,31 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab55081afe76086ece39b408b511a0aba" name="ab55081afe76086ece39b408b511a0aba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab55081afe76086ece39b408b511a0aba">&#9670;&#160;</a></span>startAsGSL3680()</h2>
+<a id="a75d55b17ceee61b5d4f0e899b84ab0a4" name="a75d55b17ceee61b5d4f0e899b84ab0a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75d55b17ceee61b5d4f0e899b84ab0a4">&#9670;&#160;</a></span>showSetup()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void TouchScreen::startAsGSL3680 </td>
+          <td class="memname">void TouchScreen::showSetup </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7a113835728e08b887c3a8ee5b4a3bb" name="ae7a113835728e08b887c3a8ee5b4a3bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7a113835728e08b887c3a8ee5b4a3bb">&#9670;&#160;</a></span>startAsFT6336()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TouchScreen::startAsFT6336 </td>
           <td>(</td>
           <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
         </tr>

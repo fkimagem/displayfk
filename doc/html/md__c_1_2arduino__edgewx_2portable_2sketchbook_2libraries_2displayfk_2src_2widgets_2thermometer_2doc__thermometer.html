@@ -75,56 +75,56 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe Thermometer </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md936"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md937"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md945"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md946"></a>
 Visão Geral</h1>
-<p>A classe <span class="tt"><a class="el" href="class_thermometer.html" title="Widget de termômetro vertical para exibir valores como uma barra preenchida dentro de uma faixa espec...">Thermometer</a></span> é um widget visual que exibe um termômetro vertical com bulbo na base e tubo de vidro central. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade completa para criar termômetros com valores variáveis, cores personalizáveis e integração com <a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a> para exibição numérica.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md938"></a>
+<p>A classe <span class="tt"><a class="el" href="class_thermometer.html" title="Widget de termômetro vertical para exibir valores como uma barra preenchida dentro de uma faixa espec...">Thermometer</a></span> é um widget visual que exibe um termômetro vertical com bulbo na base e tubo de vidro central. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade completa para criar termômetros com valores variáveis, cores personalizáveis e integração com <a class="el" href="class_label.html">Label</a> para exibição numérica.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md947"></a>
 Características Principais</h2>
 <ul>
 <li>🌡️ Termômetro vertical com bulbo e tubo de vidro</li>
 <li>🎨 Cores personalizáveis para preenchimento, fundo e marcas</li>
 <li>📊 Faixa de valores configurável (min/max)</li>
-<li>🔢 Integração com <a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a> para exibição numérica</li>
+<li>🔢 Integração com <a class="el" href="class_label.html">Label</a> para exibição numérica</li>
 <li>📏 Marcações graduadas no tubo</li>
 <li>✨ Efeito de gradiente no bulbo para realismo</li>
 <li>👁️ Pode ser mostrado/ocultado dinamicamente</li>
 <li>🔗 Integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md940"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md949"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md941"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md950"></a>
 ThermometerConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração:</p>
+<p>Estrutura que contém todos os parâmetros de configuração (ordem conforme <span class="tt"><a class="el" href="wthermometer_8h.html">wthermometer.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_thermometer_config.html">ThermometerConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_thermometer_config.html#a3639cd68491d7b4fd72eac3abf7786e9">width</a>;          <span class="comment">// Largura do termômetro</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_thermometer_config.html#a8238724cc0c1cafe3c3a250dc0917475">height</a>;         <span class="comment">// Altura do termômetro</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_thermometer_config.html#a6c663dbe463281a8769605f0c2af6447">filledColor</a>;    <span class="comment">// Cor da porção preenchida</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_thermometer_config.html#ad4f57761ee5c230dbbaeb489078f2148">backgroundColor</a>; <span class="comment">// Cor de fundo</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_thermometer_config.html#a4f0e50a48287a5da7a60abd02db14df9">markColor</a>;      <span class="comment">// Cor das marcas graduadas</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_thermometer_config.html#ae8483e737027914ce48bbc41b6009ab2">minValue</a>;            <span class="comment">// Valor mínimo da faixa</span></div>
-<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_thermometer_config.html#ae46130a4e7f2eabd6bd838373ab862c3">maxValue</a>;            <span class="comment">// Valor máximo da faixa</span></div>
-<div class="line">  <a class="code hl_class" href="class_label.html">Label</a>* <a class="code hl_variable" href="struct_thermometer_config.html#a2be1adc97bbc2fc75c7c21d04a426be8">subtitle</a>;         <span class="comment">// Ponteiro para Label (opcional)</span></div>
-<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_thermometer_config.html#abf8a12ea104292fa852d5061a2c85ef5">unit</a>;        <span class="comment">// Unidade de medida (ex: &quot;°C&quot;, &quot;°F&quot;)</span></div>
-<div class="line">  uint8_t <a class="code hl_variable" href="struct_thermometer_config.html#a7011d0b7c709d42123421fd196680941">decimalPlaces</a>;  <span class="comment">// Casas decimais para exibição</span></div>
+<div class="line">  <a class="code hl_class" href="class_label.html">Label</a>* <a class="code hl_variable" href="struct_thermometer_config.html#a2be1adc97bbc2fc75c7c21d04a426be8">subtitle</a>;         <span class="comment">// Ponteiro para Label para exibir o valor (pode ser nullptr).</span></div>
+<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_thermometer_config.html#abf8a12ea104292fa852d5061a2c85ef5">unit</a>;        <span class="comment">// Unidade de medida (ex: &quot;°C&quot;, &quot;°F&quot;).</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_thermometer_config.html#ae8483e737027914ce48bbc41b6009ab2">minValue</a>;            <span class="comment">// Valor mínimo da faixa.</span></div>
+<div class="line">  <span class="keywordtype">int</span> <a class="code hl_variable" href="struct_thermometer_config.html#ae46130a4e7f2eabd6bd838373ab862c3">maxValue</a>;            <span class="comment">// Valor máximo da faixa.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_thermometer_config.html#a3639cd68491d7b4fd72eac3abf7786e9">width</a>;          <span class="comment">// Largura do termômetro em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_thermometer_config.html#a8238724cc0c1cafe3c3a250dc0917475">height</a>;         <span class="comment">// Altura do termômetro em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_thermometer_config.html#a6c663dbe463281a8769605f0c2af6447">filledColor</a>;    <span class="comment">// Cor da porção preenchida.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_thermometer_config.html#ad4f57761ee5c230dbbaeb489078f2148">backgroundColor</a>;<span class="comment">// Cor de fundo.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_thermometer_config.html#a4f0e50a48287a5da7a60abd02db14df9">markColor</a>;      <span class="comment">// Cor das marcas graduadas.</span></div>
+<div class="line">  uint8_t <a class="code hl_variable" href="struct_thermometer_config.html#a7011d0b7c709d42123421fd196680941">decimalPlaces</a>;   <span class="comment">// Casas decimais para exibição.</span></div>
 <div class="line">};</div>
-<div class="ttc" id="aclass_label_html"><div class="ttname"><a href="class_label.html">Label</a></div><div class="ttdoc">Widget de rótulo de texto com fonte e cores personalizáveis.</div><div class="ttdef"><b>Definition</b> wlabel.h:28</div></div>
+<div class="ttc" id="aclass_label_html"><div class="ttname"><a href="class_label.html">Label</a></div><div class="ttdef"><b>Definition</b> wlabel.h:23</div></div>
 <div class="ttc" id="astruct_thermometer_config_html"><div class="ttname"><a href="struct_thermometer_config.html">ThermometerConfig</a></div><div class="ttdoc">Estrutura de configuração para o Thermometer.</div><div class="ttdef"><b>Definition</b> wthermometer.h:10</div></div>
-<div class="ttc" id="astruct_thermometer_config_html_a2be1adc97bbc2fc75c7c21d04a426be8"><div class="ttname"><a href="struct_thermometer_config.html#a2be1adc97bbc2fc75c7c21d04a426be8">ThermometerConfig::subtitle</a></div><div class="ttdeci">Label * subtitle</div><div class="ttdoc">Ponteiro para um widget Label para exibir o valor do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:18</div></div>
-<div class="ttc" id="astruct_thermometer_config_html_a3639cd68491d7b4fd72eac3abf7786e9"><div class="ttname"><a href="struct_thermometer_config.html#a3639cd68491d7b4fd72eac3abf7786e9">ThermometerConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura da exibição do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:11</div></div>
-<div class="ttc" id="astruct_thermometer_config_html_a4f0e50a48287a5da7a60abd02db14df9"><div class="ttname"><a href="struct_thermometer_config.html#a4f0e50a48287a5da7a60abd02db14df9">ThermometerConfig::markColor</a></div><div class="ttdeci">uint16_t markColor</div><div class="ttdoc">Cor usada para as marcas no termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:15</div></div>
-<div class="ttc" id="astruct_thermometer_config_html_a6c663dbe463281a8769605f0c2af6447"><div class="ttname"><a href="struct_thermometer_config.html#a6c663dbe463281a8769605f0c2af6447">ThermometerConfig::filledColor</a></div><div class="ttdeci">uint16_t filledColor</div><div class="ttdoc">Cor usada para a porção preenchida do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:13</div></div>
+<div class="ttc" id="astruct_thermometer_config_html_a2be1adc97bbc2fc75c7c21d04a426be8"><div class="ttname"><a href="struct_thermometer_config.html#a2be1adc97bbc2fc75c7c21d04a426be8">ThermometerConfig::subtitle</a></div><div class="ttdeci">Label * subtitle</div><div class="ttdoc">Ponteiro para um widget Label para exibir o valor do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:11</div></div>
+<div class="ttc" id="astruct_thermometer_config_html_a3639cd68491d7b4fd72eac3abf7786e9"><div class="ttname"><a href="struct_thermometer_config.html#a3639cd68491d7b4fd72eac3abf7786e9">ThermometerConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura da exibição do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:15</div></div>
+<div class="ttc" id="astruct_thermometer_config_html_a4f0e50a48287a5da7a60abd02db14df9"><div class="ttname"><a href="struct_thermometer_config.html#a4f0e50a48287a5da7a60abd02db14df9">ThermometerConfig::markColor</a></div><div class="ttdeci">uint16_t markColor</div><div class="ttdoc">Cor usada para as marcas no termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:19</div></div>
+<div class="ttc" id="astruct_thermometer_config_html_a6c663dbe463281a8769605f0c2af6447"><div class="ttname"><a href="struct_thermometer_config.html#a6c663dbe463281a8769605f0c2af6447">ThermometerConfig::filledColor</a></div><div class="ttdeci">uint16_t filledColor</div><div class="ttdoc">Cor usada para a porção preenchida do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:17</div></div>
 <div class="ttc" id="astruct_thermometer_config_html_a7011d0b7c709d42123421fd196680941"><div class="ttname"><a href="struct_thermometer_config.html#a7011d0b7c709d42123421fd196680941">ThermometerConfig::decimalPlaces</a></div><div class="ttdeci">uint8_t decimalPlaces</div><div class="ttdoc">Número de casas decimais para exibição do valor.</div><div class="ttdef"><b>Definition</b> wthermometer.h:20</div></div>
-<div class="ttc" id="astruct_thermometer_config_html_a8238724cc0c1cafe3c3a250dc0917475"><div class="ttname"><a href="struct_thermometer_config.html#a8238724cc0c1cafe3c3a250dc0917475">ThermometerConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura da exibição do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:12</div></div>
-<div class="ttc" id="astruct_thermometer_config_html_abf8a12ea104292fa852d5061a2c85ef5"><div class="ttname"><a href="struct_thermometer_config.html#abf8a12ea104292fa852d5061a2c85ef5">ThermometerConfig::unit</a></div><div class="ttdeci">const char * unit</div><div class="ttdoc">Unidade de medida para o termômetro (ex: &quot;°C&quot;, &quot;°F&quot;).</div><div class="ttdef"><b>Definition</b> wthermometer.h:19</div></div>
-<div class="ttc" id="astruct_thermometer_config_html_ad4f57761ee5c230dbbaeb489078f2148"><div class="ttname"><a href="struct_thermometer_config.html#ad4f57761ee5c230dbbaeb489078f2148">ThermometerConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor usada para o fundo do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:14</div></div>
-<div class="ttc" id="astruct_thermometer_config_html_ae46130a4e7f2eabd6bd838373ab862c3"><div class="ttname"><a href="struct_thermometer_config.html#ae46130a4e7f2eabd6bd838373ab862c3">ThermometerConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdoc">Valor máximo da faixa do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:17</div></div>
-<div class="ttc" id="astruct_thermometer_config_html_ae8483e737027914ce48bbc41b6009ab2"><div class="ttname"><a href="struct_thermometer_config.html#ae8483e737027914ce48bbc41b6009ab2">ThermometerConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdoc">Valor mínimo da faixa do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:16</div></div>
+<div class="ttc" id="astruct_thermometer_config_html_a8238724cc0c1cafe3c3a250dc0917475"><div class="ttname"><a href="struct_thermometer_config.html#a8238724cc0c1cafe3c3a250dc0917475">ThermometerConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura da exibição do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:16</div></div>
+<div class="ttc" id="astruct_thermometer_config_html_abf8a12ea104292fa852d5061a2c85ef5"><div class="ttname"><a href="struct_thermometer_config.html#abf8a12ea104292fa852d5061a2c85ef5">ThermometerConfig::unit</a></div><div class="ttdeci">const char * unit</div><div class="ttdoc">Unidade de medida para o termômetro (ex: &quot;°C&quot;, &quot;°F&quot;).</div><div class="ttdef"><b>Definition</b> wthermometer.h:12</div></div>
+<div class="ttc" id="astruct_thermometer_config_html_ad4f57761ee5c230dbbaeb489078f2148"><div class="ttname"><a href="struct_thermometer_config.html#ad4f57761ee5c230dbbaeb489078f2148">ThermometerConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor usada para o fundo do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:18</div></div>
+<div class="ttc" id="astruct_thermometer_config_html_ae46130a4e7f2eabd6bd838373ab862c3"><div class="ttname"><a href="struct_thermometer_config.html#ae46130a4e7f2eabd6bd838373ab862c3">ThermometerConfig::maxValue</a></div><div class="ttdeci">int maxValue</div><div class="ttdoc">Valor máximo da faixa do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:14</div></div>
+<div class="ttc" id="astruct_thermometer_config_html_ae8483e737027914ce48bbc41b6009ab2"><div class="ttname"><a href="struct_thermometer_config.html#ae8483e737027914ce48bbc41b6009ab2">ThermometerConfig::minValue</a></div><div class="ttdeci">int minValue</div><div class="ttdoc">Valor mínimo da faixa do termômetro.</div><div class="ttdef"><b>Definition</b> wthermometer.h:13</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md943"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md952"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md944"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md953"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_thermometer.html">Thermometer</a>(uint16_t _x, uint16_t _y, uint8_t _screen)</div>
 <div class="ttc" id="aclass_thermometer_html"><div class="ttname"><a href="class_thermometer.html">Thermometer</a></div><div class="ttdoc">Widget de termômetro vertical para exibir valores como uma barra preenchida dentro de uma faixa espec...</div><div class="ttdef"><b>Definition</b> wthermometer.h:32</div></div>
@@ -135,11 +135,11 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, chame <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md945"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md954"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_thermometer.html">~Thermometer</a>()</div>
 </div><!-- fragment --><p>Libera os recursos do <a class="el" href="class_thermometer.html" title="Widget de termômetro vertical para exibir valores como uma barra preenchida dentro de uma faixa espec...">Thermometer</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md946"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md955"></a>
 setup()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>(<span class="keyword">const</span> <a class="code hl_struct" href="struct_thermometer_config.html">ThermometerConfig</a>&amp; config)</div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
@@ -147,46 +147,140 @@ setup()</h2>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_thermometer_config.html" title="Estrutura de configuração para o Thermometer.">ThermometerConfig</a></span> com as configurações</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md947"></a>
+<p><b>Características:</b></p><ul>
+<li>Valida se o widget já está carregado (evita reconfiguração)</li>
+<li>Calcula gradiente de cor para efeito de luz no bulbo</li>
+<li>Configura <a class="el" href="class_label.html">Label</a> com unidade de medida se <span class="tt">subtitle</span> for fornecido</li>
+<li>Define valor inicial como <span class="tt">minValue</span></li>
+<li>Valida dimensões (altura mínima de 20 pixels)</li>
+<li>Marca o widget como carregado e inicializado</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md956"></a>
 drawBackground()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> drawBackground()</div>
 </div><!-- fragment --><p>Desenha o fundo do termômetro (bulbo, tubo, marcas). <b>Este método deve ser chamado uma vez após <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a>.</b></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md948"></a>
+<p><b>Características:</b></p><ul>
+<li>Desenha retângulo de fundo com bordas arredondadas</li>
+<li>Calcula e desenha tubo de vidro central</li>
+<li>Desenha bulbo na base com gradiente de cor para efeito de luz</li>
+<li>Desenha marcações graduadas no lado do tubo (10 divisões)</li>
+<li>Marcações maiores a cada 5 divisões</li>
+<li>Calcula áreas de preenchimento e vidro</li>
+<li>Deve ser chamado antes de usar <span class="tt">setValue()</span></li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md957"></a>
 setValue()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setValue(<span class="keywordtype">float</span> newValue)</div>
 </div><!-- fragment --><p>Define o valor atual do termômetro.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">newValue</span>: Novo valor (será limitado entre minValue e maxValue)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md949"></a>
+<p><b>Características:</b></p><ul>
+<li>Aceita valores do tipo <span class="tt">float</span> para precisão decimal</li>
+<li>Restringe valor usando <span class="tt">constrain()</span> dentro da faixa min/max</li>
+<li>Marca para redesenho automático</li>
+<li>Atualiza <a class="el" href="class_label.html">Label</a> automaticamente se <span class="tt">subtitle</span> estiver configurado</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md958"></a>
+setMinValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setMinValue(<span class="keywordtype">int</span> newValue)</div>
+</div><!-- fragment --><p>Define o valor mínimo da faixa do termômetro.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newValue</span>: Novo valor mínimo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo do termômetro</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa antes de redesenhar</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md959"></a>
+setMaxValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setMaxValue(<span class="keywordtype">int</span> newValue)</div>
+</div><!-- fragment --><p>Define o valor máximo da faixa do termômetro.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newValue</span>: Novo valor máximo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo do termômetro</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa antes de redesenhar</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md960"></a>
+getMinValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> getMinValue()</div>
+</div><!-- fragment --><p>Retorna o valor mínimo atual da faixa do termômetro.</p>
+<p><b>Retorno:</b></p><ul>
+<li>Valor mínimo configurado</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md961"></a>
+getMaxValue()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> getMaxValue()</div>
+</div><!-- fragment --><p>Retorna o valor máximo atual da faixa do termômetro.</p>
+<p><b>Retorno:</b></p><ul>
+<li>Valor máximo configurado</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md962"></a>
+setScale()</h2>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> setScale(<span class="keywordtype">int</span> newMinValue, <span class="keywordtype">int</span> newMaxValue)</div>
+</div><!-- fragment --><p>Define simultaneamente os valores mínimo e máximo da faixa do termômetro.</p>
+<p><b>Parâmetros:</b></p><ul>
+<li><span class="tt">newMinValue</span>: Novo valor mínimo</li>
+<li><span class="tt">newMaxValue</span>: Novo valor máximo</li>
+</ul>
+<p><b>Características:</b></p><ul>
+<li>Ordena automaticamente os valores se min &gt; max</li>
+<li>Ajusta o valor atual para ficar dentro da nova faixa</li>
+<li>Marca para redesenho completo do termômetro</li>
+<li>Ativa flag interna <span class="tt">m_changedScale</span> que força limpeza completa antes de redesenhar</li>
+<li>Útil para mudanças dinâmicas de escala</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md963"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna o termômetro visível.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md950"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md964"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta o termômetro.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md952"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md966"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente:</p>
 <ul>
 <li><span class="tt">detectTouch()</span>: Não processa eventos de toque</li>
-<li><span class="tt">redraw()</span>: Redesenha o termômetro</li>
+<li><span class="tt">redraw()</span>: Redesenha o termômetro com otimização de atualização incremental</li>
 <li><span class="tt">forceUpdate()</span>: Força atualização</li>
 <li><span class="tt">getCallbackFunc()</span>: Retorna callback</li>
-<li><span class="tt">cleanupMemory()</span>: Limpa memória</li>
-<li><span class="tt">start()</span>: Inicializa configurações</li>
+<li><span class="tt">cleanupMemory()</span>: Limpa memória (<a class="el" href="class_thermometer.html" title="Widget de termômetro vertical para exibir valores como uma barra preenchida dentro de uma faixa espec...">Thermometer</a> não usa alocação dinâmica)</li>
+<li><span class="tt">start()</span>: Inicializa configurações e valida dimensões (altura mínima de 20 pixels)</li>
+<li><span class="tt">sortValues()</span>: Ordena valores min/max se necessário (chamado automaticamente)</li>
+<li><span class="tt">setup(uint16_t, uint16_t, uint16_t, int, int)</span>: Método interno de configuração (sobrecarga)</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md967"></a>
+Membros Privados</h2>
+<ul>
+<li><span class="tt">m_currentValue</span>: Valor atual representado (tipo <span class="tt">float</span> para precisão decimal)</li>
+<li><span class="tt">m_lastValue</span>: Último valor representado (usado para otimização de redesenho)</li>
+<li><span class="tt">m_bulb</span>: Estrutura <span class="tt"><a class="el" href="struct_circle__t.html" title="Structure representing a circle with position and radius.">Circle_t</a></span> representando o bulbo do termômetro</li>
+<li><span class="tt">m_fillArea</span>: Estrutura <span class="tt"><a class="el" href="struct_rect__t.html" title="Structure representing a rectangle with position and size.">Rect_t</a></span> representando a área preenchida do termômetro</li>
+<li><span class="tt">m_glassArea</span>: Estrutura <span class="tt"><a class="el" href="struct_rect__t.html" title="Structure representing a rectangle with position and size.">Rect_t</a></span> representando a área de vidro do termômetro</li>
+<li><span class="tt">m_colorLightGradient</span>: Array de 5 cores para efeito de gradiente no bulbo</li>
+<li><span class="tt">m_border</span>: Tamanho da borda ao redor do termômetro (5 pixels)</li>
+<li><span class="tt">m_config</span>: Estrutura contendo configuração completa do termômetro</li>
+<li><span class="tt">m_shouldRedraw</span>: Flag indicando se o termômetro deve ser redesenhado</li>
+<li><span class="tt">m_changedScale</span>: Flag que indica quando a escala foi alterada (força redesenho completo)</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md954"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md969"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md955"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md970"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md956"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md971"></a>
 📝 Passo 2: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
@@ -198,8 +292,8 @@ hide()</h2>
 <div class="line"> </div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdThermometer = 1;</div>
 <div class="line"><a class="code hl_class" href="class_thermometer.html">Thermometer</a> *arrayThermometer[qtdThermometer] = {&amp;thermometer};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md957"></a>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md972"></a>
 ⚙️ Passo 3: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    Serial.begin(115200);</div>
@@ -211,35 +305,35 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md958"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md973"></a>
 🔧 Passo 4: Configurar o Thermometer</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar Label</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_label_config.html">LabelConfig</a> configLabel = {</div>
 <div class="line">        .text = <span class="stringliteral">&quot;0&quot;</span>,</div>
+<div class="line">        .prefix = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line">        .suffix = <span class="stringliteral">&quot;°C&quot;</span>,</div>
 <div class="line">        .fontFamily = &amp;RobotoRegular10pt7b,</div>
 <div class="line">        .datum = <a class="code hl_define" href="widgetsetup_8h.html#af24d5c2d5858ad69bc73418a0518dbfd">MC_DATUM</a>,</div>
 <div class="line">        .fontColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
-<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .prefix = <span class="stringliteral">&quot;&quot;</span>,</div>
-<div class="line">        .suffix = <span class="stringliteral">&quot;°C&quot;</span></div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    temperaturaLabel.setup(configLabel);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar Thermometer</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_thermometer_config.html">ThermometerConfig</a> configThermometer = {</div>
+<div class="line">        .subtitle = &amp;temperaturaLabel,</div>
+<div class="line">        .unit = <span class="stringliteral">&quot;°C&quot;</span>,</div>
+<div class="line">        .minValue = 0,</div>
+<div class="line">        .maxValue = 100,</div>
 <div class="line">        .width = 60,</div>
 <div class="line">        .height = 150,</div>
 <div class="line">        .filledColor = <a class="code hl_variable" href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a>,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
 <div class="line">        .markColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
-<div class="line">        .minValue = 0,</div>
-<div class="line">        .maxValue = 100,</div>
-<div class="line">        .subtitle = &amp;temperaturaLabel,</div>
-<div class="line">        .unit = <span class="stringliteral">&quot;°C&quot;</span>,</div>
 <div class="line">        .decimalPlaces = 1</div>
 <div class="line">    };</div>
 <div class="line">    thermometer.setup(configThermometer);</div>
@@ -250,13 +344,13 @@ hide()</h2>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#a748a8411f2ee37625576d89ea3906221">setThermometer</a>(arrayThermometer, qtdThermometer);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a748a8411f2ee37625576d89ea3906221"><div class="ttname"><a href="class_display_f_k.html#a748a8411f2ee37625576d89ea3906221">DisplayFK::setThermometer</a></div><div class="ttdeci">void setThermometer(Thermometer *array[], uint8_t amount)</div><div class="ttdoc">Configures the thermometer array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:540</div></div>
-<div class="ttc" id="astruct_label_config_html"><div class="ttname"><a href="struct_label_config.html">LabelConfig</a></div><div class="ttdoc">Estrutura de configuração para o Label.</div><div class="ttdef"><b>Definition</b> wlabel.h:9</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:139</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:131</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_af24d5c2d5858ad69bc73418a0518dbfd"><div class="ttname"><a href="widgetsetup_8h.html#af24d5c2d5858ad69bc73418a0518dbfd">MC_DATUM</a></div><div class="ttdeci">#define MC_DATUM</div><div class="ttdef"><b>Definition</b> widgetsetup.h:116</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md959"></a>
+<div class="ttc" id="aclass_display_f_k_html_a748a8411f2ee37625576d89ea3906221"><div class="ttname"><a href="class_display_f_k.html#a748a8411f2ee37625576d89ea3906221">DisplayFK::setThermometer</a></div><div class="ttdeci">void setThermometer(Thermometer *array[], uint8_t amount)</div><div class="ttdoc">Configures the thermometer array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:541</div></div>
+<div class="ttc" id="astruct_label_config_html"><div class="ttname"><a href="struct_label_config.html">LabelConfig</a></div><div class="ttdef"><b>Definition</b> wlabel.h:10</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a454880d5158bd3e69623e5055ea7e3ff"><div class="ttname"><a href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a></div><div class="ttdeci">constexpr uint16_t CFK_RED</div><div class="ttdef"><b>Definition</b> widgetsetup.h:141</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:133</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_af24d5c2d5858ad69bc73418a0518dbfd"><div class="ttname"><a href="widgetsetup_8h.html#af24d5c2d5858ad69bc73418a0518dbfd">MC_DATUM</a></div><div class="ttdeci">#define MC_DATUM</div><div class="ttdef"><b>Definition</b> widgetsetup.h:118</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md974"></a>
 🖥️ Passo 5: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -264,9 +358,9 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md960"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md975"></a>
 🔄 Passo 6: Exemplo de Uso</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Simular leitura de temperatura</span></div>
@@ -279,7 +373,7 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md962"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md977"></a>
 📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="_roboto_regular10pt7b_8h.html">fonts/RobotoRegular/RobotoRegular10pt7b.h</a>&gt;</span></div>
@@ -310,26 +404,26 @@ hide()</h2>
 <div class="line">    <span class="comment">// Configurar Label</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_label_config.html">LabelConfig</a> configLabel = {</div>
 <div class="line">        .text = <span class="stringliteral">&quot;0&quot;</span>,</div>
+<div class="line">        .prefix = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line">        .suffix = <span class="stringliteral">&quot;°C&quot;</span>,</div>
 <div class="line">        .fontFamily = &amp;RobotoRegular10pt7b,</div>
 <div class="line">        .datum = <a class="code hl_define" href="widgetsetup_8h.html#af24d5c2d5858ad69bc73418a0518dbfd">MC_DATUM</a>,</div>
 <div class="line">        .fontColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
-<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .prefix = <span class="stringliteral">&quot;&quot;</span>,</div>
-<div class="line">        .suffix = <span class="stringliteral">&quot;°C&quot;</span></div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    tempLabel.setup(configLabel);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar Thermometer</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_thermometer_config.html">ThermometerConfig</a> config = {</div>
+<div class="line">        .subtitle = &amp;tempLabel,</div>
+<div class="line">        .unit = <span class="stringliteral">&quot;°C&quot;</span>,</div>
+<div class="line">        .minValue = 0,</div>
+<div class="line">        .maxValue = 50,</div>
 <div class="line">        .width = 80,</div>
 <div class="line">        .height = 200,</div>
 <div class="line">        .filledColor = <a class="code hl_variable" href="widgetsetup_8h.html#a454880d5158bd3e69623e5055ea7e3ff">CFK_RED</a>,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
 <div class="line">        .markColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
-<div class="line">        .minValue = 0,</div>
-<div class="line">        .maxValue = 50,</div>
-<div class="line">        .subtitle = &amp;tempLabel,</div>
-<div class="line">        .unit = <span class="stringliteral">&quot;°C&quot;</span>,</div>
 <div class="line">        .decimalPlaces = 1</div>
 <div class="line">    };</div>
 <div class="line">    termometro.setup(config);</div>
@@ -355,16 +449,16 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="a_roboto_regular10pt7b_8h_html"><div class="ttname"><a href="_roboto_regular10pt7b_8h.html">RobotoRegular10pt7b.h</a></div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md964"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md979"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md965"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md980"></a>
 📐 Tamanhos Recomendados</h2>
 <ul>
 <li><b>Pequenos:</b> 40x100 pixels</li>
 <li><b>Médios:</b> 60x150 pixels</li>
 <li><b>Grandes:</b> 80x200 pixels</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md966"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md981"></a>
 🎨 Cores</h2>
 <ul>
 <li><b>filledColor:</b> Vermelho para temperatura alta</li>
@@ -372,31 +466,37 @@ hide()</h2>
 <li><b>markColor:</b> Preto ou cinza escuro para contraste</li>
 <li>Considere o tema claro/escuro</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md967"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md982"></a>
 🔢 Valores e Faixas</h2>
 <ul>
 <li>Configure faixa adequada (minValue a maxValue)</li>
 <li>Use valores realistas para temperatura</li>
-<li><a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a> opcional para exibição numérica</li>
+<li>Faixa configurável dinamicamente com <span class="tt">setMinValue()</span>, <span class="tt">setMaxValue()</span> ou <span class="tt">setScale()</span></li>
+<li>Consulta de valores com <span class="tt">getMinValue()</span> e <span class="tt">getMaxValue()</span></li>
+<li>Ordenação automática de valores min/max</li>
+<li><a class="el" href="class_label.html">Label</a> opcional para exibição numérica</li>
 <li>Unidade de medida clara (°C, °F, etc.)</li>
+<li>Suporta valores decimais (tipo <span class="tt">float</span>)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md968"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md983"></a>
 ⚡ Performance</h2>
 <ul>
 <li>Redesenho apenas quando valor muda</li>
-<li>Fundo desenhado uma vez apenas</li>
-<li>Atualização eficiente do preenchimento</li>
-<li><a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a> atualizado automaticamente</li>
+<li>Fundo desenhado uma vez apenas (chame <span class="tt">drawBackground()</span> uma vez)</li>
+<li>Atualização eficiente do preenchimento (apenas diferença entre valores)</li>
+<li><a class="el" href="class_label.html">Label</a> atualizado automaticamente com <span class="tt">setTextFloat()</span></li>
+<li>Gradiente de cor calculado uma vez durante <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></li>
+<li>Mudanças de escala redesenham completamente o termômetro</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md969"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md984"></a>
 👥 Usabilidade</h2>
 <ul>
-<li>Posicione <a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a> próximo ao termômetro</li>
+<li>Posicione <a class="el" href="class_label.html">Label</a> próximo ao termômetro</li>
 <li>Use cores intuitivas (vermelho = quente)</li>
 <li>Marcações graduadas para fácil leitura</li>
 <li>Tamanho adequado para visualização</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md970"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md985"></a>
 🎨 Visual</h2>
 <ul>
 <li>Bulbo com gradiente para realismo</li>
@@ -404,16 +504,16 @@ hide()</h2>
 <li>Marcações graduadas no tubo</li>
 <li>Preenchimento proporcional ao valor</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md971"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md986"></a>
 🔔 Integração</h2>
 <ul>
-<li><a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a> opcional para valor numérico</li>
+<li><a class="el" href="class_label.html">Label</a> opcional para valor numérico</li>
 <li>Unidade de medida configurável</li>
 <li>Casas decimais personalizáveis</li>
-<li>Atualização automática do <a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a></li>
+<li>Atualização automática do <a class="el" href="class_label.html">Label</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md973"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md988"></a>
 🔗 Herança de WidgetBase</h1>
 <p>A classe <span class="tt"><a class="el" href="class_thermometer.html" title="Widget de termômetro vertical para exibir valores como uma barra preenchida dentro de uma faixa espec...">Thermometer</a></span> herda métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
@@ -423,18 +523,18 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md975"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md990"></a>
 🔗 Integração com DisplayFK</h1>
 <p>O <span class="tt"><a class="el" href="class_thermometer.html" title="Widget de termômetro vertical para exibir valores como uma barra preenchida dentro de uma faixa espec...">Thermometer</a></span> integra-se com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
 <li><b>Renderização:</b> Automática com <span class="tt">drawWidgetsOnScreen()</span></li>
-<li><b><a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a>:</b> Integração opcional para exibição numérica</li>
+<li><b><a class="el" href="class_label.html">Label</a>:</b> Integração opcional para exibição numérica</li>
 <li><b>Gerenciamento:</b> Controlado pelo loop principal</li>
 <li><b>Performance:</b> Redesenho eficiente</li>
 <li><b>Valores:</b> Limitação automática respeitada</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md977"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md992"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O <a class="el" href="class_thermometer.html" title="Widget de termômetro vertical para exibir valores como uma barra preenchida dentro de uma faixa espec...">Thermometer</a> renderiza em camadas:</p>
 <ol type="1">
@@ -450,28 +550,49 @@ hide()</h2>
 </ul>
 </li>
 <li><b>Bulbo:</b><ul>
-<li>Círculo na base</li>
-<li>Gradiente de cor para efeito de luz</li>
-<li>Borda definida</li>
+<li>Círculo na base do termômetro</li>
+<li>Gradiente de cor com 5 camadas para efeito de luz realista</li>
+<li>Cores calculadas usando <span class="tt"><a class="el" href="color_8h.html#a6e2d9aea94f6e08c0568d5f2921a3499" title="Clareia uma cor RGB565 em direção ao branco.">lighten565()</a></span> baseado em <span class="tt">filledColor</span></li>
+<li>Borda preta definida</li>
+<li>Posicionado na base do termômetro</li>
 </ul>
 </li>
 <li><b>Marcações:</b><ul>
-<li>Linhas graduadas no lado do tubo</li>
-<li>Cor definida por markColor</li>
-<li>Espaçamento uniforme</li>
+<li>10 divisões uniformes ao longo do tubo</li>
+<li>Linhas menores a cada divisão</li>
+<li>Linhas maiores (2x espessura) a cada 5 divisões</li>
+<li>Cor definida por <span class="tt">markColor</span></li>
+<li>Posicionadas no lado esquerdo do tubo</li>
+<li>Espaçamento calculado proporcionalmente à altura do tubo</li>
 </ul>
 </li>
 <li><b>Preenchimento:</b><ul>
 <li>Área proporcional ao valor</li>
 <li>Cor definida por filledColor</li>
 <li>Atualizada apenas quando valor muda</li>
+<li>Limpeza eficiente quando valor diminui</li>
+<li>Quando <span class="tt">m_changedScale</span> é true, limpa toda a área antes de redesenhar</li>
+</ul>
+</li>
+<li><b><a class="el" href="class_label.html">Label</a> (subtitle):</b><ul>
+<li>Se configurado, atualiza automaticamente com o valor atual</li>
+<li>Usa <span class="tt">setTextFloat()</span> para atualizar o texto com casas decimais</li>
+<li>Unidade de medida configurada via <span class="tt">unit</span> e aplicada como sufixo</li>
+<li>Atualização ocorre a cada redesenho</li>
+</ul>
+</li>
+<li><b>Otimizações:</b><ul>
+<li>Usa <span class="tt">m_lastValue</span> para calcular apenas a diferença a ser redesenhada</li>
+<li>Flag <span class="tt">m_changedScale</span> força redesenho completo quando a escala muda</li>
+<li>Validações de estado antes de renderizar (TFT, visibilidade, tela atual, etc.)</li>
+<li>Gradiente de cor calculado uma vez durante <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></li>
 </ul>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md979"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md994"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md980"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md995"></a>
 Thermometer não aparece</h2>
 <ul>
 <li>Verifique se chamou <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar</li>
@@ -479,7 +600,7 @@ Thermometer não aparece</h2>
 <li>Verifique valores de width e height &gt; 0</li>
 <li>Chame <span class="tt">myDisplay.setThermometer()</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md981"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md996"></a>
 Valor não muda visualmente</h2>
 <ul>
 <li>Verifique se chamou <span class="tt">setValue()</span> com novo valor</li>
@@ -487,15 +608,15 @@ Valor não muda visualmente</h2>
 <li>Verifique logs para erros</li>
 <li>Teste com valores extremos</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md982"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md997"></a>
 Label não atualiza</h2>
 <ul>
 <li>Verifique se subtitle foi configurado</li>
-<li>Confirme que <a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a> foi configurado corretamente</li>
+<li>Confirme que <a class="el" href="class_label.html">Label</a> foi configurado corretamente</li>
 <li>Verifique se unit foi definido</li>
 <li>Teste com decimalPlaces adequado</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md983"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md998"></a>
 Visual incorreto</h2>
 <ul>
 <li>Verifique cores configuradas</li>
@@ -503,20 +624,31 @@ Visual incorreto</h2>
 <li>Verifique se drawBackground() foi chamado</li>
 <li>Teste com cores mais contrastantes</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md984"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md999"></a>
 Problemas de escala</h2>
 <ul>
 <li>Verifique configuração de minValue/maxValue</li>
 <li>Confirme que valores estão na faixa</li>
 <li>Teste com diferentes faixas</li>
 <li>Verifique proporção width/height</li>
+<li>Use <span class="tt">setScale()</span> para alterar min/max simultaneamente</li>
+<li>Valores são ordenados automaticamente se min &gt; max</li>
+<li>O termômetro é redesenhado completamente quando a escala muda</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1000"></a>
+Mudança de escala não funciona</h2>
+<ul>
+<li>Use <span class="tt">setScale()</span> para alterar min/max simultaneamente</li>
+<li>Ou use <span class="tt">setMinValue()</span> e <span class="tt">setMaxValue()</span> separadamente</li>
+<li>Valores são ordenados automaticamente se min &gt; max</li>
+<li>O termômetro é redesenhado completamente quando a escala muda</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md986"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md1002"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>
-<li><b><a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a>:</b> <span class="tt"><a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a></span> (<a class="el" href="wlabel_8h.html">src/widgets/label/wlabel.h</a>)</li>
+<li><b><a class="el" href="class_label.html">Label</a>:</b> <span class="tt"><a class="el" href="class_label.html">Label</a></span> (<a class="el" href="wlabel_8h.html">src/widgets/label/wlabel.h</a>)</li>
 <li><b><a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a> Principal:</b> <span class="tt"><a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></span> (<a class="el" href="displayfk_8h.html">src/displayfk.h</a>)</li>
 <li><b>Cores Padrão:</b> Definidas em <a class="el" href="displayfk_8h.html">displayfk.h</a></li>
 <li><b>Exemplos:</b> examples/Embed_ESP32S3/Display_Test/ </li>

@@ -75,11 +75,11 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe Label </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md344"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md345"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md352"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md353"></a>
 Visão Geral</h1>
-<p>A classe <span class="tt"><a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a></span> é um widget visual que exibe texto na tela com formatação personalizável. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade completa para criar e gerenciar rótulos de texto com diferentes fontes, cores e alinhamentos.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md346"></a>
+<p>A classe <span class="tt"><a class="el" href="class_label.html">Label</a></span> é um widget visual que exibe texto na tela com formatação personalizável. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade completa para criar e gerenciar rótulos de texto com diferentes fontes, cores e alinhamentos.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md354"></a>
 Características Principais</h2>
 <ul>
 <li>📝 Exibição de texto customizável</li>
@@ -95,35 +95,37 @@ Características Principais</h2>
 <li>🔗 Integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md348"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md356"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md349"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md357"></a>
 LabelConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração do label:</p>
+<p>Estrutura que contém todos os parâmetros de configuração do label (ordem conforme <span class="tt"><a class="el" href="wlabel_8h.html">wlabel.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_label_config.html">LabelConfig</a> {</div>
-<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_label_config.html#a055715273c1fc8f2eb0bcbf31df62ede">text</a>;          <span class="comment">// Texto inicial a ser exibido</span></div>
-<div class="line">  <span class="keyword">const</span> GFXfont* <a class="code hl_variable" href="struct_label_config.html#af5b9adcbfaf0ece84f92771e85108954">fontFamily</a>; <span class="comment">// Ponteiro para fonte (se USING_GRAPHIC_LIB)</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_label_config.html#aff8f9f0c0ec295dffc185469ad49ac1e">datum</a>;            <span class="comment">// Alinhamento do texto</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_label_config.html#acd3381a334e05cb550630b9bd5b80e1e">fontColor</a>;        <span class="comment">// Cor do texto</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_label_config.html#a855d437fd2137dd9f69aeda4b23fb2f0">backgroundColor</a>;  <span class="comment">// Cor de fundo</span></div>
-<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_label_config.html#aa476512aa6b6e661d51e6a9ed96ed735">prefix</a>;        <span class="comment">// Texto de prefixo</span></div>
-<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_label_config.html#a3ac3cca3582d563677fb72f7716cfa1a">suffix</a>;        <span class="comment">// Texto de sufixo</span></div>
+<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_label_config.html#a055715273c1fc8f2eb0bcbf31df62ede">text</a>;          <span class="comment">// Texto inicial a ser exibido.</span></div>
+<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_label_config.html#aa476512aa6b6e661d51e6a9ed96ed735">prefix</a>;        <span class="comment">// Texto de prefixo a ser exibido.</span></div>
+<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_label_config.html#a3ac3cca3582d563677fb72f7716cfa1a">suffix</a>;        <span class="comment">// Texto de sufixo a ser exibido.</span></div>
+<div class="line"><span class="preprocessor">  #if defined(USING_GRAPHIC_LIB)</span></div>
+<div class="line">  <span class="keyword">const</span> GFXfont* <a class="code hl_variable" href="struct_label_config.html#af5b9adcbfaf0ece84f92771e85108954">fontFamily</a>; <span class="comment">// Ponteiro para a fonte usada no texto.</span></div>
+<div class="line"><span class="preprocessor">  #endif</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_label_config.html#aff8f9f0c0ec295dffc185469ad49ac1e">datum</a>;            <span class="comment">// Configuração de alinhamento do texto.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_label_config.html#acd3381a334e05cb550630b9bd5b80e1e">fontColor</a>;        <span class="comment">// Cor do texto.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_label_config.html#a855d437fd2137dd9f69aeda4b23fb2f0">backgroundColor</a>;  <span class="comment">// Cor de fundo do rótulo.</span></div>
 <div class="line">};</div>
-<div class="ttc" id="astruct_label_config_html"><div class="ttname"><a href="struct_label_config.html">LabelConfig</a></div><div class="ttdoc">Estrutura de configuração para o Label.</div><div class="ttdef"><b>Definition</b> wlabel.h:9</div></div>
-<div class="ttc" id="astruct_label_config_html_a055715273c1fc8f2eb0bcbf31df62ede"><div class="ttname"><a href="struct_label_config.html#a055715273c1fc8f2eb0bcbf31df62ede">LabelConfig::text</a></div><div class="ttdeci">const char * text</div><div class="ttdoc">Texto inicial a ser exibido.</div><div class="ttdef"><b>Definition</b> wlabel.h:10</div></div>
-<div class="ttc" id="astruct_label_config_html_a3ac3cca3582d563677fb72f7716cfa1a"><div class="ttname"><a href="struct_label_config.html#a3ac3cca3582d563677fb72f7716cfa1a">LabelConfig::suffix</a></div><div class="ttdeci">const char * suffix</div><div class="ttdoc">Texto de sufixo a ser exibido.</div><div class="ttdef"><b>Definition</b> wlabel.h:18</div></div>
-<div class="ttc" id="astruct_label_config_html_a855d437fd2137dd9f69aeda4b23fb2f0"><div class="ttname"><a href="struct_label_config.html#a855d437fd2137dd9f69aeda4b23fb2f0">LabelConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo do rótulo.</div><div class="ttdef"><b>Definition</b> wlabel.h:16</div></div>
-<div class="ttc" id="astruct_label_config_html_aa476512aa6b6e661d51e6a9ed96ed735"><div class="ttname"><a href="struct_label_config.html#aa476512aa6b6e661d51e6a9ed96ed735">LabelConfig::prefix</a></div><div class="ttdeci">const char * prefix</div><div class="ttdoc">Texto de prefixo a ser exibido.</div><div class="ttdef"><b>Definition</b> wlabel.h:17</div></div>
-<div class="ttc" id="astruct_label_config_html_acd3381a334e05cb550630b9bd5b80e1e"><div class="ttname"><a href="struct_label_config.html#acd3381a334e05cb550630b9bd5b80e1e">LabelConfig::fontColor</a></div><div class="ttdeci">uint16_t fontColor</div><div class="ttdoc">Cor do texto.</div><div class="ttdef"><b>Definition</b> wlabel.h:15</div></div>
-<div class="ttc" id="astruct_label_config_html_af5b9adcbfaf0ece84f92771e85108954"><div class="ttname"><a href="struct_label_config.html#af5b9adcbfaf0ece84f92771e85108954">LabelConfig::fontFamily</a></div><div class="ttdeci">const GFXfont * fontFamily</div><div class="ttdoc">Ponteiro para a fonte usada para o texto.</div><div class="ttdef"><b>Definition</b> wlabel.h:12</div></div>
-<div class="ttc" id="astruct_label_config_html_aff8f9f0c0ec295dffc185469ad49ac1e"><div class="ttname"><a href="struct_label_config.html#aff8f9f0c0ec295dffc185469ad49ac1e">LabelConfig::datum</a></div><div class="ttdeci">uint16_t datum</div><div class="ttdoc">Configuração de alinhamento do texto.</div><div class="ttdef"><b>Definition</b> wlabel.h:14</div></div>
+<div class="ttc" id="astruct_label_config_html"><div class="ttname"><a href="struct_label_config.html">LabelConfig</a></div><div class="ttdef"><b>Definition</b> wlabel.h:10</div></div>
+<div class="ttc" id="astruct_label_config_html_a055715273c1fc8f2eb0bcbf31df62ede"><div class="ttname"><a href="struct_label_config.html#a055715273c1fc8f2eb0bcbf31df62ede">LabelConfig::text</a></div><div class="ttdeci">const char * text</div><div class="ttdef"><b>Definition</b> wlabel.h:11</div></div>
+<div class="ttc" id="astruct_label_config_html_a3ac3cca3582d563677fb72f7716cfa1a"><div class="ttname"><a href="struct_label_config.html#a3ac3cca3582d563677fb72f7716cfa1a">LabelConfig::suffix</a></div><div class="ttdeci">const char * suffix</div><div class="ttdef"><b>Definition</b> wlabel.h:13</div></div>
+<div class="ttc" id="astruct_label_config_html_a855d437fd2137dd9f69aeda4b23fb2f0"><div class="ttname"><a href="struct_label_config.html#a855d437fd2137dd9f69aeda4b23fb2f0">LabelConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdef"><b>Definition</b> wlabel.h:19</div></div>
+<div class="ttc" id="astruct_label_config_html_aa476512aa6b6e661d51e6a9ed96ed735"><div class="ttname"><a href="struct_label_config.html#aa476512aa6b6e661d51e6a9ed96ed735">LabelConfig::prefix</a></div><div class="ttdeci">const char * prefix</div><div class="ttdef"><b>Definition</b> wlabel.h:12</div></div>
+<div class="ttc" id="astruct_label_config_html_acd3381a334e05cb550630b9bd5b80e1e"><div class="ttname"><a href="struct_label_config.html#acd3381a334e05cb550630b9bd5b80e1e">LabelConfig::fontColor</a></div><div class="ttdeci">uint16_t fontColor</div><div class="ttdef"><b>Definition</b> wlabel.h:18</div></div>
+<div class="ttc" id="astruct_label_config_html_af5b9adcbfaf0ece84f92771e85108954"><div class="ttname"><a href="struct_label_config.html#af5b9adcbfaf0ece84f92771e85108954">LabelConfig::fontFamily</a></div><div class="ttdeci">const GFXfont * fontFamily</div><div class="ttdef"><b>Definition</b> wlabel.h:15</div></div>
+<div class="ttc" id="astruct_label_config_html_aff8f9f0c0ec295dffc185469ad49ac1e"><div class="ttname"><a href="struct_label_config.html#aff8f9f0c0ec295dffc185469ad49ac1e">LabelConfig::datum</a></div><div class="ttdeci">uint16_t datum</div><div class="ttdef"><b>Definition</b> wlabel.h:17</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md351"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md359"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md352"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md360"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_label.html">Label</a>(uint16_t _x, uint16_t _y, uint8_t _screen)</div>
-<div class="ttc" id="aclass_label_html"><div class="ttname"><a href="class_label.html">Label</a></div><div class="ttdoc">Widget de rótulo de texto com fonte e cores personalizáveis.</div><div class="ttdef"><b>Definition</b> wlabel.h:28</div></div>
+<div class="ttc" id="aclass_label_html"><div class="ttname"><a href="class_label.html">Label</a></div><div class="ttdef"><b>Definition</b> wlabel.h:23</div></div>
 </div><!-- fragment --><p>Cria um novo label na posição especificada.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">_x</span>: Coordenada X para posição do texto</li>
@@ -131,19 +133,19 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, é obrigatório chamar <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md353"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md361"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_label.html">~Label</a>()</div>
 </div><!-- fragment --><p>Libera automaticamente memória alocada para texto, prefixo e sufixo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md354"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md362"></a>
 setup()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>(<span class="keyword">const</span> <a class="code hl_struct" href="struct_label_config.html">LabelConfig</a>&amp; config)</div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
 </div><!-- fragment --><p>Configura o label com os parâmetros especificados. <b>Este método deve ser chamado após a criação do objeto.</b></p>
 <p><b>Parâmetros:</b></p><ul>
-<li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_label_config.html" title="Estrutura de configuração para o Label.">LabelConfig</a></span> com as configurações</li>
+<li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_label_config.html">LabelConfig</a></span> com as configurações</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md355"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md363"></a>
 setText()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setText(<span class="keyword">const</span> <span class="keywordtype">char</span>* str)</div>
 <div class="line"><span class="keywordtype">void</span> setText(<span class="keyword">const</span> String&amp; str)</div>
@@ -156,28 +158,28 @@ setText()</h2>
 <li>Aloca memória dinamicamente</li>
 <li>Marca para redesenho</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md356"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md364"></a>
 setPrefix()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setPrefix(<span class="keyword">const</span> <span class="keywordtype">char</span>* str)</div>
 </div><!-- fragment --><p>Define o texto de prefixo exibido antes do texto principal.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">str</span>: Texto do prefixo (nullptr para remover)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md357"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md365"></a>
 setSuffix()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setSuffix(<span class="keyword">const</span> <span class="keywordtype">char</span>* str)</div>
 </div><!-- fragment --><p>Define o texto de sufixo exibido após o texto principal.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">str</span>: Texto do sufixo (nullptr para remover)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md358"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md366"></a>
 setTextInt()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setTextInt(<span class="keywordtype">int</span> value)</div>
 </div><!-- fragment --><p>Define o texto do label como um número inteiro.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">value</span>: Valor inteiro a ser exibido</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md359"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md367"></a>
 setTextFloat()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setTextFloat(<span class="keywordtype">float</span> value, uint8_t decimalPlaces = 2)</div>
 </div><!-- fragment --><p>Define o texto do label como um número float formatado.</p>
@@ -185,30 +187,30 @@ setTextFloat()</h2>
 <li><span class="tt">value</span>: Valor float a ser exibido</li>
 <li><span class="tt">decimalPlaces</span>: Número de casas decimais (padrão: 2)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md360"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md368"></a>
 setDecimalPlaces()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setDecimalPlaces(uint8_t places)</div>
 </div><!-- fragment --><p>Define o número de casas decimais para exibição.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">places</span>: Número de casas decimais (0-5)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md361"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md369"></a>
 setFontSize()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setFontSize(uint8_t newSize)</div>
 </div><!-- fragment --><p>Define o tamanho da fonte.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">newSize</span>: Tamanho da fonte</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md362"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md370"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna o label visível na tela.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md363"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md371"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta o label da tela.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md365"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md373"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente:</p>
 <ul>
@@ -219,14 +221,14 @@ hide()</h2>
 <li><span class="tt">cleanupMemory()</span>: Limpa memória alocada</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md367"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md375"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md368"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md376"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias (SPI, display, etc.)</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md369"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md377"></a>
 🏗️ Passo 2: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
@@ -238,11 +240,11 @@ hide()</h2>
 <div class="line"><span class="comment">// Criar array de ponteiros</span></div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdLabel = 3;</div>
 <div class="line"><a class="code hl_class" href="class_label.html">Label</a> *arrayLabel[qtdLabel] = {&amp;text, &amp;line1, &amp;line2};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md370"></a>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md378"></a>
 📝 Passo 3: Prototipar Funções</h2>
 <div class="fragment"><div class="line"><span class="comment">// Labels não usam callbacks normalmente</span></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md371"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md379"></a>
 ⚙️ Passo 4: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    <span class="comment">// ... configuração do display e touch ...</span></div>
@@ -252,61 +254,61 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md372"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md380"></a>
 🔧 Passo 5: Configurar os Widgets</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar label simples</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_label_config.html">LabelConfig</a> configLabel0 = {</div>
 <div class="line">        .text = <span class="stringliteral">&quot;Custom text&quot;</span>,</div>
+<div class="line">        .prefix = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line">        .suffix = <span class="stringliteral">&quot;&quot;</span>,</div>
 <div class="line">        .fontFamily = &amp;RobotoRegular10pt7b,</div>
 <div class="line">        .datum = <a class="code hl_define" href="widgetsetup_8h.html#ab5e3647e20719a695e2557fad717b54a">TL_DATUM</a>,</div>
 <div class="line">        .fontColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
-<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .prefix = <span class="stringliteral">&quot;&quot;</span>,</div>
-<div class="line">        .suffix = <span class="stringliteral">&quot;&quot;</span></div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    text.setup(configLabel0);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Label com prefixo</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_label_config.html">LabelConfig</a> configLabel1 = {</div>
 <div class="line">        .text = <span class="stringliteral">&quot;Line 1&quot;</span>,</div>
+<div class="line">        .prefix = <span class="stringliteral">&quot;Line&quot;</span>,</div>
+<div class="line">        .suffix = <span class="stringliteral">&quot;&quot;</span>,</div>
 <div class="line">        .fontFamily = &amp;RobotoRegular10pt7b,</div>
 <div class="line">        .datum = <a class="code hl_define" href="widgetsetup_8h.html#ab5e3647e20719a695e2557fad717b54a">TL_DATUM</a>,</div>
 <div class="line">        .fontColor = <a class="code hl_variable" href="widgetsetup_8h.html#a067e01c37384dbb6e7cc57d82fbf8a5e">CFK_COLOR09</a>,</div>
-<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .prefix = <span class="stringliteral">&quot;Line&quot;</span>,</div>
-<div class="line">        .suffix = <span class="stringliteral">&quot;&quot;</span></div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    line1.setup(configLabel1);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Label com sufixo</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_label_config.html">LabelConfig</a> configLabel2 = {</div>
 <div class="line">        .text = <span class="stringliteral">&quot;Line 2&quot;</span>,</div>
+<div class="line">        .prefix = <span class="stringliteral">&quot;Line&quot;</span>,</div>
+<div class="line">        .suffix = <span class="stringliteral">&quot;C&quot;</span>,</div>
 <div class="line">        .fontFamily = &amp;RobotoRegular10pt7b,</div>
 <div class="line">        .datum = <a class="code hl_define" href="widgetsetup_8h.html#ab5e3647e20719a695e2557fad717b54a">TL_DATUM</a>,</div>
 <div class="line">        .fontColor = <a class="code hl_variable" href="widgetsetup_8h.html#a9ef228b5a2263774ad4bbfbcac2d480f">CFK_COLOR04</a>,</div>
-<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .prefix = <span class="stringliteral">&quot;Line&quot;</span>,</div>
-<div class="line">        .suffix = <span class="stringliteral">&quot;C&quot;</span></div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    line2.setup(configLabel2);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#a26ef9b13619e13891a0ecabf0b9a7b25">setLabel</a>(arrayLabel, qtdLabel);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a26ef9b13619e13891a0ecabf0b9a7b25"><div class="ttname"><a href="class_display_f_k.html#a26ef9b13619e13891a0ecabf0b9a7b25">DisplayFK::setLabel</a></div><div class="ttdeci">void setLabel(Label *array[], uint8_t amount)</div><div class="ttdoc">Configures the label array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:260</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a067e01c37384dbb6e7cc57d82fbf8a5e"><div class="ttname"><a href="widgetsetup_8h.html#a067e01c37384dbb6e7cc57d82fbf8a5e">CFK_COLOR09</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR09</div><div class="ttdef"><b>Definition</b> widgetsetup.h:175</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a9ef228b5a2263774ad4bbfbcac2d480f"><div class="ttname"><a href="widgetsetup_8h.html#a9ef228b5a2263774ad4bbfbcac2d480f">CFK_COLOR04</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR04</div><div class="ttdef"><b>Definition</b> widgetsetup.h:170</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ab5e3647e20719a695e2557fad717b54a"><div class="ttname"><a href="widgetsetup_8h.html#ab5e3647e20719a695e2557fad717b54a">TL_DATUM</a></div><div class="ttdeci">#define TL_DATUM</div><div class="ttdef"><b>Definition</b> widgetsetup.h:111</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:131</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md373"></a>
+<div class="ttc" id="aclass_display_f_k_html_a26ef9b13619e13891a0ecabf0b9a7b25"><div class="ttname"><a href="class_display_f_k.html#a26ef9b13619e13891a0ecabf0b9a7b25">DisplayFK::setLabel</a></div><div class="ttdeci">void setLabel(Label *array[], uint8_t amount)</div><div class="ttdoc">Configures the label array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:261</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a067e01c37384dbb6e7cc57d82fbf8a5e"><div class="ttname"><a href="widgetsetup_8h.html#a067e01c37384dbb6e7cc57d82fbf8a5e">CFK_COLOR09</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR09</div><div class="ttdef"><b>Definition</b> widgetsetup.h:177</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a9ef228b5a2263774ad4bbfbcac2d480f"><div class="ttname"><a href="widgetsetup_8h.html#a9ef228b5a2263774ad4bbfbcac2d480f">CFK_COLOR04</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR04</div><div class="ttdef"><b>Definition</b> widgetsetup.h:172</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ab5e3647e20719a695e2557fad717b54a"><div class="ttname"><a href="widgetsetup_8h.html#ab5e3647e20719a695e2557fad717b54a">TL_DATUM</a></div><div class="ttdeci">#define TL_DATUM</div><div class="ttdef"><b>Definition</b> widgetsetup.h:113</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:133</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md381"></a>
 🔔 Passo 6: Criar Funções de Callback (Opcional)</h2>
 <div class="fragment"><div class="line"><span class="comment">// Labels não usam callbacks normalmente</span></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md374"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md382"></a>
 🖥️ Passo 7: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -315,9 +317,9 @@ hide()</h2>
 <div class="line">    <span class="comment">// Desenhar todos os widgets na tela 0</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md375"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md383"></a>
 🔄 Passo 8: Atualizar Texto (Exemplo de Uso)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Atualizar com texto simples</span></div>
@@ -339,7 +341,7 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md377"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md385"></a>
 📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="_roboto_regular10pt7b_8h.html">fonts/RobotoRegular/RobotoRegular10pt7b.h</a>&gt;</span></div>
@@ -370,48 +372,48 @@ hide()</h2>
 <div class="line">    <span class="comment">// Configurar label de título</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_label_config.html">LabelConfig</a> configTitulo = {</div>
 <div class="line">        .text = <span class="stringliteral">&quot;Sistema de Monitoramento&quot;</span>,</div>
+<div class="line">        .prefix = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line">        .suffix = <span class="stringliteral">&quot;&quot;</span>,</div>
 <div class="line">        .fontFamily = &amp;RobotoBold10pt7b,</div>
 <div class="line">        .datum = <a class="code hl_define" href="widgetsetup_8h.html#af24d5c2d5858ad69bc73418a0518dbfd">MC_DATUM</a>,</div>
 <div class="line">        .fontColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
-<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .prefix = <span class="stringliteral">&quot;&quot;</span>,</div>
-<div class="line">        .suffix = <span class="stringliteral">&quot;&quot;</span></div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    titulo.setup(configTitulo);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar subtítulo</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_label_config.html">LabelConfig</a> configSubtitulo = {</div>
 <div class="line">        .text = <span class="stringliteral">&quot;Sensor de Ambiente&quot;</span>,</div>
+<div class="line">        .prefix = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line">        .suffix = <span class="stringliteral">&quot;&quot;</span>,</div>
 <div class="line">        .fontFamily = &amp;RobotoRegular10pt7b,</div>
 <div class="line">        .datum = <a class="code hl_define" href="widgetsetup_8h.html#af24d5c2d5858ad69bc73418a0518dbfd">MC_DATUM</a>,</div>
 <div class="line">        .fontColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac779627fb4f102b83bf3f48a2cd09d7d">CFK_GREY6</a>,</div>
-<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .prefix = <span class="stringliteral">&quot;&quot;</span>,</div>
-<div class="line">        .suffix = <span class="stringliteral">&quot;&quot;</span></div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    subtitulo.setup(configSubtitulo);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar label de temperatura</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_label_config.html">LabelConfig</a> configTemp = {</div>
 <div class="line">        .text = <span class="stringliteral">&quot;0&quot;</span>,</div>
+<div class="line">        .prefix = <span class="stringliteral">&quot;Temperatura: &quot;</span>,</div>
+<div class="line">        .suffix = <span class="stringliteral">&quot; °C&quot;</span>,</div>
 <div class="line">        .fontFamily = &amp;RobotoRegular10pt7b,</div>
 <div class="line">        .datum = <a class="code hl_define" href="widgetsetup_8h.html#ab5e3647e20719a695e2557fad717b54a">TL_DATUM</a>,</div>
 <div class="line">        .fontColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
-<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .prefix = <span class="stringliteral">&quot;Temperatura: &quot;</span>,</div>
-<div class="line">        .suffix = <span class="stringliteral">&quot; °C&quot;</span></div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    valorTemperatura.setup(configTemp);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar label de umidade</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_label_config.html">LabelConfig</a> configUmidade = {</div>
 <div class="line">        .text = <span class="stringliteral">&quot;0&quot;</span>,</div>
+<div class="line">        .prefix = <span class="stringliteral">&quot;Umidade: &quot;</span>,</div>
+<div class="line">        .suffix = <span class="stringliteral">&quot; %&quot;</span>,</div>
 <div class="line">        .fontFamily = &amp;RobotoRegular10pt7b,</div>
 <div class="line">        .datum = <a class="code hl_define" href="widgetsetup_8h.html#ab5e3647e20719a695e2557fad717b54a">TL_DATUM</a>,</div>
 <div class="line">        .fontColor = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>,</div>
-<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .prefix = <span class="stringliteral">&quot;Umidade: &quot;</span>,</div>
-<div class="line">        .suffix = <span class="stringliteral">&quot; %&quot;</span></div>
+<div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div>
 <div class="line">    };</div>
 <div class="line">    valorUmidade.setup(configUmidade);</div>
 <div class="line">    </div>
@@ -438,12 +440,12 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
 <div class="ttc" id="a_roboto_regular10pt7b_8h_html"><div class="ttname"><a href="_roboto_regular10pt7b_8h.html">RobotoRegular10pt7b.h</a></div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac779627fb4f102b83bf3f48a2cd09d7d"><div class="ttname"><a href="widgetsetup_8h.html#ac779627fb4f102b83bf3f48a2cd09d7d">CFK_GREY6</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY6</div><div class="ttdef"><b>Definition</b> widgetsetup.h:205</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_af24d5c2d5858ad69bc73418a0518dbfd"><div class="ttname"><a href="widgetsetup_8h.html#af24d5c2d5858ad69bc73418a0518dbfd">MC_DATUM</a></div><div class="ttdeci">#define MC_DATUM</div><div class="ttdef"><b>Definition</b> widgetsetup.h:116</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac779627fb4f102b83bf3f48a2cd09d7d"><div class="ttname"><a href="widgetsetup_8h.html#ac779627fb4f102b83bf3f48a2cd09d7d">CFK_GREY6</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY6</div><div class="ttdef"><b>Definition</b> widgetsetup.h:207</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_af24d5c2d5858ad69bc73418a0518dbfd"><div class="ttname"><a href="widgetsetup_8h.html#af24d5c2d5858ad69bc73418a0518dbfd">MC_DATUM</a></div><div class="ttdeci">#define MC_DATUM</div><div class="ttdef"><b>Definition</b> widgetsetup.h:118</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md379"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md387"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md380"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md388"></a>
 📐 Datums (Alinhamento)</h2>
 <ul>
 <li><span class="tt"><a class="el" href="widgetsetup_8h.html#ab5e3647e20719a695e2557fad717b54a">TL_DATUM</a></span>: Top Left (Canto superior esquerdo)</li>
@@ -456,7 +458,7 @@ hide()</h2>
 <li><span class="tt"><a class="el" href="widgetsetup_8h.html#a882a52131a92930c848d2f274921e3bf">BC_DATUM</a></span>: Bottom Center (Centro inferior)</li>
 <li><span class="tt"><a class="el" href="widgetsetup_8h.html#ae56faab3cba6c288ec7e4557839cc0f4">BR_DATUM</a></span>: Bottom Right (Canto inferior direito)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md381"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md389"></a>
 🎨 Fontes</h2>
 <ul>
 <li>Use fontes adequadas ao tamanho do texto</li>
@@ -465,13 +467,13 @@ hide()</h2>
 <li>RobotoRegular10pt7b é comum para texto normal</li>
 <li>RobotoBold10pt7b para destaque</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md382"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md390"></a>
 🔔 Callbacks</h2>
 <ul>
 <li>Labels não usam callbacks por padrão</li>
 <li>São elementos apenas visuais</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md383"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md391"></a>
 ⚡ Performance</h2>
 <ul>
 <li>Atualizações de texto alocam nova memória</li>
@@ -479,7 +481,7 @@ hide()</h2>
 <li>Use setTextInt/setTextFloat para números</li>
 <li>Prefixos e sufixos são aplicados automaticamente</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md384"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md392"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Use cores contrastantes para legibilidade</li>
@@ -487,7 +489,7 @@ hide()</h2>
 <li>Alinhamento adequado para contexto</li>
 <li>Tamanho de fonte apropriado para distância de leitura</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md385"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md393"></a>
 🎨 Design Visual</h2>
 <ul>
 <li>Texto é renderizado com fonte configurada</li>
@@ -496,7 +498,7 @@ hide()</h2>
 <li>Tamanho de fonte é aplicado durante renderização</li>
 <li>Alinhamento definido pelo datum</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md386"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md394"></a>
 📊 Formatação de Números</h2>
 <ul>
 <li>Use setTextInt() para inteiros</li>
@@ -506,9 +508,9 @@ hide()</h2>
 <li>Considere formatação para display</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md388"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md396"></a>
 🔗 Herança de WidgetBase</h1>
-<p>A classe <span class="tt"><a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a></span> herda todos os métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
+<p>A classe <span class="tt"><a class="el" href="class_label.html">Label</a></span> herda todos os métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
 <li><span class="tt">isEnabled()</span> / <span class="tt">setEnabled()</span>: Habilitar/desabilitar widget</li>
 <li><span class="tt">isInitialized()</span>: Verificar se foi configurado</li>
@@ -516,9 +518,9 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho automático</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md390"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md398"></a>
 🔗 Integração com DisplayFK</h1>
-<p>O <span class="tt"><a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a></span> integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
+<p>O <span class="tt"><a class="el" href="class_label.html">Label</a></span> integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
 <li><b>Renderização:</b> Automática quando usando <span class="tt">drawWidgetsOnScreen()</span></li>
 <li><b>Gerenciamento:</b> Controlado pelo loop principal do <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></li>
@@ -527,9 +529,9 @@ hide()</h2>
 <li><b>Performance:</b> Redesenho apenas quando necessário</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md392"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md400"></a>
 🎨 Detalhes de Renderização</h1>
-<p>O <span class="tt"><a class="el" href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis.">Label</a></span> é renderizado em uma única operação:</p>
+<p>O <span class="tt"><a class="el" href="class_label.html">Label</a></span> é renderizado em uma única operação:</p>
 <ol type="1">
 <li><b>Texto:</b><ul>
 <li>Concatenação de prefixo + texto + sufixo</li>
@@ -553,9 +555,9 @@ hide()</h2>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md394"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md402"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md395"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md403"></a>
 Label não aparece na tela</h2>
 <ul>
 <li>Verifique se chamou <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar o objeto</li>
@@ -564,7 +566,7 @@ Label não aparece na tela</h2>
 <li>Certifique-se de chamar <span class="tt">myDisplay.setLabel()</span></li>
 <li>Confirme que fontFamily foi configurado</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md396"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md404"></a>
 Texto não atualiza</h2>
 <ul>
 <li>Use <span class="tt">setText()</span>, <span class="tt">setTextInt()</span> ou <span class="tt">setTextFloat()</span></li>
@@ -572,7 +574,7 @@ Texto não atualiza</h2>
 <li>Confirme que fontColor contrasta com backgroundColor</li>
 <li>Certifique-se que o widget está visível</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md397"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md405"></a>
 Problemas de memória</h2>
 <ul>
 <li>Labels alocam memória dinamicamente para texto</li>
@@ -580,14 +582,14 @@ Problemas de memória</h2>
 <li>Memória é liberada automaticamente pelo destrutor</li>
 <li>Use cleanupMemory() se necessário para liberar manualmente</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md398"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md406"></a>
 Prefixo ou sufixo não aparece</h2>
 <ul>
 <li>Verifique se foram configurados no <a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a> ou chamando setPrefix/setSuffix</li>
 <li>Confirme que são diferentes de nullptr e ""</li>
 <li>Use setPrefix() e setSuffix() para alterar dinamicamente</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md399"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md407"></a>
 Números não formatados corretamente</h2>
 <ul>
 <li>Use setTextFloat() para floats</li>
@@ -595,7 +597,7 @@ Números não formatados corretamente</h2>
 <li>setTextInt() para inteiros</li>
 <li>Verifique se valores estão dentro dos limites</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md400"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md408"></a>
 Performance lenta</h2>
 <ul>
 <li>Evite atualizações muito frequentes</li>
@@ -603,7 +605,7 @@ Performance lenta</h2>
 <li>Reduza tamanho de texto se necessário</li>
 <li>Limpe prefixos/sufixos desnecessários</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md401"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md409"></a>
 Cores não aparecem corretamente</h2>
 <ul>
 <li>Use formatos RGB565 corretos</li>
@@ -612,7 +614,7 @@ Cores não aparecem corretamente</h2>
 <li>Teste diferentes combinações de cores</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md403"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md411"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>

@@ -75,11 +75,11 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe Image </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md280"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md281"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md288"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md289"></a>
 Visão Geral</h1>
 <p>A classe <span class="tt"><a class="el" href="class_image.html" title="Widget de imagem que pode carregar imagens de várias fontes.">Image</a></span> é um widget visual que exibe imagens na tela. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e fornece funcionalidade completa para criar e gerenciar imagens a partir de diferentes fontes: arquivos (SD, SPIFFS, FATFS) ou dados de pixels embutidos no código.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md282"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md290"></a>
 Características Principais</h2>
 <ul>
 <li>🖼️ Exibe imagens de múltiplas fontes</li>
@@ -95,46 +95,46 @@ Características Principais</h2>
 <li>🔗 Integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md284"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md292"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md285"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md293"></a>
 ImageFromFileConfig</h2>
-<p>Estrutura para carregar imagens de arquivos:</p>
+<p>Estrutura para carregar imagens de arquivos (ordem conforme <span class="tt"><a class="el" href="wimage_8h.html">wimage.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_image_from_file_config.html">ImageFromFileConfig</a> {</div>
-<div class="line">  <a class="code hl_enumeration" href="wimage_8h.html#a5aecbe50d643b2a3b5d9d9ca665fd937">SourceFile</a> <a class="code hl_variable" href="struct_image_from_file_config.html#a16c3779aceeeb3f03df861e3d5cbfce5">source</a>;           <span class="comment">// Fonte: SD, SPIFFS ou FATFS</span></div>
-<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="struct_image_from_file_config.html#a95d84caf0e3023166f494df181d89a8a">path</a>;           <span class="comment">// Caminho do arquivo</span></div>
-<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_image_from_file_config.html#a52f77aff29580ba76748a10ebae1a26c">cb</a>;            <span class="comment">// Função callback para toque</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_image_from_file_config.html#af00bf09edf3b08a54208a1534fdb1e03">backgroundColor</a>;    <span class="comment">// Cor de fundo RGB565</span></div>
+<div class="line">  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="struct_image_from_file_config.html#a95d84caf0e3023166f494df181d89a8a">path</a>;           <span class="comment">// Caminho do arquivo.</span></div>
+<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_image_from_file_config.html#a52f77aff29580ba76748a10ebae1a26c">cb</a>;           <span class="comment">// Callback executada quando a imagem é tocada.</span></div>
+<div class="line">  <a class="code hl_enumeration" href="wimage_8h.html#a5aecbe50d643b2a3b5d9d9ca665fd937">SourceFile</a> <a class="code hl_variable" href="struct_image_from_file_config.html#a16c3779aceeeb3f03df861e3d5cbfce5">source</a>;         <span class="comment">// Fonte: SD, SPIFFS ou FATFS.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_image_from_file_config.html#af00bf09edf3b08a54208a1534fdb1e03">backgroundColor</a>; <span class="comment">// Cor de fundo RGB565.</span></div>
 <div class="line">};</div>
 <div class="ttc" id="abase_types_8h_html_a05ded8c943add15c9053b728a4f6b99a"><div class="ttname"><a href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a></div><div class="ttdeci">void(* functionCB_t)()</div><div class="ttdoc">Typedef for a generic callback function.</div><div class="ttdef"><b>Definition</b> baseTypes.h:17</div></div>
 <div class="ttc" id="astruct_image_from_file_config_html"><div class="ttname"><a href="struct_image_from_file_config.html">ImageFromFileConfig</a></div><div class="ttdoc">Configuration structure for loading an image from a file.</div><div class="ttdef"><b>Definition</b> wimage.h:39</div></div>
-<div class="ttc" id="astruct_image_from_file_config_html_a16c3779aceeeb3f03df861e3d5cbfce5"><div class="ttname"><a href="struct_image_from_file_config.html#a16c3779aceeeb3f03df861e3d5cbfce5">ImageFromFileConfig::source</a></div><div class="ttdeci">SourceFile source</div><div class="ttdoc">Source of the image file.</div><div class="ttdef"><b>Definition</b> wimage.h:40</div></div>
-<div class="ttc" id="astruct_image_from_file_config_html_a52f77aff29580ba76748a10ebae1a26c"><div class="ttname"><a href="struct_image_from_file_config.html#a52f77aff29580ba76748a10ebae1a26c">ImageFromFileConfig::cb</a></div><div class="ttdeci">functionCB_t cb</div><div class="ttdoc">Callback function to be called when the image is touched.</div><div class="ttdef"><b>Definition</b> wimage.h:43</div></div>
-<div class="ttc" id="astruct_image_from_file_config_html_a95d84caf0e3023166f494df181d89a8a"><div class="ttname"><a href="struct_image_from_file_config.html#a95d84caf0e3023166f494df181d89a8a">ImageFromFileConfig::path</a></div><div class="ttdeci">const char * path</div><div class="ttdoc">Path to the image file.</div><div class="ttdef"><b>Definition</b> wimage.h:41</div></div>
-<div class="ttc" id="astruct_image_from_file_config_html_af00bf09edf3b08a54208a1534fdb1e03"><div class="ttname"><a href="struct_image_from_file_config.html#af00bf09edf3b08a54208a1534fdb1e03">ImageFromFileConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Background color of the image.</div><div class="ttdef"><b>Definition</b> wimage.h:44</div></div>
+<div class="ttc" id="astruct_image_from_file_config_html_a16c3779aceeeb3f03df861e3d5cbfce5"><div class="ttname"><a href="struct_image_from_file_config.html#a16c3779aceeeb3f03df861e3d5cbfce5">ImageFromFileConfig::source</a></div><div class="ttdeci">SourceFile source</div><div class="ttdoc">Source of the image file.</div><div class="ttdef"><b>Definition</b> wimage.h:42</div></div>
+<div class="ttc" id="astruct_image_from_file_config_html_a52f77aff29580ba76748a10ebae1a26c"><div class="ttname"><a href="struct_image_from_file_config.html#a52f77aff29580ba76748a10ebae1a26c">ImageFromFileConfig::cb</a></div><div class="ttdeci">functionCB_t cb</div><div class="ttdoc">Callback function to be called when the image is touched.</div><div class="ttdef"><b>Definition</b> wimage.h:41</div></div>
+<div class="ttc" id="astruct_image_from_file_config_html_a95d84caf0e3023166f494df181d89a8a"><div class="ttname"><a href="struct_image_from_file_config.html#a95d84caf0e3023166f494df181d89a8a">ImageFromFileConfig::path</a></div><div class="ttdeci">const char * path</div><div class="ttdoc">Path to the image file.</div><div class="ttdef"><b>Definition</b> wimage.h:40</div></div>
+<div class="ttc" id="astruct_image_from_file_config_html_af00bf09edf3b08a54208a1534fdb1e03"><div class="ttname"><a href="struct_image_from_file_config.html#af00bf09edf3b08a54208a1534fdb1e03">ImageFromFileConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Background color of the image.</div><div class="ttdef"><b>Definition</b> wimage.h:43</div></div>
 <div class="ttc" id="awimage_8h_html_a5aecbe50d643b2a3b5d9d9ca665fd937"><div class="ttname"><a href="wimage_8h.html#a5aecbe50d643b2a3b5d9d9ca665fd937">SourceFile</a></div><div class="ttdeci">SourceFile</div><div class="ttdoc">Enum for specifying the source file location of the image.</div><div class="ttdef"><b>Definition</b> wimage.h:19</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md286"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md294"></a>
 ImageFromPixelsConfig</h2>
-<p>Estrutura para carregar imagens de dados de pixels:</p>
+<p>Estrutura para carregar imagens de dados de pixels (ordem conforme <span class="tt"><a class="el" href="wimage_8h.html">wimage.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_image_from_pixels_config.html">ImageFromPixelsConfig</a> {</div>
-<div class="line">  <span class="keyword">const</span> <a class="code hl_typedef" href="wimage_8h.html#af171671f684400a78136ec972cf40c7c">pixel_t</a> *<a class="code hl_variable" href="struct_image_from_pixels_config.html#a294a7a587c7f5855c2923e6b6d890515">pixels</a>;      <span class="comment">// Dados de pixels (formato depende do display)</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_image_from_pixels_config.html#abec5ba282eeca039bb1a1e9101873020">width</a>;             <span class="comment">// Largura da imagem (&gt; 0)</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_image_from_pixels_config.html#a1e1d1250468bb7fa19a8318a24bdea01">height</a>;            <span class="comment">// Altura da imagem (&gt; 0)</span></div>
-<div class="line">  <span class="keyword">const</span> uint8_t *<a class="code hl_variable" href="struct_image_from_pixels_config.html#a8dbeef00dcba432edfef9a2d22e6fb39">maskAlpha</a>;   <span class="comment">// Máscara de transparência (opcional)</span></div>
-<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_image_from_pixels_config.html#abf97118d8727cb93dc23b5c8203bfa7a">cb</a>;            <span class="comment">// Função callback para toque</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_image_from_pixels_config.html#aafda6b569adbc529db9a1c67103a3a60">backgroundColor</a>;   <span class="comment">// Cor de fundo RGB565</span></div>
-<div class="line">  <span class="keywordtype">float</span> <a class="code hl_variable" href="struct_image_from_pixels_config.html#a138a03a004da0420af1a5f749cfc73cd">angle</a>;                <span class="comment">// Ângulo de rotação em graus</span></div>
+<div class="line">  <span class="keyword">const</span> <a class="code hl_typedef" href="wimage_8h.html#af171671f684400a78136ec972cf40c7c">pixel_t</a>* <a class="code hl_variable" href="struct_image_from_pixels_config.html#a294a7a587c7f5855c2923e6b6d890515">pixels</a>;     <span class="comment">// Dados de pixels (formato depende do display).</span></div>
+<div class="line">  <span class="keyword">const</span> uint8_t* <a class="code hl_variable" href="struct_image_from_pixels_config.html#a8dbeef00dcba432edfef9a2d22e6fb39">maskAlpha</a>;  <span class="comment">// Máscara de transparência (opcional, pode ser nullptr).</span></div>
+<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_image_from_pixels_config.html#abf97118d8727cb93dc23b5c8203bfa7a">cb</a>;           <span class="comment">// Callback executada quando a imagem é tocada.</span></div>
+<div class="line">  <span class="keywordtype">float</span> <a class="code hl_variable" href="struct_image_from_pixels_config.html#a138a03a004da0420af1a5f749cfc73cd">angle</a>;               <span class="comment">// Ângulo de rotação em graus (0 = sem rotação).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_image_from_pixels_config.html#abec5ba282eeca039bb1a1e9101873020">width</a>;            <span class="comment">// Largura da imagem (&gt; 0).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_image_from_pixels_config.html#a1e1d1250468bb7fa19a8318a24bdea01">height</a>;           <span class="comment">// Altura da imagem (&gt; 0).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_image_from_pixels_config.html#aafda6b569adbc529db9a1c67103a3a60">backgroundColor</a>;  <span class="comment">// Cor de fundo RGB565.</span></div>
 <div class="line">};</div>
-<div class="ttc" id="astruct_image_from_pixels_config_html"><div class="ttname"><a href="struct_image_from_pixels_config.html">ImageFromPixelsConfig</a></div><div class="ttdoc">Configuration structure for loading an image from pixel data.</div><div class="ttdef"><b>Definition</b> wimage.h:61</div></div>
-<div class="ttc" id="astruct_image_from_pixels_config_html_a138a03a004da0420af1a5f749cfc73cd"><div class="ttname"><a href="struct_image_from_pixels_config.html#a138a03a004da0420af1a5f749cfc73cd">ImageFromPixelsConfig::angle</a></div><div class="ttdeci">float angle</div><div class="ttdoc">Rotation angle of the image in degrees (0.0 = no rotation).</div><div class="ttdef"><b>Definition</b> wimage.h:68</div></div>
-<div class="ttc" id="astruct_image_from_pixels_config_html_a1e1d1250468bb7fa19a8318a24bdea01"><div class="ttname"><a href="struct_image_from_pixels_config.html#a1e1d1250468bb7fa19a8318a24bdea01">ImageFromPixelsConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Height of the image (must be &gt; 0).</div><div class="ttdef"><b>Definition</b> wimage.h:64</div></div>
-<div class="ttc" id="astruct_image_from_pixels_config_html_a294a7a587c7f5855c2923e6b6d890515"><div class="ttname"><a href="struct_image_from_pixels_config.html#a294a7a587c7f5855c2923e6b6d890515">ImageFromPixelsConfig::pixels</a></div><div class="ttdeci">const pixel_t * pixels</div><div class="ttdoc">Pointer to the pixel map data (format depends on display type).</div><div class="ttdef"><b>Definition</b> wimage.h:62</div></div>
-<div class="ttc" id="astruct_image_from_pixels_config_html_a8dbeef00dcba432edfef9a2d22e6fb39"><div class="ttname"><a href="struct_image_from_pixels_config.html#a8dbeef00dcba432edfef9a2d22e6fb39">ImageFromPixelsConfig::maskAlpha</a></div><div class="ttdeci">const uint8_t * maskAlpha</div><div class="ttdoc">Pointer to the alpha mask data for transparency (optional).</div><div class="ttdef"><b>Definition</b> wimage.h:65</div></div>
-<div class="ttc" id="astruct_image_from_pixels_config_html_aafda6b569adbc529db9a1c67103a3a60"><div class="ttname"><a href="struct_image_from_pixels_config.html#aafda6b569adbc529db9a1c67103a3a60">ImageFromPixelsConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Background color of the image.</div><div class="ttdef"><b>Definition</b> wimage.h:67</div></div>
-<div class="ttc" id="astruct_image_from_pixels_config_html_abec5ba282eeca039bb1a1e9101873020"><div class="ttname"><a href="struct_image_from_pixels_config.html#abec5ba282eeca039bb1a1e9101873020">ImageFromPixelsConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Width of the image (must be &gt; 0).</div><div class="ttdef"><b>Definition</b> wimage.h:63</div></div>
-<div class="ttc" id="astruct_image_from_pixels_config_html_abf97118d8727cb93dc23b5c8203bfa7a"><div class="ttname"><a href="struct_image_from_pixels_config.html#abf97118d8727cb93dc23b5c8203bfa7a">ImageFromPixelsConfig::cb</a></div><div class="ttdeci">functionCB_t cb</div><div class="ttdoc">Callback function to be called when the image is touched.</div><div class="ttdef"><b>Definition</b> wimage.h:66</div></div>
+<div class="ttc" id="astruct_image_from_pixels_config_html"><div class="ttname"><a href="struct_image_from_pixels_config.html">ImageFromPixelsConfig</a></div><div class="ttdoc">Configuration structure for loading an image from pixel data.</div><div class="ttdef"><b>Definition</b> wimage.h:59</div></div>
+<div class="ttc" id="astruct_image_from_pixels_config_html_a138a03a004da0420af1a5f749cfc73cd"><div class="ttname"><a href="struct_image_from_pixels_config.html#a138a03a004da0420af1a5f749cfc73cd">ImageFromPixelsConfig::angle</a></div><div class="ttdeci">float angle</div><div class="ttdoc">Rotation angle of the image in degrees (0.0 = no rotation).</div><div class="ttdef"><b>Definition</b> wimage.h:63</div></div>
+<div class="ttc" id="astruct_image_from_pixels_config_html_a1e1d1250468bb7fa19a8318a24bdea01"><div class="ttname"><a href="struct_image_from_pixels_config.html#a1e1d1250468bb7fa19a8318a24bdea01">ImageFromPixelsConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Height of the image (must be &gt; 0).</div><div class="ttdef"><b>Definition</b> wimage.h:65</div></div>
+<div class="ttc" id="astruct_image_from_pixels_config_html_a294a7a587c7f5855c2923e6b6d890515"><div class="ttname"><a href="struct_image_from_pixels_config.html#a294a7a587c7f5855c2923e6b6d890515">ImageFromPixelsConfig::pixels</a></div><div class="ttdeci">const pixel_t * pixels</div><div class="ttdoc">Pointer to the pixel map data (format depends on display type).</div><div class="ttdef"><b>Definition</b> wimage.h:60</div></div>
+<div class="ttc" id="astruct_image_from_pixels_config_html_a8dbeef00dcba432edfef9a2d22e6fb39"><div class="ttname"><a href="struct_image_from_pixels_config.html#a8dbeef00dcba432edfef9a2d22e6fb39">ImageFromPixelsConfig::maskAlpha</a></div><div class="ttdeci">const uint8_t * maskAlpha</div><div class="ttdoc">Pointer to the alpha mask data for transparency (optional).</div><div class="ttdef"><b>Definition</b> wimage.h:61</div></div>
+<div class="ttc" id="astruct_image_from_pixels_config_html_aafda6b569adbc529db9a1c67103a3a60"><div class="ttname"><a href="struct_image_from_pixels_config.html#aafda6b569adbc529db9a1c67103a3a60">ImageFromPixelsConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Background color of the image.</div><div class="ttdef"><b>Definition</b> wimage.h:66</div></div>
+<div class="ttc" id="astruct_image_from_pixels_config_html_abec5ba282eeca039bb1a1e9101873020"><div class="ttname"><a href="struct_image_from_pixels_config.html#abec5ba282eeca039bb1a1e9101873020">ImageFromPixelsConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Width of the image (must be &gt; 0).</div><div class="ttdef"><b>Definition</b> wimage.h:64</div></div>
+<div class="ttc" id="astruct_image_from_pixels_config_html_abf97118d8727cb93dc23b5c8203bfa7a"><div class="ttname"><a href="struct_image_from_pixels_config.html#abf97118d8727cb93dc23b5c8203bfa7a">ImageFromPixelsConfig::cb</a></div><div class="ttdeci">functionCB_t cb</div><div class="ttdoc">Callback function to be called when the image is touched.</div><div class="ttdef"><b>Definition</b> wimage.h:62</div></div>
 <div class="ttc" id="awimage_8h_html_af171671f684400a78136ec972cf40c7c"><div class="ttname"><a href="wimage_8h.html#af171671f684400a78136ec972cf40c7c">pixel_t</a></div><div class="ttdeci">uint16_t pixel_t</div><div class="ttdef"><b>Definition</b> wimage.h:27</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md287"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md295"></a>
 SourceFile (enum)</h2>
 <p>Enum para especificar a origem do arquivo:</p>
 <div class="fragment"><div class="line"><span class="keyword">enum class</span> <a class="code hl_enumeration" href="wimage_8h.html#a5aecbe50d643b2a3b5d9d9ca665fd937">SourceFile</a> {</div>
@@ -147,7 +147,7 @@ SourceFile (enum)</h2>
 <div class="ttc" id="awimage_8h_html_a5aecbe50d643b2a3b5d9d9ca665fd937a1ff315693e3b26267c50f7a739bc2478"><div class="ttname"><a href="wimage_8h.html#a5aecbe50d643b2a3b5d9d9ca665fd937a1ff315693e3b26267c50f7a739bc2478">SourceFile::FATFS</a></div><div class="ttdeci">@ FATFS</div><div class="ttdoc">Image source from FAT filesystem.</div><div class="ttdef"><b>Definition</b> wimage.h:23</div></div>
 <div class="ttc" id="awimage_8h_html_a5aecbe50d643b2a3b5d9d9ca665fd937a38f99abbc1d339c277c0669e7bc373c0"><div class="ttname"><a href="wimage_8h.html#a5aecbe50d643b2a3b5d9d9ca665fd937a38f99abbc1d339c277c0669e7bc373c0">SourceFile::SD</a></div><div class="ttdeci">@ SD</div><div class="ttdoc">Image source from SD card.</div><div class="ttdef"><b>Definition</b> wimage.h:20</div></div>
 <div class="ttc" id="awimage_8h_html_a5aecbe50d643b2a3b5d9d9ca665fd937ac17ee73343e7b19a3d0c610ae31cf2a2"><div class="ttname"><a href="wimage_8h.html#a5aecbe50d643b2a3b5d9d9ca665fd937ac17ee73343e7b19a3d0c610ae31cf2a2">SourceFile::EMBED</a></div><div class="ttdeci">@ EMBED</div><div class="ttdoc">Image source embedded within the code.</div><div class="ttdef"><b>Definition</b> wimage.h:22</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md288"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md296"></a>
 PerformanceMetrics_t</h2>
 <p>Estrutura que armazena métricas de desempenho:</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_performance_metrics__t.html">PerformanceMetrics_t</a> {</div>
@@ -156,17 +156,17 @@ PerformanceMetrics_t</h2>
 <div class="line">  uint32_t <a class="code hl_variable" href="struct_performance_metrics__t.html#a85b3cb2423321f65eb01c4abacf47762">rotationDrawCount</a>;      <span class="comment">// Número de desenhos com rotação</span></div>
 <div class="line">  <span class="comment">// ... tempos médios e máximos ...</span></div>
 <div class="line">};</div>
-<div class="ttc" id="astruct_performance_metrics__t_html"><div class="ttname"><a href="struct_performance_metrics__t.html">PerformanceMetrics_t</a></div><div class="ttdef"><b>Definition</b> wimage.h:89</div></div>
-<div class="ttc" id="astruct_performance_metrics__t_html_a2039f8f6f6521c202d0a2a6362bc453e"><div class="ttname"><a href="struct_performance_metrics__t.html#a2039f8f6f6521c202d0a2a6362bc453e">PerformanceMetrics_t::fileLoadCount</a></div><div class="ttdeci">uint32_t fileLoadCount</div><div class="ttdoc">Number of times file was loaded.</div><div class="ttdef"><b>Definition</b> wimage.h:91</div></div>
-<div class="ttc" id="astruct_performance_metrics__t_html_a85b3cb2423321f65eb01c4abacf47762"><div class="ttname"><a href="struct_performance_metrics__t.html#a85b3cb2423321f65eb01c4abacf47762">PerformanceMetrics_t::rotationDrawCount</a></div><div class="ttdeci">uint32_t rotationDrawCount</div><div class="ttdoc">Number of times rotated image was drawn.</div><div class="ttdef"><b>Definition</b> wimage.h:92</div></div>
-<div class="ttc" id="astruct_performance_metrics__t_html_ac151cf25f8e90c1798743bb9e5edd441"><div class="ttname"><a href="struct_performance_metrics__t.html#ac151cf25f8e90c1798743bb9e5edd441">PerformanceMetrics_t::drawCount</a></div><div class="ttdeci">uint32_t drawCount</div><div class="ttdoc">Number of times draw() was called.</div><div class="ttdef"><b>Definition</b> wimage.h:90</div></div>
+<div class="ttc" id="astruct_performance_metrics__t_html"><div class="ttname"><a href="struct_performance_metrics__t.html">PerformanceMetrics_t</a></div><div class="ttdef"><b>Definition</b> wimage.h:87</div></div>
+<div class="ttc" id="astruct_performance_metrics__t_html_a2039f8f6f6521c202d0a2a6362bc453e"><div class="ttname"><a href="struct_performance_metrics__t.html#a2039f8f6f6521c202d0a2a6362bc453e">PerformanceMetrics_t::fileLoadCount</a></div><div class="ttdeci">uint32_t fileLoadCount</div><div class="ttdoc">Number of times file was loaded.</div><div class="ttdef"><b>Definition</b> wimage.h:89</div></div>
+<div class="ttc" id="astruct_performance_metrics__t_html_a85b3cb2423321f65eb01c4abacf47762"><div class="ttname"><a href="struct_performance_metrics__t.html#a85b3cb2423321f65eb01c4abacf47762">PerformanceMetrics_t::rotationDrawCount</a></div><div class="ttdeci">uint32_t rotationDrawCount</div><div class="ttdoc">Number of times rotated image was drawn.</div><div class="ttdef"><b>Definition</b> wimage.h:90</div></div>
+<div class="ttc" id="astruct_performance_metrics__t_html_ac151cf25f8e90c1798743bb9e5edd441"><div class="ttname"><a href="struct_performance_metrics__t.html#ac151cf25f8e90c1798743bb9e5edd441">PerformanceMetrics_t::drawCount</a></div><div class="ttdeci">uint32_t drawCount</div><div class="ttdoc">Number of times draw() was called.</div><div class="ttdef"><b>Definition</b> wimage.h:88</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md290"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md298"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md291"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md299"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_image.html">Image</a>(uint16_t _x, uint16_t _y, uint8_t _screen)</div>
-<div class="ttc" id="aclass_image_html"><div class="ttname"><a href="class_image.html">Image</a></div><div class="ttdoc">Widget de imagem que pode carregar imagens de várias fontes.</div><div class="ttdef"><b>Definition</b> wimage.h:137</div></div>
+<div class="ttc" id="aclass_image_html"><div class="ttname"><a href="class_image.html">Image</a></div><div class="ttdoc">Widget de imagem que pode carregar imagens de várias fontes.</div><div class="ttdef"><b>Definition</b> wimage.h:135</div></div>
 </div><!-- fragment --><p>Cria uma nova imagem na posição especificada.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">_x</span>: Coordenada X do canto superior esquerdo</li>
@@ -174,11 +174,11 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, é obrigatório chamar <span class="tt">setupFromFile()</span> ou <span class="tt">setupFromPixels()</span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md292"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md300"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_image.html">~Image</a>()</div>
 </div><!-- fragment --><p>Libera automaticamente a memória alocada para imagens.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md293"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md301"></a>
 setupFromFile()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setupFromFile(<a class="code hl_struct" href="struct_image_from_file_config.html">ImageFromFileConfig</a> &amp;config)</div>
 </div><!-- fragment --><p>Configura a imagem para carregar de um arquivo.</p>
@@ -191,7 +191,7 @@ setupFromFile()</h2>
 <li>Aloca memória dinamicamente para pixels</li>
 <li>Suporta máscaras de transparência</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md294"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md302"></a>
 setupFromPixels()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setupFromPixels(<a class="code hl_struct" href="struct_image_from_pixels_config.html">ImageFromPixelsConfig</a> &amp;config)</div>
 </div><!-- fragment --><p>Configura a imagem a partir de dados de pixels embutidos.</p>
@@ -204,36 +204,36 @@ setupFromPixels()</h2>
 <li>Suporta rotação de imagem</li>
 <li>Suporta máscaras de transparência</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md295"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md303"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna a imagem visível na tela.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md296"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md304"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta a imagem da tela.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md297"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md305"></a>
 draw()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> draw()</div>
 </div><!-- fragment --><p>Desenha a imagem na tela.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md298"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md306"></a>
 drawBackground()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> drawBackground()</div>
 </div><!-- fragment --><p>Desenha o fundo da imagem.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md299"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md307"></a>
 getMetrics()</h2>
 <div class="fragment"><div class="line"><span class="keyword">const</span> <a class="code hl_struct" href="struct_performance_metrics__t.html">PerformanceMetrics_t</a>&amp; getMetrics() const</div>
 </div><!-- fragment --><p>Retorna métricas de desempenho da imagem.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md300"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md308"></a>
 resetMetrics()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> resetMetrics()</div>
 </div><!-- fragment --><p>Reseta as métricas de desempenho.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md301"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md309"></a>
 printMetrics()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> printMetrics() const</div>
 </div><!-- fragment --><p>Imprime métricas de desempenho no Serial.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md303"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md311"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente:</p>
 <ul>
@@ -248,16 +248,16 @@ printMetrics()</h2>
 <li><span class="tt">clearBuffers()</span>: Limpa buffers de memória</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md305"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md313"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md306"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md314"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Para imagens de arquivos</span></div>
 <div class="line"><span class="preprocessor">#include &lt;SD.h&gt;</span>  <span class="comment">// ou SPIFFS.h, FFat.h dependendo da fonte</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md307"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md315"></a>
 🏗️ Passo 2: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
@@ -268,12 +268,12 @@ printMetrics()</h2>
 <div class="line"><span class="comment">// Criar array de ponteiros</span></div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdImagem = 2;</div>
 <div class="line"><a class="code hl_class" href="class_image.html">Image</a> *arrayImagem[qtdImagem] = {&amp;img3dgraphpng, &amp;homepng};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md308"></a>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md316"></a>
 📝 Passo 3: Prototipar Funções de Callback</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> homepng_cb();</div>
 <div class="line"><span class="keywordtype">void</span> image_callback();</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md309"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md317"></a>
 ⚙️ Passo 4: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    Serial.begin(115200);</div>
@@ -290,11 +290,11 @@ printMetrics()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md310"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md318"></a>
 🔧 Passo 5: Configurar Imagens - De Dados Embutidos</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar imagem de dados embutidos</span></div>
@@ -322,9 +322,9 @@ printMetrics()</h2>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#ae866e857767425a556c773bff9b8a7f6">setImage</a>(arrayImagem, qtdImagem);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_ae866e857767425a556c773bff9b8a7f6"><div class="ttname"><a href="class_display_f_k.html#ae866e857767425a556c773bff9b8a7f6">DisplayFK::setImage</a></div><div class="ttdeci">void setImage(Image *array[], uint8_t amount)</div><div class="ttdoc">Configures the image array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:665</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md311"></a>
+<div class="ttc" id="aclass_display_f_k_html_ae866e857767425a556c773bff9b8a7f6"><div class="ttname"><a href="class_display_f_k.html#ae866e857767425a556c773bff9b8a7f6">DisplayFK::setImage</a></div><div class="ttdeci">void setImage(Image *array[], uint8_t amount)</div><div class="ttdoc">Configures the image array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:666</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md319"></a>
 🔧 Configurar Imagens - De Arquivos</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar imagem de arquivo SD</span></div>
@@ -342,7 +342,7 @@ printMetrics()</h2>
 <div class="line">    <a class="code hl_class" href="class_image.html">Image</a> *arrayImagem[1] = {&amp;arquivoImage};</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#ae866e857767425a556c773bff9b8a7f6">setImage</a>(arrayImagem, 1);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md312"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md320"></a>
 🔔 Passo 6: Criar Funções de Callback</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> homepng_cb() {</div>
 <div class="line">    Serial.println(<span class="stringliteral">&quot;Imagem Home tocada!&quot;</span>);</div>
@@ -352,7 +352,7 @@ printMetrics()</h2>
 <div class="line"><span class="keywordtype">void</span> image_callback() {</div>
 <div class="line">    Serial.println(<span class="stringliteral">&quot;Imagem tocada!&quot;</span>);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md313"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md321"></a>
 🖥️ Passo 7: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -361,9 +361,9 @@ printMetrics()</h2>
 <div class="line">    <span class="comment">// Desenhar todos os widgets na tela 0</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md314"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md322"></a>
 🔄 Passo 8: Exemplo Completo</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// Mostrar/ocultar imagem dinamicamente</span></div>
@@ -382,9 +382,9 @@ printMetrics()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md316"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md324"></a>
 📝 Exemplo Completo</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md317"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md325"></a>
 Exemplo com Dados Embutidos</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"> </div>
@@ -446,9 +446,9 @@ Exemplo com Dados Embutidos</h2>
 <div class="line">    Serial.println(<span class="stringliteral">&quot;Imagem tocada!&quot;</span>);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md319"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md327"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md320"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md328"></a>
 📐 Formatos de Arquivo</h2>
 <ul>
 <li>Formato binário proprietário</li>
@@ -457,7 +457,7 @@ Exemplo com Dados Embutidos</h2>
 <li>Para monocromático: 1 byte por pixel</li>
 <li>Máscara de transparência opcional após pixels</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md321"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md329"></a>
 🎨 Otimização de Memória</h2>
 <ul>
 <li>Imagens embutidas: memória estática (não alocada dinamicamente)</li>
@@ -465,7 +465,7 @@ Exemplo com Dados Embutidos</h2>
 <li>Imagens grandes podem consumir muita RAM</li>
 <li>Considere converter para formato comprimido se necessário</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md322"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md330"></a>
 🔔 Callbacks</h2>
 <ul>
 <li>Callback é executado quando a imagem é tocada</li>
@@ -473,7 +473,7 @@ Exemplo com Dados Embutidos</h2>
 <li>Mantenha callbacks curtas e rápidas</li>
 <li>Não bloqueie a execução dentro do callback</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md323"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md331"></a>
 ⚡ Performance</h2>
 <ul>
 <li>Uso de métricas de desempenho para otimização</li>
@@ -482,7 +482,7 @@ Exemplo com Dados Embutidos</h2>
 <li>Evite redesenhos desnecessários</li>
 <li>Considere cache de imagens frequentes</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md324"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md332"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Use imagens com resolução adequada ao display</li>
@@ -490,7 +490,7 @@ Exemplo com Dados Embutidos</h2>
 <li>Imagens muito pequenas podem ser difíceis de tocar</li>
 <li>Use máscaras de transparência para fundos complexos</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md325"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md333"></a>
 🎨 Design Visual</h2>
 <ul>
 <li>Imagens são renderizadas como retângulos de pixels</li>
@@ -500,7 +500,7 @@ Exemplo com Dados Embutidos</h2>
 <li>Display RGB565: 16 bits por pixel</li>
 <li>Display monocromático: 8 bits por pixel</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md326"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md334"></a>
 📊 Gerenciamento de Memória</h2>
 <ul>
 <li>Imagens de arquivos: memória alocada dinamicamente</li>
@@ -509,7 +509,7 @@ Exemplo com Dados Embutidos</h2>
 <li>Destrutor libera memória automaticamente se necessário</li>
 <li>Use clearBuffers() para liberar memória manualmente</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md327"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md335"></a>
 🔧 Métricas de Desempenho</h2>
 <ul>
 <li>Rastreia chamadas de desenho e carregamento</li>
@@ -519,7 +519,7 @@ Exemplo com Dados Embutidos</h2>
 <li>Use resetMetrics() para reiniciar contadores</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md329"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md337"></a>
 🔗 Herança de WidgetBase</h1>
 <p>A classe <span class="tt"><a class="el" href="class_image.html" title="Widget de imagem que pode carregar imagens de várias fontes.">Image</a></span> herda todos os métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
@@ -529,7 +529,7 @@ Exemplo com Dados Embutidos</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho automático</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md331"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md339"></a>
 🔗 Integração com DisplayFK</h1>
 <p>O <span class="tt"><a class="el" href="class_image.html" title="Widget de imagem que pode carregar imagens de várias fontes.">Image</a></span> integra-se automaticamente com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
@@ -541,7 +541,7 @@ Exemplo com Dados Embutidos</h2>
 <li><b>Formato:</b> Adapta-se automaticamente ao tipo de display</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md333"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md341"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O <span class="tt"><a class="el" href="class_image.html" title="Widget de imagem que pode carregar imagens de várias fontes.">Image</a></span> é renderizado diretamente:</p>
 <ol type="1">
@@ -567,9 +567,9 @@ Exemplo com Dados Embutidos</h2>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md335"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md343"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md336"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md344"></a>
 Imagem não aparece na tela</h2>
 <ul>
 <li>Verifique se chamou <span class="tt">setupFromFile()</span> ou <span class="tt">setupFromPixels()</span></li>
@@ -578,7 +578,7 @@ Imagem não aparece na tela</h2>
 <li>Certifique-se de chamar <span class="tt">myDisplay.setImage()</span></li>
 <li>Confirme que dados de pixels não são null</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md337"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md345"></a>
 Imagem de arquivo não carrega</h2>
 <ul>
 <li>Verifique se o sistema de arquivos foi inicializado</li>
@@ -587,7 +587,7 @@ Imagem de arquivo não carrega</h2>
 <li>Confirme que há memória suficiente para carregar</li>
 <li>Verifique permissões de leitura do arquivo</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md338"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md346"></a>
 Imagem embutida não aparece</h2>
 <ul>
 <li>Verifique se os dados de pixels foram incluídos</li>
@@ -595,7 +595,7 @@ Imagem embutida não aparece</h2>
 <li>Verifique se o ponteiro pixels não é null</li>
 <li>Certifique-se de que o formato está correto</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md339"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md347"></a>
 Problemas de memória</h2>
 <ul>
 <li>Imagens grandes podem consumir muita RAM</li>
@@ -603,7 +603,7 @@ Problemas de memória</h2>
 <li>Libere memória com clearBuffers() se disponível</li>
 <li>Considere usar imagens embutidas ao invés de arquivos</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md340"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md348"></a>
 Performance lenta</h2>
 <ul>
 <li>Use métricas para identificar gargalos</li>
@@ -612,7 +612,7 @@ Performance lenta</h2>
 <li>Use cache de imagens frequentes</li>
 <li>Evite carregar mesmo arquivo múltiplas vezes</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md341"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md349"></a>
 Toque não detectado</h2>
 <ul>
 <li>Verifique se o touch foi inicializado corretamente</li>
@@ -621,7 +621,7 @@ Toque não detectado</h2>
 <li>Certifique-se de que o widget está habilitado</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md343"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md351"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>

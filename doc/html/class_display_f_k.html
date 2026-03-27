@@ -171,8 +171,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa429c6908970bd090d4c9d40c568a203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe timer creation without exceptions.  <br /></td></tr>
 <tr class="memitem:acaae3382568082a929ceb1ed57398ee5" id="r_acaae3382568082a929ceb1ed57398ee5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acaae3382568082a929ceb1ed57398ee5">createSemaphoreSafe</a> ()</td></tr>
 <tr class="memdesc:acaae3382568082a929ceb1ed57398ee5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe semaphore creation without exceptions.  <br /></td></tr>
-<tr class="memitem:a4fcfc614b52ebb5cc9b12cb21fc9011c" id="r_a4fcfc614b52ebb5cc9b12cb21fc9011c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4fcfc614b52ebb5cc9b12cb21fc9011c">setCheckboxSafe</a> (<a class="el" href="class_check_box.html">CheckBox</a> *array[], uint8_t amount)</td></tr>
-<tr class="memdesc:a4fcfc614b52ebb5cc9b12cb21fc9011c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe checkbox configuration without exceptions.  <br /></td></tr>
 <tr class="memitem:a553154fc5cc0e49da704e86b9543be12" id="r_a553154fc5cc0e49da704e86b9543be12"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a553154fc5cc0e49da704e86b9543be12">allocateStringSafe</a> (const char *caller)</td></tr>
 <tr class="memdesc:a553154fc5cc0e49da704e86b9543be12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe string allocation without exceptions.  <br /></td></tr>
 <tr class="memitem:a8f1fac29b8acfb93db70407d21066bf0" id="r_a8f1fac29b8acfb93db70407d21066bf0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f1fac29b8acfb93db70407d21066bf0">deallocateStringSafe</a> (char *str)</td></tr>
@@ -184,9 +182,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab01f4ee7e1a3fd10732f505780a85579" id="r_ab01f4ee7e1a3fd10732f505780a85579"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab01f4ee7e1a3fd10732f505780a85579">setTouchCorners</a> (int x0, int x1, int y0, int y1)</td></tr>
 <tr class="memitem:afa4ab23e217db18a7b24505d2b3a6ae9" id="r_afa4ab23e217db18a7b24505d2b3a6ae9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa4ab23e217db18a7b24505d2b3a6ae9">setInvertAxis</a> (bool invert_x, bool invert_y)</td></tr>
 <tr class="memitem:a242ab7e37c6a0b001918cd044017ab12" id="r_a242ab7e37c6a0b001918cd044017ab12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a242ab7e37c6a0b001918cd044017ab12">setSwapAxis</a> (bool swap)</td></tr>
-<tr class="memitem:a960bada88e5491be7ff7db21f6f8c37f" id="r_a960bada88e5491be7ff7db21f6f8c37f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a960bada88e5491be7ff7db21f6f8c37f">startTouchGSL3680</a> (uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST)</td></tr>
+<tr class="memitem:af643012eaab7c22bb0423ab540dfd467" id="r_af643012eaab7c22bb0423ab540dfd467"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af643012eaab7c22bb0423ab540dfd467">startTouchFT6336</a> (uint16_t w, uint16_t h, uint8_t _rotation, int8_t pinSDA, int8_t pinSCL, int8_t pinINT, int8_t pinRST)</td></tr>
 <tr class="memitem:a3a2c3b0dfb360c9ed38f286be03e3473" id="r_a3a2c3b0dfb360c9ed38f286be03e3473"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a2c3b0dfb360c9ed38f286be03e3473">changeWTD</a> ()</td></tr>
 <tr class="memdesc:a3a2c3b0dfb360c9ed38f286be03e3473"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the watchdog timer.  <br /></td></tr>
+<tr class="memitem:a4fcfc614b52ebb5cc9b12cb21fc9011c" id="r_a4fcfc614b52ebb5cc9b12cb21fc9011c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4fcfc614b52ebb5cc9b12cb21fc9011c">setCheckboxSafe</a> (<a class="el" href="class_check_box.html">CheckBox</a> *array[], uint8_t amount)</td></tr>
+<tr class="memdesc:a4fcfc614b52ebb5cc9b12cb21fc9011c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe checkbox configuration without exceptions.  <br /></td></tr>
 <tr class="memitem:a8478cc1dcc4fa42ced2e0da930c09563" id="r_a8478cc1dcc4fa42ced2e0da930c09563"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8478cc1dcc4fa42ced2e0da930c09563">setCheckbox</a> (<a class="el" href="class_check_box.html">CheckBox</a> *array[], uint8_t amount)</td></tr>
 <tr class="memdesc:a8478cc1dcc4fa42ced2e0da930c09563"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the checkbox array.  <br /></td></tr>
 <tr class="memitem:adf699e461df98ece72f3c0a1bf063323" id="r_adf699e461df98ece72f3c0a1bf063323"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adf699e461df98ece72f3c0a1bf063323">setCircleButton</a> (<a class="el" href="class_circle_button.html">CircleButton</a> *array[], uint8_t amount)</td></tr>
@@ -2282,14 +2282,14 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a960bada88e5491be7ff7db21f6f8c37f" name="a960bada88e5491be7ff7db21f6f8c37f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a960bada88e5491be7ff7db21f6f8c37f">&#9670;&#160;</a></span>startTouchGSL3680()</h2>
+<a id="af643012eaab7c22bb0423ab540dfd467" name="af643012eaab7c22bb0423ab540dfd467"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af643012eaab7c22bb0423ab540dfd467">&#9670;&#160;</a></span>startTouchFT6336()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void DisplayFK::startTouchGSL3680 </td>
+          <td class="memname">void DisplayFK::startTouchFT6336 </td>
           <td>(</td>
           <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
         </tr>

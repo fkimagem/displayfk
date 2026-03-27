@@ -75,11 +75,11 @@ $(function() {
   <div class="headertitle"><div class="title">Documentação da Classe NumberBox </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md507"></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md508"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md516"></a></p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md517"></a>
 Visão Geral</h1>
 <p>A classe <span class="tt"><a class="el" href="class_number_box.html" title="Widget de caixa de número para exibir e editar valores numéricos.">NumberBox</a></span> é um widget interativo que exibe e permite edição de valores numéricos (float) através de um teclado numérico virtual. Ele herda de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> e trabalha em conjunto com <span class="tt"><a class="el" href="class_numpad.html" title="Widget de teclado numérico que permite entrada de números através de um teclado na tela.">Numpad</a></span> para fornecer uma interface completa de entrada numérica.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md509"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md518"></a>
 Características Principais</h2>
 <ul>
 <li>🔢 Exibe valores numéricos (float)</li>
@@ -88,46 +88,51 @@ Características Principais</h2>
 <li>📐 Dimensões configuráveis</li>
 <li>🔔 Callback para mudanças de valor</li>
 <li>👆 Suporte a toque para abrir teclado</li>
-<li>💾 Valor armazenado como <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a></li>
+<li>💾 Valor armazenado como <a class="el" href="class_char_string.html">CharString</a></li>
 <li>👁️ Pode ser mostrado/ocultado dinamicamente</li>
 <li>🔗 Integra-se com <a class="el" href="class_numpad.html" title="Widget de teclado numérico que permite entrada de números através de um teclado na tela.">Numpad</a> automaticamente</li>
 <li>🌓 Suporte a modo claro/escuro</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md511"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md520"></a>
 📋 Estruturas de Configuração</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md512"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md521"></a>
 NumberBoxConfig</h2>
-<p>Estrutura que contém todos os parâmetros de configuração:</p>
+<p>Estrutura que contém todos os parâmetros de configuração <br  />
+ (sincronizada com a definição em <span class="tt"><a class="el" href="wnumberbox_8h.html">wnumberbox.h</a></span>):</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_number_box_config.html">NumberBoxConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_number_box_config.html#a29c999cb4f19b9fc1011774fe771e8bd">width</a>;               <span class="comment">// Largura da caixa em pixels</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_number_box_config.html#aaabd58fb817aa263a781e566c81d4337">height</a>;              <span class="comment">// Altura da caixa em pixels</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_number_box_config.html#a2e77727894002ba3ca75246885f637d2">letterColor</a>;         <span class="comment">// Cor do texto</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_number_box_config.html#a0ecd92b2485a0a3edea9831657153f65">backgroundColor</a>;     <span class="comment">// Cor de fundo</span></div>
-<div class="line">  <span class="keywordtype">float</span> <a class="code hl_variable" href="struct_number_box_config.html#a0b48f96ca545eb87adccaad755078eee">startValue</a>;             <span class="comment">// Valor numérico inicial</span></div>
-<div class="line">  <span class="keyword">const</span> GFXfont* <a class="code hl_variable" href="struct_number_box_config.html#a576f52f92d5e54b3facb0cf41fed0198">font</a>;          <span class="comment">// Fonte para o texto</span></div>
-<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a28d8d27ff6c544b45c0462406bf622be">functionLoadScreen_t</a> <a class="code hl_variable" href="struct_number_box_config.html#aa6381dd91cb1088ce9530230fd4da60c">funcPtr</a>; <span class="comment">// Ponteiro para função da tela pai</span></div>
-<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_number_box_config.html#a2a0f916c2c19d90bb053170baf3690e4">callback</a>;        <span class="comment">// Função callback</span></div>
+<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a28d8d27ff6c544b45c0462406bf622be">functionLoadScreen_t</a> <a class="code hl_variable" href="struct_number_box_config.html#aa6381dd91cb1088ce9530230fd4da60c">funcPtr</a>;  <span class="comment">// Ponteiro para função da tela pai (screen de retorno).</span></div>
+<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_number_box_config.html#a2a0f916c2c19d90bb053170baf3690e4">callback</a>;         <span class="comment">// Função callback chamada após edição/confirmar valor.</span></div>
+<div class="line"><span class="preprocessor">#if defined(USING_GRAPHIC_LIB)</span></div>
+<div class="line">  <span class="keyword">const</span> GFXfont* <a class="code hl_variable" href="struct_number_box_config.html#a576f52f92d5e54b3facb0cf41fed0198">font</a>;           <span class="comment">// Fonte usada para desenhar o valor.</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line">  <span class="keywordtype">float</span> <a class="code hl_variable" href="struct_number_box_config.html#a0b48f96ca545eb87adccaad755078eee">startValue</a>;              <span class="comment">// Valor numérico inicial exibido.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_number_box_config.html#a29c999cb4f19b9fc1011774fe771e8bd">width</a>;                <span class="comment">// Largura da caixa em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_number_box_config.html#aaabd58fb817aa263a781e566c81d4337">height</a>;               <span class="comment">// Altura da caixa em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_number_box_config.html#a2e77727894002ba3ca75246885f637d2">letterColor</a>;          <span class="comment">// Cor do texto.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_number_box_config.html#a0ecd92b2485a0a3edea9831657153f65">backgroundColor</a>;      <span class="comment">// Cor de fundo.</span></div>
+<div class="line">  uint8_t <a class="code hl_variable" href="struct_number_box_config.html#a7181e99efc9b4b156be4391aed7de205">decimalPlaces</a>;         <span class="comment">// Número de casas decimais a exibir.</span></div>
 <div class="line">};</div>
 <div class="ttc" id="abase_types_8h_html_a05ded8c943add15c9053b728a4f6b99a"><div class="ttname"><a href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a></div><div class="ttdeci">void(* functionCB_t)()</div><div class="ttdoc">Typedef for a generic callback function.</div><div class="ttdef"><b>Definition</b> baseTypes.h:17</div></div>
 <div class="ttc" id="abase_types_8h_html_a28d8d27ff6c544b45c0462406bf622be"><div class="ttname"><a href="base_types_8h.html#a28d8d27ff6c544b45c0462406bf622be">functionLoadScreen_t</a></div><div class="ttdeci">void(* functionLoadScreen_t)()</div><div class="ttdoc">Typedef for a callback function used to load screens on request.</div><div class="ttdef"><b>Definition</b> baseTypes.h:21</div></div>
 <div class="ttc" id="astruct_number_box_config_html"><div class="ttname"><a href="struct_number_box_config.html">NumberBoxConfig</a></div><div class="ttdoc">Estrutura de configuração para o NumberBox.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:10</div></div>
-<div class="ttc" id="astruct_number_box_config_html_a0b48f96ca545eb87adccaad755078eee"><div class="ttname"><a href="struct_number_box_config.html#a0b48f96ca545eb87adccaad755078eee">NumberBoxConfig::startValue</a></div><div class="ttdeci">float startValue</div><div class="ttdoc">Valor numérico inicial para exibir.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:15</div></div>
-<div class="ttc" id="astruct_number_box_config_html_a0ecd92b2485a0a3edea9831657153f65"><div class="ttname"><a href="struct_number_box_config.html#a0ecd92b2485a0a3edea9831657153f65">NumberBoxConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo da caixa de número.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:14</div></div>
-<div class="ttc" id="astruct_number_box_config_html_a29c999cb4f19b9fc1011774fe771e8bd"><div class="ttname"><a href="struct_number_box_config.html#a29c999cb4f19b9fc1011774fe771e8bd">NumberBoxConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura da caixa de número.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:11</div></div>
-<div class="ttc" id="astruct_number_box_config_html_a2a0f916c2c19d90bb053170baf3690e4"><div class="ttname"><a href="struct_number_box_config.html#a2a0f916c2c19d90bb053170baf3690e4">NumberBoxConfig::callback</a></div><div class="ttdeci">functionCB_t callback</div><div class="ttdoc">Função callback para executar na interação.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:20</div></div>
-<div class="ttc" id="astruct_number_box_config_html_a2e77727894002ba3ca75246885f637d2"><div class="ttname"><a href="struct_number_box_config.html#a2e77727894002ba3ca75246885f637d2">NumberBoxConfig::letterColor</a></div><div class="ttdeci">uint16_t letterColor</div><div class="ttdoc">Cor para o texto exibindo o valor.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:13</div></div>
-<div class="ttc" id="astruct_number_box_config_html_a576f52f92d5e54b3facb0cf41fed0198"><div class="ttname"><a href="struct_number_box_config.html#a576f52f92d5e54b3facb0cf41fed0198">NumberBoxConfig::font</a></div><div class="ttdeci">const GFXfont * font</div><div class="ttdoc">Fonte para usar no texto.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:17</div></div>
-<div class="ttc" id="astruct_number_box_config_html_aa6381dd91cb1088ce9530230fd4da60c"><div class="ttname"><a href="struct_number_box_config.html#aa6381dd91cb1088ce9530230fd4da60c">NumberBoxConfig::funcPtr</a></div><div class="ttdeci">functionLoadScreen_t funcPtr</div><div class="ttdoc">Ponteiro de função para a função de carregamento da tela pai.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:19</div></div>
-<div class="ttc" id="astruct_number_box_config_html_aaabd58fb817aa263a781e566c81d4337"><div class="ttname"><a href="struct_number_box_config.html#aaabd58fb817aa263a781e566c81d4337">NumberBoxConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura da caixa de número.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:12</div></div>
+<div class="ttc" id="astruct_number_box_config_html_a0b48f96ca545eb87adccaad755078eee"><div class="ttname"><a href="struct_number_box_config.html#a0b48f96ca545eb87adccaad755078eee">NumberBoxConfig::startValue</a></div><div class="ttdeci">float startValue</div><div class="ttdoc">Valor numérico inicial para exibir.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:16</div></div>
+<div class="ttc" id="astruct_number_box_config_html_a0ecd92b2485a0a3edea9831657153f65"><div class="ttname"><a href="struct_number_box_config.html#a0ecd92b2485a0a3edea9831657153f65">NumberBoxConfig::backgroundColor</a></div><div class="ttdeci">uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo da caixa de número.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:20</div></div>
+<div class="ttc" id="astruct_number_box_config_html_a29c999cb4f19b9fc1011774fe771e8bd"><div class="ttname"><a href="struct_number_box_config.html#a29c999cb4f19b9fc1011774fe771e8bd">NumberBoxConfig::width</a></div><div class="ttdeci">uint16_t width</div><div class="ttdoc">Largura da caixa de número.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:17</div></div>
+<div class="ttc" id="astruct_number_box_config_html_a2a0f916c2c19d90bb053170baf3690e4"><div class="ttname"><a href="struct_number_box_config.html#a2a0f916c2c19d90bb053170baf3690e4">NumberBoxConfig::callback</a></div><div class="ttdeci">functionCB_t callback</div><div class="ttdoc">Função callback para executar na interação.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:12</div></div>
+<div class="ttc" id="astruct_number_box_config_html_a2e77727894002ba3ca75246885f637d2"><div class="ttname"><a href="struct_number_box_config.html#a2e77727894002ba3ca75246885f637d2">NumberBoxConfig::letterColor</a></div><div class="ttdeci">uint16_t letterColor</div><div class="ttdoc">Cor para o texto exibindo o valor.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:19</div></div>
+<div class="ttc" id="astruct_number_box_config_html_a576f52f92d5e54b3facb0cf41fed0198"><div class="ttname"><a href="struct_number_box_config.html#a576f52f92d5e54b3facb0cf41fed0198">NumberBoxConfig::font</a></div><div class="ttdeci">const GFXfont * font</div><div class="ttdoc">Fonte para usar no texto.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:14</div></div>
+<div class="ttc" id="astruct_number_box_config_html_a7181e99efc9b4b156be4391aed7de205"><div class="ttname"><a href="struct_number_box_config.html#a7181e99efc9b4b156be4391aed7de205">NumberBoxConfig::decimalPlaces</a></div><div class="ttdeci">uint8_t decimalPlaces</div><div class="ttdoc">Número de casas decimais para exibir.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:21</div></div>
+<div class="ttc" id="astruct_number_box_config_html_aa6381dd91cb1088ce9530230fd4da60c"><div class="ttname"><a href="struct_number_box_config.html#aa6381dd91cb1088ce9530230fd4da60c">NumberBoxConfig::funcPtr</a></div><div class="ttdeci">functionLoadScreen_t funcPtr</div><div class="ttdoc">Ponteiro de função para a função de carregamento da tela pai.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:11</div></div>
+<div class="ttc" id="astruct_number_box_config_html_aaabd58fb817aa263a781e566c81d4337"><div class="ttname"><a href="struct_number_box_config.html#aaabd58fb817aa263a781e566c81d4337">NumberBoxConfig::height</a></div><div class="ttdeci">uint16_t height</div><div class="ttdoc">Altura da caixa de número.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:18</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md514"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md523"></a>
 🔧 Métodos Públicos</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md515"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md524"></a>
 Construtor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_number_box.html">NumberBox</a>(uint16_t _x, uint16_t _y, uint8_t _screen)</div>
 <div class="line"><a class="code hl_class" href="class_number_box.html">NumberBox</a>() <span class="comment">// Construtor padrão</span></div>
-<div class="ttc" id="aclass_number_box_html"><div class="ttname"><a href="class_number_box.html">NumberBox</a></div><div class="ttdoc">Widget de caixa de número para exibir e editar valores numéricos.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:31</div></div>
+<div class="ttc" id="aclass_number_box_html"><div class="ttname"><a href="class_number_box.html">NumberBox</a></div><div class="ttdoc">Widget de caixa de número para exibir e editar valores numéricos.</div><div class="ttdef"><b>Definition</b> wnumberbox.h:32</div></div>
 </div><!-- fragment --><p>Cria um novo <a class="el" href="class_number_box.html" title="Widget de caixa de número para exibir e editar valores numéricos.">NumberBox</a>.</p>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">_x</span>: Coordenada X do canto superior esquerdo</li>
@@ -135,11 +140,11 @@ Construtor</h2>
 <li><span class="tt">_screen</span>: Identificador da tela (0 = primeira tela)</li>
 </ul>
 <p><b>Nota:</b> Após criar o objeto, chame <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> antes de usá-lo.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md516"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md525"></a>
 Destrutor</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_number_box.html">~NumberBox</a>()</div>
 </div><!-- fragment --><p>Libera os recursos do <a class="el" href="class_number_box.html" title="Widget de caixa de número para exibir e editar valores numéricos.">NumberBox</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md517"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md526"></a>
 setup()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>(<span class="keyword">const</span> <a class="code hl_struct" href="struct_number_box_config.html">NumberBoxConfig</a>&amp; config)</div>
 <div class="ttc" id="asimple__touch_8ino_html_a7dfd9b79bc5a37d7df40207afbc5431f"><div class="ttname"><a href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a></div><div class="ttdeci">void setup(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:16</div></div>
@@ -147,15 +152,15 @@ setup()</h2>
 <p><b>Parâmetros:</b></p><ul>
 <li><span class="tt">config</span>: Estrutura <span class="tt"><a class="el" href="struct_number_box_config.html" title="Estrutura de configuração para o NumberBox.">NumberBoxConfig</a></span> com as configurações</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md518"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md527"></a>
 getValue()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">float</span> getValue()</div>
 </div><!-- fragment --><p>Retorna o valor numérico atual como float.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md519"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md528"></a>
 getValueChar()</h2>
 <div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* getValueChar()</div>
 </div><!-- fragment --><p>Retorna o valor como string (const char*).</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md520"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md529"></a>
 setValue()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> setValue(<span class="keywordtype">float</span> str)</div>
 </div><!-- fragment --><p>Define o valor numérico.</p>
@@ -167,16 +172,16 @@ setValue()</h2>
 <li>Marca para redesenho</li>
 <li>Registra no log do ESP32</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md521"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md530"></a>
 show()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> show()</div>
 </div><!-- fragment --><p>Torna o <a class="el" href="class_number_box.html" title="Widget de caixa de número para exibir e editar valores numéricos.">NumberBox</a> visível.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md522"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md531"></a>
 hide()</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> hide()</div>
 </div><!-- fragment --><p>Oculta o <a class="el" href="class_number_box.html" title="Widget de caixa de número para exibir e editar valores numéricos.">NumberBox</a>.</p>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md524"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md533"></a>
 🔒 Métodos Privados (Apenas para Referência)</h1>
 <p>Estes métodos são chamados internamente:</p>
 <ul>
@@ -188,14 +193,14 @@ hide()</h2>
 <li><span class="tt">convertoToString()</span>: Converte float para string</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md526"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md535"></a>
 💻 Como Usar no Arduino IDE</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md527"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md536"></a>
 📚 Passo 1: Incluir as Bibliotecas</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="comment">// Incluir outras bibliotecas necessárias</span></div>
 <div class="ttc" id="adisplayfk_8h_html"><div class="ttname"><a href="displayfk_8h.html">displayfk.h</a></div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md528"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md537"></a>
 🏗️ Passo 2: Configurar Cores Globais do Numpad</h2>
 <div class="fragment"><div class="line"><a class="code hl_class" href="class_display_f_k.html">DisplayFK</a> myDisplay;</div>
 <div class="line"> </div>
@@ -203,21 +208,21 @@ hide()</h2>
 <div class="line"><a class="code hl_variable" href="class_numpad.html#af1001792083bbaafa5f0e60db4ecd6ea">Numpad::m_backgroundColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#af0896c6694781bb10bd957c3738c566f">CFK_GREY3</a>;</div>
 <div class="line"><a class="code hl_variable" href="class_numpad.html#a8484b4caaff37818b3dd84289441bad1">Numpad::m_letterColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a>;</div>
 <div class="line"><a class="code hl_variable" href="class_numpad.html#aaa98c8f43d058282c9146878b1d059ea">Numpad::m_keyColor</a> = <a class="code hl_variable" href="widgetsetup_8h.html#ae0bdce199f0fb656fb0ad1c0656d97a0">CFK_GREY13</a>;</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
 <div class="ttc" id="aclass_numpad_html_a8484b4caaff37818b3dd84289441bad1"><div class="ttname"><a href="class_numpad.html#a8484b4caaff37818b3dd84289441bad1">Numpad::m_letterColor</a></div><div class="ttdeci">static uint16_t m_letterColor</div><div class="ttdoc">Cor de letras estática para o Numpad.</div><div class="ttdef"><b>Definition</b> numpad.h:41</div></div>
 <div class="ttc" id="aclass_numpad_html_aaa98c8f43d058282c9146878b1d059ea"><div class="ttname"><a href="class_numpad.html#aaa98c8f43d058282c9146878b1d059ea">Numpad::m_keyColor</a></div><div class="ttdeci">static uint16_t m_keyColor</div><div class="ttdoc">Cor de teclas estática para o Numpad.</div><div class="ttdef"><b>Definition</b> numpad.h:42</div></div>
 <div class="ttc" id="aclass_numpad_html_af1001792083bbaafa5f0e60db4ecd6ea"><div class="ttname"><a href="class_numpad.html#af1001792083bbaafa5f0e60db4ecd6ea">Numpad::m_backgroundColor</a></div><div class="ttdeci">static uint16_t m_backgroundColor</div><div class="ttdoc">Cor de fundo estática para o Numpad.</div><div class="ttdef"><b>Definition</b> numpad.h:40</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae0bdce199f0fb656fb0ad1c0656d97a0"><div class="ttname"><a href="widgetsetup_8h.html#ae0bdce199f0fb656fb0ad1c0656d97a0">CFK_GREY13</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY13</div><div class="ttdef"><b>Definition</b> widgetsetup.h:212</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:131</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_af0896c6694781bb10bd957c3738c566f"><div class="ttname"><a href="widgetsetup_8h.html#af0896c6694781bb10bd957c3738c566f">CFK_GREY3</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY3</div><div class="ttdef"><b>Definition</b> widgetsetup.h:202</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md529"></a>
+<div class="ttc" id="awidgetsetup_8h_html_ae0bdce199f0fb656fb0ad1c0656d97a0"><div class="ttname"><a href="widgetsetup_8h.html#ae0bdce199f0fb656fb0ad1c0656d97a0">CFK_GREY13</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY13</div><div class="ttdef"><b>Definition</b> widgetsetup.h:214</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ae3af9efaedb7f97822568c5b8ba267c6"><div class="ttname"><a href="widgetsetup_8h.html#ae3af9efaedb7f97822568c5b8ba267c6">CFK_BLACK</a></div><div class="ttdeci">constexpr uint16_t CFK_BLACK</div><div class="ttdef"><b>Definition</b> widgetsetup.h:133</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_af0896c6694781bb10bd957c3738c566f"><div class="ttname"><a href="widgetsetup_8h.html#af0896c6694781bb10bd957c3738c566f">CFK_GREY3</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY3</div><div class="ttdef"><b>Definition</b> widgetsetup.h:204</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md538"></a>
 📝 Passo 3: Declarar Objetos Globais</h2>
 <div class="fragment"><div class="line"><span class="comment">// Criar NumberBox</span></div>
 <div class="line"><a class="code hl_class" href="class_number_box.html">NumberBox</a> numberbox(110, 240, 0);</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdNumberbox = 1;</div>
 <div class="line"><a class="code hl_class" href="class_number_box.html">NumberBox</a> *arrayNumberbox[qtdNumberbox] = {&amp;numberbox};</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md530"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md539"></a>
 ⚙️ Passo 4: Configurar Display (setup)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup</a>() {</div>
 <div class="line">    Serial.begin(115200);</div>
@@ -229,32 +234,33 @@ hide()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md531"></a>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md540"></a>
 🔧 Passo 5: Configurar o NumberBox</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar NumberBox</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_number_box_config.html">NumberBoxConfig</a> configNumberBox = {</div>
-<div class="line">        .width = 101,</div>
-<div class="line">        .height = 25,</div>
-<div class="line">        .letterColor = <a class="code hl_variable" href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a>,</div>
+<div class="line">        .funcPtr        = screen0,</div>
+<div class="line">        .callback       = numberbox_cb,</div>
+<div class="line">        .font           = &amp;RobotoRegular10pt7b,</div>
+<div class="line">        .startValue     = 1234.56f,</div>
+<div class="line">        .width          = 101,</div>
+<div class="line">        .height         = 25,</div>
+<div class="line">        .letterColor    = <a class="code hl_variable" href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a>,</div>
 <div class="line">        .backgroundColor = <a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>,</div>
-<div class="line">        .startValue = 1234.56,</div>
-<div class="line">        .font = &amp;RobotoRegular10pt7b,</div>
-<div class="line">        .funcPtr = screen0,</div>
-<div class="line">        .callback = numberbox_cb</div>
+<div class="line">        .decimalPlaces  = 2</div>
 <div class="line">    };</div>
 <div class="line">    numberbox.setup(configNumberBox);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#a448dcaf93079d2ee7bdbcda9c2439448">setNumberbox</a>(arrayNumberbox, qtdNumberbox);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a448dcaf93079d2ee7bdbcda9c2439448"><div class="ttname"><a href="class_display_f_k.html#a448dcaf93079d2ee7bdbcda9c2439448">DisplayFK::setNumberbox</a></div><div class="ttdeci">void setNumberbox(NumberBox *array[], uint8_t amount)</div><div class="ttdoc">Configures the number box array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:342</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:167</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md532"></a>
+<div class="ttc" id="aclass_display_f_k_html_a448dcaf93079d2ee7bdbcda9c2439448"><div class="ttname"><a href="class_display_f_k.html#a448dcaf93079d2ee7bdbcda9c2439448">DisplayFK::setNumberbox</a></div><div class="ttdeci">void setNumberbox(NumberBox *array[], uint8_t amount)</div><div class="ttdoc">Configures the number box array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:343</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a271e653bf0992ffe6837daa1db6ea081"><div class="ttname"><a href="widgetsetup_8h.html#a271e653bf0992ffe6837daa1db6ea081">CFK_COLOR01</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR01</div><div class="ttdef"><b>Definition</b> widgetsetup.h:169</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md541"></a>
 🔔 Passo 6: Criar Funções de Callback</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> numberbox_cb() {</div>
 <div class="line">    <span class="keywordtype">float</span> valor = numberbox.getValue();</div>
@@ -263,7 +269,7 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Faça algo com o novo valor</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md533"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md542"></a>
 🖥️ Passo 7: Função da Tela</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> screen0() {</div>
 <div class="line">    tft-&gt;fillScreen(<a class="code hl_variable" href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a>);</div>
@@ -271,9 +277,9 @@ hide()</h2>
 <div class="line">    </div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md534"></a>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md543"></a>
 🔄 Passo 8: Exemplo de Uso</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
 <div class="line">    <span class="comment">// O NumberBox funciona automaticamente</span></div>
@@ -289,7 +295,7 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="asimple__touch_8ino_html_a0b33edabd7f1c4e4a0bf32c67269be2f"><div class="ttname"><a href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a></div><div class="ttdeci">void loop(void)</div><div class="ttdef"><b>Definition</b> simple_touch.ino:27</div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md536"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md545"></a>
 📝 Exemplo Completo</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="displayfk_8h.html">displayfk.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="_roboto_regular10pt7b_8h.html">fonts/RobotoRegular/RobotoRegular10pt7b.h</a>&gt;</span></div>
@@ -353,16 +359,16 @@ hide()</h2>
 <div class="line">}</div>
 <div class="ttc" id="a_roboto_regular10pt7b_8h_html"><div class="ttname"><a href="_roboto_regular10pt7b_8h.html">RobotoRegular10pt7b.h</a></div></div>
 </div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md538"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md547"></a>
 📏 Dicas e Boas Práticas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md539"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md548"></a>
 📐 Tamanhos Recomendados</h2>
 <ul>
 <li><b>Pequenos:</b> 80x25 pixels</li>
 <li><b>Médios:</b> 120x35 pixels</li>
 <li><b>Grandes:</b> 180x45 pixels</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md540"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md549"></a>
 🎨 Cores</h2>
 <ul>
 <li>Use cores contrastantes para texto e fundo</li>
@@ -370,7 +376,7 @@ hide()</h2>
 <li>Considere o tema claro/escuro</li>
 <li>Borda usa letterColor</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md541"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md550"></a>
 🔔 Integração com Numpad</h2>
 <ul>
 <li><a class="el" href="class_numpad.html" title="Widget de teclado numérico que permite entrada de números através de um teclado na tela.">Numpad</a> abre automaticamente ao tocar no <a class="el" href="class_number_box.html" title="Widget de caixa de número para exibir e editar valores numéricos.">NumberBox</a></li>
@@ -378,15 +384,15 @@ hide()</h2>
 <li>O <a class="el" href="class_numpad.html" title="Widget de teclado numérico que permite entrada de números através de um teclado na tela.">Numpad</a> aplica o valor automaticamente ao fechar</li>
 <li>funcPtr deve apontar para função da tela pai</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md542"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md551"></a>
 ⚡ Performance</h2>
 <ul>
-<li>Armazenamento interno eficiente com <a class="el" href="class_char_string.html" title="Represents a custom string class with methods for manipulation, retrieval, and conversion.">CharString</a></li>
+<li>Armazenamento interno eficiente com <a class="el" href="class_char_string.html">CharString</a></li>
 <li>Conversão automática entre float e string</li>
 <li>Redesenho apenas quando necessário</li>
 <li>Integração otimizada com <a class="el" href="class_numpad.html" title="Widget de teclado numérico que permite entrada de números através de um teclado na tela.">Numpad</a></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md543"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md552"></a>
 👥 Usabilidade</h2>
 <ul>
 <li>Tamanho adequado para fácil toque</li>
@@ -394,7 +400,7 @@ hide()</h2>
 <li>Preview no <a class="el" href="class_numpad.html" title="Widget de teclado numérico que permite entrada de números através de um teclado na tela.">Numpad</a> mostra valor em tempo real</li>
 <li>Callback executa quando valor é confirmado</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md544"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md553"></a>
 🎨 Display</h2>
 <ul>
 <li>Retângulo com borda simples</li>
@@ -402,7 +408,7 @@ hide()</h2>
 <li>Formatação automática do texto</li>
 <li>Padding de 3 pixels por padrão</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md545"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md554"></a>
 🔢 Valores Numéricos</h2>
 <ul>
 <li>Suporta floats com casas decimais</li>
@@ -411,7 +417,7 @@ hide()</h2>
 <li>Validação pelo <a class="el" href="class_numpad.html" title="Widget de teclado numérico que permite entrada de números através de um teclado na tela.">Numpad</a></li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md547"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md556"></a>
 🔗 Herança de WidgetBase</h1>
 <p>A classe <span class="tt"><a class="el" href="class_number_box.html" title="Widget de caixa de número para exibir e editar valores numéricos.">NumberBox</a></span> herda métodos de <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span>:</p>
 <ul>
@@ -421,7 +427,7 @@ hide()</h2>
 <li><span class="tt">m_shouldRedraw</span>: Flag para redesenho</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md549"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md558"></a>
 🔗 Integração com DisplayFK</h1>
 <p>O <span class="tt"><a class="el" href="class_number_box.html" title="Widget de caixa de número para exibir e editar valores numéricos.">NumberBox</a></span> integra-se com o sistema <a class="el" href="class_display_f_k.html" title="Represents the main display framework class, managing various widget types, SD card functionality,...">DisplayFK</a>:</p>
 <ol type="1">
@@ -432,7 +438,7 @@ hide()</h2>
 <li><b>Bloqueio:</b> Outros widgets ficam bloqueados durante edição</li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md551"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md560"></a>
 🎨 Detalhes de Renderização</h1>
 <p>O <a class="el" href="class_number_box.html" title="Widget de caixa de número para exibir e editar valores numéricos.">NumberBox</a> renderiza assim:</p>
 <ol type="1">
@@ -456,9 +462,9 @@ hide()</h2>
 </li>
 </ol>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md553"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md562"></a>
 🔧 Solução de Problemas</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md554"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md563"></a>
 NumberBox não aparece</h2>
 <ul>
 <li>Verifique se chamou <span class="tt"><a class="el" href="simple__touch_8ino.html#a7dfd9b79bc5a37d7df40207afbc5431f">setup()</a></span> após criar</li>
@@ -466,7 +472,7 @@ NumberBox não aparece</h2>
 <li>Verifique se está na tela correta</li>
 <li>Chame <span class="tt">myDisplay.setNumberbox()</span></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md555"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md564"></a>
 Numpad não abre</h2>
 <ul>
 <li>Verifique se o usuário tocou no <a class="el" href="class_number_box.html" title="Widget de caixa de número para exibir e editar valores numéricos.">NumberBox</a></li>
@@ -474,7 +480,7 @@ Numpad não abre</h2>
 <li>Verifique logs para erros</li>
 <li>Teste com touch inicializado</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md556"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md565"></a>
 Valor não é aplicado</h2>
 <ul>
 <li>Verifique se usuário pressionou OK no <a class="el" href="class_numpad.html" title="Widget de teclado numérico que permite entrada de números através de um teclado na tela.">Numpad</a></li>
@@ -482,7 +488,7 @@ Valor não é aplicado</h2>
 <li>Verifique logs para conversão</li>
 <li>Teste com valores simples</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md557"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md566"></a>
 Texto não mostra corretamente</h2>
 <ul>
 <li>Verifique configuração de fonte</li>
@@ -490,7 +496,7 @@ Texto não mostra corretamente</h2>
 <li>Teste com valores menores</li>
 <li>Verifique width e height adequados</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md558"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md567"></a>
 Problemas de formatação</h2>
 <ul>
 <li>Valores grandes podem ser truncados</li>
@@ -499,7 +505,7 @@ Problemas de formatação</h2>
 <li>Teste diferentes valores</li>
 </ul>
 <hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md560"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md569"></a>
 📚 Referências</h1>
 <ul>
 <li><b>Classe Base:</b> <span class="tt"><a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a></span> (<a class="el" href="widgetbase_8h.html">src/widgets/widgetbase.h</a>)</li>

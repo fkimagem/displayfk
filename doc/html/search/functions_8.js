@@ -1,5 +1,20 @@
 var searchData=
 [
-  ['hide_0',['hide',['../class_check_box.html#a7dbf86a59c1e3fda5e4c3a89f1f2d5e5',1,'CheckBox::hide()'],['../class_circle_button.html#a4d7751b5049384d71c7b3a87009fd3e2',1,'CircleButton::hide()'],['../class_circular_bar.html#ae5190ecd28619a46522e69c8b23f3215',1,'CircularBar::hide()'],['../class_gauge_super.html#a598aa0c8fbe66cc8266261bae9286a40',1,'GaugeSuper::hide()'],['../class_h_slider.html#a686919476fd001110689b50adc5b3210',1,'HSlider::hide()'],['../class_image.html#abaf166ece6957e4092c7f104ea32fddf',1,'Image::hide()'],['../class_label.html#ad1c3b92a9c03b446666aeac0257168f7',1,'Label::hide()'],['../class_led.html#a20fa3a3f6b0e864fac3212ea7a6d11a2',1,'Led::hide()'],['../class_line_chart.html#a5ee7b3bd293f12c3a43fc2eabeb321dd',1,'LineChart::hide()'],['../class_numpad.html#ad614f57d04af6afd15ac09ef713142ae',1,'Numpad::hide()'],['../class_number_box.html#a462a78023a116c00b8126e7611d311a0',1,'NumberBox::hide()'],['../class_radio_group.html#a935a9e97d78c3ffdede9ec9db3d53dec',1,'RadioGroup::hide()'],['../class_rect_button.html#a531c09ed083e36cbdb164319d51159b7',1,'RectButton::hide()'],['../class_spin_box.html#a689648876e1e5c3772b11e7515357bd1',1,'SpinBox::hide()'],['../class_w_keyboard.html#a4dc01cad3bb1a8a431b6cf43103ae103',1,'WKeyboard::hide()'],['../class_text_box.html#afda5332f9740230416d17b8f9aea1b55',1,'TextBox::hide()'],['../class_text_button.html#a7bb2390e15e7349934d3ef3033acc489',1,'TextButton::hide()'],['../class_thermometer.html#ab6ad1c26318b05e57df948d324af6448',1,'Thermometer::hide()'],['../class_toggle_button.html#ac740c9aec9c74663af581245f4dfef25',1,'ToggleButton::hide()'],['../class_touch_area.html#ae0b454f1ba9ffb3420d74c5bc771dcfb',1,'TouchArea::hide()'],['../class_v_analog.html#a93193f0010c769e9575464f275bde32f',1,'VAnalog::hide()'],['../class_v_bar.html#a9275738654601b9ceaaa3fd643c7a7c0',1,'VBar::hide()'],['../class_widget_base.html#ae05fdc82b0f347733dd850d889cf85e0',1,'WidgetBase::hide()']]],
-  ['hslider_1',['HSlider',['../class_h_slider.html#a646b0936f5b6182c21530a03f749f970',1,'HSlider']]]
+  ['image_0',['Image',['../class_image.html#af064fd90cf0877f4030cfc9af0262e56',1,'Image']]],
+  ['indexof_1',['indexOf',['../class_char_string.html#a5ef787564de4abaea97e382747c92a10',1,'CharString::indexOf(char c, int startIndex=0) const'],['../class_char_string.html#a4ee42135e5fca0bb00ebc57cbd8b037c',1,'CharString::indexOf(const char *needle, int startIndex=0) const']]],
+  ['initializewidgetflags_2',['initializeWidgetFlags',['../class_display_f_k.html#af621892753c95d70376a05227980564f',1,'DisplayFK']]],
+  ['insertchar_3',['insertChar',['../class_numpad.html#a66996da119c426b97acf014e6bb05335',1,'Numpad::insertChar()'],['../class_w_keyboard.html#a0228ebf204261cd87cefcf31c71d4865',1,'WKeyboard::insertChar()']]],
+  ['insertcharnumpad_4',['insertCharNumpad',['../class_display_f_k.html#ad807c29d932f260cbc12c6ed4dc8dfb6',1,'DisplayFK']]],
+  ['insertchartextbox_5',['insertCharTextbox',['../class_display_f_k.html#ac5eddd8d36eac012cab94d74e1cfe1ef',1,'DisplayFK']]],
+  ['invert_5fbits_6',['invert_bits',['../widgetsetup_8h.html#a9eb83a310422d9ae26c26972ab2b2294',1,'widgetsetup.h']]],
+  ['isempty_7',['isEmpty',['../class_char_string.html#ac20bfd4a6f1ca1ea1bd6643cc910eaa0',1,'CharString']]],
+  ['isenabled_8',['isEnabled',['../class_widget_base.html#a35efe9d5e23752836785beb9fb8631a0',1,'WidgetBase']]],
+  ['isinitialized_9',['isInitialized',['../class_widget_base.html#ab337ee808e16181ce5b41a5e1379897c',1,'WidgetBase']]],
+  ['iskeypressed_10',['isKeyPressed',['../class_numpad.html#aaf8e516fc7c15a8171c571bba191cb1a',1,'Numpad']]],
+  ['islocked_11',['isLocked',['../class_widget_base.html#adc85c0f5ceb7948899ba094280c62dd4',1,'WidgetBase']]],
+  ['ispointinkey_12',['isPointInKey',['../class_numpad.html#a95c473607b3d15a51e76ef4c36e5c3ca',1,'Numpad']]],
+  ['isr_13',['isr',['../esp32__tasks_8ino.html#a767bac9c673b54028304e30ed1d8744f',1,'esp32_tasks.ino']]],
+  ['isrunningautoclick_14',['isRunningAutoClick',['../class_display_f_k.html#a110c87411a30e558eecfca2542dc3add',1,'DisplayFK']]],
+  ['isvalid_15',['isValid',['../struct_image_from_pixels_config.html#a2276fff0d5e6dfaea144274da967b3a6',1,'ImageFromPixelsConfig']]],
+  ['isvalidstate_16',['isValidState',['../class_widget_base.html#a7147245ac81da69ef9b965dee7eccbea',1,'WidgetBase']]]
 ];

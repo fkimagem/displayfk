@@ -85,11 +85,11 @@ $(function() {
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a33bd933f5d4895b3b6d18c2d5fed91a0" id="r_a33bd933f5d4895b3b6d18c2d5fed91a0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33bd933f5d4895b3b6d18c2d5fed91a0">CLAMP</a>(x,  min,  max)</td></tr>
+<tr class="memitem:a89d49301cef5e6c9a1683c78ec1349b3" id="r_a89d49301cef5e6c9a1683c78ec1349b3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a89d49301cef5e6c9a1683c78ec1349b3">CLAMP</a>(x,  lo,  hi)</td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
-<a id="a33bd933f5d4895b3b6d18c2d5fed91a0" name="a33bd933f5d4895b3b6d18c2d5fed91a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33bd933f5d4895b3b6d18c2d5fed91a0">&#9670;&#160;</a></span>CLAMP</h2>
+<a id="a89d49301cef5e6c9a1683c78ec1349b3" name="a89d49301cef5e6c9a1683c78ec1349b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89d49301cef5e6c9a1683c78ec1349b3">&#9670;&#160;</a></span>CLAMP</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -102,16 +102,16 @@ Macros</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>min</em></span>, </td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>lo</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>max</em></span>&#160;)</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>hi</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">((x) &lt; (min) ? (min) : ((x) &gt; (max) ? (max) : (x)))</div>
+<b>Value:</b><div class="fragment"><div class="line">((x) &lt; (lo) ? (lo) : ((x) &gt; (hi) ? (hi) : (x)))</div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -87,9 +87,7 @@ $(function() {
 <code>#include &quot;freertos/task.h&quot;</code><br />
 <code>#include &quot;esp_err.h&quot;</code><br />
 <code>#include &quot;esp_log.h&quot;</code><br />
-<code>#include &quot;driver/i2c_master.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="esp__lcd__touch_8h_source.html">esp_lcd_touch.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="esp__lcd__gsl3680_8h_source.html">esp_lcd_gsl3680.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="check__version_8h_source.html">../../../extras/check_version.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gsl3680__touch_8h_source.html">gsl3680_touch.h</a>&quot;</code><br />
 <code>#include &lt;Arduino.h&gt;</code><br />
 </div><table class="memberdecls">
@@ -102,9 +100,6 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a5a85b9c772bbeb480b209a3e6ea92b4c" id="r_a5a85b9c772bbeb480b209a3e6ea92b4c"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a85b9c772bbeb480b209a3e6ea92b4c">TAG</a> = &quot;GSL3680&quot;</td></tr>
-<tr class="memitem:a3c047daf57981dfb83ec2852882fa21f" id="r_a3c047daf57981dfb83ec2852882fa21f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="esp__lcd__touch_8h.html#a49dec3d10ef4bf14720c4c59924e7654">esp_lcd_touch_handle_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c047daf57981dfb83ec2852882fa21f">tp</a></td></tr>
-<tr class="memitem:aeac464588aeba80cb3460170902fd77b" id="r_aeac464588aeba80cb3460170902fd77b"><td class="memItemLeft" align="right" valign="top">esp_lcd_panel_io_handle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeac464588aeba80cb3460170902fd77b">tp_io_handle</a></td></tr>
-<tr class="memitem:a9c70a428d7203e9ed1f52f0848163e39" id="r_a9c70a428d7203e9ed1f52f0848163e39"><td class="memItemLeft" align="right" valign="top">i2c_master_bus_handle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c70a428d7203e9ed1f52f0848163e39">i2c_bus_handle</a></td></tr>
 <tr class="memitem:ad8ef1d39442e82ae1cdb1b1e9d645baa" id="r_ad8ef1d39442e82ae1cdb1b1e9d645baa"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8ef1d39442e82ae1cdb1b1e9d645baa">touch_strength</a> [1]</td></tr>
 <tr class="memitem:aacd7dd5a9f43c997abb7a2fb0bf81c2f" id="r_aacd7dd5a9f43c997abb7a2fb0bf81c2f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aacd7dd5a9f43c997abb7a2fb0bf81c2f">touch_cnt</a> = 0</td></tr>
 </table>
@@ -152,20 +147,6 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
-<a id="a9c70a428d7203e9ed1f52f0848163e39" name="a9c70a428d7203e9ed1f52f0848163e39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c70a428d7203e9ed1f52f0848163e39">&#9670;&#160;</a></span>i2c_bus_handle</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">i2c_master_bus_handle_t i2c_bus_handle</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a5a85b9c772bbeb480b209a3e6ea92b4c" name="a5a85b9c772bbeb480b209a3e6ea92b4c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5a85b9c772bbeb480b209a3e6ea92b4c">&#9670;&#160;</a></span>TAG</h2>
 
@@ -210,34 +191,6 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">uint16_t touch_strength[1]</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3c047daf57981dfb83ec2852882fa21f" name="a3c047daf57981dfb83ec2852882fa21f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c047daf57981dfb83ec2852882fa21f">&#9670;&#160;</a></span>tp</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="esp__lcd__touch_8h.html#a49dec3d10ef4bf14720c4c59924e7654">esp_lcd_touch_handle_t</a> tp</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aeac464588aeba80cb3460170902fd77b" name="aeac464588aeba80cb3460170902fd77b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeac464588aeba80cb3460170902fd77b">&#9670;&#160;</a></span>tp_io_handle</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">esp_lcd_panel_io_handle_t tp_io_handle</td>
         </tr>
       </table>
 </div><div class="memdoc">

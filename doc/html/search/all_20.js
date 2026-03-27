@@ -1,11 +1,4 @@
 var searchData=
 [
-  ['y_0',['y',['../struct_coord_point__t.html#a16f442bada8650a92c8511f6f845019e',1,'CoordPoint_t::y'],['../struct_circle__t.html#a7b1e341117f80910e2801115bac736a1',1,'Circle_t::y'],['../struct_rect__t.html#ac01102d3d7bee1fdf9236187f95758c1',1,'Rect_t::y'],['../struct_text_bound__t.html#ae698f5ab980da0f55d1c07445bfb903e',1,'TextBound_t::y'],['../class_t_s___point.html#a72927221f9227a1073019d510876a300',1,'TS_Point::y'],['../struct_touch_point_type.html#a53d37b49d6c92c7203f14356defc96df',1,'TouchPointType::y'],['../struct_t_point.html#a12e319c23f4c46449552dbbfe497a6d0',1,'TPoint::y'],['../structesp__lcd__touch__data__t.html#a034bb2e8f9e182a54df9a9ebdd76bccc',1,'esp_lcd_touch_data_t::y'],['../uniongsl___p_o_i_n_t___t_y_p_e.html#a99c767bf400d3e1d0722f1611af4a7ea',1,'gsl_POINT_TYPE::y'],['../uniongsl___d_e_c_i_m_a_l___t_y_p_e.html#ad4c86c46967413e56bd5979683d4dc63',1,'gsl_DECIMAL_TYPE::y'],['../structgsl__touch__info.html#afea13e7d045d14a6865b0692a0f18084',1,'gsl_touch_info::y'],['../class_t_p___point.html#acffe3b5c4655e96fdbf83fe96cc611e1',1,'TP_Point::y'],['../struct_screen_point__t.html#a2febb3b3c0cadde77893fe4c9c341659',1,'ScreenPoint_t::y'],['../class_x_p_t2046.html#ac4b4ed8ee99b291163590fd93b27a56a',1,'XPT2046::y'],['../structradio__t.html#a8af5a8b7dadc69a2705474bca4699252',1,'radio_t::y']]],
-  ['y_5fkey_1',['y_key',['../struct___t_p_d_s_v_r___s_i_g___t.html#a6a7d7567d0fb6c48e1e8b478070dcd31',1,'_TPDSVR_SIG_T']]],
-  ['y_5fmax_2',['y_max',['../structesp__lcd__touch__config__t.html#af02d627a68569592ed2510266c7a3172',1,'esp_lcd_touch_config_t']]],
-  ['y_5fnew_3',['y_new',['../esp__lcd__gsl3680_8c.html#aee5926625158379e9dcb15be5461a882',1,'esp_lcd_gsl3680.c']]],
-  ['y_5fposition_4',['y_position',['../struct___x_y___d_a_t_a___t.html#a745de700787c1d9f256d1bfe980af408',1,'_XY_DATA_T']]],
-  ['y_5fstart_5',['y_start',['../esp__lcd__gsl3680_8c.html#ab427af03450fc8d4603184aef3e17358',1,'esp_lcd_gsl3680.c']]],
-  ['yscreen_6',['yScreen',['../struct_calibration_point__t.html#adaa809cebd8afbd017dc412201a3514f',1,'CalibrationPoint_t']]],
-  ['ytouch_7',['yTouch',['../struct_calibration_point__t.html#a16f6b54b126b8373dbc6d0933842b7e2',1,'CalibrationPoint_t']]]
+  ['z_0',['z',['../class_t_s___point.html#ac17deb8383607ea69216bef2b2aac952',1,'TS_Point::z'],['../class_x_p_t2046.html#aecb8c817497473fbc0e7c0e73022123b',1,'XPT2046::z']]]
 ];

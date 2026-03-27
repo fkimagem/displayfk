@@ -98,19 +98,19 @@ Características Principais</h2>
 CheckBoxConfig</h2>
 <p>Estrutura que contém todos os parâmetros de configuração do checkbox:</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="struct_check_box_config.html">CheckBoxConfig</a> {</div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_check_box_config.html#a364ed35e40b7e2c417ed15096e9cfbc7">size</a>;             <span class="comment">// Tamanho do checkbox (largura = altura) em pixels</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_check_box_config.html#a056f2840777d138fec29428307e8ee9e">checkedColor</a>;     <span class="comment">// Cor quando marcado (formato RGB565)</span></div>
-<div class="line">  uint16_t <a class="code hl_variable" href="struct_check_box_config.html#afdec0911f43b3edc212611d54666294c">uncheckedColor</a>;   <span class="comment">// Cor quando desmarcado (0 = automático baseado no modo)</span></div>
-<div class="line">  <a class="code hl_enumeration" href="wcheckbox_8h.html#a21888f056835b90a6afa438050b447cd">CheckBoxWeight</a> <a class="code hl_variable" href="struct_check_box_config.html#ab22ad04be55a9d44a81f5384a5539e02">weight</a>;     <span class="comment">// Espessura da marca (LIGHT, MEDIUM, HEAVY)</span></div>
-<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_check_box_config.html#a94fce9b99b1138dc6924a1dea6b5be0e">callback</a>;     <span class="comment">// Ponteiro para função callback</span></div>
-<div class="line">音乐};</div>
+<div class="line">  <a class="code hl_typedef" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> <a class="code hl_variable" href="struct_check_box_config.html#a94fce9b99b1138dc6924a1dea6b5be0e">callback</a>;     <span class="comment">// Callback executada quando o estado do checkbox muda.</span></div>
+<div class="line">  <a class="code hl_enumeration" href="wcheckbox_8h.html#a21888f056835b90a6afa438050b447cd">CheckBoxWeight</a> <a class="code hl_variable" href="struct_check_box_config.html#ab22ad04be55a9d44a81f5384a5539e02">weight</a>;    <span class="comment">// Espessura da marca (LIGHT, MEDIUM, HEAVY).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_check_box_config.html#a364ed35e40b7e2c417ed15096e9cfbc7">size</a>;             <span class="comment">// Tamanho do checkbox (largura = altura) em pixels.</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_check_box_config.html#a056f2840777d138fec29428307e8ee9e">checkedColor</a>;     <span class="comment">// Cor quando marcado (formato RGB565).</span></div>
+<div class="line">  uint16_t <a class="code hl_variable" href="struct_check_box_config.html#afdec0911f43b3edc212611d54666294c">uncheckedColor</a>;   <span class="comment">// Cor quando desmarcado (0 = automático baseado no modo).</span></div>
+<div class="line">};</div>
 <div class="ttc" id="abase_types_8h_html_a05ded8c943add15c9053b728a4f6b99a"><div class="ttname"><a href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a></div><div class="ttdeci">void(* functionCB_t)()</div><div class="ttdoc">Typedef for a generic callback function.</div><div class="ttdef"><b>Definition</b> baseTypes.h:17</div></div>
 <div class="ttc" id="astruct_check_box_config_html"><div class="ttname"><a href="struct_check_box_config.html">CheckBoxConfig</a></div><div class="ttdoc">Configuration structure for CheckBox.</div><div class="ttdef"><b>Definition</b> wcheckbox.h:13</div></div>
-<div class="ttc" id="astruct_check_box_config_html_a056f2840777d138fec29428307e8ee9e"><div class="ttname"><a href="struct_check_box_config.html#a056f2840777d138fec29428307e8ee9e">CheckBoxConfig::checkedColor</a></div><div class="ttdeci">uint16_t checkedColor</div><div class="ttdoc">Color displayed when the checkbox is checked.</div><div class="ttdef"><b>Definition</b> wcheckbox.h:15</div></div>
-<div class="ttc" id="astruct_check_box_config_html_a364ed35e40b7e2c417ed15096e9cfbc7"><div class="ttname"><a href="struct_check_box_config.html#a364ed35e40b7e2c417ed15096e9cfbc7">CheckBoxConfig::size</a></div><div class="ttdeci">uint16_t size</div><div class="ttdoc">Size of the CheckBox (width and height will be equal).</div><div class="ttdef"><b>Definition</b> wcheckbox.h:14</div></div>
-<div class="ttc" id="astruct_check_box_config_html_a94fce9b99b1138dc6924a1dea6b5be0e"><div class="ttname"><a href="struct_check_box_config.html#a94fce9b99b1138dc6924a1dea6b5be0e">CheckBoxConfig::callback</a></div><div class="ttdeci">functionCB_t callback</div><div class="ttdoc">Callback function to execute when the CheckBox state changes.</div><div class="ttdef"><b>Definition</b> wcheckbox.h:18</div></div>
-<div class="ttc" id="astruct_check_box_config_html_ab22ad04be55a9d44a81f5384a5539e02"><div class="ttname"><a href="struct_check_box_config.html#ab22ad04be55a9d44a81f5384a5539e02">CheckBoxConfig::weight</a></div><div class="ttdeci">CheckBoxWeight weight</div><div class="ttdoc">Weight of the checkbox (LIGHT, MEDIUM, HEAVY).</div><div class="ttdef"><b>Definition</b> wcheckbox.h:17</div></div>
-<div class="ttc" id="astruct_check_box_config_html_afdec0911f43b3edc212611d54666294c"><div class="ttname"><a href="struct_check_box_config.html#afdec0911f43b3edc212611d54666294c">CheckBoxConfig::uncheckedColor</a></div><div class="ttdeci">uint16_t uncheckedColor</div><div class="ttdoc">Color displayed when the checkbox is unchecked (optional, 0 = auto).</div><div class="ttdef"><b>Definition</b> wcheckbox.h:16</div></div>
+<div class="ttc" id="astruct_check_box_config_html_a056f2840777d138fec29428307e8ee9e"><div class="ttname"><a href="struct_check_box_config.html#a056f2840777d138fec29428307e8ee9e">CheckBoxConfig::checkedColor</a></div><div class="ttdeci">uint16_t checkedColor</div><div class="ttdoc">Color displayed when the checkbox is checked.</div><div class="ttdef"><b>Definition</b> wcheckbox.h:17</div></div>
+<div class="ttc" id="astruct_check_box_config_html_a364ed35e40b7e2c417ed15096e9cfbc7"><div class="ttname"><a href="struct_check_box_config.html#a364ed35e40b7e2c417ed15096e9cfbc7">CheckBoxConfig::size</a></div><div class="ttdeci">uint16_t size</div><div class="ttdoc">Size of the CheckBox (width and height will be equal).</div><div class="ttdef"><b>Definition</b> wcheckbox.h:16</div></div>
+<div class="ttc" id="astruct_check_box_config_html_a94fce9b99b1138dc6924a1dea6b5be0e"><div class="ttname"><a href="struct_check_box_config.html#a94fce9b99b1138dc6924a1dea6b5be0e">CheckBoxConfig::callback</a></div><div class="ttdeci">functionCB_t callback</div><div class="ttdoc">Callback function to execute when the CheckBox state changes.</div><div class="ttdef"><b>Definition</b> wcheckbox.h:14</div></div>
+<div class="ttc" id="astruct_check_box_config_html_ab22ad04be55a9d44a81f5384a5539e02"><div class="ttname"><a href="struct_check_box_config.html#ab22ad04be55a9d44a81f5384a5539e02">CheckBoxConfig::weight</a></div><div class="ttdeci">CheckBoxWeight weight</div><div class="ttdoc">Weight of the checkbox (LIGHT, MEDIUM, HEAVY).</div><div class="ttdef"><b>Definition</b> wcheckbox.h:15</div></div>
+<div class="ttc" id="astruct_check_box_config_html_afdec0911f43b3edc212611d54666294c"><div class="ttname"><a href="struct_check_box_config.html#afdec0911f43b3edc212611d54666294c">CheckBoxConfig::uncheckedColor</a></div><div class="ttdeci">uint16_t uncheckedColor</div><div class="ttdoc">Color displayed when the checkbox is unchecked (optional, 0 = auto).</div><div class="ttdef"><b>Definition</b> wcheckbox.h:18</div></div>
 <div class="ttc" id="awcheckbox_8h_html_a21888f056835b90a6afa438050b447cd"><div class="ttname"><a href="wcheckbox_8h.html#a21888f056835b90a6afa438050b447cd">CheckBoxWeight</a></div><div class="ttdeci">CheckBoxWeight</div><div class="ttdef"><b>Definition</b> wcheckbox.h:6</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
 CheckBoxWeight (enum)</h2>
@@ -229,7 +229,7 @@ setColors()</h2>
 <div class="line"><span class="comment">// Criar array de ponteiros</span></div>
 <div class="line"><span class="keyword">const</span> uint8_t qtdCheckbox = 2;</div>
 <div class="line"><a class="code hl_class" href="class_check_box.html">CheckBox</a> *arrayCheckbox[qtdCheckbox] = {&amp;checkbox, &amp;checkbox1};</div>
-<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:277</div></div>
+<div class="ttc" id="aclass_display_f_k_html"><div class="ttname"><a href="class_display_f_k.html">DisplayFK</a></div><div class="ttdoc">Represents the main display framework class, managing various widget types, SD card functionality,...</div><div class="ttdef"><b>Definition</b> displayfk.h:327</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
 📝 Passo 3: Prototipar Funções de Callback</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> checkbox_cb();</div>
@@ -245,39 +245,39 @@ setColors()</h2>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">loadScreen</a>(screen0);</div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">createTask</a>(<span class="keyword">false</span>, 3);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2764</div></div>
-<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2759</div></div>
-<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2122</div></div>
+<div class="ttc" id="aclass_display_f_k_html_a3482413c8180fd5d46a17a285fae5875"><div class="ttname"><a href="class_display_f_k.html#a3482413c8180fd5d46a17a285fae5875">DisplayFK::setDrawObject</a></div><div class="ttdeci">void setDrawObject(Arduino_GFX *objTFT)</div><div class="ttdoc">Pointer to the Arduino display object.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3128</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aa2bd44d7cafe83fa5246bf57d6e0388b"><div class="ttname"><a href="class_display_f_k.html#aa2bd44d7cafe83fa5246bf57d6e0388b">DisplayFK::loadScreen</a></div><div class="ttdeci">void loadScreen(functionLoadScreen_t screen)</div><div class="ttdef"><b>Definition</b> displayfk.cpp:3123</div></div>
+<div class="ttc" id="aclass_display_f_k_html_afdf6a30e9dabe0fe3306f7ea82214ae5"><div class="ttname"><a href="class_display_f_k.html#afdf6a30e9dabe0fe3306f7ea82214ae5">DisplayFK::createTask</a></div><div class="ttdeci">void createTask(bool enableWatchdog, uint16_t timeout_s=3)</div><div class="ttdoc">Creates the event processing task.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:2151</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
 🔧 Passo 5: Configurar os Widgets</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> loadWidgets() {</div>
 <div class="line">    <span class="comment">// Configurar checkbox</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_check_box_config.html">CheckBoxConfig</a> configCheckbox = {</div>
+<div class="line">        .callback = checkbox_cb,</div>
+<div class="line">        .weight = <a class="code hl_enumvalue" href="wcheckbox_8h.html#a21888f056835b90a6afa438050b447cdac87f3be66ffc3c0d4249f1c2cc5f3cce">CheckBoxWeight::MEDIUM</a>,</div>
 <div class="line">        .size = 21,</div>
 <div class="line">        .checkedColor = <a class="code hl_variable" href="widgetsetup_8h.html#a11a6a766c4ec66e5933f0fa9998dd2c5">CFK_COLOR28</a>,</div>
-<div class="line">        .uncheckedColor = <a class="code hl_variable" href="widgetsetup_8h.html#adeef1b93c803217f6e5d26443a6634e0">CFK_GREY7</a>,</div>
-<div class="line">        .weight = <a class="code hl_enumvalue" href="wcheckbox_8h.html#a21888f056835b90a6afa438050b447cdac87f3be66ffc3c0d4249f1c2cc5f3cce">CheckBoxWeight::MEDIUM</a>,</div>
-<div class="line">        .callback = checkbox_cb</div>
+<div class="line">        .uncheckedColor = <a class="code hl_variable" href="widgetsetup_8h.html#adeef1b93c803217f6e5d26443a6634e0">CFK_GREY7</a></div>
 <div class="line">    };</div>
 <div class="line">    checkbox.setup(configCheckbox);</div>
 <div class="line">    </div>
 <div class="line">    <a class="code hl_struct" href="struct_check_box_config.html">CheckBoxConfig</a> configCheckbox1 = {</div>
+<div class="line">        .callback = checkbox1_cb,</div>
+<div class="line">        .weight = <a class="code hl_enumvalue" href="wcheckbox_8h.html#a21888f056835b90a6afa438050b447cda7f51edd36275e0ad089c8f9dc7fecf87">CheckBoxWeight::HEAVY</a>,</div>
 <div class="line">        .size = 21,</div>
 <div class="line">        .checkedColor = <a class="code hl_variable" href="widgetsetup_8h.html#a2c9f8f5a14aad96d441c29d6df5ad694">CFK_COLOR03</a>,</div>
-<div class="line">        .uncheckedColor = <a class="code hl_variable" href="widgetsetup_8h.html#a836ab937898f54a036abb3015aa8a074">CFK_GREY10</a>,</div>
-<div class="line">        .weight = <a class="code hl_enumvalue" href="wcheckbox_8h.html#a21888f056835b90a6afa438050b447cda7f51edd36275e0ad089c8f9dc7fecf87">CheckBoxWeight::HEAVY</a>,</div>
-<div class="line">        .callback = checkbox1_cb</div>
+<div class="line">        .uncheckedColor = <a class="code hl_variable" href="widgetsetup_8h.html#a836ab937898f54a036abb3015aa8a074">CFK_GREY10</a></div>
 <div class="line">    };</div>
 <div class="line">    checkbox1.setup(configCheckbox1);</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Registrar no DisplayFK</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#a8478cc1dcc4fa42ced2e0da930c09563">setCheckbox</a>(arrayCheckbox, qtdCheckbox);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_a8478cc1dcc4fa42ced2e0da930c09563"><div class="ttname"><a href="class_display_f_k.html#a8478cc1dcc4fa42ced2e0da930c09563">DisplayFK::setCheckbox</a></div><div class="ttdeci">void setCheckbox(CheckBox *array[], uint8_t amount)</div><div class="ttdoc">Configures the checkbox array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:117</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a11a6a766c4ec66e5933f0fa9998dd2c5"><div class="ttname"><a href="widgetsetup_8h.html#a11a6a766c4ec66e5933f0fa9998dd2c5">CFK_COLOR28</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR28</div><div class="ttdef"><b>Definition</b> widgetsetup.h:194</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a2c9f8f5a14aad96d441c29d6df5ad694"><div class="ttname"><a href="widgetsetup_8h.html#a2c9f8f5a14aad96d441c29d6df5ad694">CFK_COLOR03</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR03</div><div class="ttdef"><b>Definition</b> widgetsetup.h:169</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_a836ab937898f54a036abb3015aa8a074"><div class="ttname"><a href="widgetsetup_8h.html#a836ab937898f54a036abb3015aa8a074">CFK_GREY10</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY10</div><div class="ttdef"><b>Definition</b> widgetsetup.h:209</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_adeef1b93c803217f6e5d26443a6634e0"><div class="ttname"><a href="widgetsetup_8h.html#adeef1b93c803217f6e5d26443a6634e0">CFK_GREY7</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY7</div><div class="ttdef"><b>Definition</b> widgetsetup.h:206</div></div>
+<div class="ttc" id="aclass_display_f_k_html_a8478cc1dcc4fa42ced2e0da930c09563"><div class="ttname"><a href="class_display_f_k.html#a8478cc1dcc4fa42ced2e0da930c09563">DisplayFK::setCheckbox</a></div><div class="ttdeci">void setCheckbox(CheckBox *array[], uint8_t amount)</div><div class="ttdoc">Configures the checkbox array.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:118</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a11a6a766c4ec66e5933f0fa9998dd2c5"><div class="ttname"><a href="widgetsetup_8h.html#a11a6a766c4ec66e5933f0fa9998dd2c5">CFK_COLOR28</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR28</div><div class="ttdef"><b>Definition</b> widgetsetup.h:196</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a2c9f8f5a14aad96d441c29d6df5ad694"><div class="ttname"><a href="widgetsetup_8h.html#a2c9f8f5a14aad96d441c29d6df5ad694">CFK_COLOR03</a></div><div class="ttdeci">constexpr uint16_t CFK_COLOR03</div><div class="ttdef"><b>Definition</b> widgetsetup.h:171</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_a836ab937898f54a036abb3015aa8a074"><div class="ttname"><a href="widgetsetup_8h.html#a836ab937898f54a036abb3015aa8a074">CFK_GREY10</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY10</div><div class="ttdef"><b>Definition</b> widgetsetup.h:211</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_adeef1b93c803217f6e5d26443a6634e0"><div class="ttname"><a href="widgetsetup_8h.html#adeef1b93c803217f6e5d26443a6634e0">CFK_GREY7</a></div><div class="ttdeci">constexpr uint16_t CFK_GREY7</div><div class="ttdef"><b>Definition</b> widgetsetup.h:208</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
 🔔 Passo 6: Criar Funções de Callback</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> checkbox_cb() {</div>
@@ -307,9 +307,9 @@ setColors()</h2>
 <div class="line">    <span class="comment">// Desenhar todos os widgets na tela 0</span></div>
 <div class="line">    myDisplay.<a class="code hl_function" href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">drawWidgetsOnScreen</a>(0);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1816</div></div>
-<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:416</div></div>
-<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:132</div></div>
+<div class="ttc" id="aclass_display_f_k_html_aad265784eb7857a23b1a65b0fb9a452c"><div class="ttname"><a href="class_display_f_k.html#aad265784eb7857a23b1a65b0fb9a452c">DisplayFK::drawWidgetsOnScreen</a></div><div class="ttdeci">void drawWidgetsOnScreen(const uint8_t currentScreenIndex)</div><div class="ttdoc">Draws widgets on the current screen.</div><div class="ttdef"><b>Definition</b> displayfk.cpp:1844</div></div>
+<div class="ttc" id="aclass_widget_base_html_a77a9f894591cb7871282cd5868a36a15"><div class="ttname"><a href="class_widget_base.html#a77a9f894591cb7871282cd5868a36a15">WidgetBase::backgroundColor</a></div><div class="ttdeci">static uint16_t backgroundColor</div><div class="ttdoc">Cor de fundo para os widgets.</div><div class="ttdef"><b>Definition</b> widgetbase.h:418</div></div>
+<div class="ttc" id="awidgetsetup_8h_html_ac2eb83c89c3a81998a14dcb2e999403c"><div class="ttname"><a href="widgetsetup_8h.html#ac2eb83c89c3a81998a14dcb2e999403c">CFK_WHITE</a></div><div class="ttdeci">constexpr uint16_t CFK_WHITE</div><div class="ttdef"><b>Definition</b> widgetsetup.h:134</div></div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
 🔄 Passo 8: Alterar Estado Programaticamente (Opcional)</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="simple__touch_8ino.html#a0b33edabd7f1c4e4a0bf32c67269be2f">loop</a>() {</div>
@@ -353,11 +353,11 @@ setColors()</h2>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Configurar checkbox</span></div>
 <div class="line">    <a class="code hl_struct" href="struct_check_box_config.html">CheckBoxConfig</a> config = {</div>
+<div class="line">        .callback = checkbox_callback,</div>
+<div class="line">        .weight = <a class="code hl_enumvalue" href="wcheckbox_8h.html#a21888f056835b90a6afa438050b447cdac87f3be66ffc3c0d4249f1c2cc5f3cce">CheckBoxWeight::MEDIUM</a>,</div>
 <div class="line">        .size = 25,</div>
 <div class="line">        .checkedColor = <a class="code hl_variable" href="widgetsetup_8h.html#a11a6a766c4ec66e5933f0fa9998dd2c5">CFK_COLOR28</a>,</div>
-<div class="line">        .uncheckedColor = 0,  <span class="comment">// Automático</span></div>
-<div class="line">        .weight = <a class="code hl_enumvalue" href="wcheckbox_8h.html#a21888f056835b90a6afa438050b447cdac87f3be66ffc3c0d4249f1c2cc5f3cce">CheckBoxWeight::MEDIUM</a>,</div>
-<div class="line">        .callback = checkbox_callback</div>
+<div class="line">        .uncheckedColor = 0  <span class="comment">// Automático</span></div>
 <div class="line">    };</div>
 <div class="line">    meuCheckbox.setup(config);</div>
 <div class="line">    </div>

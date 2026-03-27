@@ -1,3 +1,3 @@
-#define DISP_DEFAULT	
-#define TOUCH_GSL3680
-#define HAS_TOUCH	
+#define DISP_DEFAULT
+#define TOUCH_FT6336
+#define USE_TOUCH

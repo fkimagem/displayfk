@@ -100,9 +100,9 @@ Inheritance diagram for WidgetBase:</div>
 <area href="class_gauge_super.html" title="Widget de gauge super com agulha e intervalos codificados por cores." alt="GaugeSuper" shape="rect" coords="95,224,180,248"/>
 <area href="class_h_slider.html" title="Widget de slider horizontal interativo que permite controle de valores através de deslizamento." alt="HSlider" shape="rect" coords="95,280,180,304"/>
 <area href="class_image.html" title="Widget de imagem que pode carregar imagens de várias fontes." alt="Image" shape="rect" coords="95,336,180,360"/>
-<area href="class_label.html" title="Widget de rótulo de texto com fonte e cores personalizáveis." alt="Label" shape="rect" coords="95,392,180,416"/>
+<area href="class_label.html" alt="Label" shape="rect" coords="95,392,180,416"/>
 <area href="class_led.html" title="Widget de LED com tamanho e cor personalizáveis." alt="Led" shape="rect" coords="95,448,180,472"/>
-<area href="class_line_chart.html" title="Widget de gráfico de linhas para plotar dados com múltiplas séries opcionais." alt="LineChart" shape="rect" coords="95,504,180,528"/>
+<area href="class_line_chart.html" title="Widget de gráfico de linhas com múltiplas séries, ring buffer e snapshot thread-safe." alt="LineChart" shape="rect" coords="95,504,180,528"/>
 <area href="class_number_box.html" title="Widget de caixa de número para exibir e editar valores numéricos." alt="NumberBox" shape="rect" coords="95,560,180,584"/>
 <area href="class_numpad.html" title="Widget de teclado numérico que permite entrada de números através de um teclado na tela." alt="Numpad" shape="rect" coords="95,616,180,640"/>
 <area href="class_radio_group.html" title="Widget de grupo de botões de rádio que permite seleção de uma opção dentro do grupo." alt="RadioGroup" shape="rect" coords="95,672,180,696"/>
@@ -128,7 +128,7 @@ Public Types</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:acb6b8202a24c922a6a7392ed86ef74d0" id="r_acb6b8202a24c922a6a7392ed86ef74d0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb6b8202a24c922a6a7392ed86ef74d0">WidgetBase</a> (uint16_t _x, uint16_t _y, uint8_t _screen)</td></tr>
-<tr class="memdesc:acb6b8202a24c922a6a7392ed86ef74d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a> class.  <br /></td></tr>
+<tr class="memdesc:acb6b8202a24c922a6a7392ed86ef74d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts RGB components to RGB565 format.  <br /></td></tr>
 <tr class="memitem:a17cea91a048ad7bd615d6a02804abe2d" id="r_a17cea91a048ad7bd615d6a02804abe2d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17cea91a048ad7bd615d6a02804abe2d">~WidgetBase</a> ()</td></tr>
 <tr class="memdesc:a17cea91a048ad7bd615d6a02804abe2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for the <a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a> class.  <br /></td></tr>
 <tr class="memitem:affd5e601cd8db5b380d85f6ee2f80b3d" id="r_affd5e601cd8db5b380d85f6ee2f80b3d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#affd5e601cd8db5b380d85f6ee2f80b3d">detectTouch</a> (uint16_t *_xTouch, uint16_t *_yTouch)=0</td></tr>
@@ -137,6 +137,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae05fdc82b0f347733dd850d889cf85e0" id="r_ae05fdc82b0f347733dd850d889cf85e0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae05fdc82b0f347733dd850d889cf85e0">hide</a> ()=0</td></tr>
 <tr class="memitem:a6520073a605078039e1ac397d8bc1929" id="r_a6520073a605078039e1ac397d8bc1929"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6520073a605078039e1ac397d8bc1929">forceUpdate</a> ()=0</td></tr>
 <tr class="memitem:a527632a8ae77b4478351b7a5d63da624" id="r_a527632a8ae77b4478351b7a5d63da624"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a527632a8ae77b4478351b7a5d63da624">redraw</a> ()=0</td></tr>
+<tr class="memitem:aa176d88e86545b02dc8d63f3fe2031e9" id="r_aa176d88e86545b02dc8d63f3fe2031e9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa176d88e86545b02dc8d63f3fe2031e9">onRelease</a> ()</td></tr>
+<tr class="memdesc:aa176d88e86545b02dc8d63f3fe2031e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when touch is released or leaves widget area.  <br /></td></tr>
 <tr class="memitem:a889071f7a0a3e43536153785cc37ffcc" id="r_a889071f7a0a3e43536153785cc37ffcc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a889071f7a0a3e43536153785cc37ffcc">showingMyScreen</a> ()</td></tr>
 <tr class="memitem:ab337ee808e16181ce5b41a5e1379897c" id="r_ab337ee808e16181ce5b41a5e1379897c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab337ee808e16181ce5b41a5e1379897c">isInitialized</a> () const</td></tr>
 <tr class="memitem:a35efe9d5e23752836785beb9fb8631a0" id="r_a35efe9d5e23752836785beb9fb8631a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a35efe9d5e23752836785beb9fb8631a0">isEnabled</a> () const</td></tr>
@@ -151,15 +153,10 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a139080bf3dee49f018a00215fbdf8403" id="r_a139080bf3dee49f018a00215fbdf8403"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a139080bf3dee49f018a00215fbdf8403">addCallback</a> (<a class="el" href="base_types_8h.html#a05ded8c943add15c9053b728a4f6b99a">functionCB_t</a> callback, <a class="el" href="#afc5d8840ee8c89fdaf98d6901ee2ee05">CallbackOrigin</a> origin)</td></tr>
 <tr class="memdesc:a139080bf3dee49f018a00215fbdf8403"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a callback to the callback queue.  <br /></td></tr>
-<tr class="memitem:a7b462e6e2da613ebee2ba5d3addeaa88" id="r_a7b462e6e2da613ebee2ba5d3addeaa88"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b462e6e2da613ebee2ba5d3addeaa88">lightenColor565</a> (unsigned short color, float factor)</td></tr>
-<tr class="memdesc:a7b462e6e2da613ebee2ba5d3addeaa88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lightens a color by a given factor.  <br /></td></tr>
-<tr class="memitem:a167bf923b89b00e47a983558bcf28528" id="r_a167bf923b89b00e47a983558bcf28528"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a167bf923b89b00e47a983558bcf28528">lightenToWhite565</a> (uint16_t color, float factor)</td></tr>
-<tr class="memitem:a4e1e89770f06b9a69c0bd876bf5ce611" id="r_a4e1e89770f06b9a69c0bd876bf5ce611"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e1e89770f06b9a69c0bd876bf5ce611">darkenColor565</a> (unsigned short color, float factor)</td></tr>
-<tr class="memdesc:a4e1e89770f06b9a69c0bd876bf5ce611"><td class="mdescLeft">&#160;</td><td class="mdescRight">Darkens a color by a given factor.  <br /></td></tr>
-<tr class="memitem:a2cb752eaf84522bb36631e5e2ea421f5" id="r_a2cb752eaf84522bb36631e5e2ea421f5"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2cb752eaf84522bb36631e5e2ea421f5">blendColors</a> (uint16_t color1, uint16_t color2, float factor)</td></tr>
-<tr class="memdesc:a2cb752eaf84522bb36631e5e2ea421f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blends two colors with a given factor.  <br /></td></tr>
 <tr class="memitem:ad7cb412f4568456bf8fc4be5ecd9eeb9" id="r_ad7cb412f4568456bf8fc4be5ecd9eeb9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7cb412f4568456bf8fc4be5ecd9eeb9">recalculateTextPosition</a> (const char *_texto, uint16_t *_x, uint16_t *_y, uint8_t _datum)</td></tr>
 <tr class="memdesc:ad7cb412f4568456bf8fc4be5ecd9eeb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recalculates the position of text on the screen.  <br /></td></tr>
+<tr class="memitem:ac403940d96d425c0ff770f2dbebd4df3" id="r_ac403940d96d425c0ff770f2dbebd4df3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac403940d96d425c0ff770f2dbebd4df3">setFontNull</a> ()</td></tr>
+<tr class="memdesc:ac403940d96d425c0ff770f2dbebd4df3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the font to null.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -196,10 +193,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:afe67d16a65d4afb93180a15613acf747"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the best fitting Roboto Bold font for a given area.  <br /></td></tr>
 <tr class="memitem:a8ffeb55bd2d46f065b368a7c9d89159e" id="r_a8ffeb55bd2d46f065b368a7c9d89159e"><td class="memItemLeft" align="right" valign="top">const GFXfont *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ffeb55bd2d46f065b368a7c9d89159e">getBestFontForArea</a> (const char *text, uint16_t width, uint16_t height, const GFXfont *const fonts[], size_t fontCount)</td></tr>
 <tr class="memdesc:a8ffeb55bd2d46f065b368a7c9d89159e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the best fitting font for a given area.  <br /></td></tr>
-<tr class="memitem:a34c7f00f0eaa350bcb941f375af4b777" id="r_a34c7f00f0eaa350bcb941f375af4b777"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a34c7f00f0eaa350bcb941f375af4b777">getFirstLettersForSpace</a> (const char *textoCompleto, uint16_t width, uint16_t height)</td></tr>
-<tr class="memitem:abc7dfe99ca1f15876da25e3f64c6b160" id="r_abc7dfe99ca1f15876da25e3f64c6b160"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc7dfe99ca1f15876da25e3f64c6b160">getLastLettersForSpace</a> (const char *textoCompleto, uint16_t width, uint16_t height)</td></tr>
+<tr class="memitem:a4754b6b1e0a3f9c3a2bc54c13ecbc1b0" id="r_a4754b6b1e0a3f9c3a2bc54c13ecbc1b0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4754b6b1e0a3f9c3a2bc54c13ecbc1b0">getFirstLettersForSpace</a> (const char *textoCompleto, uint16_t width, uint16_t height, char *out, size_t outSize)</td></tr>
+<tr class="memitem:add41f1d1ec9744508d243dad788ff90f" id="r_add41f1d1ec9744508d243dad788ff90f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add41f1d1ec9744508d243dad788ff90f">getLastLettersForSpace</a> (const char *textoCompleto, uint16_t width, uint16_t height, char *out, size_t outSize)</td></tr>
 <tr class="memitem:a685bdf04c94ef540804da7d07ef170ff" id="r_a685bdf04c94ef540804da7d07ef170ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a685bdf04c94ef540804da7d07ef170ff">updateFont</a> (<a class="el" href="base_types_8h.html#a72082b59a51886b2606c8c0be2f84684">FontType</a> _f)</td></tr>
 <tr class="memdesc:a685bdf04c94ef540804da7d07ef170ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the font according to the specified font type.  <br /></td></tr>
+<tr class="memitem:a866d9b3ad76c04dc2d7dbe864316cd40" id="r_a866d9b3ad76c04dc2d7dbe864316cd40"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a866d9b3ad76c04dc2d7dbe864316cd40">setPressed</a> (bool pressed)</td></tr>
+<tr class="memdesc:a866d9b3ad76c04dc2d7dbe864316cd40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marks widget as pressed.  <br /></td></tr>
 <tr class="memitem:a228dae2f2c95899387c1d77599b816b4" id="r_a228dae2f2c95899387c1d77599b816b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a228dae2f2c95899387c1d77599b816b4">printText</a> (const char *_texto, uint16_t _x, uint16_t _y, uint8_t _datum, <a class="el" href="struct_text_bound__t.html">TextBound_t</a> &amp;lastTextBoud, uint16_t _colorPadding)</td></tr>
 <tr class="memdesc:a228dae2f2c95899387c1d77599b816b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints text on the screen.  <br /></td></tr>
 <tr class="memitem:a0bf108363e452290786bea4072927d42" id="r_a0bf108363e452290786bea4072927d42"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bf108363e452290786bea4072927d42">printText</a> (const char *_texto, uint16_t _x, uint16_t _y, uint8_t _datum)</td></tr>
@@ -215,10 +214,10 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:aa145576fece4073672e8c29b93eaf470" id="r_aa145576fece4073672e8c29b93eaf470"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa145576fece4073672e8c29b93eaf470">m_visible</a></td></tr>
 <tr class="memdesc:aa145576fece4073672e8c29b93eaf470"><td class="mdescLeft">&#160;</td><td class="mdescRight">True se o widget está visível.  <br /></td></tr>
-<tr class="memitem:a485c8d31276e602db18059fedeeb5eb1" id="r_a485c8d31276e602db18059fedeeb5eb1"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a485c8d31276e602db18059fedeeb5eb1">m_xPos</a></td></tr>
-<tr class="memdesc:a485c8d31276e602db18059fedeeb5eb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Posição X do widget.  <br /></td></tr>
-<tr class="memitem:a1a9a389bf0876ad9dbec18c487b9f73d" id="r_a1a9a389bf0876ad9dbec18c487b9f73d"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a9a389bf0876ad9dbec18c487b9f73d">m_yPos</a></td></tr>
-<tr class="memdesc:a1a9a389bf0876ad9dbec18c487b9f73d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Posição Y do widget.  <br /></td></tr>
+<tr class="memitem:a994777c490195c8b50519f4e16bd3dfd" id="r_a994777c490195c8b50519f4e16bd3dfd"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a994777c490195c8b50519f4e16bd3dfd">m_xPos</a></td></tr>
+<tr class="memdesc:a994777c490195c8b50519f4e16bd3dfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Posição X do widget.  <br /></td></tr>
+<tr class="memitem:a3aac588e9e83b0e147b93f885d54c280" id="r_a3aac588e9e83b0e147b93f885d54c280"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3aac588e9e83b0e147b93f885d54c280">m_yPos</a></td></tr>
+<tr class="memdesc:a3aac588e9e83b0e147b93f885d54c280"><td class="mdescLeft">&#160;</td><td class="mdescRight">Posição Y do widget.  <br /></td></tr>
 <tr class="memitem:a20179dea2edd2e4f9be4d20ae3c42207" id="r_a20179dea2edd2e4f9be4d20ae3c42207"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20179dea2edd2e4f9be4d20ae3c42207">m_screen</a></td></tr>
 <tr class="memdesc:a20179dea2edd2e4f9be4d20ae3c42207"><td class="mdescLeft">&#160;</td><td class="mdescRight">Índice da tela para o widget.  <br /></td></tr>
 <tr class="memitem:a360e5ef6c5ef803f413eb2fcb8a60747" id="r_a360e5ef6c5ef803f413eb2fcb8a60747"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a360e5ef6c5ef803f413eb2fcb8a60747">m_loaded</a></td></tr>
@@ -229,6 +228,8 @@ Protected Attributes</h2></td></tr>
 <tr class="memdesc:a75964914da52f8e0f7e92e7fdea4e25f"><td class="mdescLeft">&#160;</td><td class="mdescRight">True se o widget está propriamente inicializado.  <br /></td></tr>
 <tr class="memitem:a45a7e4a2426ead12e116c5dd9f2caa2f" id="r_a45a7e4a2426ead12e116c5dd9f2caa2f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a45a7e4a2426ead12e116c5dd9f2caa2f">m_shouldRedraw</a></td></tr>
 <tr class="memdesc:a45a7e4a2426ead12e116c5dd9f2caa2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicando se o widget deve ser redesenhado.  <br /></td></tr>
+<tr class="memitem:a1f993a414f931d414355e12538f061f3" id="r_a1f993a414f931d414355e12538f061f3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f993a414f931d414355e12538f061f3">m_isPressed</a></td></tr>
+<tr class="memdesc:a1f993a414f931d414355e12538f061f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">True when widget is currently being touched/pressed.  <br /></td></tr>
 <tr class="memitem:a809a09b13977482a1a50804ed11ad6e1" id="r_a809a09b13977482a1a50804ed11ad6e1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a809a09b13977482a1a50804ed11ad6e1">m_locked</a></td></tr>
 <tr class="memdesc:a809a09b13977482a1a50804ed11ad6e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">True se o widget está bloqueado (previne interação).  <br /></td></tr>
 <tr class="memitem:a584b600a1ecc69f4cc31c943dc5976aa" id="r_a584b600a1ecc69f4cc31c943dc5976aa"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a584b600a1ecc69f4cc31c943dc5976aa">m_myTime</a></td></tr>
@@ -293,8 +294,25 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Constructor for the <a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a> class. </p>
+<p>Converts RGB components to RGB565 format. </p>
 <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">r</td><td>The red component. </td></tr>
+    <tr><td class="paramname">g</td><td>The green component. </td></tr>
+    <tr><td class="paramname">b</td><td>The blue component. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The color in RGB565 format.</dd></dl>
+<p>Darkens a color by a given factor. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The color to darken. </td></tr>
+    <tr><td class="paramname">factor</td><td>The factor to darken the color by. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The darkened color.</dd></dl>
+<p>Constructor for the <a class="el" href="class_widget_base.html" title="Classe base abstrata para todos os widgets.">WidgetBase</a> class. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">_x</td><td>X position of the widget. </td></tr>
     <tr><td class="paramname">_y</td><td>Y position of the widget. </td></tr>
@@ -368,90 +386,6 @@ Protected Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a2cb752eaf84522bb36631e5e2ea421f5" name="a2cb752eaf84522bb36631e5e2ea421f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2cb752eaf84522bb36631e5e2ea421f5">&#9670;&#160;</a></span>blendColors()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t WidgetBase::blendColors </td>
-          <td>(</td>
-          <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>color1</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>color2</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>factor</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Blends two colors with a given factor. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">color1</td><td>The first color to blend. </td></tr>
-    <tr><td class="paramname">color2</td><td>The second color to blend. </td></tr>
-    <tr><td class="paramname">factor</td><td>The factor to blend the colors by. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The blended color. </dd></dl>
-
-</div>
-</div>
-<a id="a4e1e89770f06b9a69c0bd876bf5ce611" name="a4e1e89770f06b9a69c0bd876bf5ce611"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e1e89770f06b9a69c0bd876bf5ce611">&#9670;&#160;</a></span>darkenColor565()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t WidgetBase::darkenColor565 </td>
-          <td>(</td>
-          <td class="paramtype">unsigned short</td>          <td class="paramname"><span class="paramname"><em>color</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>factor</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Darkens a color by a given factor. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">color</td><td>The color to darken. </td></tr>
-    <tr><td class="paramname">factor</td><td>The factor to darken the color by. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The darkened color. </dd></dl>
 
 </div>
 </div>
@@ -716,8 +650,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a34c7f00f0eaa350bcb941f375af4b777" name="a34c7f00f0eaa350bcb941f375af4b777"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34c7f00f0eaa350bcb941f375af4b777">&#9670;&#160;</a></span>getFirstLettersForSpace()</h2>
+<a id="a4754b6b1e0a3f9c3a2bc54c13ecbc1b0" name="a4754b6b1e0a3f9c3a2bc54c13ecbc1b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4754b6b1e0a3f9c3a2bc54c13ecbc1b0">&#9670;&#160;</a></span>getFirstLettersForSpace()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -726,7 +660,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char * WidgetBase::getFirstLettersForSpace </td>
+          <td class="memname">int WidgetBase::getFirstLettersForSpace </td>
           <td>(</td>
           <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>textoCompleto</em></span>, </td>
         </tr>
@@ -738,7 +672,17 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>height</em></span>&#160;)</td>
+          <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>height</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>outSize</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -750,8 +694,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="abc7dfe99ca1f15876da25e3f64c6b160" name="abc7dfe99ca1f15876da25e3f64c6b160"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc7dfe99ca1f15876da25e3f64c6b160">&#9670;&#160;</a></span>getLastLettersForSpace()</h2>
+<a id="add41f1d1ec9744508d243dad788ff90f" name="add41f1d1ec9744508d243dad788ff90f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add41f1d1ec9744508d243dad788ff90f">&#9670;&#160;</a></span>getLastLettersForSpace()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -760,7 +704,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char * WidgetBase::getLastLettersForSpace </td>
+          <td class="memname">int WidgetBase::getLastLettersForSpace </td>
           <td>(</td>
           <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>textoCompleto</em></span>, </td>
         </tr>
@@ -772,7 +716,17 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>height</em></span>&#160;)</td>
+          <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>height</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>outSize</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -924,74 +878,6 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a7b462e6e2da613ebee2ba5d3addeaa88" name="a7b462e6e2da613ebee2ba5d3addeaa88"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b462e6e2da613ebee2ba5d3addeaa88">&#9670;&#160;</a></span>lightenColor565()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t WidgetBase::lightenColor565 </td>
-          <td>(</td>
-          <td class="paramtype">unsigned short</td>          <td class="paramname"><span class="paramname"><em>color</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>factor</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Lightens a color by a given factor. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">color</td><td>The color to lighten. </td></tr>
-    <tr><td class="paramname">factor</td><td>The factor to lighten the color by. (0.0 to 5.0) </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The lightened color. </dd></dl>
-
-</div>
-</div>
-<a id="a167bf923b89b00e47a983558bcf28528" name="a167bf923b89b00e47a983558bcf28528"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a167bf923b89b00e47a983558bcf28528">&#9670;&#160;</a></span>lightenToWhite565()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t WidgetBase::lightenToWhite565 </td>
-          <td>(</td>
-          <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>color</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>factor</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a4c10afaf3fc7b6d79eb20b4aede5e4e7" name="a4c10afaf3fc7b6d79eb20b4aede5e4e7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4c10afaf3fc7b6d79eb20b4aede5e4e7">&#9670;&#160;</a></span>lock()</h2>
 
@@ -1006,6 +892,37 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa176d88e86545b02dc8d63f3fe2031e9" name="aa176d88e86545b02dc8d63f3fe2031e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa176d88e86545b02dc8d63f3fe2031e9">&#9670;&#160;</a></span>onRelease()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WidgetBase::onRelease </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when touch is released or leaves widget area. </p>
+<p>Default implementation of onRelease.</p>
+<p>This method is called when touch is released or leaves the widget area. Default implementation sets m_isPressed to false. Derived widgets should call <a class="el" href="#aa176d88e86545b02dc8d63f3fe2031e9" title="Called when touch is released or leaves widget area.">WidgetBase::onRelease()</a> first if overriding, then set m_shouldRedraw = true if visual update is needed. </p>
+
+<p>Reimplemented in <a class="el" href="class_text_button.html#a902d9f383b81a493a1b306c76a025616">TextButton</a>.</p>
 
 </div>
 </div>
@@ -1212,6 +1129,74 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac403940d96d425c0ff770f2dbebd4df3" name="ac403940d96d425c0ff770f2dbebd4df3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac403940d96d425c0ff770f2dbebd4df3">&#9670;&#160;</a></span>setFontNull()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WidgetBase::setFontNull </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the font to null. </p>
+
+</div>
+</div>
+<a id="a866d9b3ad76c04dc2d7dbe864316cd40" name="a866d9b3ad76c04dc2d7dbe864316cd40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a866d9b3ad76c04dc2d7dbe864316cd40">&#9670;&#160;</a></span>setPressed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void WidgetBase::setPressed </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>pressed</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Marks widget as pressed. </p>
+<p>Sets the pressed state of the widget.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pressed</td><td>True if widget is being pressed, false otherwise</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Called internally when touch is detected. Sets m_isPressed to true.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pressed</td><td>True if widget is being pressed, false otherwise </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1576,6 +1561,30 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a1f993a414f931d414355e12538f061f3" name="a1f993a414f931d414355e12538f061f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f993a414f931d414355e12538f061f3">&#9670;&#160;</a></span>m_isPressed</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool WidgetBase::m_isPressed</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True when widget is currently being touched/pressed. </p>
+
+</div>
+</div>
 <a id="a360e5ef6c5ef803f413eb2fcb8a60747" name="a360e5ef6c5ef803f413eb2fcb8a60747"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a360e5ef6c5ef803f413eb2fcb8a60747">&#9670;&#160;</a></span>m_loaded</h2>
 
@@ -1720,8 +1729,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a485c8d31276e602db18059fedeeb5eb1" name="a485c8d31276e602db18059fedeeb5eb1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a485c8d31276e602db18059fedeeb5eb1">&#9670;&#160;</a></span>m_xPos</h2>
+<a id="a994777c490195c8b50519f4e16bd3dfd" name="a994777c490195c8b50519f4e16bd3dfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a994777c490195c8b50519f4e16bd3dfd">&#9670;&#160;</a></span>m_xPos</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1730,7 +1739,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t WidgetBase::m_xPos</td>
+          <td class="memname">int16_t WidgetBase::m_xPos</td>
         </tr>
       </table>
   </td>
@@ -1744,8 +1753,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a1a9a389bf0876ad9dbec18c487b9f73d" name="a1a9a389bf0876ad9dbec18c487b9f73d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a9a389bf0876ad9dbec18c487b9f73d">&#9670;&#160;</a></span>m_yPos</h2>
+<a id="a3aac588e9e83b0e147b93f885d54c280" name="a3aac588e9e83b0e147b93f885d54c280"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3aac588e9e83b0e147b93f885d54c280">&#9670;&#160;</a></span>m_yPos</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1754,7 +1763,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t WidgetBase::m_yPos</td>
+          <td class="memname">int16_t WidgetBase::m_yPos</td>
         </tr>
       </table>
   </td>

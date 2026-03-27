@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['key_5ft_0',['Key_t',['../struct_key__t.html',1,'']]]
+  ['margin_5ft_0',['Margin_t',['../struct_margin__t.html',1,'']]]
 ];
