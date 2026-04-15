@@ -24,8 +24,7 @@ A classe `LineChart` é um widget visual avançado que exibe gráficos de linhas
 
 ### LineChartConfig
 
-Estrutura que contém todos os parâmetros de configuração do gráfico.  
-Ela foi reorganizada para melhor alinhamento em 32 bits (veja também `STRUCT_ALIGNMENT.md`):
+Estrutura que contém todos os parâmetros de configuração do gráfico (ordem conforme `wlinechart.h`):
 
 ```cpp
 struct LineChartConfig {
@@ -98,6 +97,16 @@ Configura o gráfico com os parâmetros especificados. **Este método deve ser c
 **Parâmetros:**
 - `config`: Estrutura `LineChartConfig` com as configurações
 
+**Validações automáticas:**
+- `width` e `height` devem ser maiores que 0
+- `minValue` deve ser menor que `maxValue`
+- `amountSeries` deve estar entre 1 e 10
+- `colorsSeries` não pode ser `nullptr`
+- `maxPointsAmount` deve ser >= 2
+
+**Comportamento:**
+- A configuração é aplicada apenas uma vez por instância (se já carregado, ignora novo `setup()`)
+
 ### push()
 
 ```cpp
@@ -116,8 +125,8 @@ Adiciona um novo valor a uma série específica do gráfico.
 
 **Características:**
 - Valor é limitado automaticamente entre minValue e maxValue
-- Desloca valores antigos para frente
-- Thread-safe com mutex
+- Usa buffer circular por série (ring buffer)
+- Thread-safe com mutex (quando `DISP_DEFAULT` está ativo)
 - Marca para redesenho
 
 ### drawBackground()
@@ -148,7 +157,7 @@ Oculta o gráfico da tela.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Não processa eventos de toque
 - `redraw()`: Redesenha o gráfico
@@ -358,11 +367,10 @@ void minhaTela() {
 - Valores devem estar entre minValue e maxValue
 
 ### 🔔 Performance
-- Atualizações thread-safe com mutex
+- Atualizações thread-safe com mutex (em `DISP_DEFAULT`)
 - Evite muitas atualizações muito rápidas
 - Use maxPointsAmount para limitar pontos
 - Trabalhar em background se necessário
-- Configurações
 
 ### 👥 Usabilidade
 - Configure grade clara e legível
@@ -396,7 +404,7 @@ A classe `LineChart` herda métodos de `WidgetBase`:
 O `LineChart` integra-se com DisplayFK:
 
 1. **Renderização:** Automática com `drawWidgetsOnScreen()`
-2. **Thread-Safety:** Mutex para acesso seguro
+2. **Thread-Safety:** Mutex para acesso seguro (em `DISP_DEFAULT`)
 3. **Gerenciamento:** Controlado pelo loop principal
 4. **Performance:** Redesenho eficiente
 5. **Séries:** Múltiplas séries simultâneas
@@ -430,12 +438,14 @@ O gráfico renderiza em camadas:
 - Confirme que `drawBackground()` foi chamado
 - Verifique se está na tela correta
 - Chame `myDisplay.setLineChart()`
+- Verifique se `setup()` passou nas validações (`width/height`, faixa, séries, cores e pontos)
 
 ### Dados não aparecem
 - Use `push()` para adicionar valores
 - Verifique índice da série (0 a amountSeries-1)
 - Confirme valores entre minValue e maxValue
 - Verifique se gráfico está visível
+- Se `workInBackground = false`, `push()` só atualiza quando a tela do widget está ativa
 
 ### Problemas de performance
 - Limite número de pontos com maxPointsAmount

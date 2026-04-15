@@ -82,6 +82,7 @@ Configura o slider com os parâmetros especificados. **Este método deve ser cha
 - Largura deve ser maior que zero
 - Raio deve ser maior que zero
 - minValue deve ser menor que maxValue
+- Se a configuração for inválida, `setup()` é abortado e o widget não é inicializado
 
 ### getValue()
 
@@ -137,9 +138,9 @@ Oculta o slider da tela.
 
 ---
 
-## 🔒 Métodos Privados (Apenas para Referência)
+## 🔒 Métodos Internos (Apenas para Referência)
 
-Estes métodos são chamados internamente e não precisam ser invocados diretamente:
+Estes métodos existem na classe e são usados no fluxo interno do widget:
 
 - `detectTouch()`: Detecta toque do usuário no slider
 - `redraw()`: Redesenha o slider na tela
@@ -287,13 +288,14 @@ void setup() {
     
     // Configurar slider
     HSliderConfig config = {
-        .width = 200,
-        .pressedColor = CFK_COLOR20,
-        .backgroundColor = CFK_GREY7,
+        .callback = slider_callback,
+        .subtitle = nullptr,
         .minValue = 0,
         .maxValue = 100,
         .radius = 15,
-        .callback = slider_callback
+        .width = 200,
+        .pressedColor = CFK_COLOR20,
+        .backgroundColor = CFK_GREY7
     };
     meuSlider.setup(config);
     
@@ -337,7 +339,8 @@ void slider_callback() {
 - Barra de progresso usa a mesma cor do controle
 
 ### 🔔 Callbacks
-- Callback é executado quando o valor muda
+- Callback é enfileirado em `setValue()` quando configurado
+- Em interação por toque, o callback também depende do fluxo de eventos do `DisplayFK`
 - Mantenha callbacks curtas e rápidas
 - Não bloqueie a execução dentro do callback
 - Use variáveis globais para armazenar dados
@@ -366,6 +369,7 @@ void slider_callback() {
 - Valores podem ser negativos
 - Faixa de valores ampla permite precisão maior
 - Valores são mapeados proporcionalmente para posições
+- `setup()` exige `minValue < maxValue`
 
 ---
 
@@ -445,6 +449,7 @@ O `HSlider` é renderizado em camadas:
 - Confirme que o nome da função está correto
 - Certifique-se de não ter erros de compilação
 - Verifique se o valor realmente mudou
+- Verifique se o widget foi inicializado com sucesso (`setup` válido)
 
 ### Problemas visuais
 - Verifique se as cores contrastam adequadamente

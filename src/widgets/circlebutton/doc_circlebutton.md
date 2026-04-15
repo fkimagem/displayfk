@@ -73,6 +73,7 @@ Configura o botão circular com os parâmetros especificados. **Este método dev
 **Validações automáticas:**
 - Raio é limitado entre 5 e 200 pixels
 - Valores fora da faixa são ajustados automaticamente
+- `setup()` apenas configura; o redesenho ocorre no ciclo normal do `DisplayFK`
 
 ### getStatus()
 
@@ -121,7 +122,7 @@ Oculta o botão circular da tela.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente e não precisam ser invocados diretamente:
+Estes métodos existem na classe, porém normalmente são usados no fluxo interno do widget:
 
 - `detectTouch()`: Detecta toque do usuário no botão
 - `redraw()`: Redesenha o botão na tela
@@ -394,12 +395,14 @@ O `CircleButton` é renderizado em camadas:
 - Confirme que o nome da função está correto
 - Certifique-se de não ter erros de compilação
 - Verifique se o estado realmente mudou (`setStatus` não dispara callback se o estado já está correto)
+- Em toque (`detectTouch`), o estado é alternado e o callback é executado pelo loop de callbacks do framework
 
 ### Problemas visuais
 - Verifique se as cores contrastam com o fundo
 - Confirme que o botão está dentro dos limites da tela
 - Verifique se o background foi desenhado corretamente na tela
 - Para modo escuro, as bordas são brancas por padrão
+- O círculo interno usa aproximadamente 75% do raio externo
 
 ### Botão muito pequeno/grande
 - Ajuste o raio na configuração (5-200 pixels)

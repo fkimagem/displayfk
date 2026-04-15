@@ -107,7 +107,7 @@ Libera automaticamente a memória alocada para imagens.
 ### setupFromFile()
 
 ```cpp
-void setupFromFile(ImageFromFileConfig &config)
+void setupFromFile(ImageFromFileConfig& config)
 ```
 
 Configura a imagem para carregar de um arquivo.
@@ -119,12 +119,13 @@ Configura a imagem para carregar de um arquivo.
 - Carrega arquivo do sistema de arquivos (SD, SPIFFS ou FATFS)
 - Lê dimensões do arquivo automaticamente
 - Aloca memória dinamicamente para pixels
-- Suporta máscaras de transparência
+- Lê máscara de transparência do arquivo
+- Só pode ser chamado uma vez por instância carregada (se já estiver carregada, retorna)
 
 ### setupFromPixels()
 
 ```cpp
-void setupFromPixels(ImageFromPixelsConfig &config)
+void setupFromPixels(ImageFromPixelsConfig& config)
 ```
 
 Configura a imagem a partir de dados de pixels embutidos.
@@ -137,6 +138,7 @@ Configura a imagem a partir de dados de pixels embutidos.
 - Valida dimensões automaticamente
 - Suporta rotação de imagem
 - Suporta máscaras de transparência
+- Só pode ser chamado uma vez por instância carregada (se já estiver carregada, retorna)
 
 ### show()
 
@@ -198,7 +200,7 @@ Imprime métricas de desempenho no Serial.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Detecta toque na imagem
 - `redraw()`: Redesenha a imagem na tela
@@ -271,10 +273,11 @@ void loadWidgets() {
     // Configurar imagem de dados embutidos
     ImageFromPixelsConfig configImage = {
         .pixels = img3dgraphpngPixels,
-        .width = img3dgraphpngW,
-        .height = img3dgraphpngH,
         .maskAlpha = img3dgraphpngMask,
         .cb = nullptr,
+        .angle = 0.0f,
+        .width = img3dgraphpngW,
+        .height = img3dgraphpngH,
         .backgroundColor = CFK_WHITE
     };
     img3dgraphpng.setupFromPixels(configImage);
@@ -282,10 +285,11 @@ void loadWidgets() {
     // Outra imagem com callback
     ImageFromPixelsConfig configImage2 = {
         .pixels = HomepngPixels,
-        .width = HomepngW,
-        .height = HomepngH,
         .maskAlpha = HomepngMask,
         .cb = homepng_cb,
+        .angle = 0.0f,
+        .width = HomepngW,
+        .height = HomepngH,
         .backgroundColor = CFK_WHITE
     };
     homepng.setupFromPixels(configImage2);
@@ -301,9 +305,9 @@ void loadWidgets() {
 void loadWidgets() {
     // Configurar imagem de arquivo SD
     ImageFromFileConfig configFileImage = {
-        .source = SourceFile::SD,
         .path = "/image.bin",
         .cb = image_callback,
+        .source = SourceFile::SD,
         .backgroundColor = CFK_WHITE
     };
     
@@ -400,12 +404,12 @@ void setup() {
     // Configurar imagem
     ImageFromPixelsConfig config = {
         .pixels = myimagePixels,
-        .width = MYIMAGE_W,
-        .height = MYIMAGE_H,
         .maskAlpha = myimageMask,
         .cb = image_callback,
-        .backgroundColor = CFK_WHITE,
-        .angle = 0.0f
+        .angle = 0.0f,
+        .width = MYIMAGE_W,
+        .height = MYIMAGE_H,
+        .backgroundColor = CFK_WHITE
     };
     minhaImagem.setupFromPixels(config);
     
@@ -451,6 +455,7 @@ void image_callback() {
 - Toque detectado dentro da área retangular da imagem
 - Mantenha callbacks curtas e rápidas
 - Não bloqueie a execução dentro do callback
+- O callback é retornado por `getCallbackFunc()` e processado pelo loop de eventos do framework
 
 ### ⚡ Performance
 - Uso de métricas de desempenho para otimização
@@ -551,12 +556,14 @@ O `Image` é renderizado diretamente:
 - Verifique se o arquivo existe e não está corrompido
 - Confirme que há memória suficiente para carregar
 - Verifique permissões de leitura do arquivo
+- O arquivo precisa conter largura/altura válidas e máscara com tamanho válido
 
 ### Imagem embutida não aparece
 - Verifique se os dados de pixels foram incluídos
 - Confirme que width e height estão corretos
 - Verifique se o ponteiro pixels não é null
 - Certifique-se de que o formato está correto
+- Verifique também se a posição + dimensões cabem na área do display
 
 ### Problemas de memória
 - Imagens grandes podem consumir muita RAM

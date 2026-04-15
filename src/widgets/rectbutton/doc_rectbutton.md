@@ -72,6 +72,10 @@ Configura o botão retangular. **Este método deve ser chamado após a criação
 **Parâmetros:**
 - `config`: Estrutura `RectButtonConfig` com as configurações
 
+**Comportamento:**
+- A configuração é aplicada apenas uma vez por instância (se já carregado, novo `setup()` é ignorado)
+- `m_callback` é definido a partir de `config.callback`
+
 ### getStatus()
 
 ```cpp
@@ -90,6 +94,11 @@ Define o estado do botão programaticamente.
 
 **Parâmetros:**
 - `_status`: Novo estado (true = pressionado, false = solto)
+
+**Características:**
+- Marca para redesenho
+- Enfileira callback (se configurado)
+- Requer widget já carregado (`setup()` executado)
 
 ### getEnabled()
 
@@ -138,7 +147,7 @@ Oculta o botão.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Detecta toque no botão
 - `redraw()`: Redesenha o botão
@@ -357,7 +366,7 @@ void desligar_callback() {
 - Redesenho apenas quando necessário
 - Detecção de toque eficiente
 - Estados internos otimizados
-- Callbacks executados apenas na mudança
+- `setStatus()` enfileira callback quando chamado
 
 ### 👥 Usabilidade
 - Botões grandes o suficiente para toque
@@ -448,7 +457,6 @@ O RectButton renderiza em camadas:
 
 ### Callback não executa
 - Verifique se callback foi configurado corretamente
-- Confirme que estado realmente mudou
 - Verifique logs para erros
 - Teste com mudança programática
 

@@ -82,7 +82,7 @@ Configura o termômetro. **Este método deve ser chamado após a criação do ob
 - Configura Label com unidade de medida se `subtitle` for fornecido
 - Define valor inicial como `minValue`
 - Valida dimensões (altura mínima de 20 pixels)
-- Marca o widget como carregado e inicializado
+- Marca o widget como carregado para o ciclo de renderização
 
 ### drawBackground()
 
@@ -213,7 +213,7 @@ Oculta o termômetro.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Não processa eventos de toque
 - `redraw()`: Redesenha o termômetro com otimização de atualização incremental

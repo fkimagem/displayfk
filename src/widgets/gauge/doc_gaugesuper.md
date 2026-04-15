@@ -90,9 +90,9 @@ Configura o gauge com os parâmetros especificados. **Este método deve ser cham
 
 **Validações automáticas:**
 - Largura (width) deve ser maior que 0
-- Valores min/max são trocados automaticamente se min > max
+- A faixa deve ser válida: `minValue < maxValue`
 - Título é truncado se exceder 20 caracteres
-- Intervalos são limitados a no máximo 10
+- `amountIntervals` deve ser no máximo 10
 - Memória é alocada dinamicamente para arrays
 - Altura (height) é usada para calcular dimensões disponíveis (altura - 2*borderSize)
 
@@ -111,7 +111,7 @@ Define o valor atual do gauge e marca para redesenho da agulha.
 - Valor é limitado automaticamente entre minValue e maxValue
 - Armazena o valor anterior para renderização eficiente
 - Marca o widget para redesenho apenas se o valor mudou
-- Registra o evento no log do ESP32
+- Requer widget carregado/inicializado e na tela atual para atualizar
 
 ### drawBackground()
 
@@ -149,7 +149,7 @@ Oculta o gauge da tela.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente e não precisam ser invocados diretamente:
+Estes métodos existem na classe e são usados internamente no fluxo de renderização:
 
 - `detectTouch()`: Não processa eventos de toque (sempre retorna false)
 - `redraw()`: Redesenha apenas a agulha e valor
@@ -246,7 +246,7 @@ void loadWidgets() {
 ### 🔔 Passo 6: Criar Funções de Callback (Opcional)
 
 ```cpp
-// Gauge não usa callbacks normalmente
+// GaugeSuper não dispara callback no fluxo atual
 ```
 
 ### 🖥️ Passo 7: Função da Tela
@@ -367,7 +367,7 @@ void minhaTela() {
 - Consider o tema claro/escuro da interface
 
 ### 🔔 Callbacks
-- Gauge não usa callbacks por padrão
+- GaugeSuper não dispara callback no fluxo atual
 - É apenas visual, não interativo
 
 ### ⚡ Performance
@@ -396,6 +396,7 @@ void minhaTela() {
 - Cada intervalo tem uma cor associada
 - Rótulos mostram valores dos intervalos
 - Intervalos devem ter espaçamento adequado
+- Se `amountIntervals > 0`, `intervals` e `colors` devem ser ponteiros válidos
 
 ---
 
@@ -468,7 +469,7 @@ O `GaugeSuper` é renderizado em camadas:
 - Verifique se arrays de intervalos e cores foram fornecidos
 - Confirme que amountIntervals está correto
 - Verifique se intervalos estão ordenados
-- Certifique-se de que não excede 10 intervalos
+- Certifique-se de que não excede 10 intervalos (validação falha no setup)
 
 ### Rótulos não aparecem
 - Verifique se `showLabels = true` na configuração
@@ -493,6 +494,12 @@ O `GaugeSuper` é renderizado em camadas:
 - Use valores dentro da faixa configurada
 - Considera diminuir a largura do gauge
 - Verifique se não há muitos widgets na mesma tela
+
+### Setup não aplica configuração
+- Verifique se `minValue < maxValue`
+- Verifique se `width > 0`
+- Se usar intervalos (`amountIntervals > 0`), garanta `intervals` e `colors` válidos
+- Garanta `amountIntervals <= 10`
 
 ---
 

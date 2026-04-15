@@ -97,24 +97,10 @@ Define o estado do botão programaticamente.
 **Parâmetros:**
 - `status`: true para ligado, false para desligado
 
-### getEnabled()
-
-```cpp
-bool getEnabled()
-```
-
-Retorna se o botão está habilitado.
-
-### setEnabled()
-
-```cpp
-void setEnabled(bool newState)
-```
-
-Habilita ou desabilita o botão.
-
-**Parâmetros:**
-- `newState`: true para habilitar, false para desabilitar
+**Características:**
+- Requer widget carregado (`setup()` executado)
+- Marca para redesenho
+- Enfileira callback (se configurado)
 
 ### show()
 
@@ -136,13 +122,13 @@ Oculta o botão.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Detecta toque no botão com validações completas
 - `redraw()`: Redesenha o botão com cores adaptadas ao tema
 - `forceUpdate()`: Força atualização
 - `getCallbackFunc()`: Retorna callback
-- `cleanupMemory()`: Limpa memória e canvas
+- `cleanupMemory()`: Limpeza interna (não há alocação dinâmica relevante)
 - `start()`: Inicializa configurações e valida dimensões
 - `blitRowFromCanvas()`: Copia dados do canvas para o display
 
@@ -372,7 +358,7 @@ void bluetooth_callback() {
 ### ⚡ Performance
 - Redesenho apenas quando estado muda
 - Detecção de toque eficiente com debounce
-- Callbacks executados apenas na alternância
+- Callback também pode ser enfileirado em `setStatus()`
 - Estados internos otimizados
 - Validações de visibilidade, teclado e carregamento
 
@@ -478,6 +464,7 @@ O ToggleButton renderiza assim:
 - Confirme que o botão foi realmente tocado
 - Verifique logs para erros
 - Teste com `changeState()` programático
+- Para disparar callback programaticamente, use `setStatus()`
 
 ### Estado não muda visualmente
 - Verifique se `m_shouldRedraw` está sendo definido

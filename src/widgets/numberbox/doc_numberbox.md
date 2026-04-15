@@ -2,11 +2,11 @@
 
 ## Visão Geral
 
-A classe `NumberBox` é um widget interativo que exibe e permite edição de valores numéricos (float) através de um teclado numérico virtual. Ele herda de `WidgetBase` e trabalha em conjunto com `Numpad` para fornecer uma interface completa de entrada numérica.
+A classe `NumberBox` é um widget interativo que exibe e permite edição de valores numéricos (double) através de um teclado numérico virtual. Ele herda de `WidgetBase` e trabalha em conjunto com `Numpad` para fornecer uma interface completa de entrada numérica.
 
 ### Características Principais
 
-- 🔢 Exibe valores numéricos (float)
+- 🔢 Exibe valores numéricos (double)
 - 📝 Permite edição via teclado virtual (Numpad)
 - 🎨 Cores e fontes personalizáveis
 - 📐 Dimensões configuráveis
@@ -84,10 +84,10 @@ Configura o NumberBox. **Este método deve ser chamado após a criação do obje
 ### getValue()
 
 ```cpp
-float getValue()
+double getValue()
 ```
 
-Retorna o valor numérico atual como float.
+Retorna o valor numérico atual como `double`.
 
 ### getValueChar()
 
@@ -100,13 +100,13 @@ Retorna o valor como string (const char*).
 ### setValue()
 
 ```cpp
-void setValue(float str)
+void setValue(double value)
 ```
 
 Define o valor numérico.
 
 **Parâmetros:**
-- `str`: Novo valor numérico
+- `value`: Novo valor numérico
 
 **Características:**
 - Converte float para string internamente
@@ -133,7 +133,7 @@ Oculta o NumberBox.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Detecta toque e abre Numpad
 - `redraw()`: Redesenha o NumberBox
@@ -335,14 +335,15 @@ void numero_callback() {
 - Borda usa letterColor
 
 ### 🔔 Integração com Numpad
-- Numpad abre automaticamente ao tocar no NumberBox
+- Ao toque, o `NumberBox` sinaliza `WidgetBase::usingKeyboard = true`
+- O fluxo de abertura visual do `Numpad` é controlado pelo sistema (`DisplayFK`)
 - Configure cores globais do Numpad antes de usar NumberBox
 - O Numpad aplica o valor automaticamente ao fechar
 - funcPtr deve apontar para função da tela pai
 
 ### ⚡ Performance
 - Armazenamento interno eficiente com CharString
-- Conversão automática entre float e string
+- Conversão automática entre double e string
 - Redesenho apenas quando necessário
 - Integração otimizada com Numpad
 
@@ -359,7 +360,7 @@ void numero_callback() {
 - Padding de 3 pixels por padrão
 
 ### 🔢 Valores Numéricos
-- Suporta floats com casas decimais
+- Suporta `double` com casas decimais
 - Pode exibir valores positivos e negativos
 - Conversão automática para string
 - Validação pelo Numpad

@@ -86,6 +86,14 @@ void onClick()
 
 Simula um clique no botão programaticamente (executa o callback).
 
+### onRelease()
+
+```cpp
+void onRelease()
+```
+
+Chamado quando o toque é liberado, removendo o estado visual de pressionado e forçando redesenho.
+
 ### getEnabled()
 
 ```cpp
@@ -125,7 +133,7 @@ Oculta o botão.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Detecta toque no botão
 - `redraw()`: Redesenha o botão
@@ -350,7 +358,7 @@ void excluir_callback() {
 ### ⚡ Performance
 - Redesenho apenas quando necessário
 - Detecção de toque eficiente
-- Callbacks executados apenas no clique
+- Callback pode ser disparado pelo fluxo de toque do framework ou por `onClick()`
 - Estados internos otimizados
 
 ### 👥 Usabilidade
@@ -435,6 +443,7 @@ O TextButton renderiza assim:
 - Confirme que o botão foi realmente clicado
 - Verifique logs para erros
 - Teste com onClick() programático
+- Verifique se o widget já foi configurado (`setup()`)
 
 ### Texto não aparece
 - Verifique se o texto foi configurado

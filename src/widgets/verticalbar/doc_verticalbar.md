@@ -85,7 +85,7 @@ Desenha o fundo da barra (container). **Este método deve ser chamado uma vez ap
 ### setValue()
 
 ```cpp
-void setValue(uint32_t newValue)
+void setValue(int newValue)
 ```
 
 Define o valor atual da barra.
@@ -96,7 +96,7 @@ Define o valor atual da barra.
 ### setMinValue()
 
 ```cpp
-void setMinValue(uint32_t newValue)
+void setMinValue(int newValue)
 ```
 
 Define o valor mínimo da faixa da barra.
@@ -113,7 +113,7 @@ Define o valor mínimo da faixa da barra.
 ### setMaxValue()
 
 ```cpp
-void setMaxValue(uint32_t newValue)
+void setMaxValue(int newValue)
 ```
 
 Define o valor máximo da faixa da barra.
@@ -130,7 +130,7 @@ Define o valor máximo da faixa da barra.
 ### getMinValue()
 
 ```cpp
-uint32_t getMinValue()
+int getMinValue()
 ```
 
 Retorna o valor mínimo atual da faixa da barra.
@@ -141,7 +141,7 @@ Retorna o valor mínimo atual da faixa da barra.
 ### getMaxValue()
 
 ```cpp
-uint32_t getMaxValue()
+int getMaxValue()
 ```
 
 Retorna o valor máximo atual da faixa da barra.
@@ -152,7 +152,7 @@ Retorna o valor máximo atual da faixa da barra.
 ### setScale()
 
 ```cpp
-void setScale(uint32_t newMinValue, uint32_t newMaxValue)
+void setScale(int newMinValue, int newMaxValue)
 ```
 
 Define simultaneamente os valores mínimo e máximo da faixa da barra.
@@ -186,16 +186,16 @@ Oculta a barra.
 
 ---
 
-## 🔒 Métodos Privados (Apenas para Referência)
+## 🔒 Métodos Internos (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Não processa eventos de toque
 - `redraw()`: Redesenha a barra
 - `forceUpdate()`: Força atualização
-- `getCallbackFunc()`: Retorna callback
-- `cleanupMemory()`: Limpa memória
-- `start()`: Inicializa configurações e valida dimensões (largura e altura mínimas de 20 pixels)
+- `getCallbackFunc()`: Retorna `m_callback` (não há configuração de callback específica no `VBar`)
+- `cleanupMemory()`: Limpeza interna (sem alocação dinâmica relevante)
+- `start()`: Ajusta `width` e `height` com `constrain()` (mínimo 20 e máximo limitado ao tamanho atual do display)
 - `sortValues()`: Ordena valores min/max se necessário (chamado automaticamente)
 
 ### Membros Privados

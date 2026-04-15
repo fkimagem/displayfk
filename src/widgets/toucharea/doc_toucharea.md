@@ -76,6 +76,9 @@ void onClick()
 
 Simula um toque na área programaticamente (executa o callback).
 
+**Observação:**
+- A execução de `onClick()` no código atual depende da macro `DFK_TOUCHAREA`.
+
 ### getStatus()
 
 ```cpp
@@ -104,13 +107,13 @@ Desativa a área de toque.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Detecta toque na área
-- `redraw()`: Não desenha nada (área invisível)
+- `redraw()`: Não desenha elementos visuais (área invisível)
 - `forceUpdate()`: Força atualização
 - `getCallbackFunc()`: Retorna callback
-- `cleanupMemory()`: Limpa memória
+- `cleanupMemory()`: Limpeza interna (sem alocação dinâmica relevante)
 - `changeState()`: Não implementado
 
 ---
@@ -390,6 +393,7 @@ O TouchArea **não renderiza nada visualmente**:
 - Confirme que a área foi realmente tocada
 - Verifique logs para erros
 - Teste com `onClick()` programático
+- Se usar `onClick()`, confirme que `DFK_TOUCHAREA` está habilitado na compilação
 
 ### Área muito pequena
 - Aumente width e height

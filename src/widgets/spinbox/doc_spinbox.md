@@ -78,6 +78,11 @@ Configura o SpinBox. **Este método deve ser chamado após a criação do objeto
 **Parâmetros:**
 - `config`: Estrutura `SpinBoxConfig` com as configurações
 
+**Validações/comportamento:**
+- Se `minValue > maxValue`, os valores são invertidos automaticamente
+- `startValue` é limitado para a faixa final `[minValue, maxValue]`
+- A configuração é aplicada apenas uma vez por instância (`setup()` posterior é ignorado)
+
 ### drawBackground()
 
 ```cpp
@@ -125,7 +130,7 @@ Oculta o SpinBox.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Detecta toque nos botões
 - `redraw()`: Redesenha o valor atual
@@ -321,7 +326,7 @@ void volume_callback() {
 ### ⚡ Performance
 - Redesenho apenas quando valor muda
 - Detecção de toque eficiente
-- Callback executado apenas na mudança
+- Callback enfileirado quando `setValue()` é chamado
 - Fundo desenhado uma vez apenas
 
 ### 👥 Usabilidade
@@ -414,6 +419,7 @@ O SpinBox renderiza em camadas:
 - Confirme que toque foi detectado
 - Verifique logs para erros
 - Teste com setValue() programático
+- Verifique se `step` não está em 0 (passo zero impede incremento/decremento)
 
 ### Valor sai da faixa
 - Verifique configuração de minValue/maxValue

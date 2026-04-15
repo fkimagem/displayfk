@@ -1,8 +1,8 @@
-# Documentação da Classe Keyboard
+# Documentação da Classe WKeyboard
 
 ## Visão Geral
 
-A classe `Keyboard` (também conhecida como `WKeyboard`) é um widget interativo que exibe um teclado virtual completo (QWERTY) na tela para entrada de texto. Ele herda de `WidgetBase` e trabalha em conjunto com `TextBox` para fornecer uma interface de entrada de texto completa.
+A classe `WKeyboard` é um widget interativo que exibe um teclado virtual completo (QWERTY) na tela para entrada de texto. Ele herda de `WidgetBase` e trabalha em conjunto com `TextBox` para fornecer uma interface de entrada de texto completa.
 
 ### Características Principais
 
@@ -22,9 +22,9 @@ A classe `Keyboard` (também conhecida como `WKeyboard`) é um widget interativo
 
 ---
 
-## 📋 Estruturas e Enums
+## 📋 Enums
 
-### KeyboardType Enum
+### WKeyboard::KeyboardType
 
 Enum para especificar tipos de entrada do teclado:
 
@@ -87,8 +87,8 @@ O teclado tem dois layouts (minúsculas e maiúsculas), com 5 linhas e 10 coluna
 ### Construtor
 
 ```cpp
-Keyboard(uint16_t _x, uint16_t _y, uint8_t _screen)
-Keyboard() // Construtor padrão
+WKeyboard(uint16_t _x, uint16_t _y, uint8_t _screen)
+WKeyboard() // Construtor padrão
 ```
 
 Cria um novo teclado virtual.
@@ -103,7 +103,7 @@ Cria um novo teclado virtual.
 ### Destrutor
 
 ```cpp
-~Keyboard()
+~WKeyboard()
 ```
 
 Libera os recursos do teclado.
@@ -200,9 +200,9 @@ Estes métodos são chamados internamente:
 DisplayFK myDisplay;
 
 // Configurar cores globais do Keyboard
-Keyboard::m_backgroundColor = CFK_GREY3;
-Keyboard::m_letterColor = CFK_BLACK;
-Keyboard::m_keyColor = CFK_GREY13;
+WKeyboard::m_backgroundColor = CFK_GREY3;
+WKeyboard::m_letterColor = CFK_BLACK;
+WKeyboard::m_keyColor = CFK_GREY13;
 ```
 
 ### 📝 Passo 3: Configurar TextBox
@@ -229,7 +229,7 @@ void setup() {
 }
 ```
 
-### 🔧 Passo 5: Configurar o Keyboard
+### 🔧 Passo 5: Configurar o WKeyboard
 
 ```cpp
 void loadWidgets() {
@@ -277,7 +277,7 @@ void screen0() {
 
 ```cpp
 void loop() {
-    // O Keyboard abre automaticamente quando o usuário toca no TextBox
+    // O WKeyboard abre automaticamente quando o usuário toca no TextBox
     // Não é necessário código adicional no loop
 }
 ```
@@ -295,9 +295,9 @@ Arduino_DataBus *bus = nullptr;
 Arduino_GFX *gfx = nullptr;
 
 // Configurar cores do Keyboard
-Keyboard::m_backgroundColor = CFK_GREY3;
-Keyboard::m_letterColor = CFK_BLACK;
-Keyboard::m_keyColor = CFK_GREY13;
+WKeyboard::m_backgroundColor = CFK_GREY3;
+WKeyboard::m_letterColor = CFK_BLACK;
+WKeyboard::m_keyColor = CFK_GREY13;
 
 // Criar TextBox
 TextBox meuTexto(100, 100, 0);
@@ -334,7 +334,7 @@ void setup() {
 
 void loop() {
     // Seu código aqui
-    // Keyboard abre automaticamente ao tocar no TextBox
+    // WKeyboard abre automaticamente ao tocar no TextBox
 }
 
 void minhaTela() {
@@ -398,7 +398,7 @@ void texto_callback() {
 
 ## 🔗 Herança de WidgetBase
 
-A classe `Keyboard` herda métodos de `WidgetBase`:
+A classe `WKeyboard` herda métodos de `WidgetBase`:
 
 - `isEnabled()` / `setEnabled()`: Habilitar/desabilitar widget
 - `isInitialized()`: Verificar se foi configurado
@@ -409,7 +409,7 @@ A classe `Keyboard` herda métodos de `WidgetBase`:
 
 ## 🔗 Integração com DisplayFK
 
-O `Keyboard` integra-se com o sistema DisplayFK:
+O `WKeyboard` integra-se com o sistema DisplayFK:
 
 1. **Abertura Automática:** Quando o usuário toca em um TextBox
 2. **Bloqueio:** Outros widgets ficam bloqueados quando o Keyboard está aberto

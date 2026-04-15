@@ -51,7 +51,7 @@ const uint8_t qtdGauge = 1;
 GaugeSuper *arrayGauge[qtdGauge] = {&widget};
 const uint8_t qtdIntervalG0 = 4;
 int range0[qtdIntervalG0] = {0,20,70,80};
-uint16_t colors0[qtdIntervalG0] = {CFK_COLOR01,CFK_WHITE,CFK_COLOR05,CFK_COLOR01};
+uint16_t colors0[qtdIntervalG0] = {CFK_COLOR01,CFK_COLOR10,CFK_COLOR05,CFK_COLOR01};
 Label term1(290, 350, 0);
 Label term11(290, 395, 0);
 Label term12(415, 350, 0);

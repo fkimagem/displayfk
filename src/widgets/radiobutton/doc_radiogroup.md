@@ -85,6 +85,11 @@ Configura o grupo de botões de rádio. **Este método deve ser chamado após a 
 **Parâmetros:**
 - `config`: Estrutura `RadioGroupConfig` com as configurações
 
+**Validações automáticas:**
+- `amount` deve ser maior que 0
+- `setup()` é aplicado apenas uma vez por instância carregada
+- Para uso correto, `buttons` deve apontar para um array válido com `amount` elementos
+
 ### getSelected()
 
 ```cpp
@@ -132,7 +137,7 @@ Oculta o grupo de botões.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Detecta toque nos botões
 - `redraw()`: Redesenha os botões
@@ -342,7 +347,7 @@ void temperatura_callback() {
 - Fácil acesso por toque
 
 ### ⚡ Performance
-- Gerenciamento eficiente de memória
+- Cópia interna do array de botões durante `setup()`
 - Redesenho apenas quando necessário
 - Detecção de toque otimizada
 - Callback executado apenas na mudança
@@ -419,6 +424,7 @@ O RadioGroup renderiza assim:
 - Confirme que amount > 0
 - Verifique se array de botões foi definido
 - Chame `myDisplay.setRadiogroup()`
+- Confirme que `defaultClickedId` existe no array de botões
 
 ### Toque não funciona
 - Verifique se o usuário tocou dentro do raio
@@ -431,6 +437,7 @@ O RadioGroup renderiza assim:
 - Confirme que seleção realmente mudou
 - Verifique logs para erros
 - Teste com seleção programática
+- Garanta que o ID passado em `setSelected()` existe no grupo
 
 ### Botões não mudam visualmente
 - Verifique se m_shouldRedraw está sendo definido

@@ -190,13 +190,13 @@ Oculta o display.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Não processa eventos de toque
 - `redraw()`: Redesenha o display usando métodos especializados
 - `forceUpdate()`: Força atualização
 - `getCallbackFunc()`: Retorna callback
-- `cleanupMemory()`: Limpa memória
+- `cleanupMemory()`: Limpeza interna (sem alocação dinâmica relevante)
 - `start()`: Inicializa configurações e calcula áreas (largura e altura mínimas de 40 pixels)
 - `calculateArrowVerticalPosition()`: Calcula posição vertical da seta baseada no valor
 - `drawArrow()`: Desenha a seta indicadora triangular

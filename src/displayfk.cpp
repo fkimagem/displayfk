@@ -2382,6 +2382,12 @@ void DisplayFK::processTouchStatus(bool hasTouch, uint16_t xTouch, uint16_t yTou
 #endif
     }
 
+    if(m_debugTouch && hasTouch){
+        Serial.printf("Touch pressed at [%i, %i]\n", xTouch, yTouch);
+        CHECK_TFT_VOID
+        WidgetBase::objTFT->fillCircle(xTouch, yTouch, 2, CFK_FUCHSIA);
+    }
+
     if(m_lastTouchState == TouchEventType::TOUCH_DOWN){
         Serial.println("---------------------- APERTEI");
         pressPoint.x = xTouch;

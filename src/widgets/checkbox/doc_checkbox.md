@@ -135,7 +135,10 @@ void setSize(uint16_t newSize)
 Altera o tamanho do checkbox em tempo de execução.
 
 **Parâmetros:**
-- `newSize`: Novo tamanho em pixels (10-100 recomendado)
+- `newSize`: Novo tamanho em pixels (**aceito apenas entre 10 e 100**)
+
+**Comportamento:**
+- Se o valor estiver fora da faixa, a alteração é ignorada.
 
 ### getSize()
 
@@ -159,9 +162,9 @@ Altera as cores do checkbox.
 
 ---
 
-## 🔒 Métodos Privados (Apenas para Referência)
+## 🔒 Métodos Internos (Apenas para Referência)
 
-Estes métodos são chamados internamente e não precisam ser invocados diretamente:
+Estes métodos existem na classe, mas normalmente são usados pelo ciclo interno do `DisplayFK`:
 
 - `detectTouch()`: Detecta toque do usuário no checkbox
 - `redraw()`: Redesenha o checkbox na tela
@@ -423,6 +426,7 @@ O `CheckBox` integra-se automaticamente com o sistema DisplayFK:
 - Verifique se o touch foi inicializado corretamente
 - Confirme que as coordenadas do toque estão mapeadas
 - Verifique se o widget está habilitado (`setEnabled(true)`)
+- Confirme se o widget foi registrado no `DisplayFK` e desenhado na tela atual
 
 ### Callback não é executado
 - Verifique se a função callback foi configurada corretamente

@@ -93,11 +93,11 @@ Libera os recursos do Numpad.
 ### setup()
 
 ```cpp
-void setup()
+bool setup()
 void setup(const NumpadConfig& config)
 ```
 
-Configura o teclado. A versão sem parâmetros usa configuração padrão.
+Configura o teclado. A versão sem parâmetros usa configuração padrão e retorna sucesso/falha.
 
 **Parâmetros:**
 - `config`: Estrutura `NumpadConfig` com as configurações
@@ -141,9 +141,10 @@ Oculta o teclado.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Detecta toque nas teclas
+- `detectTouch(..., PressedKeyType*)`: Versão usada para identificar tipo de tecla pressionada
 - `drawKeys()`: Desenha o teclado
 - `redraw()`: Redesenha o teclado
 - `forceUpdate()`: Força atualização
@@ -337,6 +338,7 @@ void numero_callback() {
 - Abre quando o usuário toca em um NumberBox
 - Fecha quando o usuário pressiona OK
 - Valor é aplicado automaticamente ao NumberBox
+- Tecla `ESC` restaura o conteúdo anterior antes de fechar
 
 ### ⚡ Performance
 - Teclado é desenhado apenas quando aberto
@@ -424,6 +426,7 @@ O Numpad renderiza em camadas:
 - Confirme que o NumberBox tem callback configurado
 - Verifique log para erros de conversão
 - Teste diferentes valores de entrada
+- Verifique se o `Numpad` está associado a um `NumberBox` válido (`open(field)`)
 
 ### Preview não mostra valor
 - Verifique configuração de fonte do preview

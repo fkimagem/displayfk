@@ -81,7 +81,7 @@ Configura a barra circular com os parâmetros especificados. **Este método deve
 
 **Validações automáticas:**
 - Valores min/max são trocados automaticamente se min > max
-- Exibição de valor é desabilitada se raio interno < 20 pixels
+- Exibição de valor é desabilitada se `radius - thickness < 15`
 - Valores são inicializados com o valor mínimo
 
 ### setValue()
@@ -98,7 +98,7 @@ Define o valor atual da barra circular e marca para redesenho.
 **Características:**
 - Armazena o valor anterior para renderização eficiente
 - Marca o widget para redesenho automático
-- Registra o evento no log do ESP32
+- Valor é limitado automaticamente dentro da faixa `[minValue, maxValue]`
 
 ### setMinValue()
 
@@ -113,7 +113,6 @@ Define o valor mínimo da faixa da barra circular.
 
 **Características:**
 - Ordena automaticamente os valores se min > max
-- Ajusta o valor atual para ficar dentro da nova faixa
 - Marca para redesenho completo da barra
 - Ativa flag interna `m_changedScale` que força limpeza completa do arco antes de redesenhar
 
@@ -130,7 +129,6 @@ Define o valor máximo da faixa da barra circular.
 
 **Características:**
 - Ordena automaticamente os valores se min > max
-- Ajusta o valor atual para ficar dentro da nova faixa
 - Marca para redesenho completo da barra
 - Ativa flag interna `m_changedScale` que força limpeza completa do arco antes de redesenhar
 
@@ -206,23 +204,20 @@ Oculta a barra circular da tela.
 
 ---
 
-## 🔒 Métodos Privados (Apenas para Referência)
+## 🔒 Métodos Internos (Apenas para Referência)
 
-Estes métodos são chamados internamente e não precisam ser invocados diretamente:
+Estes métodos existem na classe, porém normalmente são usados no ciclo interno de renderização:
 
 - `detectTouch()`: Não processa eventos de toque (sempre retorna false)
 - `redraw()`: Redesenha a barra na tela com renderização eficiente
 - `forceUpdate()`: Força uma atualização imediata
 - `getCallbackFunc()`: Retorna a função callback
-- `start()`: Aplica validações e inicializações (não implementado no código atual)
 - `sortValues()`: Ordena valores min/max se necessário (chamado automaticamente)
 
 ### Membros Privados
 
 - `m_value`: Valor atual a ser exibido na barra
 - `m_lastValue`: Último valor representado (usado para otimização de redesenho incremental)
-- `m_rotation`: Ângulo de rotação do gauge (onde 0 está no meio direito)
-- `m_lastArea`: Última área calculada para o rótulo (usado para otimização de texto)
 - `m_config`: Estrutura contendo configuração completa da barra circular
 - `m_changedScale`: Flag que indica quando a escala foi alterada (força redesenho completo do arco)
 
@@ -250,11 +245,10 @@ const uint8_t qtdCircBar = 1;
 CircularBar *arrayCircularbar[qtdCircBar] = {&circload};
 ```
 
-### 📝 Passo 3: Prototipar Funções de Callback
+### 📝 Passo 3: Funções auxiliares (opcional)
 
 ```cpp
-// CircularBar não usa callbacks por padrão, mas pode ser configurado
-void circularbar_cb();
+// CircularBar não dispara callback no fluxo padrão
 ```
 
 ### ⚙️ Passo 4: Configurar Display (setup)
@@ -300,15 +294,7 @@ void loadWidgets() {
 }
 ```
 
-### 🔔 Passo 6: Criar Funções de Callback (Opcional)
-
-```cpp
-void circularbar_cb() {
-    // CircularBar normalmente não usa callbacks
-    // Mas pode ser configurado se necessário
-    Serial.println("CircularBar callback executado");
-}
-```
+### 🔔 Passo 6: Atualizar valor dinamicamente
 
 ### 🖥️ Passo 7: Função da Tela
 
@@ -429,9 +415,8 @@ void minhaTela() {
 - Cores vibrantes para a barra preenchida
 
 ### 🔔 Callbacks
-- CircularBar normalmente não usa callbacks
-- Mantenha as callbacks curtas se configuradas
-- Use para notificar mudanças importantes de valor
+- O `CircularBar` não dispara callback no código atual
+- Para reação a mudanças, faça a lógica no ponto onde `setValue()` é chamado
 
 ### ⚡ Performance
 - Renderização eficiente com atualizações incrementais
@@ -464,7 +449,8 @@ void minhaTela() {
 - Faixa configurável dinamicamente com `setMinValue()`, `setMaxValue()` ou `setScale()`
 - Consulta de valores com `getMinValue()` e `getMaxValue()`
 - Ordenação automática de valores min/max
-- Valores limitados automaticamente dentro da faixa
+- `setValue()` limita automaticamente dentro da faixa
+- `setScale()` também limita o valor atual na nova faixa
 
 ---
 
@@ -487,7 +473,7 @@ O `CircularBar` integra-se automaticamente com o sistema DisplayFK:
 2. **Sincronização:** Estados sincronizados entre diferentes telas
 3. **Gerenciamento:** Controlado pelo loop principal do DisplayFK
 4. **Performance:** Renderização eficiente com atualizações incrementais
-5. **Fontes:** Usa RobotoBold10pt7b para exibição de valores
+5. **Fontes:** Usa `RobotoBold10pt7b` para exibição de valores (quando `showValue = true`)
 
 ---
 
@@ -513,8 +499,7 @@ O `CircularBar` é renderizado em camadas:
    - Desenha apenas a diferença entre valores (usando `m_lastValue`)
    - Flag `m_changedScale` força redesenho completo do arco quando a escala muda
    - Debounce para evitar redesenhos excessivos
-   - Validações de estado antes de renderizar (TFT, visibilidade, inicialização, etc.)
-   - Usa `m_lastArea` para otimizar atualização do texto central
+   - Validações de estado antes de renderizar (TFT, visibilidade, inicialização, tela atual, etc.)
 
 ---
 
@@ -538,6 +523,7 @@ O `CircularBar` é renderizado em camadas:
 - Ou use `setMinValue()` e `setMaxValue()` separadamente
 - Valores são ordenados automaticamente se min > max
 - A barra é redesenhada completamente quando a escala muda
+- Se quiser também limitar imediatamente o valor atual na nova faixa, prefira `setScale()`
 
 ### Texto não aparece no centro
 - Verifique se `showValue = true` na configuração
@@ -571,5 +557,5 @@ O `CircularBar` é renderizado em camadas:
 - **DisplayFK Principal:** `DisplayFK` (src/displayfk.h)
 - **Exemplos:** examples/Embed_ESP32S3/Display_Test/
 - **Cores Padrão:** Definidas em displayfk.h (CFK_COLOR01-CFK_COLOR28, CFK_GREY*, CFK_WHITE, CFK_BLACK)
-- **Fonte:** RobotoBold10pt7b (src/fonts/RobotoRegular/)
+- **Fonte:** `RobotoBold10pt7b` (src/fonts/RobotoRegular/)
 

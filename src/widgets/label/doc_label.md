@@ -65,7 +65,7 @@ Cria um novo label na posição especificada.
 ~Label()
 ```
 
-Libera automaticamente memória alocada para texto, prefixo e sufixo.
+Destrutor padrão da classe (`~Label() = default`).
 
 ### setup()
 
@@ -92,7 +92,7 @@ Define o texto do label. Aceita C-string ou objeto String.
 
 **Características:**
 - Aplica automaticamente prefixo e sufixo
-- Aloca memória dinamicamente
+- Usa buffers internos fixos (sem alocação dinâmica)
 - Marca para redesenho
 
 ### setPrefix()
@@ -188,7 +188,7 @@ Estes métodos são chamados internamente:
 - `redraw()`: Redesenha o texto na tela
 - `forceUpdate()`: Força atualização
 - `getCallbackFunc()`: Retorna função callback
-- `cleanupMemory()`: Limpa memória alocada
+- `buildFinalText()`: Monta texto final com prefixo e sufixo
 
 ---
 
@@ -451,7 +451,7 @@ void minhaTela() {
 - São elementos apenas visuais
 
 ### ⚡ Performance
-- Atualizações de texto alocam nova memória
+- Atualizações de texto usam buffers internos fixos
 - Evite atualizações muito frequentes
 - Use setTextInt/setTextFloat para números
 - Prefixos e sufixos são aplicados automaticamente
@@ -496,7 +496,7 @@ O `Label` integra-se automaticamente com o sistema DisplayFK:
 1. **Renderização:** Automática quando usando `drawWidgetsOnScreen()`
 2. **Gerenciamento:** Controlado pelo loop principal do DisplayFK
 3. **Sincronização:** Estados sincronizados entre diferentes telas
-4. **Memória:** Gerenciamento automático de alocação
+4. **Memória:** Uso de buffers internos fixos
 5. **Performance:** Redesenho apenas quando necessário
 
 ---
@@ -507,7 +507,7 @@ O `Label` é renderizado em uma única operação:
 
 1. **Texto:**
    - Concatenação de prefixo + texto + sufixo
-   - Alocação dinâmica de memória
+   - Montagem em buffer interno (`m_text`)
    - Buffer interno para texto completo
 
 2. **Renderização:**
@@ -532,6 +532,7 @@ O `Label` é renderizado em uma única operação:
 - Verifique se está na tela correta
 - Certifique-se de chamar `myDisplay.setLabel()`
 - Confirme que fontFamily foi configurado
+- Lembre que `setup()` só configura uma vez por instância (se já carregado, ignora)
 
 ### Texto não atualiza
 - Use `setText()`, `setTextInt()` ou `setTextFloat()`
@@ -540,10 +541,10 @@ O `Label` é renderizado em uma única operação:
 - Certifique-se que o widget está visível
 
 ### Problemas de memória
-- Labels alocam memória dinamicamente para texto
-- Textos muito longos podem consumir RAM
-- Memória é liberada automaticamente pelo destrutor
-- Use cleanupMemory() se necessário para liberar manualmente
+- `Label` usa buffers internos fixos para texto/prefixo/sufixo
+- Textos longos são truncados pelos limites internos
+- Não há `cleanupMemory()` público para `Label`
+- O destrutor é padrão da classe
 
 ### Prefixo ou sufixo não aparece
 - Verifique se foram configurados no setup() ou chamando setPrefix/setSuffix

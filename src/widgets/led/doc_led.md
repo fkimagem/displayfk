@@ -72,13 +72,10 @@ Configura o LED com os parâmetros especificados. **Este método deve ser chamad
 
 **Parâmetros:**
 - `config`: Estrutura `LedConfig` com as configurações
-
-**Parâmetros:**
-- `config`: Estrutura `LedConfig` com as configurações
-  - `radius`: Raio do LED em pixels (recomendado: 5-50)
-  - `colorOn`: Cor RGB565 quando ligado
-  - `colorOff`: Cor RGB565 quando desligado (0 = automático baseado no modo claro/escuro)
-  - `initialState`: Estado inicial do LED (true = ligado, false = desligado)
+- `radius`: Raio do LED em pixels (recomendado: 5-50)
+- `colorOn`: Cor RGB565 quando ligado
+- `colorOff`: Cor RGB565 quando desligado (0 = automático baseado no modo claro/escuro)
+- `initialState`: Estado inicial do LED (true = ligado, false = desligado)
 
 **Validações automáticas:**
 - Raio deve ser maior que zero
@@ -88,6 +85,7 @@ Configura o LED com os parâmetros especificados. **Este método deve ser chamad
 - O LED é inicializado com o estado especificado em `initialState`
 - O gradiente de cor é calculado automaticamente baseado em `colorOn`
 - Se `colorOff` for 0, a cor será calculada automaticamente baseada no modo claro/escuro
+- Se o widget já estiver carregado, uma nova chamada de `setup()` é ignorada
 
 ### getState()
 
@@ -116,6 +114,7 @@ Define o estado do LED e atualiza o visual automaticamente.
 - Marca para redesenho apenas se o estado mudar
 - Atualiza gradiente de cor quando ligado
 - Registra evento no log do ESP32
+- Requer widget carregado/inicializado (`setup()` já executado)
 
 ### setColor()
 
@@ -132,6 +131,7 @@ Altera a cor do LED quando ligado dinamicamente, sem necessidade de reconfigurar
 - Atualiza o gradiente de cor automaticamente
 - Marca para redesenho imediato
 - Útil para mudar a cor do LED em tempo de execução
+- Não altera o estado atual (ligado/desligado)
 
 ### drawBackground()
 
@@ -161,7 +161,7 @@ Oculta o LED da tela.
 
 ## 🔒 Métodos Privados (Apenas para Referência)
 
-Estes métodos são chamados internamente:
+Estes métodos existem na classe e são usados internamente:
 
 - `detectTouch()`: Não processa eventos de toque (sempre retorna false)
 - `redraw()`: Redesenha o LED na tela
@@ -417,10 +417,8 @@ void minhaTela() {
 - 5 círculos concêntricos desenhados
 - Cada círculo menor que o anterior (4 pixels)
 - Offset de 2 pixels para efeito 3D
-- Gradiente calculado dinamicamente usando `lighten565()`
-- Fator de clareamento: 0.2 * índice do círculo (0.0 a 0.8)
+- Gradiente calculado dinamicamente com mistura de cores (`blendColorsRGB`)
 - Cores mais claras no centro, mais escuras nas bordas
-- Gradiente baseado em conversão HSV para melhor qualidade visual
 
 ---
 
@@ -481,6 +479,7 @@ O `Led` é renderizado em duas camadas:
 - Verifique se está na tela correta
 - Certifique-se de chamar `myDisplay.setLed()`
 - Confirme que o raio é maior que 0
+- Lembre que `setup()` só configura uma vez por instância carregada
 
 ### LED não muda de cor
 - Verifique se chamou `setState()` com novo valor
