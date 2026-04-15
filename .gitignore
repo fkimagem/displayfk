@@ -3,3 +3,5 @@ TASKS/
 RAG/
 agent/
 agents/
+src/widgets/compiled/
+*.bat
