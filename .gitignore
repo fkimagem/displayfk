@@ -7,3 +7,4 @@ src/widgets/compiled/
 *.bat
 src/widgets/*.md
 src/widgets/**/*.md
+setup_boards/
