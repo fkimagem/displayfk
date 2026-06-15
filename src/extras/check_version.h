@@ -25,7 +25,7 @@
 #endif
 
 #define ESP32_CORE_MIN ESP_ARDUINO_VERSION_VAL(2, 0, 17)
-#define ESP32_CORE_MAX ESP_ARDUINO_VERSION_VAL(3, 3, 5)
+#define ESP32_CORE_MAX ESP_ARDUINO_VERSION_VAL(3, 3, 6)
 
 // Helpers para converter números em strings
 #define STR_HELPER(x) #x
@@ -46,7 +46,7 @@
 #endif
 
 #if ESP_ARDUINO_VERSION > ESP32_CORE_MAX
-  #error "ESP32 Arduino Core too new. Use version up to 3.3.5."
+  #error "ESP32 Arduino Core too new. Use version up to 3.3.6."
 #endif
 
 // Verificação de versão mínima
