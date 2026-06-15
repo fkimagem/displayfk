@@ -9,3 +9,4 @@ src/widgets/compiled/
 src/widgets/*.md
 src/widgets/**/*.md
 setup_boards/
+*.zip
