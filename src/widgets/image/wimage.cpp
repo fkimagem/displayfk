@@ -28,6 +28,8 @@ Image::Image(uint16_t _x, uint16_t _y, uint8_t _screen)
           .height = 0,
           .backgroundColor = 0
         };
+
+        m_drawBackground = false;
 }
 
 /**
@@ -248,6 +250,8 @@ bool Image::readFileFromDisk() {
  *          Valida a configuração usando o método centralizado validateConfig().
  */
 void Image::drawBackground() {
+  if(m_drawBackground == false) return;
+
   CHECK_TFT_VOID
   CHECK_VISIBLE_VOID
   CHECK_CURRENTSCREEN_VOID
@@ -255,11 +259,14 @@ void Image::drawBackground() {
   CHECK_LOADED_VOID
   CHECK_SHOULDREDRAW_VOID
   
+  
+
   // Validate configuration using centralized method
   if (!validateConfig()) {
     ESP_LOGW(TAG, "Invalid configuration for background drawing");
     return;
   }
+
   
   #if defined(USING_GRAPHIC_LIB)
   WidgetBase::objTFT->fillRect(m_xPos, m_yPos, m_config.width, m_config.height, m_config.backgroundColor);
@@ -294,7 +301,7 @@ void Image::draw() {
   
 
   // If not visible, draw background only
-  if (!m_visible) {
+  if (!m_visible && m_drawBackground) {
     // Validate configuration before drawing background
     if (validateConfig()) {
       #if defined(USING_GRAPHIC_LIB)
@@ -496,6 +503,16 @@ void Image::setupFromPixels(ImageFromPixelsConfig &config) {
   
   ESP_LOGD(TAG, "Image setup from pixels completed at (%d, %d) - %dx%d", 
            m_xPos, m_yPos, m_config.width, m_config.height);
+}
+
+
+/**
+ * @brief Define se o fundo do widget deve ser desenhado.
+ * @param drawBackground True para desenhar o fundo, False para não desenhar.
+ * @details Define se o fundo do widget deve ser desenhado ou nao.
+ */
+void Image::setDrawBackground(bool drawBackground) {
+  m_drawBackground = drawBackground;
 }
 
 /**

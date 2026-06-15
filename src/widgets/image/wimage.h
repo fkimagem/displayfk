@@ -155,6 +155,8 @@ public:
 
   void setupFromFile(ImageFromFileConfig &config);
   void setupFromPixels(ImageFromPixelsConfig &config);
+
+  void setDrawBackground(bool value);
   
   // Performance metrics access
   const PerformanceMetrics_t& getMetrics() const { return m_metrics; }
@@ -171,6 +173,7 @@ private:
   fs::FS *m_fs; ///< Ponteiro para sistema de arquivos (legacy para compatibilidade).
   const char *m_path; ///< Caminho para o arquivo de imagem (legacy para compatibilidade).
   PerformanceMetrics_t m_metrics; ///< Métricas de desempenho para otimização.
+  bool m_drawBackground; ///< Flag para controlar desenho do fundo (true = desenha, false = não desenha).
   
   bool readFileFromDisk();
   void defineFileSystem(SourceFile source);

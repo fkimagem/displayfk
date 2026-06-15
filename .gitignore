@@ -3,6 +3,7 @@ TASKS/
 RAG/
 agent/
 agents/
+.agents/
 src/widgets/compiled/
 *.bat
 src/widgets/*.md

@@ -24,6 +24,9 @@
 #define ESP_ARDUINO_VERSION_PATCH 0
 #endif
 
+#define ESP32_CORE_MIN ESP_ARDUINO_VERSION_VAL(2, 0, 17)
+#define ESP32_CORE_MAX ESP_ARDUINO_VERSION_VAL(3, 3, 5)
+
 // Helpers para converter números em strings
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
@@ -36,6 +39,14 @@
 
 #if defined(DEBUG_DISPLAY_FK)
 #pragma message("Usando versão ArduinoCore: " ARDUINO_CORE_VERSION_STR)
+#endif
+
+#if ESP_ARDUINO_VERSION < ESP32_CORE_MIN
+  #error "ESP32 Arduino Core too old. Use version 2.0.17 or higher."
+#endif
+
+#if ESP_ARDUINO_VERSION > ESP32_CORE_MAX
+  #error "ESP32 Arduino Core too new. Use version up to 3.3.5."
 #endif
 
 // Verificação de versão mínima
