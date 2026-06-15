@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-// Garante que a macro de construção exista
+// Ensure version builder macro exists
 #ifndef ESP_ARDUINO_VERSION_VAL
 #define ESP_ARDUINO_VERSION_VAL(major, minor, patch) \
   (((major) << 16) | ((minor) << 8) | (patch))
@@ -11,7 +11,7 @@
 
 #if defined(ESP_ARDUINO_VERSION)
 
-// Garante macros de versão caso o core não os declare
+// Ensure version component macros exist if the core does not declare them
 #ifndef ESP_ARDUINO_VERSION_MAJOR
 #define ESP_ARDUINO_VERSION_MAJOR 0
 #endif
@@ -24,42 +24,42 @@
 #define ESP_ARDUINO_VERSION_PATCH 0
 #endif
 
-#define ESP32_CORE_MIN ESP_ARDUINO_VERSION_VAL(2, 0, 17)
-#define ESP32_CORE_MAX ESP_ARDUINO_VERSION_VAL(3, 3, 6)
+// Required ESP32 Arduino Core version
+#define ESP32_CORE_REQUIRED ESP_ARDUINO_VERSION_VAL(3, 3, 6)
 
-// Helpers para converter números em strings
+// Helpers to convert numbers to strings
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 
-// String completa da versão
+// Full Arduino Core version string
 #define ARDUINO_CORE_VERSION_STR \
   STR(ESP_ARDUINO_VERSION_MAJOR) "." \
   STR(ESP_ARDUINO_VERSION_MINOR) "." \
   STR(ESP_ARDUINO_VERSION_PATCH)
 
 #if defined(DEBUG_DISPLAY_FK)
-#pragma message("Usando versão ArduinoCore: " ARDUINO_CORE_VERSION_STR)
+#pragma message("Using Arduino Core version: " ARDUINO_CORE_VERSION_STR)
 #endif
 
-#if ESP_ARDUINO_VERSION < ESP32_CORE_MIN
-  #error "ESP32 Arduino Core too old. Use version 2.0.17 or higher."
+#if ESP_ARDUINO_VERSION < ESP32_CORE_REQUIRED
+  #error "ESP32 Arduino Core version is too old. Please update to version 3.3.6."
 #endif
 
-#if ESP_ARDUINO_VERSION > ESP32_CORE_MAX
-  #error "ESP32 Arduino Core too new. Use version up to 3.3.6."
+#if ESP_ARDUINO_VERSION > ESP32_CORE_REQUIRED
+  #error "ESP32 Arduino Core version is too new. Please downgrade to version 3.3.6."
 #endif
 
-// Verificação de versão mínima
-#if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3,3,0)
+#if ESP_ARDUINO_VERSION == ESP32_CORE_REQUIRED
   #define ESP_ARDUINO_VERSION_OK
   #if defined(DEBUG_DISPLAY_FK)
-  #pragma message("Versão ArduinoCore OK.")
-  #endif
-#else
-  #if defined(DEBUG_DISPLAY_FK)
-  #pragma message("Versão ArduinoCore incompatível com ESP32P4. Requer 3.3.0 ou superior.")
+    #pragma message("ESP32 Arduino Core version 3.3.6 detected. Version OK.")
   #endif
 #endif
 
+#else
+
+#error "ESP32 Arduino Core version could not be detected. Please install ESP32 Arduino Core version 3.3.6."
+
 #endif // ESP_ARDUINO_VERSION
+
 #endif // CHECK_VERSION_H
