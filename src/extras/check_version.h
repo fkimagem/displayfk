@@ -24,8 +24,9 @@
 #define ESP_ARDUINO_VERSION_PATCH 0
 #endif
 
-// Required ESP32 Arduino Core version
-#define ESP32_CORE_REQUIRED ESP_ARDUINO_VERSION_VAL(3, 3, 6)
+// Valid ESP32 Arduino Core version range
+#define ESP32_CORE_MIN ESP_ARDUINO_VERSION_VAL(3, 3, 6)
+#define ESP32_CORE_MAX ESP_ARDUINO_VERSION_VAL(3, 3, 9)
 
 // Helpers to convert numbers to strings
 #define STR_HELPER(x) #x
@@ -41,24 +42,24 @@
 #pragma message("Using Arduino Core version: " ARDUINO_CORE_VERSION_STR)
 #endif
 
-#if ESP_ARDUINO_VERSION < ESP32_CORE_REQUIRED
-  #error "ESP32 Arduino Core version is too old. Please update to version 3.3.6."
+#if ESP_ARDUINO_VERSION < ESP32_CORE_MIN
+  #error "ESP32 Arduino Core version is too old. Please upgrade to a version between 3.3.6 and 3.3.9."
 #endif
 
-#if ESP_ARDUINO_VERSION > ESP32_CORE_REQUIRED
-  #error "ESP32 Arduino Core version is too new. Please downgrade to version 3.3.6."
+#if ESP_ARDUINO_VERSION > ESP32_CORE_MAX
+  #error "ESP32 Arduino Core version is too new. Please downgrade to a version between 3.3.6 and 3.3.9."
 #endif
 
-#if ESP_ARDUINO_VERSION == ESP32_CORE_REQUIRED
+#if (ESP_ARDUINO_VERSION >= ESP32_CORE_MIN) && (ESP_ARDUINO_VERSION <= ESP32_CORE_MAX)
   #define ESP_ARDUINO_VERSION_OK
   #if defined(DEBUG_DISPLAY_FK)
-    #pragma message("ESP32 Arduino Core version 3.3.6 detected. Version OK.")
+    #pragma message("ESP32 Arduino Core version " ARDUINO_CORE_VERSION_STR " detected. Version OK.")
   #endif
 #endif
 
 #else
 
-#error "ESP32 Arduino Core version could not be detected. Please install ESP32 Arduino Core version 3.3.6."
+#error "ESP32 Arduino Core version could not be detected. Please install ESP32 Arduino Core between version 3.3.6 and 3.3.9."
 
 #endif // ESP_ARDUINO_VERSION
 
