@@ -92,11 +92,13 @@ void screen0(){
 }
 
 void loadWidgets(){
-    CameraMipiConfig config = { .width = 200, .height = 100 };
+    CameraMipiConfig config = { .width = 200, .height = 100, .showZoomLevel = true };
     cam01.setup(config);
+    cam01.setZoomLevel(1);
 
-    CameraMipiConfig config2 = { .width = 300, .height = 300 };
+    CameraMipiConfig config2 = { .width = 300, .height = 300, .showZoomLevel = true };
     cam02.setup(config2);
+    cam02.setZoomLevel(1);
     myDisplay.setCameraMipi(arrayCameraMipi, qtdCameraMipi);
 }
 
