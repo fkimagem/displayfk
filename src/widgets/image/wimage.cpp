@@ -276,6 +276,30 @@ void Image::drawBackground() {
   ESP_LOGD(TAG, "Background drawn: %dx%d at (%d,%d)", m_config.width, m_config.height, m_xPos, m_yPos);
 }
 
+void Image::listDir(fs::FS &fs, const char * dirname) {
+  Serial.printf("Listing directory: %s\n", dirname);
+
+  File root = fs.open(dirname);
+  if (!root) {
+    Serial.println("Failed to open directory");
+    return;
+  }
+
+  if (!root.isDirectory()) {
+    Serial.println("Not a directory");
+    return;
+  }
+
+  File file = root.openNextFile();
+  while (file) {
+    Serial.printf("  %s  size=%u  dir=%s\n",
+                  file.name(),
+                  (unsigned)file.size(),
+                  file.isDirectory() ? "YES" : "NO");
+    file = root.openNextFile();
+  }
+}
+
 /**
  * @brief Desenha a imagem na tela.
  * @details Carrega e renderiza a imagem de sua fonte (arquivo ou pixels) com rotação opcional.
@@ -525,37 +549,60 @@ void Image::setDrawBackground(bool drawBackground) {
  *          - EMBED: retorna erro (embutido não precisa de sistema de arquivos)
  */
 void Image::defineFileSystem(SourceFile source) {
-  if (source == SourceFile::SD) {
-    if (!WidgetBase::mySD) {
-      ESP_LOGE(TAG, "SD not configured");
-      return;
-    }
-    m_fs = WidgetBase::mySD;
-  } else if (source == SourceFile::SPIFFS) {
-    #if defined(USE_SPIFFS)
-    if (!SPIFFS.begin(false)) {
-      ESP_LOGE(TAG, "SPIFFS Mount Failed");
-      return;
-    }
-    m_fs = &SPIFFS;
-    #else
-    ESP_LOGE(TAG, "USE_SPIFFS is not defined in widgetsetup.h");
-    return;
-    #endif
-  } else if (source == SourceFile::FATFS) {
-    #if defined(USE_FATFS)
-    if (!FFat.begin(false)) {
-      ESP_LOGE(TAG, "FAT Mount Failed");
+  switch (source) {
+    case SourceFile::SD:
+    {
+      if (!WidgetBase::mySD) {
+        ESP_LOGE(TAG, "SD not configured");
         return;
       }
-      m_fs = &FFat;
+      m_fs = WidgetBase::mySD;
+      ESP_LOGD(TAG, "SD mounted");
+    }
+    break;
+
+    case SourceFile::SPIFFS:
+    {
+      #if defined(USE_SPIFFS)
+      if (!SPIFFS.begin(false)) {
+        ESP_LOGE(TAG, "SPIFFS Mount Failed");
+        return;
+      }
+      m_fs = &SPIFFS;
+      ESP_LOGD(TAG, "SPIFFS mounted");
+      listDir(*m_fs, "/");
       #else
-      ESP_LOGE(TAG, "USE_FATFS is not defined in widgetsetup.h");
+      ESP_LOGE(TAG, "USE_SPIFFS is not defined in widgetsetup.h");
       return;
-    #endif
-  } else {
-    ESP_LOGE(TAG, "Invalid source");
-    return;
+      #endif
+    }
+    break;
+
+    case SourceFile::EMBED:
+    {
+      ESP_LOGD(TAG, "EMBED source dont need filesystem");
+    }
+    break;
+
+    case SourceFile::FATFS:
+    {
+      #if defined(USE_FATFS)
+      if (!FFat.begin(false)) {
+        ESP_LOGE(TAG, "FAT Mount Failed");
+          return;
+        }
+        m_fs = &FFat;
+        ESP_LOGD(TAG, "FATFS mounted");
+        #else
+        ESP_LOGE(TAG, "USE_FATFS is not defined in widgetsetup.h");
+        return;
+      #endif
+    }
+    break;
+
+    default:
+      ESP_LOGE(TAG, "Invalid source");
+    break;
   }
 }
 

@@ -542,6 +542,7 @@ rectbutton3.setup(configRectButton3);
             .pixels = iClosepngPixels,
             .maskAlpha = iClosepngMask,
             .cb = closepng_cb,
+            .angle = 0,
             .width = iClosepngW,
             .height = iClosepngH,
             .backgroundColor = CFK_GREY3

@@ -180,6 +180,7 @@ private:
   void drawRotatedImage();
   bool validateConfig();
   void clearBuffers();
+  void listDir(fs::FS &fs, const char * dirname);
 };
 
 #endif

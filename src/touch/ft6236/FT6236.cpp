@@ -19,6 +19,10 @@ MIT license, all text above must be included in any redistribution
 #include "Arduino.h"
 #include "FT6236.h"
 #include <Wire.h>
+#include "../share_i2c.h"
+#if defined(USE_CAMERA_CSI)
+#define Wire TouchI2c
+#endif
 
 /* New class. */
 FT6236::FT6236() { touches = 0; }
@@ -26,14 +30,22 @@ FT6236::FT6236() { touches = 0; }
 /* Start I2C and check if the FT6236 is found. */
 boolean FT6236::begin(uint8_t thresh, int8_t sda, int8_t scl)
 {
+    bool started = false;
     if (sda != -1 && scl != -1)
     {
-        Wire.begin(sda, scl);
+        started = Wire.begin(sda, scl);
     }
     else
     {
-        Wire.begin();
+        started = Wire.begin();
     }
+#if defined(USE_CAMERA_CSI)
+    if (!started) {
+        return false;
+    }
+#else
+    (void)started;
+#endif
 
     // Adjust threshold
     writeRegister8(FT6236_REG_THRESHHOLD, thresh);

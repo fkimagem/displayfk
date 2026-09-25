@@ -157,6 +157,7 @@ void loadWidgets(){
             .pixels = irightpngPixels,
             .maskAlpha = irightpngMask,
             .cb = irightpng_cb,
+            .angle = 0,
             .width = irightpngW,
             .height = irightpngH,
             .backgroundColor = CFK_WHITE
@@ -166,6 +167,7 @@ void loadWidgets(){
             .pixels = ileftpngPixels,
             .maskAlpha = ileftpngMask,
             .cb = ileftpng_cb,
+            .angle = 0,
             .width = ileftpngW,
             .height = ileftpngH,
             .backgroundColor = CFK_WHITE

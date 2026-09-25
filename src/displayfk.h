@@ -51,6 +51,22 @@
 #include "../user_setup.h"
 #include "check_touch.h"
 
+#if defined(CAM_OV02C10)
+#include "camera/ov02c10/ov02c10/ov02c10.h"
+#endif
+#if defined(CAM_OV5647)
+#include "camera/ov5647/ov5647/ov5647.h"
+#endif
+#if defined(CAM_SC2336)
+#include "camera/sc2336/sc2336/sc2336.h"
+#endif
+#if defined(CAM_OV2710)
+#include "camera/ov2710/ov2710/ov2710.h"
+#endif
+#if defined(USE_CAMERA_CSI) && defined(DFK_CAMERA_MIPI)
+#include "camera/cameracontroller/cameracontroller.h"
+#endif
+
 #include <Arduino.h>
 #if defined(USE_SPIFFS)
 #include "SPIFFS.h"
@@ -128,6 +144,19 @@ static const lcd_init_cmd_t st7701_init_operations[] = {
     {0xFF, (uint8_t[]){0x77, 0x01, 0x00, 0x00, 0x00}, 5, 0},
     {0x11, (uint8_t[]){0x00}, 1, 120},  // Sleep Out - delay de 120ms
     {0x29, (uint8_t[]){0x00}, 1, 20},   // Display On - delay de 20ms
+};
+
+static const lcd_init_cmd_t ek79007_init_operations[] = {
+    {0xB2, (uint8_t[]){0x10}, 1, 0},
+    {0x80, (uint8_t[]){0x8B}, 1, 0},
+    {0x81, (uint8_t[]){0x78}, 1, 0},
+    {0x82, (uint8_t[]){0x84}, 1, 0},
+    {0x83, (uint8_t[]){0x88}, 1, 0},
+    {0x84, (uint8_t[]){0xA8}, 1, 0},
+    {0x85, (uint8_t[]){0xE3}, 1, 0},
+    {0x86, (uint8_t[]){0x88}, 1, 0},
+    {0x11, (uint8_t[]){0x00}, 0, 120},
+    {0x29, (uint8_t[]){0x00}, 0, 20},
 };
 #endif
 /**
@@ -347,6 +376,9 @@ public:
 
 #if defined(DISP_DEFAULT)
     void setDrawObject(Arduino_GFX *objTFT); ///< Pointer to the Arduino display object.
+#if defined(CONFIG_IDF_TARGET_ESP32P4)
+    void setDrawObject(Arduino_DSI_Display *objTFT);
+#endif
 #elif defined(DISP_PCD8544)
     void setDrawObject(Adafruit_PCD8544 *objTFT); ///< Pointer to the PCD8544 display object.
 #elif defined(DISP_SSD1306)
@@ -371,7 +403,13 @@ public:
     void disableTouchLog();
     void addLog(const char *data);
     void loopTask();
+    void cameraTask();
     TaskHandle_t getTaskHandle() const;
+#if defined(USE_CAMERA_CSI) && defined(DFK_CAMERA_MIPI)
+    CameraController &getCamera();
+    void setRotationCamera(uint8_t rotation, bool mirrorX = false, bool mirrorY = false);
+    bool startCamera(int sccbPort, int8_t sclPin, int8_t sdaPin, uint32_t i2cFreq = 0, int8_t resetPin = -1, int8_t pwdnPin = -1);
+#endif
     void setupAutoClick(uint32_t intervalMs, uint16_t x, uint16_t y);
     void startAutoClick();
     void stopAutoClick();
@@ -531,6 +569,10 @@ public:
     void setThermometer(Thermometer *array[], uint8_t amount);
 #endif
 
+#ifdef DFK_CAMERA_MIPI
+    void setCameraMipi(CameraMipi *array[], uint8_t amount);
+#endif
+
 #ifdef DFK_SD
     bool startSD(uint8_t pinCS, SPIClass *spiShared);
     bool startSD(uint8_t pinCS, SPIClass *spiShared, int hz);
@@ -561,6 +603,17 @@ private:
 #endif
 
     // Variáveis privadas
+#if defined(USE_CAMERA_CSI) && defined(DFK_CAMERA_MIPI)
+    CameraController m_camera;
+    uint8_t m_cameraRotation;
+    bool m_cameraMirrorX;
+    bool m_cameraMirrorY;
+#if defined(CONFIG_IDF_TARGET_ESP32P4)
+    Arduino_DSI_Display *m_cameraDsiDisplay;
+#endif
+    uint16_t *m_cameraPreviewFb;
+    size_t m_cameraPreviewFbBytes;
+#endif
     TaskHandle_t m_hndTaskEventoTouch; ///< Handle for the touch event task.
     bool m_runningTransaction;
     Preferences m_configs; ///< Preferences for storing and accessing configuration data.
@@ -721,6 +774,12 @@ private:
     bool m_thermometerConfigured = false;     ///< Flag indicating if Thermometer is configured.
 #endif
 
+#ifdef DFK_CAMERA_MIPI
+    uint8_t qtdCameraMipi = 0;            ///< Number of Camera widgets.
+    CameraMipi **arrayCameraMipi = nullptr; ///< Array of Camera widgets.
+    bool m_cameraMipiConfigured = false;   ///< Flag indicating if Camera is configured.
+#endif
+
 #ifdef DFK_EXTERNALINPUT
     bool m_inputExternalConfigured = false; ///< Flag indicating if ExternalInput is configured.
     ExternalKeyboard m_pExternalKeyboard;   ///< Internal numpad instance for NumberBox.
@@ -756,6 +815,9 @@ private:
     void processTextBoxTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
     void processNumberBoxTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
     void processEmptyAreaTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    void processCameraMipiTouch(uint16_t xTouch, uint16_t yTouch, bool collectMode = false);
+    bool processTouchOnCameraFullScreen();
+    void exitCameraFullScreen();
 
 #ifdef ENABLE_ON_RELEASE
     // Touch tracking helper methods
@@ -786,6 +848,15 @@ private:
     void updateTextBox();
     void updateNumberBox();
     void updateThermometer();
+    #if defined(DFK_CAMERA_MIPI) && defined(USE_CAMERA_CSI)
+    void updateCameraMipi(ESPVideoBufferClass *buffer);
+    bool blitCameraDmaFullScreen(const uint16_t *src, uint32_t cam_w, uint32_t cam_h);
+    bool blitCameraDmaCropped(const uint16_t *src, uint32_t cam_w, uint32_t cam_h, int x, int y, uint32_t w, uint32_t h, uint8_t zoomLevel = 1);
+    bool ensureCameraPreview(uint32_t w, uint32_t h);
+    void drawCameraZoomLabel(CameraMipi *widget);
+    #else
+    void updateCameraMipi();
+    #endif
 };
 
 #endif

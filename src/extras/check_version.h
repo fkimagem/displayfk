@@ -2,6 +2,7 @@
 #define CHECK_VERSION_H
 
 #include <Arduino.h>
+#include "../../user_setup.h"
 
 // Ensure version builder macro exists
 #ifndef ESP_ARDUINO_VERSION_VAL
@@ -26,7 +27,7 @@
 
 // Valid ESP32 Arduino Core version range
 #define ESP32_CORE_MIN ESP_ARDUINO_VERSION_VAL(3, 3, 6)
-#define ESP32_CORE_MAX ESP_ARDUINO_VERSION_VAL(3, 3, 9)
+#define ESP32_CORE_MAX ESP_ARDUINO_VERSION_VAL(3, 3, 11)
 
 // Helpers to convert numbers to strings
 #define STR_HELPER(x) #x
@@ -43,11 +44,11 @@
 #endif
 
 #if ESP_ARDUINO_VERSION < ESP32_CORE_MIN
-  #error "ESP32 Arduino Core version is too old. Please upgrade to a version between 3.3.6 and 3.3.9."
+  #error "ESP32 Arduino Core version is too old. Please upgrade to a version between 3.3.6 and 3.3.11."
 #endif
 
 #if ESP_ARDUINO_VERSION > ESP32_CORE_MAX
-  #error "ESP32 Arduino Core version is too new. Please downgrade to a version between 3.3.6 and 3.3.9."
+  #error "ESP32 Arduino Core version is too new. Please downgrade to a version between 3.3.6 and 3.3.11."
 #endif
 
 #if (ESP_ARDUINO_VERSION >= ESP32_CORE_MIN) && (ESP_ARDUINO_VERSION <= ESP32_CORE_MAX)
@@ -62,5 +63,23 @@
 #error "ESP32 Arduino Core version could not be detected. Please install ESP32 Arduino Core between version 3.3.6 and 3.3.9."
 
 #endif // ESP_ARDUINO_VERSION
+
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 4, 0)
+#error "ESP32 IDF version is too old. Please upgrade to a version between 5.4.0 and 5.4.3."
+#endif
+
+#if (defined(CAM_OV02C10) + defined(CAM_OV5647) + defined(CAM_SC2336) + defined(CAM_OV2710)) > 1
+#error "CAM_OV02C10, CAM_OV5647, CAM_SC2336 and CAM_OV2710 cannot be defined at the same time. Choose one camera sensor in user_setup.h."
+#endif
+
+#if defined(USE_CAMERA_CSI)
+#if !defined(CAM_OV02C10) && !defined(CAM_OV5647) && !defined(CAM_SC2336) && !defined(CAM_OV2710)
+#error "USE_CAMERA_CSI requires CAM_OV02C10, CAM_OV5647, CAM_SC2336 or CAM_OV2710 in user_setup.h."
+#endif
+#endif
+
+#if (defined(CAM_OV02C10) || defined(CAM_OV5647) || defined(CAM_SC2336) || defined(CAM_OV2710)) && !defined(USE_CAMERA_CSI)
+#error "CAM_OV02C10, CAM_OV5647, CAM_SC2336 and CAM_OV2710 require USE_CAMERA_CSI in user_setup.h."
+#endif
 
 #endif // CHECK_VERSION_H

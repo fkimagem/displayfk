@@ -2,6 +2,9 @@
 #define WIDGETSETUP_H
 
 #include <cstdint>
+#include <esp_idf_version.h>
+#include "soc/soc_caps.h"
+#include "sdkconfig.h"
 #include "../../user_setup.h"
 #define INVERTE_BITS_16(x) ((uint16_t)(~(x)))
 
@@ -75,6 +78,7 @@ constexpr uint16_t process_color(uint16_t val) {
 #define DFK_TEXTBUTTON 1
 #define DFK_CIRCULARBAR 1
 #define DFK_THERMOMETER 1
+#define DFK_CAMERA_MIPI 1
 //#define DFK_EXTERNALINPUT 1
 
 #define USE_SPIFFS 1
@@ -108,6 +112,16 @@ constexpr uint16_t process_color(uint16_t val) {
 #if defined(DISP_DEFAULT) || defined(DISP_PCD8544) || defined(DISP_SSD1306)
 #define USING_GRAPHIC_LIB
 #endif
+
+ #if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 4, 0)  // ESP_Video MIPI-CSI exige IDF >= 5.4
+ #undef DFK_CAMERA_MIPI
+ #pragma message("IDF < 5.4.0, desativando DFK_CAMERA_MIPI")
+ #endif
+
+ #if !defined(CONFIG_IDF_TARGET_ESP32P4)  // ESP_Video MIPI-CSI exige IDF >= 5.4
+ #undef DFK_CAMERA_MIPI
+ #pragma message("Board is not ESP32-P4, desativando DFK_CAMERA_MIPI")
+ #endif
 
 //These enumerate the text plotting alignment (reference datum point)
 #define TL_DATUM 0 // Top left (default)

@@ -1,4 +1,8 @@
 #include "cst820.h"
+#include "../share_i2c.h"
+#if defined(USE_CAMERA_CSI)
+#define Wire TouchI2c
+#endif
 
 CST820::CST820(int8_t sda_pin, int8_t scl_pin, int8_t rst_pin, int8_t int_pin)
 {
@@ -11,14 +15,22 @@ CST820::CST820(int8_t sda_pin, int8_t scl_pin, int8_t rst_pin, int8_t int_pin)
 void CST820::begin(void)
 {
     // Initialize I2C
+    bool started = false;
     if (_sda != -1 && _scl != -1)
     {
-        Wire.begin(_sda, _scl);
+        started = Wire.begin(_sda, _scl);
     }
     else
     {
-        Wire.begin();
+        started = Wire.begin();
     }
+#if defined(USE_CAMERA_CSI)
+    if (!started) {
+        return;
+    }
+#else
+    (void)started;
+#endif
 
     // Int Pin Configuration
     if (_int != -1)

@@ -52,10 +52,13 @@ bool CircularBar::detectTouch(uint16_t *_xTouch, uint16_t *_yTouch) {
 
 functionCB_t CircularBar::getCallbackFunc() { return m_callback; }
 
+
 void CircularBar::drawBackground() {
   CHECK_TFT_VOID
   CHECK_VISIBLE_VOID
   CHECK_LOADED_VOID
+  CHECK_CURRENTSCREEN_VOID
+  CHECK_USINGKEYBOARD_VOID
 
   int rOut = m_config.radius;
   int rIn = rOut - m_config.thickness;

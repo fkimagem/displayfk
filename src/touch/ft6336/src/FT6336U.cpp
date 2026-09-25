@@ -9,6 +9,10 @@
 #include "FT6336U.h"
 
 #include <Wire.h>
+#include "../../share_i2c.h"
+#if defined(USE_CAMERA_CSI)
+#define Wire TouchI2c
+#endif
 
 FT6336U::FT6336U(uint8_t rst_n, uint8_t int_n)
 : rst_n(rst_n), int_n(int_n) {
@@ -27,7 +31,13 @@ void FT6336U::begin(void) {
 #if defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSY40) || defined(TEENSYDUINO)
     if(sda != -1 && scl != -1) {
 #if defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_ESP8266)        
+#if defined(USE_CAMERA_CSI)
+        if (!Wire.begin(sda, scl)) {
+            return;
+        }
+#else
         Wire.begin(sda, scl);
+#endif
 #elif defined(ARDUINO_TEENSY41) || defined(ARDUINO_TEENSY40) || defined(TEENSYDUINO) || defined(TEENSYDUINO) 
         Wire.setSCL(scl); 
         Wire.setSDA(sda);        
@@ -35,7 +45,13 @@ void FT6336U::begin(void) {
 #endif        
     }
     else {
+#if defined(USE_CAMERA_CSI)
+        if (!Wire.begin()) {
+            return;
+        }
+#else
         Wire.begin();
+#endif
     }
 #else
     Wire.begin();

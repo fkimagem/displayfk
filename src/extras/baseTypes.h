@@ -9,6 +9,7 @@
 #define TIMEOUT_CLICK 500
 #define TIMEOUT_REDRAW 50
 #define TIMEOUT_FAST_REDRAW 10
+#define TIMEOUT_CLICK_LONG 2000 // 2 seconds
 
 #define DGTORAD(value) ((value) * 0.0174532925)
 

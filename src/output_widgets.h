@@ -38,6 +38,10 @@
 #include "widgets/thermometer/wthermometer.h"
 #endif
 
+#ifdef DFK_CAMERA_MIPI
+#include "widgets/cameramipi/wcameramipi.h"
+#endif
+
 #ifdef DFK_EXTERNALINPUT
 #include "widgets/externalinput/winputexternal.h"
 #include "widgets/externalinput/wexternalkeyboard.h"

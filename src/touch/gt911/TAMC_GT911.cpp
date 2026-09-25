@@ -1,6 +1,10 @@
 #include "Arduino.h"
 #include "TAMC_GT911.h"
 #include <Wire.h>
+#include "../share_i2c.h"
+#if defined(USE_CAMERA_CSI)
+#define Wire TouchI2c
+#endif
 
 //#define LOG_GT911 1
 //#define OLD_GT911 1
@@ -12,7 +16,13 @@ TAMC_GT911::TAMC_GT911(uint8_t _sda, uint8_t _scl, uint8_t _int, uint8_t _rst, u
 
 void TAMC_GT911::begin(uint8_t _addr) {
   addr = _addr;
+#if defined(USE_CAMERA_CSI)
+  if (!Wire.begin(pinSda, pinScl)) {
+    return;
+  }
+#else
   Wire.begin(pinSda, pinScl);
+#endif
   reset();
 }
 void TAMC_GT911::reset() {

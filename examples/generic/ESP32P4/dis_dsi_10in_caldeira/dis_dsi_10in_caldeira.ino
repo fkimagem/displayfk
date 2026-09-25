@@ -812,6 +812,7 @@ rectbutton.setup(configRectButton0);
             .pixels = iPinionpngPixels,
             .maskAlpha = iPinionpngMask,
             .cb = pinionpng_cb,
+            .angle = 0,
             .width = iPinionpngW,
             .height = iPinionpngH,
             .backgroundColor = CFK_GREY5
@@ -821,6 +822,7 @@ rectbutton.setup(configRectButton0);
             .pixels = iStoppngPixels,
             .maskAlpha = iStoppngMask,
             .cb = stoppng_cb,
+            .angle = 0,
             .width = iStoppngW,
             .height = iStoppngH,
             .backgroundColor = CFK_GREY5
@@ -830,6 +832,7 @@ rectbutton.setup(configRectButton0);
             .pixels = iRightpngPixels,
             .maskAlpha = iRightpngMask,
             .cb = rightpng_cb,
+            .angle = 0,
             .width = iRightpngW,
             .height = iRightpngH,
             .backgroundColor = CFK_GREY5
@@ -839,6 +842,7 @@ rectbutton.setup(configRectButton0);
             .pixels = iHelppngPixels,
             .maskAlpha = iHelppngMask,
             .cb = helppng_cb,
+            .angle = 0,
             .width = iHelppngW,
             .height = iHelppngH,
             .backgroundColor = CFK_GREY5

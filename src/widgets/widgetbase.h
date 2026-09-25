@@ -351,11 +351,15 @@
 #define CHECK_DEBOUNCE_CLICK_BOOL {if(millis() - m_myTime < TIMEOUT_CLICK){return false;}}
 #define CHECK_DEBOUNCE_CLICK_VOID {if(millis() - m_myTime < TIMEOUT_CLICK){return;}}
 
+#define CHECK_DEBOUNCE_LONG_CLICK_BOOL {if(millis() - m_myTime < TIMEOUT_CLICK_LONG){return false;}}
+#define CHECK_DEBOUNCE_LONG_CLICK_VOID {if(millis() - m_myTime < TIMEOUT_CLICK_LONG){return;}}
+
 #define CHECK_DEBOUNCE_REDRAW_BOOL {if(millis() - m_myTime < TIMEOUT_REDRAW){return false;}}
 #define CHECK_DEBOUNCE_REDRAW_VOID {if(millis() - m_myTime < TIMEOUT_REDRAW){return;}}
 
 #define CHECK_DEBOUNCE_FAST_REDRAW_BOOL {if(millis() - m_myTime < TIMEOUT_FAST_REDRAW){return false;}}
 #define CHECK_DEBOUNCE_FAST_REDRAW_VOID {if(millis() - m_myTime < TIMEOUT_FAST_REDRAW){return;}}
+
 
 #define CHECK_ENABLED_BOOL {if(!m_enabled){return false;}}
 #define CHECK_ENABLED_VOID {if(!m_enabled){return;}}

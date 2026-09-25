@@ -551,19 +551,21 @@ rectbutton.setup(configRectButton0);
 
     ImageFromPixelsConfig configImage0 = {
             .pixels = img3dgraphpngPixels,
-            .width = img3dgraphpngW,
-            .height = img3dgraphpngH,
             .maskAlpha = img3dgraphpngMask,
             .cb = nullptr,
+            .angle = 0,
+            .width = img3dgraphpngW,
+            .height = img3dgraphpngH,
             .backgroundColor = CFK_WHITE
         };
     img3dgraphpng.setupFromPixels(configImage0);
     ImageFromPixelsConfig configImage1 = {
             .pixels = HomepngPixels,
-            .width = HomepngW,
-            .height = HomepngH,
             .maskAlpha = HomepngMask,
             .cb = homepng_cb,
+            .angle = 0,
+            .width = HomepngW,
+            .height = HomepngH,
             .backgroundColor = CFK_WHITE
         };
     homepng.setupFromPixels(configImage1);
